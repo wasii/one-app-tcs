@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="17506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17505"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="CicrularProgressBarCell" id="gTV-IL-0wX" customClass="CicrularProgressBarCollectionCell" customModule="One_App" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="170" height="170"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                <rect key="frame" x="0.0" y="0.0" width="170" height="170"/>
+                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                <subviews>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="v5U-qe-csU" customClass="CustomView" customModule="One_App" customModuleProvider="target">
+                        <rect key="frame" x="0.0" y="0.0" width="170" height="170"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="SCC-pw-vyb" customClass="MBCircularProgressBarView">
+                                <rect key="frame" x="35" y="5" width="100" height="100"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="100" id="DgY-0f-v9t"/>
+                                    <constraint firstAttribute="width" secondItem="SCC-pw-vyb" secondAttribute="height" id="Sdb-RW-u4y"/>
+                                </constraints>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="value">
+                                        <real key="value" value="0.0"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="maxValue">
+                                        <real key="value" value="0.0"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="valueFontSize">
+                                        <real key="value" value="25"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="unitFontSize">
+                                        <real key="value" value="1"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="fontColor">
+                                        <color key="value" red="0.1137254902" green="0.40000000000000002" blue="0.55294117649999996" alpha="1" colorSpace="calibratedRGB"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="progressColor">
+                                        <color key="value" red="0.1137254902" green="0.40000000000000002" blue="0.55294117649999996" alpha="1" colorSpace="calibratedRGB"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="progressStrokeColor">
+                                        <color key="value" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="progressRotationAngle">
+                                        <real key="value" value="50"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="progressAngle">
+                                        <real key="value" value="100"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="progressLineWidth">
+                                        <real key="value" value="6"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="emptyLineWidth">
+                                        <real key="value" value="6"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="emptyLineColor">
+                                        <color key="value" red="0.94901960780000005" green="0.95294117649999999" blue="0.95686274510000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="emptyLineStrokeColor">
+                                        <color key="value" red="0.94901960780000005" green="0.95294117649999999" blue="0.95686274510000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </view>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Attendance &amp; Leaves" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oOf-60-az7">
+                                <rect key="frame" x="20" y="105" width="130" height="65"/>
+                                <fontDescription key="fontDescription" type="system" weight="light" pointSize="12"/>
+                                <color key="textColor" red="0.11372549019607843" green="0.40000000000000002" blue="0.55294117647058827" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="SCC-pw-vyb" firstAttribute="centerX" secondItem="v5U-qe-csU" secondAttribute="centerX" id="ETp-DO-lAb"/>
+                            <constraint firstAttribute="width" secondItem="v5U-qe-csU" secondAttribute="height" id="Kfl-6a-sW7"/>
+                            <constraint firstAttribute="trailing" secondItem="oOf-60-az7" secondAttribute="trailing" constant="20" id="MFE-1S-jJ5"/>
+                            <constraint firstAttribute="bottom" secondItem="oOf-60-az7" secondAttribute="bottom" id="MeR-qR-WeG"/>
+                            <constraint firstItem="SCC-pw-vyb" firstAttribute="top" secondItem="v5U-qe-csU" secondAttribute="top" constant="5" id="SP9-lZ-yQg"/>
+                            <constraint firstItem="oOf-60-az7" firstAttribute="leading" secondItem="v5U-qe-csU" secondAttribute="leading" constant="20" id="WzT-eP-eEn"/>
+                            <constraint firstAttribute="height" constant="170" id="iR0-ID-C9z"/>
+                            <constraint firstItem="oOf-60-az7" firstAttribute="top" secondItem="SCC-pw-vyb" secondAttribute="bottom" id="sER-wL-dGU"/>
+                        </constraints>
+                        <userDefinedRuntimeAttributes>
+                            <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                <real key="value" value="3"/>
+                            </userDefinedRuntimeAttribute>
+                        </userDefinedRuntimeAttributes>
+                    </view>
+                </subviews>
+            </view>
+            <viewLayoutGuide key="safeArea" id="ZTg-uK-7eu"/>
+            <constraints>
+                <constraint firstItem="v5U-qe-csU" firstAttribute="centerX" secondItem="gTV-IL-0wX" secondAttribute="centerX" id="YXg-Hk-2Sg"/>
+                <constraint firstItem="v5U-qe-csU" firstAttribute="centerY" secondItem="gTV-IL-0wX" secondAttribute="centerY" id="bsm-nF-Wh8"/>
+            </constraints>
+            <size key="customSize" width="150" height="178"/>
+            <connections>
+                <outlet property="circularView" destination="SCC-pw-vyb" id="k53-hj-5AG"/>
+                <outlet property="titleLabel" destination="oOf-60-az7" id="kkl-Pd-EfS"/>
+            </connections>
+            <point key="canvasLocation" x="210.1449275362319" y="166.07142857142856"/>
+        </collectionViewCell>
+    </objects>
+    <resources>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
+</document>
