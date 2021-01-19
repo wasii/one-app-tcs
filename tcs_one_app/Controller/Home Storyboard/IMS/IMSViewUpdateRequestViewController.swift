@@ -845,10 +845,15 @@ var ticket_request: tbl_Hr_Request_Logs?
         
         
         if havePermissionToEdit {
-            if let _ = AppDelegate.sharedInstance.db?.read_tbl_UserPermission(permission: IMS_Reject_Permision) {
-                rejectBtn.isHidden = false
-                rejectBtn.addTarget(self, action: #selector(rejectBtnTapped), for: .touchUpInside)
+            if IMS_Submitted == current_user || IMS_Inprogress_Ro == current_user || IMS_Inprogress_Rhod == current_user ||
+                IMS_Inprogress_Hod == current_user ||
+                IMS_Inprogress_Ds == current_user {
+                if let _ = AppDelegate.sharedInstance.db?.read_tbl_UserPermission(permission: IMS_Reject_Permision) {
+                    rejectBtn.isHidden = false
+                    rejectBtn.addTarget(self, action: #selector(rejectBtnTapped), for: .touchUpInside)
+                }
             }
+            
         }
     }
     

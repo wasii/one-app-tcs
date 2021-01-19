@@ -172,7 +172,7 @@ class IncidentInvestigationViewController: BaseViewController {
             if self.isEditable {
                 self.opinions_textview.isUserInteractionEnabled = true
                 if ticket?.OPINION == "" {
-                    self.opinions_textview.text = ENTER_FINDINGS
+                    self.opinions_textview.text = ENTER_OPINIONS
                 } else {
                     self.opinions_textview.text = ticket?.OPINION ?? ""
                 }
@@ -183,6 +183,10 @@ class IncidentInvestigationViewController: BaseViewController {
         } else {
             self.o_view.isHidden = true
         }
+    }
+    
+    @IBAction func back_button_tapped(_ sender: Any) {
+        self.navigationController?.popViewController(animated: true)
     }
 }
 
