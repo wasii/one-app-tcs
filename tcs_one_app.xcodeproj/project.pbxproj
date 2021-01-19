@@ -52,6 +52,7 @@
 		1B77CE87256257B700A821E7 /* GrievanceViewRequestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B77CE86256257B700A821E7 /* GrievanceViewRequestViewController.swift */; };
 		1B7A292425A05E3C005694B6 /* IMSViewUpdateRequestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B7A292325A05E3C005694B6 /* IMSViewUpdateRequestViewController.swift */; };
 		1B9E6C812562779D006529C3 /* GrievanceViewClosedRequestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B9E6C802562779D006529C3 /* GrievanceViewClosedRequestViewController.swift */; };
+		1BB7FA4425B70CF8003AC7C4 /* IMSFilesAccordingRemarksViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BB7FA4325B70CF8003AC7C4 /* IMSFilesAccordingRemarksViewController.swift */; };
 		1BBAEA4D259DA1AA00FBDCB4 /* IMSAllRequestsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BBAEA4C259DA1AA00FBDCB4 /* IMSAllRequestsViewController.swift */; };
 		1BC42B8D257527F7000A63AF /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1BC42B8C257527F7000A63AF /* CloudKit.framework */; };
 		4EDC7C88E5B17C3133E5ABA9 /* Pods_tcs_one_app.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CA51BA4126CEE514AB22E928 /* Pods_tcs_one_app.framework */; };
@@ -163,6 +164,7 @@
 		1B77CE86256257B700A821E7 /* GrievanceViewRequestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GrievanceViewRequestViewController.swift; sourceTree = "<group>"; };
 		1B7A292325A05E3C005694B6 /* IMSViewUpdateRequestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMSViewUpdateRequestViewController.swift; sourceTree = "<group>"; };
 		1B9E6C802562779D006529C3 /* GrievanceViewClosedRequestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GrievanceViewClosedRequestViewController.swift; sourceTree = "<group>"; };
+		1BB7FA4325B70CF8003AC7C4 /* IMSFilesAccordingRemarksViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMSFilesAccordingRemarksViewController.swift; sourceTree = "<group>"; };
 		1BBAEA4C259DA1AA00FBDCB4 /* IMSAllRequestsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMSAllRequestsViewController.swift; sourceTree = "<group>"; };
 		1BC42B8C257527F7000A63AF /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
 		60069559254994D400EB3865 /* HRHelpDeskRequestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HRHelpDeskRequestViewController.swift; sourceTree = "<group>"; };
@@ -328,6 +330,7 @@
 				1BBAEA4C259DA1AA00FBDCB4 /* IMSAllRequestsViewController.swift */,
 				1B71451725AF7E9A0058C36C /* IMSHistoryViewController.swift */,
 				1B71451A25AF85250058C36C /* IMSFilesViewController.swift */,
+				1BB7FA4325B70CF8003AC7C4 /* IMSFilesAccordingRemarksViewController.swift */,
 			);
 			path = "IMS Desk";
 			sourceTree = "<group>";
@@ -757,6 +760,7 @@
 				1B47F9A325A5F81C00FC74A4 /* IncidentInvestigationViewController.swift in Sources */,
 				605CE7752541977100509434 /* PinValidator.swift in Sources */,
 				60C34FE3253985DD00495944 /* HomeScreenViewController.swift in Sources */,
+				1BB7FA4425B70CF8003AC7C4 /* IMSFilesAccordingRemarksViewController.swift in Sources */,
 				60EE11B3254B262C00ACB45B /* UserInfoViewController.swift in Sources */,
 				609922962547F43900534577 /* HRNotifications.swift in Sources */,
 				1B326588259C95BF001B94C0 /* IMSDashboardViewController.swift in Sources */,

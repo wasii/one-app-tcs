@@ -1,30 +1,29 @@
 //
-//  IMSFilesViewController.swift
+//  IMSFilesAccordingRemarksViewController.swift
 //  tcs_one_app
 //
-//  Created by TCS on 14/01/2021.
+//  Created by TCS on 19/01/2021.
 //  Copyright © 2021 Personal. All rights reserved.
 //
 
+import UIKit
 import Alamofire
 import QuickLook
-import UIKit
 
-class IMSFilesViewController: BaseViewController {
+class IMSFilesAccordingRemarksViewController: BaseViewController {
 
     @IBOutlet weak var mainView: UIView!
     @IBOutlet weak var mainViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var tableView: UITableView!
     
-    var ticket_id: Int?
-    var fileAttachments: [AttachmentsList]?
-    var user_permission = [tbl_UserPermission]()
     
+    var grem_id: Int?
+    var fileAttachments: [AttachmentsList]?
     var fileDownloadedURL: URL?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.title = "Downloads"
-        
+
         self.makeTopCornersRounded(roundView: self.mainView)
         self.tableView.register(UINib(nibName: "GrievacneDownloadsTableCell", bundle: nil), forCellReuseIdentifier: "GrievacneDownloadsCell")
         self.tableView.rowHeight = 60
@@ -85,7 +84,7 @@ class IMSFilesViewController: BaseViewController {
     
     func setupAttachments(_ handler: @escaping(_ success: Bool, _ count: Int)-> Void) {
         
-        let query = "SELECT * from  \(db_files) WHERE TICKET_ID = '\(self.ticket_id!)'"
+        let query = "SELECT * from  \(db_files) WHERE GREM_ID = '\(self.grem_id!)'"
         let attachments = AppDelegate.sharedInstance.db?.read_tbl_hr_files(query: query)
         fileAttachments = [AttachmentsList]()
         for file in attachments! {
@@ -102,108 +101,14 @@ class IMSFilesViewController: BaseViewController {
             }
         }
         
-        var temp_files = [AttachmentsList]()
-        let temp = fileAttachments
-        if AppDelegate.sharedInstance.db!.read_tbl_UserPermission(permission: IMS_Files_Initiator).count > 0 {
-            fileAttachments = temp?.filter({ (AttachmentsList) -> Bool in
-                AttachmentsList.fileUploadedBy == IMS_InputBy_Initiator
-            })
-            for file in fileAttachments! {
-                temp_files.append(file)
-            }
-        }
-        if AppDelegate.sharedInstance.db!.read_tbl_UserPermission(permission: IMS_Files_Line_Manager).count > 0 {
-            fileAttachments = temp?.filter({ (AttachmentsList) -> Bool in
-                AttachmentsList.fileUploadedBy == IMS_InputBy_LineManager
-            })
-            for file in fileAttachments! {
-                temp_files.append(file)
-            }
-        }
-        if AppDelegate.sharedInstance.db!.read_tbl_UserPermission(permission: IMS_Files_Department_Head).count > 0 {
-            fileAttachments = temp?.filter({ (AttachmentsList) -> Bool in
-                AttachmentsList.fileUploadedBy == IMS_InputBy_Hod
-            })
-            for file in fileAttachments! {
-                temp_files.append(file)
-            }
-        }
-        if AppDelegate.sharedInstance.db!.read_tbl_UserPermission(permission: IMS_Files_Central_Security).count > 0 {
-            fileAttachments = temp?.filter({ (AttachmentsList) -> Bool in
-                AttachmentsList.fileUploadedBy == IMS_InputBy_CentralSecurity
-            })
-            for file in fileAttachments! {
-                temp_files.append(file)
-            }
-        }
-        if AppDelegate.sharedInstance.db!.read_tbl_UserPermission(permission: IMS_Files_Area_Security).count > 0 {
-            fileAttachments = temp?.filter({ (AttachmentsList) -> Bool in
-                AttachmentsList.fileUploadedBy == IMS_InputBy_AreaSecurity
-            })
-            for file in fileAttachments! {
-                temp_files.append(file)
-            }
-        }
-        if AppDelegate.sharedInstance.db!.read_tbl_UserPermission(permission: IMS_Files_Head_Security).count > 0 {
-            fileAttachments = temp?.filter({ (AttachmentsList) -> Bool in
-                AttachmentsList.fileUploadedBy == IMS_InputBy_HeadSecurity
-            })
-            for file in fileAttachments! {
-                temp_files.append(file)
-            }
-        }
-        if AppDelegate.sharedInstance.db!.read_tbl_UserPermission(permission: IMS_Files_Director_Security).count > 0 {
-            fileAttachments = temp?.filter({ (AttachmentsList) -> Bool in
-                AttachmentsList.fileUploadedBy == IMS_InputBy_DirectorSecurity
-            })
-            for file in fileAttachments! {
-                temp_files.append(file)
-            }
-        }
-        if AppDelegate.sharedInstance.db!.read_tbl_UserPermission(permission: IMS_Files_Financial_Services).count > 0 {
-            fileAttachments = temp?.filter({ (AttachmentsList) -> Bool in
-                AttachmentsList.fileUploadedBy == IMS_InputBy_FinancialService
-            })
-            for file in fileAttachments! {
-                temp_files.append(file)
-            }
-        }
-        if AppDelegate.sharedInstance.db!.read_tbl_UserPermission(permission: IMS_Files_Finance).count > 0 {
-            fileAttachments = temp?.filter({ (AttachmentsList) -> Bool in
-                AttachmentsList.fileUploadedBy == IMS_InputBy_Finance
-            })
-            for file in fileAttachments! {
-                temp_files.append(file)
-            }
-        }
-        if AppDelegate.sharedInstance.db!.read_tbl_UserPermission(permission: IMS_Files_Human_Resources).count > 0 {
-            fileAttachments = temp?.filter({ (AttachmentsList) -> Bool in
-                AttachmentsList.fileUploadedBy == IMS_InputBy_HumanResource
-            })
-            for file in fileAttachments! {
-                temp_files.append(file)
-            }
-        }
-        if AppDelegate.sharedInstance.db!.read_tbl_UserPermission(permission: IMS_Files_Controller).count > 0 {
-            fileAttachments = temp?.filter({ (AttachmentsList) -> Bool in
-                AttachmentsList.fileUploadedBy == IMS_InputBy_Controller
-            })
-            for file in fileAttachments! {
-                temp_files.append(file)
-            }
-        }
-        
-        temp_files = temp_files.sorted(by: { (list1, list2) -> Bool in
+        fileAttachments = fileAttachments?.sorted(by: { (list1, list2) -> Bool in
             list1.createdOn < list2.createdOn
         })
-        
-        fileAttachments = temp_files
         handler(true, fileAttachments!.count)
     }
 }
 
-
-extension IMSFilesViewController: UITableViewDelegate, UITableViewDataSource {
+extension IMSFilesAccordingRemarksViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if let count = self.fileAttachments?.count {
             return count
@@ -220,7 +125,7 @@ extension IMSFilesViewController: UITableViewDelegate, UITableViewDataSource {
         
         let fileSize = Double(data.fileSize)
         
-        cell.fileSize.text = String(format: "(%.4f MB)", (fileSize! / 1000))
+        cell.fileSize.text = String(format: "(%.4f MB)", (fileSize! / 1024))
         
         cell.downloadBtn.tag = indexPath.row
         cell.downloadBtn.addTarget(self, action: #selector(downloadFile(sender:)), for: .touchUpInside)
@@ -271,7 +176,7 @@ extension IMSFilesViewController: UITableViewDelegate, UITableViewDataSource {
     }
 }
 
-extension IMSFilesViewController: QLPreviewControllerDataSource {
+extension IMSFilesAccordingRemarksViewController: QLPreviewControllerDataSource {
     func numberOfPreviewItems(in controller: QLPreviewController) -> Int {
         return 1
     }

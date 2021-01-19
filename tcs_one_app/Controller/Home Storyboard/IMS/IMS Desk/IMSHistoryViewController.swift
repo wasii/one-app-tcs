@@ -33,7 +33,7 @@ class IMSHistoryViewController: BaseViewController {
             closure_remarks = "\(cr)"
         }
         
-        setupGrievanceRemarks { (count) in
+        setupIMSRemarks { (count) in
             DispatchQueue.main.async {
                 self.tableView.reloadData()
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
@@ -49,7 +49,7 @@ class IMSHistoryViewController: BaseViewController {
         }
     }
     
-    func setupGrievanceRemarks(_ handler: @escaping(_ count: Int) -> Void) {
+    func setupIMSRemarks(_ handler: @escaping(_ count: Int) -> Void) {
         let query = "SELECT * FROM \(db_grievance_remarks) WHERE TICKET_ID = '\(self.ticket_id!)';"
         self.grievance_remarks = AppDelegate.sharedInstance.db?.read_tbl_hr_grievance(query: query)
         
@@ -189,7 +189,19 @@ extension IMSHistoryViewController: UITableViewDataSource, UITableViewDelegate {
         cell.roleManager.text = data.REMARKS_INPUT
         cell.dateLabel.text = data.CREATED.dateSeperateWithT
         cell.descriptions.text = data.REMARKS
+        
+        cell.openAttachments.tag = indexPath.row
+        cell.openAttachments.addTarget(self, action: #selector(openDownloadFiles(sender:)), for: .touchUpInside)
         return cell
+    }
+    
+    @objc func openDownloadFiles(sender: UIButton) {
+        let row = self.grievance_remarks![sender.tag]
+        
+        let controller = self.storyboard?.instantiateViewController(withIdentifier: "IMSFilesAccordingRemarksViewController") as! IMSFilesAccordingRemarksViewController
+        
+        controller.grem_id = row.SERVER_ID_PK
+        self.navigationController?.pushViewController(controller, animated: true)
     }
 }
 
