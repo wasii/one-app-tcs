@@ -107,65 +107,65 @@ class FetchUserDataViewController: BaseViewController {
         let params = self.getAPIParameter(service_name: SETUP, request_body: setup_body)
         NetworkCalls.setup(params: params) { (success, response) in
             if success {
-                DispatchQueue.main.async {
-                    //show success for view 1
-                    self.loaderViews[0].backgroundColor = UIColor.nativeRedColor()
-                    self.activityIndicator[0].stopAnimating()
-                    self.activityIndicator[0].isHidden = true
-                    self.checkedImageView[0].isHidden = false
-                    //start animation for view 2
-                    self.activityIndicator[2].isHidden = false
-                    self.activityIndicator[2].startAnimating()
-
-                    //MARK: oneapp.gethrrequest
-                    self.getHrRequest()
-
-                }
 //                DispatchQueue.main.async {
-//                    self.logReqTopConstraint.constant = 70
+//                    //show success for view 1
 //                    self.loaderViews[0].backgroundColor = UIColor.nativeRedColor()
 //                    self.activityIndicator[0].stopAnimating()
 //                    self.activityIndicator[0].isHidden = true
 //                    self.checkedImageView[0].isHidden = false
-//                    //start animation for view 1
-//                    self.activityIndicator[1].isHidden = false
-//                    self.activityIndicator[1].startAnimating()
-//                    self.imsSetupView.isHidden = false
-//                }
-//                self.getIMSSetup { imsSuccess, imsReponse in
-//                    if imsSuccess {
-//                        DispatchQueue.main.async {
-//                            let json = JSON(imsReponse)
-//                            self.initialiseIMS(response: json) { _ in
-//                                DispatchQueue.main.async {
+//                    //start animation for view 2
+//                    self.activityIndicator[2].isHidden = false
+//                    self.activityIndicator[2].startAnimating()
 //
-//                                    self.loaderViews[1].backgroundColor = UIColor.nativeRedColor()
-//                                    self.activityIndicator[1].stopAnimating()
-//                                    self.activityIndicator[1].isHidden = true
-//                                    self.checkedImageView[1].isHidden = false
-//                                    //start animation for view 2
-//                                    self.activityIndicator[2].isHidden = false
-//                                    self.activityIndicator[2].startAnimating()
-//                                    //MARK: oneapp.gethrrequest
-//                                    self.getHrRequest()
-//                                }
-//                            }
-//                        }
+//                    //MARK: oneapp.gethrrequest
+//                    self.getHrRequest()
 //
-//                    } else {
-//                        DispatchQueue.main.async {
-//                            self.loaderViews[0].backgroundColor = UIColor.nativeRedColor()
-//                            self.activityIndicator[0].stopAnimating()
-//                            self.activityIndicator[0].isHidden = true
-//                            self.checkedImageView[0].isHidden = false
-//                            //start animation for view 2
-//                            self.activityIndicator[2].isHidden = false
-//                            self.activityIndicator[2].startAnimating()
-//                            //MARK: oneapp.gethrrequest
-//                            self.getHrRequest()
-//                        }
-//                    }
 //                }
+                DispatchQueue.main.async {
+                    self.logReqTopConstraint.constant = 70
+                    self.loaderViews[0].backgroundColor = UIColor.nativeRedColor()
+                    self.activityIndicator[0].stopAnimating()
+                    self.activityIndicator[0].isHidden = true
+                    self.checkedImageView[0].isHidden = false
+                    //start animation for view 1
+                    self.activityIndicator[1].isHidden = false
+                    self.activityIndicator[1].startAnimating()
+                    self.imsSetupView.isHidden = false
+                }
+                self.getIMSSetup { imsSuccess, imsReponse in
+                    if imsSuccess {
+                        DispatchQueue.main.async {
+                            let json = JSON(imsReponse)
+                            self.initialiseIMS(response: json) { _ in
+                                DispatchQueue.main.async {
+
+                                    self.loaderViews[1].backgroundColor = UIColor.nativeRedColor()
+                                    self.activityIndicator[1].stopAnimating()
+                                    self.activityIndicator[1].isHidden = true
+                                    self.checkedImageView[1].isHidden = false
+                                    //start animation for view 2
+                                    self.activityIndicator[2].isHidden = false
+                                    self.activityIndicator[2].startAnimating()
+                                    //MARK: oneapp.gethrrequest
+                                    self.getHrRequest()
+                                }
+                            }
+                        }
+
+                    } else {
+                        DispatchQueue.main.async {
+                            self.loaderViews[0].backgroundColor = UIColor.nativeRedColor()
+                            self.activityIndicator[0].stopAnimating()
+                            self.activityIndicator[0].isHidden = true
+                            self.checkedImageView[0].isHidden = false
+                            //start animation for view 2
+                            self.activityIndicator[2].isHidden = false
+                            self.activityIndicator[2].startAnimating()
+                            //MARK: oneapp.gethrrequest
+                            self.getHrRequest()
+                        }
+                    }
+                }
             } else {
                 if response as! String == REVERTBACK {
                     DispatchQueue.main.async {

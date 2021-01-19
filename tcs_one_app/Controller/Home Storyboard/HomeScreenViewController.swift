@@ -143,14 +143,14 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
                                                   rejected: "Closed",
                                                   tag: module.SERVER_ID_PK)
                 break
-//            case "IMS":
-//                chart.pieChart = self.setupGraphs(pieChartView: chart.pieChart,
-//                                                  module_id: module.SERVER_ID_PK,
-//                                                  pending: "Submitted",
-//                                                  approved: INREVIEW,
-//                                                  rejected: "Closed",
-//                                                  tag: module.SERVER_ID_PK)
-//            break
+            case "IMS":
+                chart.pieChart = self.setupGraphs(pieChartView: chart.pieChart,
+                                                  module_id: module.SERVER_ID_PK,
+                                                  pending: "Submitted",
+                                                  approved: INREVIEW,
+                                                  rejected: "Closed",
+                                                  tag: module.SERVER_ID_PK)
+            break
             default:
                 break
             }
@@ -333,15 +333,15 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
         if let modules = self.module {
             for (index,_) in modules.enumerated() {
                 switch index {
-//                case 0:
-//                    floaty.addItem("Add IMS Request", icon: UIImage(named: "helpdesk")) { item in
-//                        CONSTANT_MODULE_ID = AppDelegate.sharedInstance.db?.read_tbl_UserModule(query: "SELECT * FROM \(db_user_module) WHERE TAGNAME = '\(MODULE_TAG_IMS)';").first?.SERVER_ID_PK ?? -1
-//                        let storyboard = UIStoryboard(name: "IMSStoryboard", bundle: nil)
-//                        let controller = storyboard.instantiateViewController(withIdentifier: "IMSNewRequestViewController") as! IMSNewRequestViewController
-//                        self.navigationController?.pushViewController(controller, animated: true)
-//
-//                    }
-//                    break
+                case 0:
+                    floaty.addItem("Add IMS Request", icon: UIImage(named: "helpdesk")) { item in
+                        CONSTANT_MODULE_ID = AppDelegate.sharedInstance.db?.read_tbl_UserModule(query: "SELECT * FROM \(db_user_module) WHERE TAGNAME = '\(MODULE_TAG_IMS)';").first?.SERVER_ID_PK ?? -1
+                        let storyboard = UIStoryboard(name: "IMSStoryboard", bundle: nil)
+                        let controller = storyboard.instantiateViewController(withIdentifier: "IMSNewRequestViewController") as! IMSNewRequestViewController
+                        self.navigationController?.pushViewController(controller, animated: true)
+
+                    }
+                    break
                 case 1:
                     floaty.addItem("Add Grievance Request", icon: UIImage(named: "helpdesk")) { item in
                         CONSTANT_MODULE_ID = AppDelegate.sharedInstance.db?.read_tbl_UserModule(query: "SELECT * FROM \(db_user_module) WHERE TAGNAME = '\(MODULE_TAG_GRIEVANCE)';").first?.SERVER_ID_PK ?? -1
@@ -444,12 +444,12 @@ extension HomeScreenViewController: UICollectionViewDelegate, UICollectionViewDa
             let controller = storyboard.instantiateViewController(withIdentifier: "GrievanceHelpDeskViewController") as! GrievanceHelpDeskViewController
             self.navigationController?.pushViewController(controller, animated: true)
             break
-//        case "IMS":
-//            CONSTANT_MODULE_ID = AppDelegate.sharedInstance.db?.read_tbl_UserModule(query: "SELECT * FROM \(db_user_module) WHERE TAGNAME = '\(MODULE_TAG_IMS)';").first?.SERVER_ID_PK ?? -1
-//            let storyboard = UIStoryboard(name: "IMSStoryboard", bundle: nil)
-//            let controller = storyboard.instantiateViewController(withIdentifier: "IMSDashboardViewController") as! IMSDashboardViewController
-//            self.navigationController?.pushViewController(controller, animated: true)
-//            break
+        case "IMS":
+            CONSTANT_MODULE_ID = AppDelegate.sharedInstance.db?.read_tbl_UserModule(query: "SELECT * FROM \(db_user_module) WHERE TAGNAME = '\(MODULE_TAG_IMS)';").first?.SERVER_ID_PK ?? -1
+            let storyboard = UIStoryboard(name: "IMSStoryboard", bundle: nil)
+            let controller = storyboard.instantiateViewController(withIdentifier: "IMSDashboardViewController") as! IMSDashboardViewController
+            self.navigationController?.pushViewController(controller, animated: true)
+            break
             
         default:
             break
