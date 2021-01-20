@@ -342,7 +342,7 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
 //
 //                    }
 //                    break
-                case 1:
+                case 0:
                     floaty.addItem("Add Grievance Request", icon: UIImage(named: "helpdesk")) { item in
                         CONSTANT_MODULE_ID = AppDelegate.sharedInstance.db?.read_tbl_UserModule(query: "SELECT * FROM \(db_user_module) WHERE TAGNAME = '\(MODULE_TAG_GRIEVANCE)';").first?.SERVER_ID_PK ?? -1
                         let storyboard = UIStoryboard(name: "GrievanceStoryboard", bundle: nil)
@@ -351,7 +351,7 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
                       
                     }
                     break
-                case 2:
+                case 1:
                     floaty.addItem("Add HR Request", icon: UIImage(named: "helpdesk")) { item in
                         CONSTANT_MODULE_ID = AppDelegate.sharedInstance.db?.read_tbl_UserModule(query: "SELECT * FROM \(db_user_module) WHERE TAGNAME = '\(MODULE_TAG_HR)';").first?.SERVER_ID_PK ?? -1
                         let controller = self.storyboard?.instantiateViewController(withIdentifier: "NewRequestViewController") as! NewRequestViewController

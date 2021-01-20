@@ -18,7 +18,7 @@ var NOTIFICATION_COUNT      = 0
 
 //PRODUCTION
 let ENDPOINT                = "https://prodapi.tcscourier.com/core/api/main/"
-let UPLOADFILESURL          = "https://oneappapi.tcscourier.com/"
+let UPLOADFILESURL          = "https://oneappapi.tcscourier.com/api/file-upload"
 
 //DEV
 //let ENDPOINT                = "https://devapi.tcscourier.com/core/api/main"
