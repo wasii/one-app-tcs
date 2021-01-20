@@ -69,10 +69,10 @@ class IMSDashboardViewController: BaseViewController {
         self.selected_query = "Weekly"
         
         self.tableView.register(UINib(nibName: "RequestListingTableCell", bundle: nil), forCellReuseIdentifier: "RequestListingCell")
-        self.tableView.rowHeight = 70
+        self.tableView.rowHeight = 80
         
         self.filteredTableView.register(UINib(nibName: "RequestListingTableCell", bundle: nil), forCellReuseIdentifier: "RequestListingCell")
-        self.filteredTableView.rowHeight = 70
+        self.filteredTableView.rowHeight = 80
         
         self.permissionTableView.register(UINib(nibName: "ModulePermissionsTableCell", bundle: nil), forCellReuseIdentifier: "ModulePermissionsCell")
         self.permissionTableView.rowHeight = 70
@@ -129,7 +129,7 @@ class IMSDashboardViewController: BaseViewController {
             controller.todate   = self.endday
         }
         controller.selected_query = self.selected_query
-//        controller.delegate = self
+        controller.delegate = self
         controller.modalTransitionStyle = .crossDissolve
         if #available(iOS 13.0, *) {
             controller.modalPresentationStyle = .overFullScreen
@@ -143,7 +143,7 @@ class IMSDashboardViewController: BaseViewController {
         
         
         controller.selected_option = self.filterType
-//        controller.delegate = self
+        controller.delegate = self
         controller.modalTransitionStyle = .crossDissolve
         if #available(iOS 13.0, *) {
             controller.modalPresentationStyle = .overFullScreen
@@ -161,7 +161,7 @@ class IMSDashboardViewController: BaseViewController {
             
             self.mainViewHeightConstraint.constant -= self.tableViewHeightConstraint.constant
             self.tableViewHeightConstraint.constant = 0
-            self.tableViewHeightConstraint.constant = CGFloat((self.tbl_request_logs!.count * 70) + 50)
+            self.tableViewHeightConstraint.constant = CGFloat((self.tbl_request_logs!.count * 80) + 50)
             self.mainViewHeightConstraint.constant +=  self.tableViewHeightConstraint.constant
             return
         } else {
@@ -230,13 +230,12 @@ class IMSDashboardViewController: BaseViewController {
         
         self.mainViewHeightConstraint.constant -= self.tableViewHeightConstraint.constant
         self.tableViewHeightConstraint.constant = 0
-        self.tableViewHeightConstraint.constant = CGFloat((self.filtered_data!.count * 70) + 50)
+        self.tableViewHeightConstraint.constant = CGFloat((self.filtered_data!.count * 80) + 50)
         self.mainViewHeightConstraint.constant +=  self.tableViewHeightConstraint.constant
     }
     private func setupPermission() {
         let listing_all_filter_count = AppDelegate.sharedInstance.db?.read_tbl_UserPermission(permission: IMS_Listing_All_Filters).count
         let listing_responsible_bar_count = AppDelegate.sharedInstance.db?.read_tbl_UserPermission(permission: IMS_Listing_Responsible_Bar).count
-//        let listing_management_bar_count  = AppDelegate.sharedInstance.db?.read_tbl_UserPermission(permission: PERMISSION_GRIEVENCE_LISTING_MANAGEMENT_BAR).count
         
         user_permission_table_list = [UserPermssionsTableList]()
         if listing_all_filter_count! > 0 {
@@ -247,10 +246,6 @@ class IMSDashboardViewController: BaseViewController {
         if listing_responsible_bar_count! > 0 {
             user_permission_table_list?.append(UserPermssionsTableList(title: "IMS Requests", imageName: "helpdesk"))
         }
-        
-//        if listing_management_bar_count! > 0 {
-//            user_permission_table_list?.append(UserPermssionsTableList(title: "Grievance Monitoring", imageName: "helpdesk"))
-//        }
         
         if let _ = self.user_permission_table_list {
             self.permissionTableView.reloadData()
@@ -288,7 +283,7 @@ class IMSDashboardViewController: BaseViewController {
         
         self.mainViewHeightConstraint.constant -= self.tableViewHeightConstraint.constant
         self.tableViewHeightConstraint.constant = 0
-        self.tableViewHeightConstraint.constant = CGFloat((self.tbl_request_logs!.count * 70) + 50)
+        self.tableViewHeightConstraint.constant = CGFloat((self.tbl_request_logs!.count * 80) + 50)
         self.mainViewHeightConstraint.constant +=  self.tableViewHeightConstraint.constant
     }
     private func getFilterType() -> String {
@@ -337,12 +332,15 @@ class IMSDashboardViewController: BaseViewController {
             self.submittedProgressView.maxValue = CGFloat(data.count)
             self.inreviewProgressView.maxValue = CGFloat(data.count)
             self.closedProgressView.maxValue = CGFloat(data.count)
-            
-            UIView.animate(withDuration: 0.5) {
+            UIView.animate(withDuration: 0.5, delay: 0.0, options: .curveLinear, animations: {
                 self.submittedProgressView.value = CGFloat(pendingCount)
-                self.inreviewProgressView.value = CGFloat(approvedCount)
-                self.closedProgressView.value = CGFloat(rejectedCount)
-            }
+                UIView.animate(withDuration: 0.5, delay: 0.1, options: .curveLinear, animations: {
+                    self.inreviewProgressView.value = CGFloat(approvedCount)
+                    UIView.animate(withDuration: 0.5, delay: 0.2, options: .curveLinear, animations: {
+                        self.closedProgressView.value = CGFloat(rejectedCount)
+                    }, completion: nil)
+                }, completion: nil)
+            }, completion: nil)
         }
     }
     private func setupStackBarChart() {
@@ -448,12 +446,14 @@ class IMSDashboardViewController: BaseViewController {
         formatter.maximumFractionDigits = 0
         formatter.multiplier = 1.0
         formatter.zeroSymbol = ""
-        data.setValueFont(.systemFont(ofSize: 7, weight: .light))
+        data.setValueFont(.systemFont(ofSize: 1, weight: .light))
         data.setValueTextColor(.white)
         
         data.setValueFormatter(DefaultValueFormatter(formatter: formatter))
         barStackChart.fitBars = true
         barStackChart.data = data
+        
+        barStackChart.animate(yAxisDuration: 0.5, easing: nil)
     }
     //MARK: Custom Functions ENDS
 }
@@ -495,7 +495,7 @@ extension IMSDashboardViewController: ChartViewDelegate {
         self.filteredTableView.reloadData()
         
         self.filteredTableviewHeightConstraint.constant = 0
-        self.filteredTableviewHeightConstraint.constant = CGFloat(self.date_specific_tbl_request_logs!.count * 70) + 10
+        self.filteredTableviewHeightConstraint.constant = CGFloat(self.date_specific_tbl_request_logs!.count * 80) + 10
         self.mainViewHeightConstraint.constant += self.filteredTableviewHeightConstraint.constant
     }
 }
@@ -547,7 +547,10 @@ extension IMSDashboardViewController: UITableViewDataSource, UITableViewDelegate
                     let cell = tableView.dequeueReusableCell(withIdentifier: "RequestListingCell") as! RequestListingTableCell
                     let data = self.date_specific_tbl_request_logs![indexPath.row]
                     cell.mainHeading.text = data.INCIDENT_TYPE!
-                    cell.subHeading.text = data.DETAIL_QUERY!
+                    if let department = AppDelegate.sharedInstance.db?.read_tbl_department(query: "SELECT * FROM \(db_lov_department) WHERE SERVER_ID_PK = '\(data.DEPARTMENT ?? "")'").first {
+                        cell.subHeading.text = department.DEPAT_NAME
+                    }
+                    
                     cell.date.text = data.CREATED_DATE?.dateSeperateWithT ?? ""
                     
                     if data.TICKET_STATUS == IMS_Status_Submitted {
@@ -589,7 +592,9 @@ extension IMSDashboardViewController: UITableViewDataSource, UITableViewDelegate
                 data = self.tbl_request_logs![indexPath.row]
             }
             cell.mainHeading.text = data!.INCIDENT_TYPE!
-            cell.subHeading.text = data!.DETAIL_QUERY!
+            if let department = AppDelegate.sharedInstance.db?.read_tbl_department(query: "SELECT * FROM \(db_lov_department) WHERE SERVER_ID_PK = '\(data?.DEPARTMENT ?? "")'").first {
+                cell.subHeading.text = department.DEPAT_NAME
+            }
             cell.date.text = data!.CREATED_DATE?.dateSeperateWithT ?? ""
             
             if data!.TICKET_STATUS == IMS_Status_Submitted {
@@ -672,7 +677,6 @@ extension IMSDashboardViewController: UITableViewDataSource, UITableViewDelegate
                 } else {
                     self.navigationController?.pushViewController(controller, animated: true)
                 }
-//                self.navigationController?.pushViewController(controller, animated: true)
             } else {
                 let current_ticket = self.tbl_request_logs![indexPath.row]
                 let isGranted = permissions?.contains(where: { (perm) -> Bool in

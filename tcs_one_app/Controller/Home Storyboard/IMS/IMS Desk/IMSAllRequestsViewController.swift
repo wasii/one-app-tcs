@@ -209,7 +209,6 @@ class IMSAllRequestsViewController: BaseViewController {
             self.inreviewProgressView.value = CGFloat(approvedCount ?? 0)
             self.closedProgressView.value = CGFloat(rejectedCount ?? 0)
         }
-        
     }
     
     func filteredData(status: String) {
@@ -254,7 +253,7 @@ class IMSAllRequestsViewController: BaseViewController {
         }
         
         controller.selected_query = self.selected_query
-//        controller.delegate = self
+        controller.delegate = self
         controller.modalTransitionStyle = .crossDissolve
         if #available(iOS 13.0, *) {
             controller.modalPresentationStyle = .overFullScreen

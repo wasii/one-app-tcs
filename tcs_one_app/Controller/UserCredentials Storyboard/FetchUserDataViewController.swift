@@ -612,7 +612,7 @@ class FetchUserDataViewController: BaseViewController {
                                 self.counter.text = "0/\(self.HR_Request.count)"
 
                                 for hrl in self.HR_Request {
-                                    AppDelegate.sharedInstance.db?.deleteRow(tableName: db_hr_request, column: "SERVER_ID_PK", ref_id: "\(hrl.ticketID!)", handler: { _ in
+                                    AppDelegate.sharedInstance.db?.deleteRowWithMultipleConditions(tbl: db_hr_request, conditions: "SERVER_ID_PK = '\(hrl.ticketID!)' AND CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)'", { _ in
                                         AppDelegate.sharedInstance.db?.insert_tbl_hr_request(hrrequests: hrl, { success in
                                             if success {
                                                 totalCounter += 1
@@ -631,6 +631,25 @@ class FetchUserDataViewController: BaseViewController {
                                             }
                                         })
                                     })
+//                                    AppDelegate.sharedInstance.db?.deleteRow(tableName: db_hr_request, column: "SERVER_ID_PK", ref_id: "\(hrl.ticketID!)", handler: { _ in
+//                                        AppDelegate.sharedInstance.db?.insert_tbl_hr_request(hrrequests: hrl, { success in
+//                                            if success {
+//                                                totalCounter += 1
+//                                                print("\(totalCounter)/\(self.HR_Request.count)")
+//                                                self.counter.text = "\(totalCounter)/\(self.HR_Request.count)"
+//                                                if (totalCounter == self.HR_Request.count - 1) || self.HR_Request.count == 1 {
+//                                                    Helper.updateLastSyncStatus(APIName: GET_HR_REQUEST,
+//                                                                              date: sync_date,
+//                                                                              skip: self.skip,
+//                                                                              take: 80,
+//                                                                              total_records: self.count)
+//                                                    self.count = 0
+//                                                    self.skip = 0
+//                                                    self.setup_HRLogs_HRFILES(response: response)
+//                                                }
+//                                            }
+//                                        })
+//                                    })
                                 }
                             }
                         } else {

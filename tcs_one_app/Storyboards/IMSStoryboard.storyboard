@@ -3099,10 +3099,10 @@
                                                                 </constraints>
                                                                 <userDefinedRuntimeAttributes>
                                                                     <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
-                                                                        <real key="value" value="1"/>
+                                                                        <real key="value" value="1.3999999999999999"/>
                                                                     </userDefinedRuntimeAttribute>
                                                                     <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                                                        <real key="value" value="4"/>
+                                                                        <real key="value" value="10"/>
                                                                     </userDefinedRuntimeAttribute>
                                                                     <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
                                                                         <color key="value" red="0.86666666670000003" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
@@ -5691,6 +5691,7 @@
                         <outlet property="download_btn" destination="ziU-Gc-6nv" id="aLp-po-poL"/>
                         <outlet property="employee_id" destination="Pwf-NO-RfL" id="rSr-Uu-1FD"/>
                         <outlet property="employee_name" destination="eln-b0-xJt" id="6nB-2r-gEc"/>
+                        <outlet property="employee_search_btn" destination="xnF-N5-gVG" id="fNL-Kh-x0p"/>
                         <outlet property="employee_view" destination="Ehi-Yh-R6n" id="a7Q-Ni-rXn"/>
                         <outlet property="financial_label" destination="i7t-d7-GRH" id="fhZ-sW-4hC"/>
                         <outlet property="financial_top_constraint" destination="FnX-OF-4aa" id="IoL-2y-obn"/>

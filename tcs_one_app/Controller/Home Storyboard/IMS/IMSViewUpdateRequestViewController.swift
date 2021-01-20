@@ -229,16 +229,18 @@ var ticket_request: tbl_Hr_Request_Logs?
             }
             if ticket_request!.IS_FINANCIAL == 1 {
                 lov_financial = financial_type(ID: 2, TYPE: "Financial")
+                incident_loss_type.text = "Financial"
                 loss_amount_stackview.isHidden = false
                 incident_loss_amount.text = "\(ticket_request!.AMOUNT!)"
                 
                 
-                if let recovery_type = AppDelegate.sharedInstance.db?.read_tbl_recovery_type(query: "SELECT * FROM \(db_lov_recovery_type) WHERE NAME = '\(ticket_request!.RECOVERY_TYPE ?? "")'").first {
+                if let recovery_type = AppDelegate.sharedInstance.db?.read_tbl_recovery_type(query: "SELECT * FROM \(db_lov_recovery_type) WHERE SERVER_ID_PK = '\(ticket_request!.RECOVERY_TYPE ?? "")'").first {
                     incident_recovery_type.text = recovery_type.NAME
                     lov_recovery_type = recovery_type
                 }
             } else {
                 lov_financial = financial_type(ID: 1, TYPE: "Non Financial")
+                incident_loss_type.text = "Non Financial"
             }
             
             if havePermissionToEdit {
@@ -261,6 +263,9 @@ var ticket_request: tbl_Hr_Request_Logs?
                 
                 classification_textfield.isUserInteractionEnabled = false
                 incident_1_textfield.isUserInteractionEnabled = false
+                incident_2_textfield.isUserInteractionEnabled = false
+                incident_3_textfield.isUserInteractionEnabled = false
+                
                 incident_2_textfield.isHidden = false
                 incident_3_textfield.isHidden = false
                 
@@ -761,7 +766,12 @@ var ticket_request: tbl_Hr_Request_Logs?
         
         status_textfield.label.textColor = UIColor.nativeRedColor()
         status_textfield.label.text = "Ticket Status"
-        status_textfield.text = self.ticket_request!.TICKET_STATUS!
+        if self.ticket_request!.TICKET_STATUS == IMS_Status_Closed || self.ticket_request!.TICKET_STATUS == IMS_Status_Submitted {
+            status_textfield.text = self.ticket_request!.TICKET_STATUS!
+        } else {
+            status_textfield.text = IMS_Status_Inprogress
+        }
+        
         status_textfield.setOutlineColor(UIColor.nativeRedColor(), for: .normal)
         status_textfield.setOutlineColor(UIColor.nativeRedColor(), for: .editing)
         
@@ -2039,14 +2049,15 @@ extension IMSViewUpdateRequestViewController {
                 return nil
             }
         }
-        let columns = ["IS_CONTROL_DEFINED", "RISK_REMARKS", "RISK_TYPE", "CONTROL_CATEGORY", "CONTROL_TYPE", "HR_STATUS", "HR_REMARKS"]
+        let columns = ["IS_CONTROL_DEFINED", "RISK_REMARKS", "RISK_TYPE", "CONTROL_CATEGORY", "CONTROL_TYPE", "HR_STATUS", "HR_REMARKS", "TICKET_STATUS"]
         let values = [control,
                       self.risk_remarks_textview.text!,
                       self.lov_risk_type!.SERVER_ID_PK,
                       self.lov_category_control!.SERVER_ID_PK,
                       self.lov_type_control!.SERVER_ID_PK,
                       self.lov_hr_status!.SERVER_ID_PK,
-                      self.recommendations_textview.text!]
+                      self.recommendations_textview.text!,
+                      IMS_Status_Closed]
         AppDelegate.sharedInstance.db?.updateTables(tableName: db_hr_request, columnName: columns, updateValue: values, onCondition: "SERVER_ID_PK = '\(self.ticket_request!.SERVER_ID_PK!)'", { _ in })
         
         let json = [
@@ -2092,8 +2103,8 @@ extension IMSViewUpdateRequestViewController {
                 return nil
             }
         }
-        let columns = ["FINANCE_GL_NO", "HR_STATUS"]
-        let values = [self.hr_reference_number_textfield.text!, self.lov_hr_status!.SERVER_ID_PK]
+        let columns = ["FINANCE_GL_NO", "HR_STATUS", "TICKET_STATUS"]
+        let values = [self.hr_reference_number_textfield.text!, self.lov_hr_status!.SERVER_ID_PK, IMS_Status_Inprogress_Ca]
         AppDelegate.sharedInstance.db?.updateTables(tableName: db_hr_request, columnName: columns, updateValue: values, onCondition: "SERVER_ID_PK = '\(self.ticket_request!.SERVER_ID_PK!)'", { _ in })
         
         let json = [
@@ -2135,8 +2146,14 @@ extension IMSViewUpdateRequestViewController {
                 return nil
             }
         }
-        let columns = ["HR_REF_NO", "HR_STATUS"]
-        let values = [self.hr_reference_number_textfield.text!, self.lov_hr_status!.SERVER_ID_PK]
+        var ticket_status = ""
+        if ticket_request!.IS_FINANCIAL == 1 && ticket_request!.IS_EMP_RELATED == 1 {
+            ticket_status = IMS_Status_Inprogress_Fi
+        } else {
+            ticket_status = IMS_Status_Inprogress_Ca
+        }
+        let columns = ["HR_REF_NO", "HR_STATUS", "TICKET_STATUS"]
+        let values = [self.hr_reference_number_textfield.text!, self.lov_hr_status!.SERVER_ID_PK, ticket_status]
         AppDelegate.sharedInstance.db?.updateTables(tableName: db_hr_request, columnName: columns, updateValue: values, onCondition: "SERVER_ID_PK = '\(self.ticket_request!.SERVER_ID_PK!)'", { _ in })
         
         let json = [
@@ -2144,7 +2161,7 @@ extension IMSViewUpdateRequestViewController {
                 "access_token": UserDefaults.standard.string(forKey: USER_ACCESS_TOKEN)!,
                 "tickets": [
                     "ticketid": "\(self.ticket_request!.SERVER_ID_PK!)",
-                    "status": IMS_Status_Inprogress_Fi,
+                    "status": ticket_status,
                     "loginid": "\(CURRENT_USER_LOGGED_IN_ID)",
                     "closure_remarks" : "",
                     "hr_ref_no": self.hr_reference_number_textfield.text!,
@@ -2181,8 +2198,8 @@ extension IMSViewUpdateRequestViewController {
                 return nil
             }
         }
-        let columns = ["IS_INS_CLAIM_PROCESS", "INS_CLAIMED_AMOUNT"]
-        let values = [is_insurance_claimable, claim_reference_number]
+        let columns = ["IS_INS_CLAIM_PROCESS", "INS_CLAIMED_AMOUNT", "TICKET_STATUS"]
+        let values = [is_insurance_claimable, claim_reference_number, IMS_Status_Inprogress_Hr]
         AppDelegate.sharedInstance.db?.updateTables(tableName: db_hr_request, columnName: columns, updateValue: values, onCondition: "SERVER_ID_PK = '\(self.ticket_request!.SERVER_ID_PK!)'", { _ in })
         let json = [
             "hr_request": [
@@ -2242,8 +2259,8 @@ extension IMSViewUpdateRequestViewController {
         
         
         
-        let columns = ["INS_CLAIM_REFNO", "IS_INS_CLAIM_PROCESS"]
-        let values = [claim_reference_number, is_insurance_claimable]
+        let columns = ["INS_CLAIM_REFNO", "IS_INS_CLAIM_PROCESS", "TICKET_STATUS"]
+        let values = [claim_reference_number, is_insurance_claimable, ticket_status]
         AppDelegate.sharedInstance.db?.updateTables(tableName: db_hr_request, columnName: columns, updateValue: values, onCondition: "SERVER_ID_PK = '\(self.ticket_request!.SERVER_ID_PK!)'", { _ in })
         let json = [
             "hr_request": [
@@ -2314,8 +2331,8 @@ extension IMSViewUpdateRequestViewController {
             ticket_status = IMS_Status_Inprogress_Ca
         }
         
-        let columns = ["DIR_SEC_ENDOR", "DIR_SEC_RECOM", "DIR_NOTIFY_EMAILS"]
-        let values = [self.endoresement_textview.text!, self.recommendations_textview.text!, self.email_textfield.text!]
+        let columns = ["DIR_SEC_ENDOR", "DIR_SEC_RECOM", "DIR_NOTIFY_EMAILS", "TICKET_STATUS"]
+        let values = [self.endoresement_textview.text!, self.recommendations_textview.text!, self.email_textfield.text!, ticket_status]
         AppDelegate.sharedInstance.db?.updateTables(tableName: db_hr_request, columnName: columns, updateValue: values, onCondition: "SERVER_ID_PK = '\(self.ticket_request!.SERVER_ID_PK!)'", { _ in })
         let json = [
             "hr_request": [
@@ -2357,8 +2374,8 @@ extension IMSViewUpdateRequestViewController {
                 return nil
             }
         }
-        let columns = ["HO_SEC_SUMMARY", "HO_SEC_RECOM", "DIR_NOTIFY_EMAILS"]
-        let values = [self.executive_summary_textview.text!, self.recommendations_textview.text!]
+        let columns = ["HO_SEC_SUMMARY", "HO_SEC_RECOM", "TICKET_STATUS"]
+        let values = [self.executive_summary_textview.text!, self.recommendations_textview.text!, IMS_Status_Inprogress_Ds]
         AppDelegate.sharedInstance.db?.updateTables(tableName: db_hr_request, columnName: columns, updateValue: values, onCondition: "SERVER_ID_PK = '\(self.ticket_request!.SERVER_ID_PK!)'", { _ in })
         let json = [
             "hr_request": [
@@ -2401,9 +2418,9 @@ extension IMSViewUpdateRequestViewController {
                 return nil
             }
         }
-//        let columns = ["HO_SEC_SUMMARY", "HO_SEC_RECOM", "DIR_NOTIFY_EMAILS"]
-//        let values = [self.executive_summary_textview.text!, self.recommendations_textview.text!]
-//        AppDelegate.sharedInstance.db?.updateTables(tableName: db_hr_request, columnName: columns, updateValue: values, onCondition: "SERVER_ID_PK = '\(self.ticket_request!.SERVER_ID_PK!)'", { _ in })
+        let columns = ["HO_SEC_SUMMARY", "HO_SEC_RECOM", "DIR_NOTIFY_EMAILS", "TICKET_STATUS"]
+        let values = [self.executive_summary_textview.text!, self.recommendations_textview.text!, IMS_Status_Inprogress_Hs]
+        AppDelegate.sharedInstance.db?.updateTables(tableName: db_hr_request, columnName: columns, updateValue: values, onCondition: "SERVER_ID_PK = '\(self.ticket_request!.SERVER_ID_PK!)'", { _ in })
         
         let json = [
             "hr_request": [
@@ -2443,10 +2460,8 @@ extension IMSViewUpdateRequestViewController {
         }
         let is_switch = self.investigation_required_switch.isOn ? "1" : "0"
         
-        let columns = ["IS_INVESTIGATION"]
-        let values = [is_switch]
-        AppDelegate.sharedInstance.db?.updateTables(tableName: db_hr_request, columnName: columns, updateValue: values, onCondition: "SERVER_ID_PK = '\(self.ticket_request!.SERVER_ID_PK!)'", { _ in })
         
+        var ticket_status = IMS_Status_Inprogress_Cs
         var json = [String:Any]()
         if is_switch == "1" {
             json = [
@@ -2469,8 +2484,6 @@ extension IMSViewUpdateRequestViewController {
                 ]
             ]
         } else {
-            var ticket_status = IMS_Status_Inprogress_Fs
-            
             if self.ticket_request!.IS_FINANCIAL == 1 && self.ticket_request!.IS_EMP_RELATED == 1 {
                 ticket_status = IMS_Status_Inprogress_Fs
             } else if self.ticket_request!.IS_FINANCIAL == 0 && self.ticket_request!.IS_EMP_RELATED == 1 {
@@ -2500,6 +2513,11 @@ extension IMSViewUpdateRequestViewController {
                 ]
             ]
         }
+        
+        let columns = ["IS_INVESTIGATION", "TICKET_STATUS"]
+        let values = [is_switch, ticket_status]
+        AppDelegate.sharedInstance.db?.updateTables(tableName: db_hr_request, columnName: columns, updateValue: values, onCondition: "SERVER_ID_PK = '\(self.ticket_request!.SERVER_ID_PK!)'", { _ in })
+        
         let params = getAPIParameter(service_name: IMSUPDATE, request_body: json)
         return params
     }
@@ -2514,8 +2532,8 @@ extension IMSViewUpdateRequestViewController {
             return nil
         }
         
-        let columns = ["SEC_AREA", "AREA_SEC_EMP_NO"]
-        let values = [self.lov_area!.SERVER_ID_PK, "\(self.lov_assigned_to!.EMP_NO)"]
+        let columns = ["SEC_AREA", "AREA_SEC_EMP_NO", "TICKET_STATUS"]
+        let values = [self.lov_area!.SERVER_ID_PK, "\(self.lov_assigned_to!.EMP_NO)", IMS_Status_Inprogress_As]
         AppDelegate.sharedInstance.db?.updateTables(tableName: db_hr_request, columnName: columns, updateValue: values, onCondition: "SERVER_ID_PK = '\(self.ticket_request!.SERVER_ID_PK!)'", { _ in })
         
         let json = [
@@ -2585,8 +2603,8 @@ extension IMSViewUpdateRequestViewController {
                 }
             }
         }
-        let columns = ["IS_FINANCIAL", "AMOUNT", "LOV_MASTER", "LOV_DETAIL", "LOV_SUBDETAIL", "IS_EMP_RELATED", "RECOVERY_TYPE", "CLASSIFICATION"]
-        let values = [is_financial,loss_amount, "\(self.lov_master_table!.SERVER_ID_PK)", "\(self.lov_detail_table!.SERVER_ID_PK)", "\(self.lov_subdetail_table!.LOV_SUBDETL_ID)", employee_related, v_recovery_type, self.lov_classification!.SERVER_ID_PK]
+        let columns = ["IS_FINANCIAL", "AMOUNT", "LOV_MASTER", "LOV_DETAIL", "LOV_SUBDETAIL", "IS_EMP_RELATED", "RECOVERY_TYPE", "CLASSIFICATION", "TICKET_STATUS"]
+        let values = [is_financial,loss_amount, "\(self.lov_master_table!.SERVER_ID_PK)", "\(self.lov_detail_table!.SERVER_ID_PK)", "\(self.lov_subdetail_table!.LOV_SUBDETL_ID)", employee_related, v_recovery_type, self.lov_classification!.SERVER_ID_PK, IMS_Status_Inprogress_Hod]
         AppDelegate.sharedInstance.db?.updateTables(tableName: db_hr_request, columnName: columns, updateValue: values, onCondition: "SERVER_ID_PK = '\(self.ticket_request!.SERVER_ID_PK!)'", { _ in })
         
         let json = [
@@ -2657,8 +2675,8 @@ extension IMSViewUpdateRequestViewController {
                 v_recovery_type = recovery.SERVER_ID_PK
             }
         }
-        let columns = ["IS_FINANCIAL", "AMOUNT", "LOV_MASTER", "LOV_DETAIL", "LOV_SUBDETAIL", "IS_EMP_RELATED", "RECOVERY_TYPE", "CLASSIFICATION"]
-        let values = [is_financial,loss_amount, master_detail, detail_detail, sub_detail, employee_related, v_recovery_type, classification]
+        let columns = ["IS_FINANCIAL", "AMOUNT", "LOV_MASTER", "LOV_DETAIL", "LOV_SUBDETAIL", "IS_EMP_RELATED", "RECOVERY_TYPE", "CLASSIFICATION", "TICKET_STATUS"]
+        let values = [is_financial,loss_amount, master_detail, detail_detail, sub_detail, employee_related, v_recovery_type, classification, IMS_Status_Inprogress_Rm]
         AppDelegate.sharedInstance.db?.updateTables(tableName: db_hr_request, columnName: columns, updateValue: values, onCondition: "SERVER_ID_PK = '\(self.ticket_request!.SERVER_ID_PK!)'", { _ in })
         
         let json = [
@@ -2698,8 +2716,8 @@ extension IMSViewUpdateRequestViewController {
         }
         let is_switch = self.investigation_required_switch.isOn ? "1" : "0"
         
-        let columns = ["IS_INVESTIGATION"]
-        let values = [is_switch]
+        let columns = ["IS_INVESTIGATION", "TICKET_STATUS"]
+        let values = [is_switch, IMS_Status_Inprogress_Rhod]
         AppDelegate.sharedInstance.db?.updateTables(tableName: db_hr_request, columnName: columns, updateValue: values, onCondition: "SERVER_ID_PK = '\(self.ticket_request!.SERVER_ID_PK!)'", { _ in })
         
         let json = [
@@ -2734,8 +2752,8 @@ extension IMSViewUpdateRequestViewController {
                 return nil
             }
         }
-        let columns = ["DIR_SEC_ENDOR", "DIR_SEC_RECOM", "DIR_NOTIFY_EMAILS"]
-        let values = [self.endoresement_textview.text ?? "", self.recommendations_textview.text ?? "", self.email_textfield.text ?? ""]
+        let columns = ["DIR_SEC_ENDOR", "DIR_SEC_RECOM", "DIR_NOTIFY_EMAILS", "TICKET_STATUS"]
+        let values = [self.endoresement_textview.text ?? "", self.recommendations_textview.text ?? "", self.email_textfield.text ?? "", IMS_Status_Inprogress_Rds]
         AppDelegate.sharedInstance.db?.updateTables(tableName: db_hr_request, columnName: columns, updateValue: values, onCondition: "SERVER_ID_PK = '\(self.ticket_request!.SERVER_ID_PK!)'", { _ in })
         let json = [
             "hr_request": [

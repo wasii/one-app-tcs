@@ -29,11 +29,7 @@ class GrievanceRemarksHistoryViewController: BaseViewController {
         self.tableView.register(UINib(nibName: "GrievancesHistoryTableCell", bundle: nil), forCellReuseIdentifier: "GrievancesHistoryCell")
         self.tableView.estimatedRowHeight = 10.0
         self.tableView.rowHeight = UITableView.automaticDimension
-        
-//        let query = "SELECT HR_REMARKS FROM \(db_hr_request) WHERE SERVER_ID_PK = '\(ticket_id!)'"
-//        if let cr = AppDelegate.sharedInstance.db?.read_column(query: query) {
-//            closure_remarks = "\(cr)"
-//        }
+
         setupMainViewHeight()
         setupGrievanceRemarks { (count) in
             DispatchQueue.main.async {
@@ -146,18 +142,7 @@ class GrievanceRemarksHistoryViewController: BaseViewController {
             }).sorted(by: { (remarks1, remarks2) -> Bool in
                 remarks1.CREATED < remarks2.CREATED
             })
-//            if closure_remarks != "" {
-//                let temp = self.grievance_remarks!.last!
-//                temp_remarks.append(tbl_Grievance_Remarks(ID: temp.ID,
-//                                                          SERVER_ID_PK: temp.SERVER_ID_PK,
-//                                                          EMPL_NO: temp.EMPL_NO,
-//                                                          TICKET_ID: temp.TICKET_ID,
-//                                                          REMARKS: self.closure_remarks,
-//                                                          REF_ID: temp.REF_ID,
-//                                                          CREATED: temp.CREATED,
-//                                                          REMARKS_INPUT: "Closure Remarks",
-//                                                          REMARKS_SYNC: temp.REMARKS_SYNC))
-//            }
+            
             self.grievance_remarks = temp_remarks
             handler(self.grievance_remarks!.count)
             

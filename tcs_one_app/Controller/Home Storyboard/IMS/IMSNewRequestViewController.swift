@@ -19,6 +19,7 @@ class IMSNewRequestViewController: BaseViewController {
     
     @IBOutlet weak var employee_view: UIView!
     @IBOutlet weak var employee_id: MDCOutlinedTextField!
+    @IBOutlet weak var employee_search_btn: UIButton!
     
     @IBOutlet weak var employee_name: MDCOutlinedTextField!
     
@@ -124,22 +125,6 @@ class IMSNewRequestViewController: BaseViewController {
     }
     func setupMainViewHeight() {
         self.mainViewHeightConstraint.constant = 950
-//        switch UIDevice().type {
-//        case .iPhone5, .iPhone5S, .iPhone5C, .iPhoneSE, .iPhone6, .iPhone6Plus, .iPhone6S, .iPhone6SPlus, .iPhone7, .iPhone7Plus, .iPhone8, .iPhone8Plus, .iPhone12, .iPhone12Pro, .iPhone12Mini:
-//            self.mainViewHeightConstraint.constant = 890
-//            break
-//        case .iPhoneX, .iPhoneXR, .iPhoneXS, .iPhone11Pro:
-//            self.mainViewHeightConstraint.constant = 790
-//            break
-//        case .iPhone11, .iPhoneXSMax, .iPhone11ProMax:
-//            self.mainViewHeightConstraint.constant = 910
-//            break
-//        case .iPhone12ProMax:
-//            self.mainViewHeightConstraint.constant = 880
-//            break
-//        default:
-//            break
-//        }
     }
     func setupTextField() {
         self.loss_amount_view.isHidden = true
@@ -227,8 +212,13 @@ class IMSNewRequestViewController: BaseViewController {
                 self.employee_view.isHidden = true
             } else {
                 self.employee_name.isHidden = false
+                self.employee_search_btn.isEnabled = false
+                self.employee_id.text = "\(ticket.REQ_ID ?? 0)"
+                self.employee_id.isUserInteractionEnabled = false
+                
                 self.employee_name.text = "\(ticket.EMP_NAME!)"
                 self.employee_name.isUserInteractionEnabled = false
+                
                 self.incident_type_top_constraint.constant = 90
                 self.financial_top_constraint.constant = 93
                 
