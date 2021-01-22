@@ -129,7 +129,7 @@ class IMSNewRequestViewController: BaseViewController {
     func setupTextField() {
         self.loss_amount_view.isHidden = true
         incident_mode.label.textColor = UIColor.nativeRedColor()
-        incident_mode.label.text = "Incident Mode"
+        incident_mode.label.text = "*Incident Mode"
         incident_mode.placeholder = ""
         incident_mode.setOutlineColor(UIColor.nativeRedColor(), for: .normal)
         incident_mode.setOutlineColor(UIColor.nativeRedColor(), for: .editing)
@@ -148,34 +148,34 @@ class IMSNewRequestViewController: BaseViewController {
         employee_name.setOutlineColor(UIColor.nativeRedColor(), for: .editing)
         
         incident_type.label.textColor = UIColor.nativeRedColor()
-        incident_type.label.text = "Incident Type"
+        incident_type.label.text = "*Incident Type"
         incident_type.placeholder = ""
         incident_type.setOutlineColor(UIColor.nativeRedColor(), for: .normal)
         incident_type.setOutlineColor(UIColor.nativeRedColor(), for: .editing)
         
         
         consinement_number.label.textColor = UIColor.nativeRedColor()
-        consinement_number.label.text = "Enter CN#"
+        consinement_number.label.text = "*Enter CN#"
         consinement_number.placeholder = ""
         consinement_number.setOutlineColor(UIColor.nativeRedColor(), for: .normal)
         consinement_number.setOutlineColor(UIColor.nativeRedColor(), for: .editing)
         
         city.label.textColor = UIColor.nativeRedColor()
-        city.label.text = "City"
+        city.label.text = "*City"
         city.text = "Select City"
         city.setOutlineColor(UIColor.nativeRedColor(), for: .normal)
         city.setOutlineColor(UIColor.nativeRedColor(), for: .editing)
         
         
         area.label.textColor = UIColor.nativeRedColor()
-        area.label.text = "Area"
+        area.label.text = "*Area"
         area.text = "Select Area"
         area.setOutlineColor(UIColor.nativeRedColor(), for: .normal)
         area.setOutlineColor(UIColor.nativeRedColor(), for: .editing)
         
         
         date.label.textColor = UIColor.nativeRedColor()
-        date.label.text = "Date"
+        date.label.text = "*Date"
         date.text = "Select Date"
         date.setOutlineColor(UIColor.nativeRedColor(), for: .normal)
         date.setOutlineColor(UIColor.nativeRedColor(), for: .editing)
@@ -185,7 +185,7 @@ class IMSNewRequestViewController: BaseViewController {
         
          
         loss_amount.label.textColor = UIColor.nativeRedColor()
-        loss_amount.label.text = "Loss Amount"
+        loss_amount.label.text = "*Loss Amount"
         loss_amount.placeholder = ""
         loss_amount.setOutlineColor(UIColor.nativeRedColor(), for: .normal)
         loss_amount.setOutlineColor(UIColor.nativeRedColor(), for: .editing)
@@ -542,7 +542,7 @@ class IMSNewRequestViewController: BaseViewController {
             return
         }
         if self.remarks.text == "" {
-            self.view.makeToast("Incident Detail is mandatory")
+            self.view.makeToast("Remarks is mandatory")
             return
         }
         

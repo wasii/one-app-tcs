@@ -329,14 +329,17 @@ class IMSDashboardViewController: BaseViewController {
                 logs.TICKET_STATUS == IMS_Status_Closed
             }).count
             
-            self.submittedProgressView.maxValue = CGFloat(data.count)
-            self.inreviewProgressView.maxValue = CGFloat(data.count)
-            self.closedProgressView.maxValue = CGFloat(data.count)
+            
+            
+            
             UIView.animate(withDuration: 0.5, delay: 0.0, options: .curveLinear, animations: {
+                self.submittedProgressView.maxValue = CGFloat(data.count)
                 self.submittedProgressView.value = CGFloat(pendingCount)
                 UIView.animate(withDuration: 0.5, delay: 0.1, options: .curveLinear, animations: {
+                    self.inreviewProgressView.maxValue = CGFloat(data.count)
                     self.inreviewProgressView.value = CGFloat(approvedCount)
                     UIView.animate(withDuration: 0.5, delay: 0.2, options: .curveLinear, animations: {
+                        self.closedProgressView.maxValue = CGFloat(data.count)
                         self.closedProgressView.value = CGFloat(rejectedCount)
                     }, completion: nil)
                 }, completion: nil)
@@ -728,6 +731,12 @@ extension IMSDashboardViewController: DateSelectionDelegate {
     
     func requestModeSelected(selected_query: String) {
         self.filterType = selected_query
+        if selected_query == "All" {
+            allRequestBtn.setTitle("All Requests", for: .normal)
+        } else {
+            allRequestBtn.setTitle(selected_query, for: .normal)
+        }
+        
         self.setupJSON(numberOfDays: self.numberOfDays, startday: self.startday, endday: self.endday)
     }
 }

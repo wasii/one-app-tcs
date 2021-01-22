@@ -38,6 +38,14 @@ class IncidentInvestigationViewController: BaseViewController {
     @IBOutlet weak var opinions_textview: UITextView!
     @IBOutlet weak var opinions_wordcounter: UILabel!
     
+    @IBOutlet weak var es_view: UIView!
+    @IBOutlet weak var es_textview: UITextView!
+    @IBOutlet weak var es_wordcounter: UILabel!
+    
+    @IBOutlet weak var recommendation_view: UIView!
+    @IBOutlet weak var recommendation_textview: UITextView!
+    @IBOutlet weak var recommendation_wordcounter: UILabel!
+    
     var ticket: tbl_Hr_Request_Logs?
     var isEditable = false
     
@@ -182,6 +190,25 @@ class IncidentInvestigationViewController: BaseViewController {
             }
         } else {
             self.o_view.isHidden = true
+        }
+        if AppDelegate.sharedInstance.db!.read_tbl_UserPermission(permission: IMS_View_Executive_Summary).count > 0 {
+//            "HO_SEC_SUMMARY", "HO_SEC_RECOM"
+            if ticket?.HO_SEC_SUMMARY == ""  {
+                self.es_view.isHidden = true
+            } else {
+                self.es_view.isHidden = false
+                self.es_textview.text = ticket?.HO_SEC_SUMMARY ?? ""
+                self.es_wordcounter.text = "\(ticket?.HO_SEC_SUMMARY?.count ?? 0)/200"
+            }
+        }
+        if AppDelegate.sharedInstance.db!.read_tbl_UserPermission(permission: IMS_View_HS_Recommendation).count > 0 {
+            if ticket?.HO_SEC_RECOM == "" {
+                self.recommendation_view.isHidden = true
+            } else {
+                self.recommendation_view.isHidden = false
+                self.recommendation_textview.text = ticket?.HO_SEC_RECOM ?? ""
+                self.recommendation_wordcounter.text = "\(ticket?.HO_SEC_RECOM?.count ?? 0)/200"
+            }
         }
     }
     

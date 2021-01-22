@@ -246,6 +246,14 @@ var ticket_request: tbl_Hr_Request_Logs?
             if havePermissionToEdit {
                 self.title = "Update Request"
                 self.headingLabel.text = "Update Request"
+                
+                classification_textfield.label.text = "*Classification"
+                incident_1_textfield.label.text = "*Incident Level 1"
+                incident_2_textfield.label.text = "*Incident Level 2"
+                incident_3_textfield.label.text = "*Incident Level 3"
+                incident_loss_amount.label.text = "*Loss Amount"
+                incident_recovery_type.label.text = "*Recovery Type"
+                
                 let remarks_permission = AppDelegate.sharedInstance.db?.read_tbl_UserPermission(permission: IMS_Add_Remarks_Line_Manager).count
                 let file_attachment_permission = AppDelegate.sharedInstance.db?.read_tbl_UserPermission(permission: IMS_IMS_Add_Files_Line_Manager).count
                 
@@ -282,6 +290,8 @@ var ticket_request: tbl_Hr_Request_Logs?
         }
         if IMS_Inprogress_Hod == current_user {
             if havePermissionToEdit {
+                self.title = "Update Request"
+                self.headingLabel.text = "Update Request"
                 self.investigation_required_view.isHidden = false
                 self.investigation_required_switch.isUserInteractionEnabled = true
                 let remarks_permission = AppDelegate.sharedInstance.db?.read_tbl_UserPermission(permission: IMS_Add_Remarks_Department_Head).count
@@ -296,6 +306,8 @@ var ticket_request: tbl_Hr_Request_Logs?
                     attachment_view.isHidden = false
                 }
             } else {
+                self.title = "View Request"
+                self.headingLabel.text = "View Request"
                 self.investigation_required_view.isHidden = false
                 if self.ticket_request!.IS_INVESTIGATION == 1 {
                     self.investigation_required_switch.isOn = true
@@ -316,6 +328,10 @@ var ticket_request: tbl_Hr_Request_Logs?
             self.assigned_to_view.isHidden = false
             
             if havePermissionToEdit {
+                self.title = "Update Request"
+                self.headingLabel.text = "Update Request"
+                self.area_textfield.label.text = "*Area "
+                self.assigned_to_textfield.label.text = "*Assigned To "
                 self.area_textfield.delegate = self
                 self.assigned_to_textfield.delegate = self
                 
@@ -323,6 +339,8 @@ var ticket_request: tbl_Hr_Request_Logs?
                 self.assigned_to_textfield.tag = ASSIGNED_TO_TAG
                 
             } else {
+                self.title = "View Request"
+                self.headingLabel.text = "View Request"
                 self.area_textfield.isUserInteractionEnabled = false
                 self.area_textfield.label.text = "Area"
                 if let area = AppDelegate.sharedInstance.db?.read_tbl_area(query: "SELECT * FROM \(db_lov_area) WHERE SERVER_ID_PK = '\(self.ticket_request!.AREA!)'").first {
@@ -349,6 +367,8 @@ var ticket_request: tbl_Hr_Request_Logs?
         
         if IMS_Inprogress_As == "\(current_user)" {
             if havePermissionToEdit {
+                self.title = "Update Request"
+                self.headingLabel.text = "Update Request"
                 self.remarks_attachment_stackview.isHidden = true
                 let addRemarks = AppDelegate.sharedInstance.db?.read_tbl_UserPermission(permission: IMS_Add_Remarks_Area_Security)
                 let addFiles   = AppDelegate.sharedInstance.db?.read_tbl_UserPermission(permission: IMS_Add_Files_Area_Security)
@@ -364,6 +384,8 @@ var ticket_request: tbl_Hr_Request_Logs?
                 self.showEnterDetailLabel.text = "Enter Details"
                 
             } else {
+                self.title = "View Request"
+                self.headingLabel.text = "View Request"
                 self.forwardBtn.isHidden = true
                 self.rejectBtn.isHidden = true
                 self.showEnterDetailLabel.text = "Show Details"
@@ -376,6 +398,8 @@ var ticket_request: tbl_Hr_Request_Logs?
             
             
             if havePermissionToEdit {
+                self.title = "Update Request"
+                self.headingLabel.text = "Update Request"
                 self.remarks_attachment_stackview.isHidden = true
                 let addRemarks = AppDelegate.sharedInstance.db?.read_tbl_UserPermission(permission: IMS_Add_Remarks_Head_Security)
                 let addFiles   = AppDelegate.sharedInstance.db?.read_tbl_UserPermission(permission: IMS_Add_Files_Head_Security)
@@ -394,6 +418,8 @@ var ticket_request: tbl_Hr_Request_Logs?
                 self.recommendations_textview.delegate = self
                 self.executive_summary_textview.delegate = self
             } else {
+                self.title = "View Request"
+                self.headingLabel.text = "View Request"
                 self.executive_summary_textview.isUserInteractionEnabled = false
                 self.recommendations_textview.isUserInteractionEnabled = false
                 
@@ -411,6 +437,8 @@ var ticket_request: tbl_Hr_Request_Logs?
             
             self.email_view.isHidden = false
             if havePermissionToEdit {
+                self.title = "Update Request"
+                self.headingLabel.text = "Update Request"
                 self.remarks_attachment_stackview.isHidden = true
                 let addRemarks = AppDelegate.sharedInstance.db?.read_tbl_UserPermission(permission: IMS_Add_Remarks_Director_Security)
                 let addFiles   = AppDelegate.sharedInstance.db?.read_tbl_UserPermission(permission: IMS_Add_Files_Director_Security)
@@ -429,6 +457,8 @@ var ticket_request: tbl_Hr_Request_Logs?
                 self.endoresement_textview.delegate = self
                 self.recommendations_textview.delegate = self
             } else {
+                self.title = "View Request"
+                self.headingLabel.text = "View Request"
                 self.endoresement_textview.isUserInteractionEnabled = false
                 self.recommendations_textview.isUserInteractionEnabled = false
                 
@@ -448,6 +478,8 @@ var ticket_request: tbl_Hr_Request_Logs?
             }
             self.claim_reference_number_textfield.text = "\(ticket_request?.INS_CLAIM_REFNO ?? "")"
             if havePermissionToEdit {
+                self.title = "Update Request"
+                self.headingLabel.text = "Update Request"
                 self.remarks_attachment_stackview.isHidden = true
                 let addRemarks = AppDelegate.sharedInstance.db?.read_tbl_UserPermission(permission: IMS_Add_Remarks_Financial_Services)
                 let addFiles   = AppDelegate.sharedInstance.db?.read_tbl_UserPermission(permission: IMS_Add_Files_Financial_Services)
@@ -464,6 +496,8 @@ var ticket_request: tbl_Hr_Request_Logs?
                 self.claim_reference_number_textfield.isUserInteractionEnabled = true
                 
             } else {
+                self.title = "View Request"
+                self.headingLabel.text = "View Request"
                 self.claim_reference_number_textfield.isUserInteractionEnabled = false
                 self.insurance_claimable_switch.isOn = true
                 self.forwardBtn.isHidden = true
@@ -480,6 +514,8 @@ var ticket_request: tbl_Hr_Request_Logs?
             }
             self.ins_claim_reference_number_textfield.text = "\(self.ticket_request?.INS_CLAIMED_AMOUNT ?? 0.0)"
             if havePermissionToEdit {
+                self.title = "Update Request"
+                self.headingLabel.text = "Update Request"
                 self.remarks_attachment_stackview.isHidden = true
                 let addRemarks = AppDelegate.sharedInstance.db?.read_tbl_UserPermission(permission: IMS_Add_Remarks_Financial_Services)
                 let addFiles   = AppDelegate.sharedInstance.db?.read_tbl_UserPermission(permission: IMS_Add_Files_Financial_Services)
@@ -494,6 +530,8 @@ var ticket_request: tbl_Hr_Request_Logs?
                 }
                 self.ins_claim_reference_number_textfield.isUserInteractionEnabled = true
             } else {
+                self.title = "View Request"
+                self.headingLabel.text = "View Request"
                 self.ins_claim_reference_number_textfield.isUserInteractionEnabled = false
                 self.ins_insurance_claimable_switch.isOn = true
                 self.forwardBtn.isHidden = true
@@ -516,6 +554,8 @@ var ticket_request: tbl_Hr_Request_Logs?
             }
             
             if havePermissionToEdit {
+                self.title = "Update Request"
+                self.headingLabel.text = "Update Request"
                 self.hr_reference_number_textfield.isUserInteractionEnabled = true
                 self.hr_status_textfield.isUserInteractionEnabled = true
                 
@@ -534,6 +574,8 @@ var ticket_request: tbl_Hr_Request_Logs?
                     attachment_view.isHidden = false
                 }
             } else {
+                self.title = "View Request"
+                self.headingLabel.text = "View Request"
                 self.hr_reference_number_textfield.isUserInteractionEnabled = false
                 self.hr_status_textfield.isUserInteractionEnabled = false
                 self.forwardBtn.isHidden = true
@@ -554,6 +596,8 @@ var ticket_request: tbl_Hr_Request_Logs?
                 self.hr_status_textfield.text = self.ticket_request?.HR_STATUS ?? ""
             }
             if havePermissionToEdit {
+                self.title = "Update Request"
+                self.headingLabel.text = "Update Request"
                 self.hr_reference_number_textfield.isUserInteractionEnabled = true
                 self.hr_status_textfield.isUserInteractionEnabled = true
                 
@@ -572,6 +616,8 @@ var ticket_request: tbl_Hr_Request_Logs?
                     attachment_view.isHidden = false
                 }
             } else {
+                self.title = "View Request"
+                self.headingLabel.text = "View Request"
                 self.hr_reference_number_textfield.isUserInteractionEnabled = false
                 self.hr_status_textfield.isUserInteractionEnabled = false
                 self.forwardBtn.isHidden = true
@@ -595,6 +641,8 @@ var ticket_request: tbl_Hr_Request_Logs?
             
             self.hr_status_textfield.text = self.ticket_request?.HR_STATUS ?? ""
             if havePermissionToEdit {
+                self.title = "Update Request"
+                self.headingLabel.text = "Update Request"
                 self.risk_remarks_textview.delegate = self
                 self.closure_remarks_textview.delegate = self
                 self.type_of_risk_textfield.delegate = self
@@ -615,7 +663,8 @@ var ticket_request: tbl_Hr_Request_Logs?
                     attachment_view.isHidden = false
                 }
             } else {
-                
+                self.title = "View Request"
+                self.headingLabel.text = "View Request"
                 self.claim_defined_switch.isEnabled = false
                 self.risk_remarks_textview.text = self.ticket_request!.RISK_REMARKS ?? ""
                 self.risk_remarks_textview.isUserInteractionEnabled = false
@@ -1949,11 +1998,13 @@ extension IMSViewUpdateRequestViewController: IMSUpdateRequestDelegate {
         self.lov_financial = financial
         if financial.TYPE == "Financial" {
             UIView.animate(withDuration: 0.2) {
+                self.incident_loss_type.text = financial.TYPE
                 self.loss_amount_stackview.isHidden = false
                 self.view.layoutIfNeeded()
             }
         } else {
             UIView.animate(withDuration: 0.2) {
+                self.incident_loss_type.text = financial.TYPE
                 self.loss_amount_stackview.isHidden = true
                 self.view.layoutIfNeeded()
             }
@@ -1970,7 +2021,8 @@ extension IMSViewUpdateRequestViewController: IMSUpdateRequestDelegate {
         self.area_textfield.text = area.AREA_NAME
         
         self.lov_assigned_to = nil
-        self.assigned_to_textfield.text = ""
+        self.assigned_to_textfield.label.text = "*Assigned To "
+        self.assigned_to_textfield.text = "Select Assigned To"
     }
     
     func updateAssignedTo(assigned_to: tbl_lov_area_security) {
