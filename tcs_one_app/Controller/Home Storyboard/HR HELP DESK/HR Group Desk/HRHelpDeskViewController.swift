@@ -115,10 +115,10 @@ class HRHelpDeskViewController: BaseViewController, ChartViewDelegate {
         setupPermissions()
 
         self.tableView.register(UINib(nibName: "RequestListingTableCell", bundle: nil), forCellReuseIdentifier: "RequestListingCell")
-        self.tableView.rowHeight = 80
+        self.tableView.rowHeight = 100
         
         self.filteredTableView.register(UINib(nibName: "RequestListingTableCell", bundle: nil), forCellReuseIdentifier: "RequestListingCell")
-        self.filteredTableView.rowHeight = 80
+        self.filteredTableView.rowHeight = 100
         
         self.permissionsTableView.register(UINib(nibName: "ModulePermissionsTableCell", bundle: nil), forCellReuseIdentifier: "ModulePermissionsCell")
         self.permissionsTableView.rowHeight = 70
@@ -207,7 +207,7 @@ class HRHelpDeskViewController: BaseViewController, ChartViewDelegate {
     func setupHeightView() {
         self.mainViewHeightConstraint.constant -= self.tableViewHeightConstraint.constant
         self.tableViewHeightConstraint.constant = 0
-        self.tableViewHeightConstraint.constant = CGFloat((self.tbl_request_logs!.count * 80) + 20)
+        self.tableViewHeightConstraint.constant = CGFloat((self.tbl_request_logs!.count * 100) + 20)
         self.mainViewHeightConstraint.constant +=  self.tableViewHeightConstraint.constant
         
         switch UIDevice().type {
@@ -462,7 +462,7 @@ class HRHelpDeskViewController: BaseViewController, ChartViewDelegate {
             
             self.mainViewHeightConstraint.constant -= self.tableViewHeightConstraint.constant
             self.tableViewHeightConstraint.constant = 0
-            self.tableViewHeightConstraint.constant = CGFloat((self.tbl_request_logs!.count * 80) + 50)
+            self.tableViewHeightConstraint.constant = CGFloat((self.tbl_request_logs!.count * 100) + 50)
             self.mainViewHeightConstraint.constant +=  self.tableViewHeightConstraint.constant
             
             return
@@ -497,7 +497,7 @@ class HRHelpDeskViewController: BaseViewController, ChartViewDelegate {
         
         self.mainViewHeightConstraint.constant -= self.tableViewHeightConstraint.constant
         self.tableViewHeightConstraint.constant = 0
-        self.tableViewHeightConstraint.constant = CGFloat((self.filtered_data!.count * 80) + 50)
+        self.tableViewHeightConstraint.constant = CGFloat((self.filtered_data!.count * 100) + 50)
         self.mainViewHeightConstraint.constant +=  self.tableViewHeightConstraint.constant
     }
     
@@ -547,7 +547,7 @@ class HRHelpDeskViewController: BaseViewController, ChartViewDelegate {
         self.filteredTableView.reloadData()
         
         self.filteredViewHeightConstraint.constant = 0
-        self.filteredViewHeightConstraint.constant = CGFloat(self.date_specific_tbl_request_logs!.count * 80) + 10
+        self.filteredViewHeightConstraint.constant = CGFloat(self.date_specific_tbl_request_logs!.count * 100) + 10
         self.mainViewHeightConstraint.constant += self.filteredViewHeightConstraint.constant
     }
 }
@@ -614,6 +614,9 @@ extension HRHelpDeskViewController: UITableViewDataSource, UITableViewDelegate {
                         cell.status.textColor = UIColor.rejectedColor()
                     }
                     
+                    //HR FEEDBACK
+                    cell.ticketID.text = "\(data.SERVER_ID_PK!)"
+                    //HR FEEDBACK
                     cell.type.text = "HR"
                     return cell
                 }
@@ -631,6 +634,10 @@ extension HRHelpDeskViewController: UITableViewDataSource, UITableViewDelegate {
             cell.mainHeading.text = data!.MASTER_QUERY!
             cell.subHeading.text = data!.DETAIL_QUERY!
             cell.date.text = data!.CREATED_DATE?.dateSeperateWithT ?? ""
+            
+            //HR FEEDBACK
+            cell.ticketID.text = "\(data!.SERVER_ID_PK!)"
+            //HR FEEDBACK
             
             if data!.TICKET_STATUS == "Pending" || data!.TICKET_STATUS == "pending" {
                 cell.status.text = "Pending"

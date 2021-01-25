@@ -46,6 +46,14 @@ class IncidentInvestigationViewController: BaseViewController {
     @IBOutlet weak var recommendation_textview: UITextView!
     @IBOutlet weak var recommendation_wordcounter: UILabel!
     
+    @IBOutlet weak var endoresement_view: UIView!
+    @IBOutlet weak var endorsement_textview: UITextView!
+    @IBOutlet weak var endoresement_wordcounter: UILabel!
+    
+    @IBOutlet weak var ds_recommendation_view: UIView!
+    @IBOutlet weak var ds_recommendation_textview: UITextView!
+    @IBOutlet weak var ds_recommendation_wordcounter: UILabel!
+    
     var ticket: tbl_Hr_Request_Logs?
     var isEditable = false
     
@@ -191,8 +199,9 @@ class IncidentInvestigationViewController: BaseViewController {
         } else {
             self.o_view.isHidden = true
         }
+        
+        //HS
         if AppDelegate.sharedInstance.db!.read_tbl_UserPermission(permission: IMS_View_Executive_Summary).count > 0 {
-//            "HO_SEC_SUMMARY", "HO_SEC_RECOM"
             if ticket?.HO_SEC_SUMMARY == ""  {
                 self.es_view.isHidden = true
             } else {
@@ -208,6 +217,26 @@ class IncidentInvestigationViewController: BaseViewController {
                 self.recommendation_view.isHidden = false
                 self.recommendation_textview.text = ticket?.HO_SEC_RECOM ?? ""
                 self.recommendation_wordcounter.text = "\(ticket?.HO_SEC_RECOM?.count ?? 0)/200"
+            }
+        }
+        
+        //DS
+        if AppDelegate.sharedInstance.db!.read_tbl_UserPermission(permission: IMS_View_Endorsement).count > 0 {
+            if ticket?.DIR_SEC_ENDOR == ""  {
+                self.endoresement_view.isHidden = true
+            } else {
+                self.endoresement_view.isHidden = false
+                self.endorsement_textview.text = ticket?.DIR_SEC_ENDOR ?? ""
+                self.endoresement_wordcounter.text = "\(ticket?.DIR_SEC_ENDOR?.count ?? 0)/200"
+            }
+        }
+        if AppDelegate.sharedInstance.db!.read_tbl_UserPermission(permission: IMS_View_DS_Recommendation).count > 0 {
+            if ticket?.DIR_SEC_RECOM == "" {
+                self.ds_recommendation_view.isHidden = true
+            } else {
+                self.ds_recommendation_view.isHidden = false
+                self.ds_recommendation_textview.text = ticket?.DIR_SEC_RECOM ?? ""
+                self.ds_recommendation_wordcounter.text = "\(ticket?.DIR_SEC_RECOM?.count ?? 0)/200"
             }
         }
     }

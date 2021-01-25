@@ -71,7 +71,7 @@ class WatchAllRequestsViewController: BaseViewController {
         self.temp_logs = self.tbl_request_logs
         self.makeTopCornersRounded(roundView: self.mainVIew)
         self.tableView.register(UINib(nibName: "RequestListingTableCell", bundle: nil), forCellReuseIdentifier: "RequestListingCell")
-        self.tableView.rowHeight = 80
+        self.tableView.rowHeight = 100
         
         if let _ = dateHeading {
             self.dateLabelButton.setTitle(self.dateHeading!, for: .normal)
@@ -111,18 +111,18 @@ class WatchAllRequestsViewController: BaseViewController {
             break
         }
         
-        if self.mainViewHeightConstraint.constant < CGFloat(self.tbl_request_logs!.count * 80) {
+        if self.mainViewHeightConstraint.constant < CGFloat(self.tbl_request_logs!.count * 100) {
             self.mainViewHeightConstraint.constant = 0
-            self.mainViewHeightConstraint.constant += CGFloat(self.tbl_request_logs!.count * 80) + 300
+            self.mainViewHeightConstraint.constant += CGFloat(self.tbl_request_logs!.count * 100) + 300
         }
     }
     
     func setupTableViewHeight(isFiltered: Bool) {
         var height: CGFloat = 0.0
         if isFiltered {
-            height = CGFloat((filtered_table!.count * 80) + 300)
+            height = CGFloat((filtered_table!.count * 100) + 300)
         } else {
-            height = CGFloat((tbl_request_logs!.count * 80) + 300)
+            height = CGFloat((tbl_request_logs!.count * 100) + 300)
         }
         self.mainViewHeightConstraint.constant = 300
         switch UIDevice().type {
@@ -412,6 +412,9 @@ extension WatchAllRequestsViewController: UITableViewDelegate, UITableViewDataSo
         cell.mainHeading.text = data!.MASTER_QUERY!
         cell.subHeading.text = data!.DETAIL_QUERY!
         cell.date.text = data!.CREATED_DATE?.dateSeperateWithT ?? ""
+        //HR FEEDBACK
+        cell.ticketID.text = "\(data!.SERVER_ID_PK!)"
+        //HR FEEDBACK
         
         switch CONSTANT_MODULE_ID {
         case 1:

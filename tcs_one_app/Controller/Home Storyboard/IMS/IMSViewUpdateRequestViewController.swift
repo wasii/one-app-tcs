@@ -39,6 +39,10 @@ var ticket_request: tbl_Hr_Request_Logs?
     @IBOutlet weak var incident_detail_classification: MDCOutlinedTextField!
     @IBOutlet weak var incident_detail_incident_level_3: MDCOutlinedTextField!
     
+    @IBOutlet weak var incident_detail_city_consignment_stackview: UIStackView!
+    @IBOutlet weak var incident_detail_consignment_view: UIView!
+    @IBOutlet weak var incident_detail_city_textfield: MDCOutlinedTextField!
+    @IBOutlet weak var incident_detail_consignment_textfield: MDCOutlinedTextField!
     
     @IBOutlet weak var incident_detail_loss_type: MDCOutlinedTextField!
     @IBOutlet weak var incident_detail_loss_amount_view: UIStackView!
@@ -176,6 +180,9 @@ var ticket_request: tbl_Hr_Request_Logs?
     var picker =            UIImagePickerController()
     var fileDownloadedURL:  URL?
     
+    
+    var isRejected = false
+    var willDBInsert = false
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = "View Request"
@@ -338,6 +345,21 @@ var ticket_request: tbl_Hr_Request_Logs?
                 self.area_textfield.tag = AREA_TAG
                 self.assigned_to_textfield.tag = ASSIGNED_TO_TAG
                 
+                
+                let remarks_permission = AppDelegate.sharedInstance.db?.read_tbl_UserPermission(permission: IMS_Add_Remarks_Central_Security).count
+                let file_attachment_permission = AppDelegate.sharedInstance.db?.read_tbl_UserPermission(permission: IMS_Add_Files_Central_Security).count
+                
+                remarks_attachment_stackview.isHidden = true
+                remarks_view.isHidden = true
+                attachment_view.isHidden = true
+                if remarks_permission! > 0 {
+                    remarks_attachment_stackview.isHidden = false
+                    remarks_view.isHidden = false
+                } else if file_attachment_permission! > 0 {
+                    remarks_attachment_stackview.isHidden = false
+                    attachment_view.isHidden = false
+                }
+                
             } else {
                 self.title = "View Request"
                 self.headingLabel.text = "View Request"
@@ -370,8 +392,11 @@ var ticket_request: tbl_Hr_Request_Logs?
                 self.title = "Update Request"
                 self.headingLabel.text = "Update Request"
                 self.remarks_attachment_stackview.isHidden = true
+                self.attachment_view.isHidden = true
+                self.remarks_view.isHidden = true
                 let addRemarks = AppDelegate.sharedInstance.db?.read_tbl_UserPermission(permission: IMS_Add_Remarks_Area_Security)
                 let addFiles   = AppDelegate.sharedInstance.db?.read_tbl_UserPermission(permission: IMS_Add_Files_Area_Security)
+                
                 
                 if addRemarks!.count > 0 {
                     remarks_attachment_stackview.isHidden = false
@@ -401,6 +426,8 @@ var ticket_request: tbl_Hr_Request_Logs?
                 self.title = "Update Request"
                 self.headingLabel.text = "Update Request"
                 self.remarks_attachment_stackview.isHidden = true
+                self.attachment_view.isHidden = true
+                self.remarks_view.isHidden = true
                 let addRemarks = AppDelegate.sharedInstance.db?.read_tbl_UserPermission(permission: IMS_Add_Remarks_Head_Security)
                 let addFiles   = AppDelegate.sharedInstance.db?.read_tbl_UserPermission(permission: IMS_Add_Files_Head_Security)
                 
@@ -440,6 +467,9 @@ var ticket_request: tbl_Hr_Request_Logs?
                 self.title = "Update Request"
                 self.headingLabel.text = "Update Request"
                 self.remarks_attachment_stackview.isHidden = true
+                self.attachment_view.isHidden = true
+                self.remarks_view.isHidden = true
+                
                 let addRemarks = AppDelegate.sharedInstance.db?.read_tbl_UserPermission(permission: IMS_Add_Remarks_Director_Security)
                 let addFiles   = AppDelegate.sharedInstance.db?.read_tbl_UserPermission(permission: IMS_Add_Files_Director_Security)
                 
@@ -461,6 +491,7 @@ var ticket_request: tbl_Hr_Request_Logs?
                 self.headingLabel.text = "View Request"
                 self.endoresement_textview.isUserInteractionEnabled = false
                 self.recommendations_textview.isUserInteractionEnabled = false
+                self.email_textfield.isUserInteractionEnabled = false
                 
                 self.endoresement_textview.text = self.ticket_request?.DIR_SEC_ENDOR ?? ""
                 self.recommendations_textview.text = self.ticket_request?.DIR_SEC_RECOM ?? ""
@@ -481,6 +512,9 @@ var ticket_request: tbl_Hr_Request_Logs?
                 self.title = "Update Request"
                 self.headingLabel.text = "Update Request"
                 self.remarks_attachment_stackview.isHidden = true
+                self.attachment_view.isHidden = true
+                self.remarks_view.isHidden = true
+                
                 let addRemarks = AppDelegate.sharedInstance.db?.read_tbl_UserPermission(permission: IMS_Add_Remarks_Financial_Services)
                 let addFiles   = AppDelegate.sharedInstance.db?.read_tbl_UserPermission(permission: IMS_Add_Files_Financial_Services)
                 
@@ -517,6 +551,9 @@ var ticket_request: tbl_Hr_Request_Logs?
                 self.title = "Update Request"
                 self.headingLabel.text = "Update Request"
                 self.remarks_attachment_stackview.isHidden = true
+                self.attachment_view.isHidden = true
+                self.remarks_view.isHidden = true
+                
                 let addRemarks = AppDelegate.sharedInstance.db?.read_tbl_UserPermission(permission: IMS_Add_Remarks_Financial_Services)
                 let addFiles   = AppDelegate.sharedInstance.db?.read_tbl_UserPermission(permission: IMS_Add_Files_Financial_Services)
                 
@@ -562,6 +599,9 @@ var ticket_request: tbl_Hr_Request_Logs?
                 self.hr_status_textfield.delegate = self
                 
                 self.remarks_attachment_stackview.isHidden = true
+                self.attachment_view.isHidden = true
+                self.remarks_view.isHidden = true
+                
                 let addRemarks = AppDelegate.sharedInstance.db?.read_tbl_UserPermission(permission: IMS_Add_Remarks_Human_Resources)
                 let addFiles   = AppDelegate.sharedInstance.db?.read_tbl_UserPermission(permission: IMS_Add_Files_Human_Resources)
                 
@@ -604,6 +644,9 @@ var ticket_request: tbl_Hr_Request_Logs?
                 self.hr_status_textfield.delegate = self
                 
                 self.remarks_attachment_stackview.isHidden = true
+                self.attachment_view.isHidden = true
+                self.remarks_view.isHidden = true
+                
                 let addRemarks = AppDelegate.sharedInstance.db?.read_tbl_UserPermission(permission: IMS_Add_Remarks_Finance)
                 let addFiles   = AppDelegate.sharedInstance.db?.read_tbl_UserPermission(permission: IMS_Add_Files_Finance)
                 
@@ -651,6 +694,9 @@ var ticket_request: tbl_Hr_Request_Logs?
                 self.hr_status_textfield.delegate = self
                 
                 self.remarks_attachment_stackview.isHidden = true
+                self.attachment_view.isHidden = true
+                self.remarks_view.isHidden = true
+                
                 let addRemarks = AppDelegate.sharedInstance.db?.read_tbl_UserPermission(permission: IMS_Add_Remarks_Controller)
                 let addFiles   = AppDelegate.sharedInstance.db?.read_tbl_UserPermission(permission: IMS_Add_Files_Controller)
                 
@@ -757,6 +803,16 @@ var ticket_request: tbl_Hr_Request_Logs?
         incident_detail_recovery_type.label.text = "Recovery Type"
         incident_detail_recovery_type.text = ""
         incident_detail_recovery_type.setOutlineColor(UIColor.nativeRedColor(), for: .normal)
+        
+        incident_detail_city_textfield.label.textColor = UIColor.nativeRedColor()
+        incident_detail_city_textfield.label.text = "City"
+        incident_detail_city_textfield.text = ""
+        incident_detail_city_textfield.setOutlineColor(UIColor.nativeRedColor(), for: .normal)
+        
+        incident_detail_consignment_textfield.label.textColor = UIColor.nativeRedColor()
+        incident_detail_consignment_textfield.label.text = "Consignment #"
+        incident_detail_consignment_textfield.text = ""
+        incident_detail_consignment_textfield.setOutlineColor(UIColor.nativeRedColor(), for: .normal)
         
         
         classification_textfield.label.textColor = UIColor.nativeRedColor()
@@ -917,49 +973,16 @@ var ticket_request: tbl_Hr_Request_Logs?
     }
     
     @objc func rejectBtnTapped() {
-        
-        if IMS_Submitted == current_user || IMS_Inprogress_Ro == current_user || IMS_Inprogress_Rhod == current_user {
-            if let params = setupRejectByLineManager() {
-                self.navigationController?.popViewController(animated: true)
-                NetworkCalls.updaterequestims(params: params) { success, response in
-                    if success {
-                        DispatchQueue.main.async {
-                            self.updateTicketRequest(response: response)
-                        }
-                    } else {
-                        print(success)
-                    }
-                }
-            }
+        self.isRejected = true
+        self.rejectBtn.isEnabled = false
+        let storyboard = UIStoryboard(name: "Popups", bundle: nil)
+        let controller = storyboard.instantiateViewController(withIdentifier: "ConfirmationPopViewController") as! ConfirmationPopViewController
+        controller.delegate = self
+        if #available(iOS 13.0, *) {
+            controller.modalPresentationStyle = .overFullScreen
         }
-        if IMS_Inprogress_Hod == current_user {
-            if let params = setupRejectByHOD() {
-                self.navigationController?.popViewController(animated: true)
-                NetworkCalls.updaterequestims(params: params) { success, response in
-                    if success {
-                        DispatchQueue.main.async {
-                            self.updateTicketRequest(response: response)
-                        }
-                    } else {
-                        print(success)
-                    }
-                }
-            }
-        }
-        if IMS_Inprogress_Ds == current_user {
-            if let params = setupRejectDirectorOfSecurity() {
-                self.navigationController?.popViewController(animated: true)
-                NetworkCalls.updaterequestims(params: params) { success, response in
-                    if success {
-                        DispatchQueue.main.async {
-                            self.updateTicketRequest(response: response)
-                        }
-                    } else {
-                        print(success)
-                    }
-                }
-            }
-        }
+        controller.modalTransitionStyle = .crossDissolve
+        Helper.topMostController().present(controller, animated: true, completion: nil)
     }
     
     @objc func openDownloadHistory() {
@@ -1019,8 +1042,13 @@ var ticket_request: tbl_Hr_Request_Logs?
             } else {
                 UIView.animate(withDuration: 0.2) {
                     self.incident_detail_view_hod.isHidden = false
+                    self.incident_detail_city_textfield.text = "\(AppDelegate.sharedInstance.db!.read_tbl_area(query: "SELECT * FROM \(db_lov_area) WHERE SERVER_ID_PK = '\(self.ticket_request!.AREA!)'").first!.AREA_NAME)"
+                    if self.ticket_request!.CNSGNO != "" {
+                        self.incident_detail_consignment_view.isHidden = false
+                        self.incident_detail_consignment_textfield.text = "\(self.ticket_request!.CNSGNO!)"
+                    }
                     if self.ticket_request!.IS_FINANCIAL == 1 {
-                        self.incident_detail_view_height_constraint.constant = 540
+                        self.incident_detail_view_height_constraint.constant = 610
                         self.incident_detail_loss_amount_view.isHidden = false
                         self.incident_detail_loss_amount.text = "\(self.ticket_request!.AMOUNT ?? 0.0)"
                         self.incident_detail_recovery_type.text = "\(self.ticket_request!.RECOVERY_TYPE!)"
@@ -1045,8 +1073,14 @@ var ticket_request: tbl_Hr_Request_Logs?
             } else {
                 UIView.animate(withDuration: 0.2) {
                     self.incident_detail_view_hod.isHidden = true
+                    self.incident_detail_city_textfield.text = "\(AppDelegate.sharedInstance.db!.read_tbl_area(query: "SELECT * FROM \(db_lov_area) WHERE SERVER_ID_PK = '\(self.ticket_request!.AREA!)'").first!.AREA_NAME)"
+                    
+                    if self.ticket_request!.CNSGNO != "" {
+                        self.incident_detail_consignment_view.isHidden = false
+                        self.incident_detail_consignment_textfield.text = "\(self.ticket_request!.CNSGNO!)"
+                    }
                     if self.ticket_request!.IS_FINANCIAL == 1 {
-                        self.incident_detail_view_height_constraint.constant = 540
+                        self.incident_detail_view_height_constraint.constant = 640
                         self.incident_detail_loss_amount_view.isHidden = false
                         self.incident_detail_loss_amount.text = "\(self.ticket_request!.AMOUNT ?? 0.0)"
                         self.incident_detail_recovery_type.text = "\(self.ticket_request!.RECOVERY_TYPE!)"
@@ -1056,7 +1090,6 @@ var ticket_request: tbl_Hr_Request_Logs?
                     self.view.layoutIfNeeded()
                 }
             }
-            
         }
     }
     @IBAction func incidentInvestigationTapped(_ sender: Any) {
@@ -1088,172 +1121,87 @@ var ticket_request: tbl_Hr_Request_Logs?
     }
     
     @IBAction func forwardBtnTapped(_ sender: Any) {
-        if current_user == IMS_Inprogress_Ca {
-            if let params = self.setupController() {
-                self.navigationController?.popViewController(animated: true)
-                NetworkCalls.updaterequestims(params: params) { (success, response) in
-                    if success {
-                        DispatchQueue.main.async {
-                            self.updateTicketRequest(response: response)
-                        }
-                    } else {
-                        print(success)
-                    }
-                }
-            }
-            return
-        }
-        if current_user == IMS_Inprogress_Fi {
-            if let params = self.setupFinance() {
-                self.navigationController?.popViewController(animated: true)
-                NetworkCalls.updaterequestims(params: params) { (success, response) in
-                    if success {
-                        DispatchQueue.main.async {
-                            self.updateTicketRequest(response: response)
-                        }
-                    } else {
-                        print(success)
-                    }
-                }
-            }
-            return
-        }
-        if current_user == IMS_Inprogress_Hr {
-            if let params = self.setupHR() {
-                self.navigationController?.popViewController(animated: true)
-                NetworkCalls.updaterequestims(params: params) { (success, response) in
-                    if success {
-                        DispatchQueue.main.async {
-                            self.updateTicketRequest(response: response)
-                        }
-                    } else {
-                        print(success)
-                    }
-                }
-            }
-            return
-        }
-        if current_user == IMS_Inprogress_Ins {
-            self.navigationController?.popViewController(animated: true)
-            if let params = self.setupINSFinancialServices() {
-                NetworkCalls.updaterequestims(params: params) { (success, response) in
-                    if success {
-                        DispatchQueue.main.async {
-                            self.updateTicketRequest(response: response)
-                        }
-                    } else {
-                        print(success)
-                    }
-                }
-            }
-            return
-        }
-        if current_user == IMS_Inprogress_Fs {
-            self.navigationController?.popViewController(animated: true)
-            if let params = self.setupFinancialServices() {
-                NetworkCalls.updaterequestims(params: params) { (success, response) in
-                    if success {
-                        DispatchQueue.main.async {
-                            self.updateTicketRequest(response: response)
-                        }
-                    } else {
-                        print(success)
-                    }
-                }
-            }
-            return
-        }
-        if current_user == IMS_Inprogress_Ds {
-            self.navigationController?.popViewController(animated: true)
-            if let params = self.setupDirectorOfSecurity() {
-                NetworkCalls.updaterequestims(params: params) { (success, response) in
-                    if success {
-                        DispatchQueue.main.async {
-                            self.updateTicketRequest(response: response)
-                        }
-                    } else {
-                        print(success)
-                    }
-                }
-            }
-            return
-        }
-        if current_user == IMS_Inprogress_Hs {
-            if let params = self.setupHeadOfSecurity() {
-                self.navigationController?.popViewController(animated: true)
-                NetworkCalls.updaterequestims(params: params) { (success, response) in
-                    if success {
-                        DispatchQueue.main.async {
-                            self.updateTicketRequest(response: response)
-                        }
-                    } else {
-                        print(success)
-                    }
-                }
-            }
-            return
-        }
-        if current_user == IMS_Inprogress_As {
-            if let params = self.setupAreaSecurity() {
-                self.navigationController?.popViewController(animated: true)
-                NetworkCalls.updaterequestims(params: params) { (success, response) in
-                    if success {
-                        DispatchQueue.main.async {
-                            self.updateTicketRequest(response: response)
-                        }
-                    } else {
-                        print(success)
-                    }
-                }
-            }
-            return
-        }
         
-        if current_user == IMS_Inprogress_Cs {
-            if let params = self.setupCentralSecurity() {
-                self.navigationController?.popViewController(animated: true)
-                NetworkCalls.updaterequestims(params: params) { (success, response) in
-                    if success {
-                        DispatchQueue.main.async {
-                            self.updateTicketRequest(response: response)
-                        }
-                    } else {
-                        print(success)
-                    }
-                }
+        switch current_user {
+        case IMS_Submitted, IMS_Inprogress_Ro, IMS_Inprogress_Rhod:
+            guard let _ = setupLineManager() else {
+                return
             }
-            return
+            break
+        case IMS_Inprogress_Hod:
+            guard let _ = setupHeadOfDepartment() else {
+                return
+            }
+            break
+        case IMS_Inprogress_Cs:
+            guard let _ = setupCentralSecurity() else {
+                return
+            }
+            break
+        case IMS_Inprogress_As:
+            guard let _ = setupAreaSecurity() else {
+                return
+            }
+            break
+        case IMS_Inprogress_Hs, IMS_Inprogress_Rds:
+            guard let _ = setupHeadOfSecurity() else {
+                return
+            }
+            break
+        case IMS_Inprogress_Ds:
+            guard let _ = setupDirectorOfSecurity() else {
+                return
+            }
+            break
+        case IMS_Inprogress_Fs:
+            guard let _ = setupFinancialServices() else {
+                return
+            }
+            break
+        case IMS_Inprogress_Ins:
+            guard let _ = setupINSFinancialServices() else {
+                return
+            }
+            break
+        case IMS_Inprogress_Hr:
+            guard let _ = setupHR() else {
+                return
+            }
+            break
+        case IMS_Inprogress_Fi:
+            guard let _ = setupFinance() else {
+                return
+            }
+            break
+        case IMS_Inprogress_Ca:
+            guard let _ = setupController() else {
+                return
+            }
+            break
+        default:
+            break
+        }
+        self.forwardBtn.isEnabled = false
+        let storyboard = UIStoryboard(name: "Popups", bundle: nil)
+        let controller = storyboard.instantiateViewController(withIdentifier: "ConfirmationPopViewController") as! ConfirmationPopViewController
+        controller.delegate = self
+        if #available(iOS 13.0, *) {
+            controller.modalPresentationStyle = .overFullScreen
         }
         if current_user == IMS_Inprogress_Hod {
-            if let params = self.setupHeadOfDepartment() {
-                self.navigationController?.popViewController(animated: true)
-                NetworkCalls.updaterequestims(params: params) { success, response in
-                    if success {
-                        DispatchQueue.main.async {
-                            self.updateTicketRequest(response: response)
-                        }
-                    } else {
-                        print(success)
-                    }
-                }
-            }
-            return
-        }
-        if let params = self.setupLineManager() {
-            self.navigationController?.popViewController(animated: true)
-            NetworkCalls.updaterequestims(params: params) { success, response in
-                if success {
-                    DispatchQueue.main.async {
-                        self.updateTicketRequest(response: response)
-                    }
-                } else {
-                    print(success)
-                }
+            let is_investigation = self.investigation_required_switch.isOn ? true : false
+            
+            if is_investigation {
+                controller.heading = "Currently Investigation Required is On.\nAre you sure you want to proceed?"
+            } else {
+                controller.heading = "Currently Investigation Required is Off.\nAre you sure you want to proceed?"
             }
         }
+        
+        controller.modalTransitionStyle = .crossDissolve
+        Helper.topMostController().present(controller, animated: true, completion: nil)
     }
 }
-
 
 //MARK: Add Attachment METHODS
 extension IMSViewUpdateRequestViewController {
@@ -1755,12 +1703,12 @@ extension IMSViewUpdateRequestViewController: UITextFieldDelegate {
             let storyboard = UIStoryboard(name: "Popups", bundle: nil)
             let controller = storyboard.instantiateViewController(withIdentifier: "NewRequestListingViewController") as! NewRequestListingViewController
             
-            var query = ""//
-            if current_user == IMS_Inprogress_Ca {
-                query = "SELECT * FROM \(db_lov_hr_status) WHERE NAME = 'Close'"
-            } else {
-                query = "SELECT * FROM \(db_lov_hr_status)"
-            }
+            let query = "SELECT * FROM \(db_lov_hr_status)"
+//            if current_user == IMS_Inprogress_Ca {
+//                query = "SELECT * FROM \(db_lov_hr_status) WHERE NAME = 'Close'"
+//            } else {
+//
+//            }
             controller.hr_status = AppDelegate.sharedInstance.db?.read_tbl_hr_status(query: query)
             controller.heading = "Select Status"
             controller.isIMSUpdate = true
@@ -2101,17 +2049,18 @@ extension IMSViewUpdateRequestViewController {
                 return nil
             }
         }
-        let columns = ["IS_CONTROL_DEFINED", "RISK_REMARKS", "RISK_TYPE", "CONTROL_CATEGORY", "CONTROL_TYPE", "HR_STATUS", "HR_REMARKS", "TICKET_STATUS"]
-        let values = [control,
-                      self.risk_remarks_textview.text!,
-                      self.lov_risk_type!.SERVER_ID_PK,
-                      self.lov_category_control!.SERVER_ID_PK,
-                      self.lov_type_control!.SERVER_ID_PK,
-                      self.lov_hr_status!.SERVER_ID_PK,
-                      self.recommendations_textview.text!,
-                      IMS_Status_Closed]
-        AppDelegate.sharedInstance.db?.updateTables(tableName: db_hr_request, columnName: columns, updateValue: values, onCondition: "SERVER_ID_PK = '\(self.ticket_request!.SERVER_ID_PK!)'", { _ in })
-        
+        if willDBInsert {
+            let columns = ["IS_CONTROL_DEFINED", "RISK_REMARKS", "RISK_TYPE", "CONTROL_CATEGORY", "CONTROL_TYPE", "HR_STATUS", "HR_REMARKS", "TICKET_STATUS"]
+            let values = [control,
+                          self.risk_remarks_textview.text!,
+                          self.lov_risk_type!.SERVER_ID_PK,
+                          self.lov_category_control!.SERVER_ID_PK,
+                          self.lov_type_control!.SERVER_ID_PK,
+                          self.lov_hr_status!.SERVER_ID_PK,
+                          self.recommendations_textview.text!,
+                          IMS_Status_Closed]
+            AppDelegate.sharedInstance.db?.updateTables(tableName: db_hr_request, columnName: columns, updateValue: values, onCondition: "SERVER_ID_PK = '\(self.ticket_request!.SERVER_ID_PK!)'", { _ in })
+        }
         let json = [
             "hr_request": [
                 "access_token": UserDefaults.standard.string(forKey: USER_ACCESS_TOKEN)!,
@@ -2155,10 +2104,12 @@ extension IMSViewUpdateRequestViewController {
                 return nil
             }
         }
-        let columns = ["FINANCE_GL_NO", "HR_STATUS", "TICKET_STATUS"]
-        let values = [self.hr_reference_number_textfield.text!, self.lov_hr_status!.SERVER_ID_PK, IMS_Status_Inprogress_Ca]
-        AppDelegate.sharedInstance.db?.updateTables(tableName: db_hr_request, columnName: columns, updateValue: values, onCondition: "SERVER_ID_PK = '\(self.ticket_request!.SERVER_ID_PK!)'", { _ in })
         
+        if willDBInsert {
+            let columns = ["FINANCE_GL_NO", "HR_STATUS", "TICKET_STATUS"]
+            let values = [self.hr_reference_number_textfield.text!, self.lov_hr_status!.SERVER_ID_PK, IMS_Status_Inprogress_Ca]
+            AppDelegate.sharedInstance.db?.updateTables(tableName: db_hr_request, columnName: columns, updateValue: values, onCondition: "SERVER_ID_PK = '\(self.ticket_request!.SERVER_ID_PK!)'", { _ in })
+        }
         let json = [
             "hr_request": [
                 "access_token": UserDefaults.standard.string(forKey: USER_ACCESS_TOKEN)!,
@@ -2204,10 +2155,12 @@ extension IMSViewUpdateRequestViewController {
         } else {
             ticket_status = IMS_Status_Inprogress_Ca
         }
-        let columns = ["HR_REF_NO", "HR_STATUS", "TICKET_STATUS"]
-        let values = [self.hr_reference_number_textfield.text!, self.lov_hr_status!.SERVER_ID_PK, ticket_status]
-        AppDelegate.sharedInstance.db?.updateTables(tableName: db_hr_request, columnName: columns, updateValue: values, onCondition: "SERVER_ID_PK = '\(self.ticket_request!.SERVER_ID_PK!)'", { _ in })
         
+        if willDBInsert {
+            let columns = ["HR_REF_NO", "HR_STATUS", "TICKET_STATUS"]
+            let values = [self.hr_reference_number_textfield.text!, self.lov_hr_status!.SERVER_ID_PK, ticket_status]
+            AppDelegate.sharedInstance.db?.updateTables(tableName: db_hr_request, columnName: columns, updateValue: values, onCondition: "SERVER_ID_PK = '\(self.ticket_request!.SERVER_ID_PK!)'", { _ in })
+        }
         let json = [
             "hr_request": [
                 "access_token": UserDefaults.standard.string(forKey: USER_ACCESS_TOKEN)!,
@@ -2250,9 +2203,12 @@ extension IMSViewUpdateRequestViewController {
                 return nil
             }
         }
-        let columns = ["IS_INS_CLAIM_PROCESS", "INS_CLAIMED_AMOUNT", "TICKET_STATUS"]
-        let values = [is_insurance_claimable, claim_reference_number, IMS_Status_Inprogress_Hr]
-        AppDelegate.sharedInstance.db?.updateTables(tableName: db_hr_request, columnName: columns, updateValue: values, onCondition: "SERVER_ID_PK = '\(self.ticket_request!.SERVER_ID_PK!)'", { _ in })
+        
+        if willDBInsert {
+            let columns = ["IS_INS_CLAIM_PROCESS", "INS_CLAIMED_AMOUNT", "TICKET_STATUS"]
+            let values = [is_insurance_claimable, claim_reference_number, IMS_Status_Inprogress_Hr]
+            AppDelegate.sharedInstance.db?.updateTables(tableName: db_hr_request, columnName: columns, updateValue: values, onCondition: "SERVER_ID_PK = '\(self.ticket_request!.SERVER_ID_PK!)'", { _ in })
+        }
         let json = [
             "hr_request": [
                 "access_token": UserDefaults.standard.string(forKey: USER_ACCESS_TOKEN)!,
@@ -2310,10 +2266,11 @@ extension IMSViewUpdateRequestViewController {
         }
         
         
-        
-        let columns = ["INS_CLAIM_REFNO", "IS_INS_CLAIM_PROCESS", "TICKET_STATUS"]
-        let values = [claim_reference_number, is_insurance_claimable, ticket_status]
-        AppDelegate.sharedInstance.db?.updateTables(tableName: db_hr_request, columnName: columns, updateValue: values, onCondition: "SERVER_ID_PK = '\(self.ticket_request!.SERVER_ID_PK!)'", { _ in })
+        if willDBInsert {
+            let columns = ["INS_CLAIM_REFNO", "IS_INS_CLAIM_PROCESS", "TICKET_STATUS"]
+            let values = [claim_reference_number, is_insurance_claimable, ticket_status]
+            AppDelegate.sharedInstance.db?.updateTables(tableName: db_hr_request, columnName: columns, updateValue: values, onCondition: "SERVER_ID_PK = '\(self.ticket_request!.SERVER_ID_PK!)'", { _ in })
+        }
         let json = [
             "hr_request": [
                 "access_token": UserDefaults.standard.string(forKey: USER_ACCESS_TOKEN)!,
@@ -2383,9 +2340,11 @@ extension IMSViewUpdateRequestViewController {
             ticket_status = IMS_Status_Inprogress_Ca
         }
         
-        let columns = ["DIR_SEC_ENDOR", "DIR_SEC_RECOM", "DIR_NOTIFY_EMAILS", "TICKET_STATUS"]
-        let values = [self.endoresement_textview.text!, self.recommendations_textview.text!, self.email_textfield.text!, ticket_status]
-        AppDelegate.sharedInstance.db?.updateTables(tableName: db_hr_request, columnName: columns, updateValue: values, onCondition: "SERVER_ID_PK = '\(self.ticket_request!.SERVER_ID_PK!)'", { _ in })
+        if willDBInsert {
+            let columns = ["DIR_SEC_ENDOR", "DIR_SEC_RECOM", "DIR_NOTIFY_EMAILS", "TICKET_STATUS"]
+            let values = [self.endoresement_textview.text!, self.recommendations_textview.text!, self.email_textfield.text!, ticket_status]
+            AppDelegate.sharedInstance.db?.updateTables(tableName: db_hr_request, columnName: columns, updateValue: values, onCondition: "SERVER_ID_PK = '\(self.ticket_request!.SERVER_ID_PK!)'", { _ in })
+        }
         let json = [
             "hr_request": [
                 "access_token": UserDefaults.standard.string(forKey: USER_ACCESS_TOKEN)!,
@@ -2426,9 +2385,11 @@ extension IMSViewUpdateRequestViewController {
                 return nil
             }
         }
-        let columns = ["HO_SEC_SUMMARY", "HO_SEC_RECOM", "TICKET_STATUS"]
-        let values = [self.executive_summary_textview.text!, self.recommendations_textview.text!, IMS_Status_Inprogress_Ds]
-        AppDelegate.sharedInstance.db?.updateTables(tableName: db_hr_request, columnName: columns, updateValue: values, onCondition: "SERVER_ID_PK = '\(self.ticket_request!.SERVER_ID_PK!)'", { _ in })
+        if willDBInsert {
+            let columns = ["HO_SEC_SUMMARY", "HO_SEC_RECOM", "TICKET_STATUS"]
+            let values = [self.executive_summary_textview.text!, self.recommendations_textview.text!, IMS_Status_Inprogress_Ds]
+            AppDelegate.sharedInstance.db?.updateTables(tableName: db_hr_request, columnName: columns, updateValue: values, onCondition: "SERVER_ID_PK = '\(self.ticket_request!.SERVER_ID_PK!)'", { _ in })
+        }
         let json = [
             "hr_request": [
                 "access_token": UserDefaults.standard.string(forKey: USER_ACCESS_TOKEN)!,
@@ -2470,10 +2431,11 @@ extension IMSViewUpdateRequestViewController {
                 return nil
             }
         }
-        let columns = ["HO_SEC_SUMMARY", "HO_SEC_RECOM", "DIR_NOTIFY_EMAILS", "TICKET_STATUS"]
-        let values = [self.executive_summary_textview.text!, self.recommendations_textview.text!, IMS_Status_Inprogress_Hs]
-        AppDelegate.sharedInstance.db?.updateTables(tableName: db_hr_request, columnName: columns, updateValue: values, onCondition: "SERVER_ID_PK = '\(self.ticket_request!.SERVER_ID_PK!)'", { _ in })
-        
+        if willDBInsert {
+            let columns = ["HO_SEC_SUMMARY", "HO_SEC_RECOM", "DIR_NOTIFY_EMAILS", "TICKET_STATUS"]
+            let values = [self.executive_summary_textview.text!, self.recommendations_textview.text!, IMS_Status_Inprogress_Hs]
+            AppDelegate.sharedInstance.db?.updateTables(tableName: db_hr_request, columnName: columns, updateValue: values, onCondition: "SERVER_ID_PK = '\(self.ticket_request!.SERVER_ID_PK!)'", { _ in })
+        }
         let json = [
             "hr_request": [
                 "access_token": UserDefaults.standard.string(forKey: USER_ACCESS_TOKEN)!,
@@ -2505,7 +2467,7 @@ extension IMSViewUpdateRequestViewController {
     
     func setupHeadOfDepartment() -> [String:Any]? {
         if !self.remarks_view.isHidden {
-            if remarks_textview.text == "" {
+            if remarks_textview.text == "" || remarks_textview.text == ENTER_REMARKS{
                 self.view.makeToast("Remarks is mandatory")
                 return nil
             }
@@ -2566,10 +2528,11 @@ extension IMSViewUpdateRequestViewController {
             ]
         }
         
-        let columns = ["IS_INVESTIGATION", "TICKET_STATUS"]
-        let values = [is_switch, ticket_status]
-        AppDelegate.sharedInstance.db?.updateTables(tableName: db_hr_request, columnName: columns, updateValue: values, onCondition: "SERVER_ID_PK = '\(self.ticket_request!.SERVER_ID_PK!)'", { _ in })
-        
+        if willDBInsert {
+            let columns = ["IS_INVESTIGATION", "TICKET_STATUS"]
+            let values = [is_switch, ticket_status]
+            AppDelegate.sharedInstance.db?.updateTables(tableName: db_hr_request, columnName: columns, updateValue: values, onCondition: "SERVER_ID_PK = '\(self.ticket_request!.SERVER_ID_PK!)'", { _ in })
+        }
         let params = getAPIParameter(service_name: IMSUPDATE, request_body: json)
         return params
     }
@@ -2583,11 +2546,18 @@ extension IMSViewUpdateRequestViewController {
             self.view.makeToast("Assigned To is mandatory")
             return nil
         }
+        if !self.remarks_view.isHidden {
+            if remarks_textview.text == "" || remarks_textview.text == ENTER_REMARKS {
+                self.view.makeToast("Remarks is mandatory")
+                return nil
+            }
+        }
         
-        let columns = ["SEC_AREA", "AREA_SEC_EMP_NO", "TICKET_STATUS"]
-        let values = [self.lov_area!.SERVER_ID_PK, "\(self.lov_assigned_to!.EMP_NO)", IMS_Status_Inprogress_As]
-        AppDelegate.sharedInstance.db?.updateTables(tableName: db_hr_request, columnName: columns, updateValue: values, onCondition: "SERVER_ID_PK = '\(self.ticket_request!.SERVER_ID_PK!)'", { _ in })
-        
+        if willDBInsert {
+            let columns = ["SEC_AREA", "AREA_SEC_EMP_NO", "TICKET_STATUS"]
+            let values = [self.lov_area!.SERVER_ID_PK, "\(self.lov_assigned_to!.EMP_NO)", IMS_Status_Inprogress_As]
+            AppDelegate.sharedInstance.db?.updateTables(tableName: db_hr_request, columnName: columns, updateValue: values, onCondition: "SERVER_ID_PK = '\(self.ticket_request!.SERVER_ID_PK!)'", { _ in })
+        }
         let json = [
             "hr_request": [
                 "access_token": UserDefaults.standard.string(forKey: USER_ACCESS_TOKEN)!,
@@ -2655,10 +2625,11 @@ extension IMSViewUpdateRequestViewController {
                 }
             }
         }
-        let columns = ["IS_FINANCIAL", "AMOUNT", "LOV_MASTER", "LOV_DETAIL", "LOV_SUBDETAIL", "IS_EMP_RELATED", "RECOVERY_TYPE", "CLASSIFICATION", "TICKET_STATUS"]
-        let values = [is_financial,loss_amount, "\(self.lov_master_table!.SERVER_ID_PK)", "\(self.lov_detail_table!.SERVER_ID_PK)", "\(self.lov_subdetail_table!.LOV_SUBDETL_ID)", employee_related, v_recovery_type, self.lov_classification!.SERVER_ID_PK, IMS_Status_Inprogress_Hod]
-        AppDelegate.sharedInstance.db?.updateTables(tableName: db_hr_request, columnName: columns, updateValue: values, onCondition: "SERVER_ID_PK = '\(self.ticket_request!.SERVER_ID_PK!)'", { _ in })
-        
+        if self.willDBInsert {
+            let columns = ["IS_FINANCIAL", "AMOUNT", "LOV_MASTER", "LOV_DETAIL", "LOV_SUBDETAIL", "IS_EMP_RELATED", "RECOVERY_TYPE", "CLASSIFICATION", "TICKET_STATUS"]
+            let values = [is_financial,loss_amount, "\(self.lov_master_table!.SERVER_ID_PK)", "\(self.lov_detail_table!.SERVER_ID_PK)", "\(self.lov_subdetail_table!.LOV_SUBDETL_ID)", employee_related, v_recovery_type, self.lov_classification!.SERVER_ID_PK, IMS_Status_Inprogress_Hod]
+            AppDelegate.sharedInstance.db?.updateTables(tableName: db_hr_request, columnName: columns, updateValue: values, onCondition: "SERVER_ID_PK = '\(self.ticket_request!.SERVER_ID_PK!)'", { _ in })
+        }
         let json = [
             "hr_request": [
                 "access_token": UserDefaults.standard.string(forKey: USER_ACCESS_TOKEN)!,
@@ -2727,9 +2698,11 @@ extension IMSViewUpdateRequestViewController {
                 v_recovery_type = recovery.SERVER_ID_PK
             }
         }
-        let columns = ["IS_FINANCIAL", "AMOUNT", "LOV_MASTER", "LOV_DETAIL", "LOV_SUBDETAIL", "IS_EMP_RELATED", "RECOVERY_TYPE", "CLASSIFICATION", "TICKET_STATUS"]
-        let values = [is_financial,loss_amount, master_detail, detail_detail, sub_detail, employee_related, v_recovery_type, classification, IMS_Status_Inprogress_Rm]
-        AppDelegate.sharedInstance.db?.updateTables(tableName: db_hr_request, columnName: columns, updateValue: values, onCondition: "SERVER_ID_PK = '\(self.ticket_request!.SERVER_ID_PK!)'", { _ in })
+        if willDBInsert {
+            let columns = ["IS_FINANCIAL", "AMOUNT", "LOV_MASTER", "LOV_DETAIL", "LOV_SUBDETAIL", "IS_EMP_RELATED", "RECOVERY_TYPE", "CLASSIFICATION", "TICKET_STATUS"]
+            let values = [is_financial,loss_amount, master_detail, detail_detail, sub_detail, employee_related, v_recovery_type, classification, IMS_Status_Inprogress_Rm]
+            AppDelegate.sharedInstance.db?.updateTables(tableName: db_hr_request, columnName: columns, updateValue: values, onCondition: "SERVER_ID_PK = '\(self.ticket_request!.SERVER_ID_PK!)'", { _ in })
+        }
         
         let json = [
             "hr_request": [
@@ -2761,17 +2734,18 @@ extension IMSViewUpdateRequestViewController {
     
     func setupRejectByHOD() -> [String:Any]? {
         if !self.remarks_view.isHidden {
-            if remarks_textview.text == "" {
+            if remarks_textview.text == "" || remarks_textview.text == ENTER_REMARKS {
                 self.view.makeToast("Remarks is mandatory")
                 return nil
             }
         }
         let is_switch = self.investigation_required_switch.isOn ? "1" : "0"
         
-        let columns = ["IS_INVESTIGATION", "TICKET_STATUS"]
-        let values = [is_switch, IMS_Status_Inprogress_Rhod]
-        AppDelegate.sharedInstance.db?.updateTables(tableName: db_hr_request, columnName: columns, updateValue: values, onCondition: "SERVER_ID_PK = '\(self.ticket_request!.SERVER_ID_PK!)'", { _ in })
-        
+        if willDBInsert {
+            let columns = ["IS_INVESTIGATION", "TICKET_STATUS"]
+            let values = [is_switch, IMS_Status_Inprogress_Rhod]
+            AppDelegate.sharedInstance.db?.updateTables(tableName: db_hr_request, columnName: columns, updateValue: values, onCondition: "SERVER_ID_PK = '\(self.ticket_request!.SERVER_ID_PK!)'", { _ in })
+        }
         let json = [
             "hr_request": [
                 "access_token": UserDefaults.standard.string(forKey: USER_ACCESS_TOKEN)!,
@@ -2804,9 +2778,11 @@ extension IMSViewUpdateRequestViewController {
                 return nil
             }
         }
-        let columns = ["DIR_SEC_ENDOR", "DIR_SEC_RECOM", "DIR_NOTIFY_EMAILS", "TICKET_STATUS"]
-        let values = [self.endoresement_textview.text ?? "", self.recommendations_textview.text ?? "", self.email_textfield.text ?? "", IMS_Status_Inprogress_Rds]
-        AppDelegate.sharedInstance.db?.updateTables(tableName: db_hr_request, columnName: columns, updateValue: values, onCondition: "SERVER_ID_PK = '\(self.ticket_request!.SERVER_ID_PK!)'", { _ in })
+        if willDBInsert {
+            let columns = ["DIR_SEC_ENDOR", "DIR_SEC_RECOM", "DIR_NOTIFY_EMAILS", "TICKET_STATUS"]
+            let values = [self.endoresement_textview.text ?? "", self.recommendations_textview.text ?? "", self.email_textfield.text ?? "", IMS_Status_Inprogress_Rds]
+            AppDelegate.sharedInstance.db?.updateTables(tableName: db_hr_request, columnName: columns, updateValue: values, onCondition: "SERVER_ID_PK = '\(self.ticket_request!.SERVER_ID_PK!)'", { _ in })
+        }
         let json = [
             "hr_request": [
                 "access_token": UserDefaults.standard.string(forKey: USER_ACCESS_TOKEN)!,
@@ -2901,9 +2877,226 @@ extension IMSViewUpdateRequestViewController: UpdateIncidentInvestigation {
 
 extension IMSViewUpdateRequestViewController: ConfirmationProtocol {
     func confirmationProtocol() {
-        
+        self.willDBInsert = true
+        if self.isRejected {
+            if IMS_Submitted == current_user || IMS_Inprogress_Ro == current_user || IMS_Inprogress_Rhod == current_user {
+                if let params = setupRejectByLineManager() {
+                    self.navigationController?.popViewController(animated: true)
+                    NetworkCalls.updaterequestims(params: params) { success, response in
+                        if success {
+                            DispatchQueue.main.async {
+                                self.updateTicketRequest(response: response)
+                            }
+                        } else {
+                            print(success)
+                        }
+                    }
+                }
+            }
+            if IMS_Inprogress_Hod == current_user {
+                if let params = setupRejectByHOD() {
+                    self.navigationController?.popViewController(animated: true)
+                    NetworkCalls.updaterequestims(params: params) { success, response in
+                        if success {
+                            DispatchQueue.main.async {
+                                self.updateTicketRequest(response: response)
+                            }
+                        } else {
+                            print(success)
+                        }
+                    }
+                }
+            }
+            if IMS_Inprogress_Ds == current_user {
+                if let params = setupRejectDirectorOfSecurity() {
+                    self.navigationController?.popViewController(animated: true)
+                    NetworkCalls.updaterequestims(params: params) { success, response in
+                        if success {
+                            DispatchQueue.main.async {
+                                self.updateTicketRequest(response: response)
+                            }
+                        } else {
+                            print(success)
+                        }
+                    }
+                }
+            }
+        }
+        //Forward button tapped
+        else {
+            if current_user == IMS_Inprogress_Ca {
+                if let params = self.setupController() {
+                    self.navigationController?.popViewController(animated: true)
+                    NetworkCalls.updaterequestims(params: params) { (success, response) in
+                        if success {
+                            DispatchQueue.main.async {
+                                self.updateTicketRequest(response: response)
+                            }
+                        } else {
+                            print(success)
+                        }
+                    }
+                }
+                return
+            }
+            if current_user == IMS_Inprogress_Fi {
+                if let params = self.setupFinance() {
+                    self.navigationController?.popViewController(animated: true)
+                    NetworkCalls.updaterequestims(params: params) { (success, response) in
+                        if success {
+                            DispatchQueue.main.async {
+                                self.updateTicketRequest(response: response)
+                            }
+                        } else {
+                            print(success)
+                        }
+                    }
+                }
+                return
+            }
+            if current_user == IMS_Inprogress_Hr {
+                if let params = self.setupHR() {
+                    self.navigationController?.popViewController(animated: true)
+                    NetworkCalls.updaterequestims(params: params) { (success, response) in
+                        if success {
+                            DispatchQueue.main.async {
+                                self.updateTicketRequest(response: response)
+                            }
+                        } else {
+                            print(success)
+                        }
+                    }
+                }
+                return
+            }
+            if current_user == IMS_Inprogress_Ins {
+                self.navigationController?.popViewController(animated: true)
+                if let params = self.setupINSFinancialServices() {
+                    NetworkCalls.updaterequestims(params: params) { (success, response) in
+                        if success {
+                            DispatchQueue.main.async {
+                                self.updateTicketRequest(response: response)
+                            }
+                        } else {
+                            print(success)
+                        }
+                    }
+                }
+                return
+            }
+            if current_user == IMS_Inprogress_Fs {
+                self.navigationController?.popViewController(animated: true)
+                if let params = self.setupFinancialServices() {
+                    NetworkCalls.updaterequestims(params: params) { (success, response) in
+                        if success {
+                            DispatchQueue.main.async {
+                                self.updateTicketRequest(response: response)
+                            }
+                        } else {
+                            print(success)
+                        }
+                    }
+                }
+                return
+            }
+            if current_user == IMS_Inprogress_Ds {
+                self.navigationController?.popViewController(animated: true)
+                if let params = self.setupDirectorOfSecurity() {
+                    NetworkCalls.updaterequestims(params: params) { (success, response) in
+                        if success {
+                            DispatchQueue.main.async {
+                                self.updateTicketRequest(response: response)
+                            }
+                        } else {
+                            print(success)
+                        }
+                    }
+                }
+                return
+            }
+            if current_user == IMS_Inprogress_Hs {
+                if let params = self.setupHeadOfSecurity() {
+                    self.navigationController?.popViewController(animated: true)
+                    NetworkCalls.updaterequestims(params: params) { (success, response) in
+                        if success {
+                            DispatchQueue.main.async {
+                                self.updateTicketRequest(response: response)
+                            }
+                        } else {
+                            print(success)
+                        }
+                    }
+                }
+                return
+            }
+            if current_user == IMS_Inprogress_As {
+                if let params = self.setupAreaSecurity() {
+                    self.navigationController?.popViewController(animated: true)
+                    NetworkCalls.updaterequestims(params: params) { (success, response) in
+                        if success {
+                            DispatchQueue.main.async {
+                                self.updateTicketRequest(response: response)
+                            }
+                        } else {
+                            print(success)
+                        }
+                    }
+                }
+                return
+            }
+            
+            if current_user == IMS_Inprogress_Cs {
+                if let params = self.setupCentralSecurity() {
+                    self.navigationController?.popViewController(animated: true)
+                    NetworkCalls.updaterequestims(params: params) { (success, response) in
+                        if success {
+                            DispatchQueue.main.async {
+                                self.updateTicketRequest(response: response)
+                            }
+                        } else {
+                            print(success)
+                        }
+                    }
+                }
+                return
+            }
+            if current_user == IMS_Inprogress_Hod {
+                if let params = self.setupHeadOfDepartment() {
+                    self.navigationController?.popViewController(animated: true)
+                    NetworkCalls.updaterequestims(params: params) { success, response in
+                        if success {
+                            DispatchQueue.main.async {
+                                self.updateTicketRequest(response: response)
+                            }
+                        } else {
+                            print(success)
+                        }
+                    }
+                }
+                return
+            }
+            
+            if let params = self.setupLineManager() {
+                self.navigationController?.popViewController(animated: true)
+                NetworkCalls.updaterequestims(params: params) { success, response in
+                    if success {
+                        DispatchQueue.main.async {
+                            self.updateTicketRequest(response: response)
+                        }
+                    } else {
+                        print(success)
+                    }
+                }
+            }
+        }
     }
-    func noButtonTapped() {}
+    func noButtonTapped() {
+        self.isRejected = false
+        self.forwardBtn.isEnabled = true
+        self.rejectBtn.isEnabled = true
+        self.downloadBtn.isEnabled = true
+        self.historyBtn.isEnabled = true
+    }
 }
 
 

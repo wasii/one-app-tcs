@@ -546,6 +546,19 @@ let IMS_InputBy_Finance = "Finance";
 let IMS_InputBy_Controller = "Controller";
 
 
+
+let INPROGRESS_INITIATOR    = IMS_Status_Inprogress + "-Initiator"
+let INPROGRESS_LINEMANAGER  = IMS_Status_Inprogress + "-Line Manager"
+let INPROGRESS_HOD          = IMS_Status_Inprogress + "-HOD"
+let INPROGRESS_CS           = IMS_Status_Inprogress + "-Central Security"
+let INPROGRESS_AS           = IMS_Status_Inprogress + "-Area Security"
+let INPROGRESS_HS           = IMS_Status_Inprogress + "-Head Security"
+let INPROGRESS_DS           = IMS_Status_Inprogress + "-Director Security"
+let INPROGRESS_FS           = IMS_Status_Inprogress + "-Financial Services"
+let INPROGRESS_HR           = IMS_Status_Inprogress + "-Human Resources"
+let INPROGRESS_FI           = IMS_Status_Inprogress + "-Finance"
+let INPROGRESS_CA           = IMS_Status_Inprogress + "-Controller"
+
 let CLASSIFICATION_TAG = 1
 let INCIDENT_LEVEL_1_TAG = 2
 let INCIDENT_LEVEL_2_TAG = 3

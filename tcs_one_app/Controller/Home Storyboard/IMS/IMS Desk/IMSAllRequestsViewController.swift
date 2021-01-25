@@ -50,7 +50,8 @@ class IMSAllRequestsViewController: BaseViewController {
         self.makeTopCornersRounded(roundView: self.mainView)
         self.selected_query = "Weekly"
         self.tableView.register(UINib(nibName: "RequestListingTableCell", bundle: nil), forCellReuseIdentifier: "RequestListingCell")
-        self.tableView.rowHeight = 70
+//        self.tableView.rowHeight = 70
+        self.tableView.rowHeight = 100
         
 //        self.searchTextField.delegate = self
         user_permission = AppDelegate.sharedInstance.db!.read_tbl_UserPermission()
@@ -118,9 +119,9 @@ class IMSAllRequestsViewController: BaseViewController {
     func setupTableViewHeight(isFiltered: Bool) {
         var height: CGFloat = 0.0
         if isFiltered {
-            height = CGFloat((filtered_data!.count * 70) + 300)
+            height = CGFloat((filtered_data!.count * 100) + 300)
         } else {
-            height = CGFloat((tbl_request_logs!.count * 70) + 300)
+            height = CGFloat((tbl_request_logs!.count * 100) + 300)
         }
         self.mainViewHeightConstraint.constant = 280
         switch UIDevice().type {
@@ -347,33 +348,98 @@ extension IMSAllRequestsViewController: UITableViewDataSource, UITableViewDelega
             data = self.tbl_request_logs![indexPath.row]
         }
         cell.mainHeading.text = data!.INCIDENT_TYPE!
-        cell.subHeading.text = data!.DETAIL_QUERY!
+        if let department = AppDelegate.sharedInstance.db?.read_tbl_department(query: "SELECT * FROM \(db_lov_department) WHERE SERVER_ID_PK = '\(data?.DEPARTMENT ?? "")'").first {
+            cell.subHeading.text = department.DEPAT_NAME
+        }
         cell.date.text = data!.CREATED_DATE?.dateSeperateWithT ?? ""
+        //HR FEEDBACK
+        cell.ticketID.text = "\(data!.SERVER_ID_PK!)"
+        //HR FEEDBACK
         
-        if data!.TICKET_STATUS == IMS_Status_Submitted {
+        switch data!.TICKET_STATUS {
+        case IMS_Status_Submitted:
             cell.status.text = "Submitted"
             cell.status.textColor = UIColor.pendingColor()
-        } else if data!.TICKET_STATUS == IMS_Status_Inprogress ||
-                    data!.TICKET_STATUS == IMS_Status_Inprogress_Rds ||
-                    data!.TICKET_STATUS == IMS_Status_Inprogress_Ro ||
-                    data!.TICKET_STATUS == IMS_Status_Inprogress_Rm ||
-                    data!.TICKET_STATUS == IMS_Status_Inprogress_Hod ||
-                    data!.TICKET_STATUS == IMS_Status_Inprogress_Cs ||
-                    data!.TICKET_STATUS == IMS_Status_Inprogress_As ||
-                    data!.TICKET_STATUS == IMS_Status_Inprogress_Hs ||
-                    data!.TICKET_STATUS == IMS_Status_Inprogress_Ds ||
-                    data!.TICKET_STATUS == IMS_Status_Inprogress_Fs ||
-                    data!.TICKET_STATUS == IMS_Status_Inprogress_Ins ||
-                    data!.TICKET_STATUS == IMS_Status_Inprogress_Hr ||
-                    data!.TICKET_STATUS == IMS_Status_Inprogress_Fi ||
-                    data!.TICKET_STATUS == IMS_Status_Inprogress_Ca ||
-                    data!.TICKET_STATUS == IMS_Status_Inprogress_Rhod {
+            break
+        case IMS_Status_Inprogress:
             cell.status.text = IMS_Status_Inprogress
             cell.status.textColor = UIColor.approvedColor()
-        } else {
-            cell.status.text = "Closed"
+            break
+        case IMS_Status_Inprogress_Rm:
+            cell.status.text = INPROGRESS_INITIATOR
+            cell.status.textColor = UIColor.approvedColor()
+            break
+        case IMS_Status_Inprogress_Ro, IMS_Status_Inprogress_Rhod:
+            cell.status.text = INPROGRESS_LINEMANAGER
+            cell.status.textColor = UIColor.approvedColor()
+            break
+        case IMS_Status_Inprogress_Hod:
+            cell.status.text = INPROGRESS_HOD
+            cell.status.textColor = UIColor.approvedColor()
+            break
+        case IMS_Status_Inprogress_Cs:
+            cell.status.text = INPROGRESS_CS
+            cell.status.textColor = UIColor.approvedColor()
+            break
+        case IMS_Status_Inprogress_As:
+            cell.status.text = INPROGRESS_AS
+            cell.status.textColor = UIColor.approvedColor()
+            break
+        case IMS_Status_Inprogress_Hs, IMS_Status_Inprogress_Rds:
+            cell.status.text = INPROGRESS_HS
+            cell.status.textColor = UIColor.approvedColor()
+            break
+        case IMS_Status_Inprogress_Ds:
+            cell.status.text = INPROGRESS_DS
+            cell.status.textColor = UIColor.approvedColor()
+            break
+        case IMS_Status_Inprogress_Fs, IMS_Status_Inprogress_Ins:
+            cell.status.text = INPROGRESS_FS
+            cell.status.textColor = UIColor.approvedColor()
+            break
+        case IMS_Status_Inprogress_Hr:
+            cell.status.text = INPROGRESS_HR
+            cell.status.textColor = UIColor.approvedColor()
+            break
+        case IMS_Status_Inprogress_Fi:
+            cell.status.text = INPROGRESS_FI
+            cell.status.textColor = UIColor.approvedColor()
+            break
+        case IMS_Status_Inprogress_Ca:
+            cell.status.text = INPROGRESS_CA
+            cell.status.textColor = UIColor.approvedColor()
+            break
+        case IMS_Status_Closed:
+            cell.status.text = IMS_Status_Closed
             cell.status.textColor = UIColor.rejectedColor()
+        default:
+            print("Wrong Ticket Status")
+            break
         }
+        
+//        if data!.TICKET_STATUS == IMS_Status_Submitted {
+//
+//        } else if data!.TICKET_STATUS == IMS_Status_Inprogress ||
+//                    data!.TICKET_STATUS == IMS_Status_Inprogress_Rds ||
+//                    data!.TICKET_STATUS == IMS_Status_Inprogress_Ro ||
+//                    data!.TICKET_STATUS == IMS_Status_Inprogress_Rm ||
+//                    data!.TICKET_STATUS == IMS_Status_Inprogress_Hod ||
+//                    data!.TICKET_STATUS == IMS_Status_Inprogress_Cs ||
+//                    data!.TICKET_STATUS == IMS_Status_Inprogress_As ||
+//                    data!.TICKET_STATUS == IMS_Status_Inprogress_Hs ||
+//                    data!.TICKET_STATUS == IMS_Status_Inprogress_Ds ||
+//                    data!.TICKET_STATUS == IMS_Status_Inprogress_Fs ||
+//                    data!.TICKET_STATUS == IMS_Status_Inprogress_Ins ||
+//                    data!.TICKET_STATUS == IMS_Status_Inprogress_Hr ||
+//                    data!.TICKET_STATUS == IMS_Status_Inprogress_Fi ||
+//                    data!.TICKET_STATUS == IMS_Status_Inprogress_Ca ||
+//                    data!.TICKET_STATUS == IMS_Status_Inprogress_Rhod {
+//            cell.status.text = IMS_Status_Inprogress
+//            cell.status.textColor = UIColor.approvedColor()
+//        } else {
+//            cell.status.text = "Closed"
+//            cell.status.textColor = UIColor.rejectedColor()
+//        }
         
         cell.type.text = "IMS"
         return cell

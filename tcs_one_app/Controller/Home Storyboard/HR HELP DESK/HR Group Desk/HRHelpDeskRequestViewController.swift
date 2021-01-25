@@ -45,7 +45,7 @@ class HRHelpDeskRequestViewController: BaseViewController {
         self.makeTopCornersRounded(roundView: self.mainView)
         self.selected_query = "Weekly"
         self.tableView.register(UINib(nibName: "RequestListingTableCell", bundle: nil), forCellReuseIdentifier: "RequestListingCell")
-        self.tableView.rowHeight = 80
+        self.tableView.rowHeight = 100
         
         self.searchTextField.delegate = self
     }
@@ -112,9 +112,9 @@ class HRHelpDeskRequestViewController: BaseViewController {
     func setupTableViewHeight(isFiltered: Bool) {
         var height: CGFloat = 0.0
         if isFiltered {
-            height = CGFloat((filtered_data!.count * 80) + 300)
+            height = CGFloat((filtered_data!.count * 100) + 300)
         } else {
-            height = CGFloat((tbl_request_logs!.count * 80) + 300)
+            height = CGFloat((tbl_request_logs!.count * 100) + 300)
         }
         self.mainViewHeightConstraint.constant = 280
         switch UIDevice().type {
@@ -298,6 +298,9 @@ extension HRHelpDeskRequestViewController: UITableViewDelegate, UITableViewDataS
             cell.status.textColor = UIColor.rejectedColor()
         }
         
+        //HR FEEDBACK
+        cell.ticketID.text = "\(data!.SERVER_ID_PK!)"
+        //HR FEEDBACK
         cell.type.text = "HR"
         return cell
     }

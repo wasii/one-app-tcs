@@ -52,7 +52,7 @@ class NotificationsViewController: BaseViewController {
             setup_hr_notification { (success, count) in
                 if success {
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
-                        let height = (80 * count) + 50
+                        let height = (100 * count) + 50
                         if CGFloat(height) > UIScreen.main.bounds.height {
                             self.mainViewHeightConstraint.constant = CGFloat(height)
                         } else {
@@ -76,7 +76,7 @@ class NotificationsViewController: BaseViewController {
         self.makeTopCornersRounded(roundView: self.mainView)
         
         self.tableView.register(UINib(nibName: "RequestListingTableCell", bundle: nil), forCellReuseIdentifier: "RequestListingCell")
-        self.tableView.rowHeight = 80
+        self.tableView.rowHeight = 100
     }
     
     
@@ -101,7 +101,7 @@ class NotificationsViewController: BaseViewController {
         setup_hr_notification { (success, count) in
             if success {
                 DispatchQueue.main.async {
-                    let height = (80 * count) + 50
+                    let height = (100 * count) + 50
                     if CGFloat(height) > UIScreen.main.bounds.height {
                         self.mainViewHeightConstraint.constant = CGFloat(height)
                     } else {
@@ -182,7 +182,7 @@ class NotificationsViewController: BaseViewController {
         })
         self.hr_notification = tat
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
-            let height = (80 * tat.count) + 50
+            let height = (100 * tat.count) + 50
             if CGFloat(height) > UIScreen.main.bounds.height {
                 self.mainViewHeightConstraint.constant = CGFloat(height)
             } else {
@@ -216,7 +216,9 @@ extension NotificationsViewController: UITableViewDelegate, UITableViewDataSourc
         }
         cell.mainHeading.text = data.NOTIFY_TITLE
         cell.subHeading.text = data.TITLE_MESSAGE
-        
+        //HR FEEDBACK
+        cell.ticketID.text = "\(data.TICKET_ID)"
+        //HR FEEDBACK
         
         switch data.MODULE_ID {
         case 1:

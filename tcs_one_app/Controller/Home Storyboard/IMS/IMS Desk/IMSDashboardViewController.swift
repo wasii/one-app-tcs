@@ -69,10 +69,13 @@ class IMSDashboardViewController: BaseViewController {
         self.selected_query = "Weekly"
         
         self.tableView.register(UINib(nibName: "RequestListingTableCell", bundle: nil), forCellReuseIdentifier: "RequestListingCell")
-        self.tableView.rowHeight = 80
+//        self.tableView.rowHeight = 80
+        self.tableView.rowHeight = 100
         
         self.filteredTableView.register(UINib(nibName: "RequestListingTableCell", bundle: nil), forCellReuseIdentifier: "RequestListingCell")
-        self.filteredTableView.rowHeight = 80
+//        self.filteredTableView.rowHeight = 80
+        self.filteredTableView.rowHeight = 100
+        
         
         self.permissionTableView.register(UINib(nibName: "ModulePermissionsTableCell", bundle: nil), forCellReuseIdentifier: "ModulePermissionsCell")
         self.permissionTableView.rowHeight = 70
@@ -161,7 +164,7 @@ class IMSDashboardViewController: BaseViewController {
             
             self.mainViewHeightConstraint.constant -= self.tableViewHeightConstraint.constant
             self.tableViewHeightConstraint.constant = 0
-            self.tableViewHeightConstraint.constant = CGFloat((self.tbl_request_logs!.count * 80) + 50)
+            self.tableViewHeightConstraint.constant = CGFloat((self.tbl_request_logs!.count * 100) + 50)
             self.mainViewHeightConstraint.constant +=  self.tableViewHeightConstraint.constant
             return
         } else {
@@ -230,7 +233,7 @@ class IMSDashboardViewController: BaseViewController {
         
         self.mainViewHeightConstraint.constant -= self.tableViewHeightConstraint.constant
         self.tableViewHeightConstraint.constant = 0
-        self.tableViewHeightConstraint.constant = CGFloat((self.filtered_data!.count * 80) + 50)
+        self.tableViewHeightConstraint.constant = CGFloat((self.filtered_data!.count * 100) + 50)
         self.mainViewHeightConstraint.constant +=  self.tableViewHeightConstraint.constant
     }
     private func setupPermission() {
@@ -283,7 +286,7 @@ class IMSDashboardViewController: BaseViewController {
         
         self.mainViewHeightConstraint.constant -= self.tableViewHeightConstraint.constant
         self.tableViewHeightConstraint.constant = 0
-        self.tableViewHeightConstraint.constant = CGFloat((self.tbl_request_logs!.count * 80) + 50)
+        self.tableViewHeightConstraint.constant = CGFloat((self.tbl_request_logs!.count * 100) + 50)
         self.mainViewHeightConstraint.constant +=  self.tableViewHeightConstraint.constant
     }
     private func getFilterType() -> String {
@@ -498,7 +501,7 @@ extension IMSDashboardViewController: ChartViewDelegate {
         self.filteredTableView.reloadData()
         
         self.filteredTableviewHeightConstraint.constant = 0
-        self.filteredTableviewHeightConstraint.constant = CGFloat(self.date_specific_tbl_request_logs!.count * 80) + 10
+        self.filteredTableviewHeightConstraint.constant = CGFloat(self.date_specific_tbl_request_logs!.count * 100) + 10
         self.mainViewHeightConstraint.constant += self.filteredTableviewHeightConstraint.constant
     }
 }
@@ -554,6 +557,9 @@ extension IMSDashboardViewController: UITableViewDataSource, UITableViewDelegate
                         cell.subHeading.text = department.DEPAT_NAME
                     }
                     
+                    //HR FEEDBACK
+                    cell.ticketID.text = "\(data.SERVER_ID_PK!)"
+                    //HR FEEDBACK
                     cell.date.text = data.CREATED_DATE?.dateSeperateWithT ?? ""
                     
                     if data.TICKET_STATUS == IMS_Status_Submitted {
@@ -599,6 +605,9 @@ extension IMSDashboardViewController: UITableViewDataSource, UITableViewDelegate
                 cell.subHeading.text = department.DEPAT_NAME
             }
             cell.date.text = data!.CREATED_DATE?.dateSeperateWithT ?? ""
+            //HR FEEDBACK
+            cell.ticketID.text = "\(data!.SERVER_ID_PK!)"
+            //HR FEEDBACK
             
             if data!.TICKET_STATUS == IMS_Status_Submitted {
                 cell.status.text = IMS_Status_Submitted
@@ -699,7 +708,6 @@ extension IMSDashboardViewController: UITableViewDataSource, UITableViewDelegate
                 } else {
                     self.navigationController?.pushViewController(controller, animated: true)
                 }
-                
             }
         }
     }
