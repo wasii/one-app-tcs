@@ -417,30 +417,6 @@ extension IMSAllRequestsViewController: UITableViewDataSource, UITableViewDelega
             break
         }
         
-//        if data!.TICKET_STATUS == IMS_Status_Submitted {
-//
-//        } else if data!.TICKET_STATUS == IMS_Status_Inprogress ||
-//                    data!.TICKET_STATUS == IMS_Status_Inprogress_Rds ||
-//                    data!.TICKET_STATUS == IMS_Status_Inprogress_Ro ||
-//                    data!.TICKET_STATUS == IMS_Status_Inprogress_Rm ||
-//                    data!.TICKET_STATUS == IMS_Status_Inprogress_Hod ||
-//                    data!.TICKET_STATUS == IMS_Status_Inprogress_Cs ||
-//                    data!.TICKET_STATUS == IMS_Status_Inprogress_As ||
-//                    data!.TICKET_STATUS == IMS_Status_Inprogress_Hs ||
-//                    data!.TICKET_STATUS == IMS_Status_Inprogress_Ds ||
-//                    data!.TICKET_STATUS == IMS_Status_Inprogress_Fs ||
-//                    data!.TICKET_STATUS == IMS_Status_Inprogress_Ins ||
-//                    data!.TICKET_STATUS == IMS_Status_Inprogress_Hr ||
-//                    data!.TICKET_STATUS == IMS_Status_Inprogress_Fi ||
-//                    data!.TICKET_STATUS == IMS_Status_Inprogress_Ca ||
-//                    data!.TICKET_STATUS == IMS_Status_Inprogress_Rhod {
-//            cell.status.text = IMS_Status_Inprogress
-//            cell.status.textColor = UIColor.approvedColor()
-//        } else {
-//            cell.status.text = "Closed"
-//            cell.status.textColor = UIColor.rejectedColor()
-//        }
-        
         cell.type.text = "IMS"
         return cell
     }
@@ -540,4 +516,3 @@ extension IMSAllRequestsViewController: UITableViewDataSource, UITableViewDelega
         }
     }
 }
-

@@ -2086,11 +2086,11 @@ extension IMSViewUpdateRequestViewController {
                     "status": IMS_Status_Closed,
                     "loginid": "\(CURRENT_USER_LOGGED_IN_ID)",
                     "closure_remarks" : "\(self.recommendations_textview.text!)",
-                    "is_control_defined": self.hr_reference_number_textfield.text!,
-                    "risk_type": self.lov_hr_status!.SERVER_ID_PK,
-                    "risk_remarks": self.lov_hr_status!.SERVER_ID_PK,
-                    "control_category": self.lov_hr_status!.SERVER_ID_PK,
-                    "control_type": self.lov_hr_status!.SERVER_ID_PK,
+                    "is_control_defined": control,
+                    "risk_type": self.lov_risk_type!.SERVER_ID_PK,
+                    "risk_remarks": self.risk_remarks_textview.text!,
+                    "control_category": self.lov_category_control!.SERVER_ID_PK,
+                    "control_type": self.lov_type_control!.SERVER_ID_PK,
                     "hr_status": self.lov_hr_status!.SERVER_ID_PK,
                     "ticket_logs": [
                         [

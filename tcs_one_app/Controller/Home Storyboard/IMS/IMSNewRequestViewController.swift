@@ -96,6 +96,9 @@ class IMSNewRequestViewController: BaseViewController {
     )
     
     var current_ticket: tbl_Hr_Request_Logs?
+    var offline_data = tbl_Hr_Request_Logs()
+    var offline_hr_files = tbl_Files_Table()
+    var offline_remarks  = tbl_Grievance_Remarks()
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = "New Request"
@@ -569,6 +572,8 @@ class IMSNewRequestViewController: BaseViewController {
             }
         }
         
+        self.create_ticket_button.isEnabled = false
+        
         let refid = randomString()
         var employeeId = ""
         
@@ -578,9 +583,7 @@ class IMSNewRequestViewController: BaseViewController {
             employeeId = self.employee_id.text!
         }
         
-        var offline_data = tbl_Hr_Request_Logs()
-        var offline_hr_files = tbl_Files_Table()
-        var offline_remarks  = tbl_Grievance_Remarks()
+        
         
         offline_data.REQ_ID = Int(employeeId)
         offline_data.SERVER_ID_PK = randomInt()
@@ -625,19 +628,14 @@ class IMSNewRequestViewController: BaseViewController {
         
         
         
-        AppDelegate.sharedInstance.db?.dump_data_HRRequest(hrrequests: offline_data, { success in
-            if success {
-                print("DUMP IMS TICKET")
-                if self.title == "Update Request" {
-                    self.updateIMSTicket(offline_data: offline_data)
-                } else {
-                    self.createImsTicket(offline_data: offline_data)
-                    
-                }
-                
-            }
-        })
-        self.navigationController?.popViewController(animated: true)
+        let storyboard = UIStoryboard(name: "Popups", bundle: nil)
+        let controller = storyboard.instantiateViewController(withIdentifier: "ConfirmationPopViewController") as! ConfirmationPopViewController
+        controller.delegate = self
+        if #available(iOS 13.0, *) {
+            controller.modalPresentationStyle = .overFullScreen
+        }
+        controller.modalTransitionStyle = .crossDissolve
+        Helper.topMostController().present(controller, animated: true, completion: nil)
     }
     func updateIMSTicket(offline_data: tbl_Hr_Request_Logs) {
         var ticket_files = [[String:String]]()
@@ -1364,5 +1362,33 @@ extension IMSNewRequestViewController: UIImagePickerControllerDelegate {
                 }
             }
         }
+    }
+}
+
+
+
+
+
+
+
+
+extension IMSNewRequestViewController: ConfirmationProtocol {
+    func confirmationProtocol() {
+        AppDelegate.sharedInstance.db?.dump_data_HRRequest(hrrequests: offline_data, { success in
+            if success {
+                print("DUMP IMS TICKET")
+                if self.title == "Update Request" {
+                    self.updateIMSTicket(offline_data: self.offline_data)
+                } else {
+                    self.createImsTicket(offline_data: self.offline_data)
+                    
+                }
+            }
+        })
+        self.navigationController?.popViewController(animated: true)
+    }
+    
+    func noButtonTapped() {
+        self.create_ticket_button.isEnabled = true
     }
 }
