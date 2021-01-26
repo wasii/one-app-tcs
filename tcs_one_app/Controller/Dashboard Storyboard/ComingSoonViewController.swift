@@ -37,10 +37,8 @@ class ComingSoonViewController: UIViewController {
         if let de = UserDefaults.standard.string(forKey: "department") {
             department.text = "Department: \(de)"
         }
-        if let rb = UserDefaults.standard.string(forKey: "reported_by") {
-            reportedby.text = "Reported To: \(rb)"
-        }
-        
+        let rb = UserDefaults.standard.integer(forKey: "reported_by")
+        reportedby.text = "Reported To: \(rb)"
     }
     @IBAction func closeBtnTapped(_ sender: Any) {
         self.dismiss(animated: true, completion: nil)
