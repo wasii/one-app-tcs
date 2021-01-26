@@ -609,29 +609,89 @@ extension IMSDashboardViewController: UITableViewDataSource, UITableViewDelegate
             cell.ticketID.text = "\(data!.SERVER_ID_PK!)"
             //HR FEEDBACK
             
-            if data!.TICKET_STATUS == IMS_Status_Submitted {
-                cell.status.text = IMS_Status_Submitted
+//            if data!.TICKET_STATUS == IMS_Status_Submitted {
+//                cell.status.text = IMS_Status_Submitted
+//                cell.status.textColor = UIColor.pendingColor()
+//            } else if data!.TICKET_STATUS == IMS_Status_Inprogress ||
+//                        data!.TICKET_STATUS == IMS_Status_Inprogress_Rds ||
+//                        data!.TICKET_STATUS == IMS_Status_Inprogress_Ro ||
+//                        data!.TICKET_STATUS == IMS_Status_Inprogress_Rm ||
+//                        data!.TICKET_STATUS == IMS_Status_Inprogress_Hod ||
+//                        data!.TICKET_STATUS == IMS_Status_Inprogress_Cs ||
+//                        data!.TICKET_STATUS == IMS_Status_Inprogress_As ||
+//                        data!.TICKET_STATUS == IMS_Status_Inprogress_Hs ||
+//                        data!.TICKET_STATUS == IMS_Status_Inprogress_Ds ||
+//                        data!.TICKET_STATUS == IMS_Status_Inprogress_Fs ||
+//                        data!.TICKET_STATUS == IMS_Status_Inprogress_Ins ||
+//                        data!.TICKET_STATUS == IMS_Status_Inprogress_Hr ||
+//                        data!.TICKET_STATUS == IMS_Status_Inprogress_Fi ||
+//                        data!.TICKET_STATUS == IMS_Status_Inprogress_Ca ||
+//                        data!.TICKET_STATUS == IMS_Status_Inprogress_Rhod {
+//                cell.status.text = IMS_Status_Inprogress
+//                cell.status.textColor = UIColor.approvedColor()
+//            } else {
+//                cell.status.text = IMS_Status_Closed
+//                cell.status.textColor = UIColor.rejectedColor()
+//            }
+            switch data!.TICKET_STATUS {
+            case IMS_Status_Submitted:
+                cell.status.text = "Submitted"
                 cell.status.textColor = UIColor.pendingColor()
-            } else if data!.TICKET_STATUS == IMS_Status_Inprogress ||
-                        data!.TICKET_STATUS == IMS_Status_Inprogress_Rds ||
-                        data!.TICKET_STATUS == IMS_Status_Inprogress_Ro ||
-                        data!.TICKET_STATUS == IMS_Status_Inprogress_Rm ||
-                        data!.TICKET_STATUS == IMS_Status_Inprogress_Hod ||
-                        data!.TICKET_STATUS == IMS_Status_Inprogress_Cs ||
-                        data!.TICKET_STATUS == IMS_Status_Inprogress_As ||
-                        data!.TICKET_STATUS == IMS_Status_Inprogress_Hs ||
-                        data!.TICKET_STATUS == IMS_Status_Inprogress_Ds ||
-                        data!.TICKET_STATUS == IMS_Status_Inprogress_Fs ||
-                        data!.TICKET_STATUS == IMS_Status_Inprogress_Ins ||
-                        data!.TICKET_STATUS == IMS_Status_Inprogress_Hr ||
-                        data!.TICKET_STATUS == IMS_Status_Inprogress_Fi ||
-                        data!.TICKET_STATUS == IMS_Status_Inprogress_Ca ||
-                        data!.TICKET_STATUS == IMS_Status_Inprogress_Rhod {
+                break
+            case IMS_Status_Inprogress:
                 cell.status.text = IMS_Status_Inprogress
                 cell.status.textColor = UIColor.approvedColor()
-            } else {
+                break
+            case IMS_Status_Inprogress_Rm:
+                cell.status.text = INPROGRESS_INITIATOR
+                cell.status.textColor = UIColor.approvedColor()
+                break
+            case IMS_Status_Inprogress_Ro, IMS_Status_Inprogress_Rhod:
+                cell.status.text = INPROGRESS_LINEMANAGER
+                cell.status.textColor = UIColor.approvedColor()
+                break
+            case IMS_Status_Inprogress_Hod:
+                cell.status.text = INPROGRESS_HOD
+                cell.status.textColor = UIColor.approvedColor()
+                break
+            case IMS_Status_Inprogress_Cs:
+                cell.status.text = INPROGRESS_CS
+                cell.status.textColor = UIColor.approvedColor()
+                break
+            case IMS_Status_Inprogress_As:
+                cell.status.text = INPROGRESS_AS
+                cell.status.textColor = UIColor.approvedColor()
+                break
+            case IMS_Status_Inprogress_Hs, IMS_Status_Inprogress_Rds:
+                cell.status.text = INPROGRESS_HS
+                cell.status.textColor = UIColor.approvedColor()
+                break
+            case IMS_Status_Inprogress_Ds:
+                cell.status.text = INPROGRESS_DS
+                cell.status.textColor = UIColor.approvedColor()
+                break
+            case IMS_Status_Inprogress_Fs, IMS_Status_Inprogress_Ins:
+                cell.status.text = INPROGRESS_FS
+                cell.status.textColor = UIColor.approvedColor()
+                break
+            case IMS_Status_Inprogress_Hr:
+                cell.status.text = INPROGRESS_HR
+                cell.status.textColor = UIColor.approvedColor()
+                break
+            case IMS_Status_Inprogress_Fi:
+                cell.status.text = INPROGRESS_FI
+                cell.status.textColor = UIColor.approvedColor()
+                break
+            case IMS_Status_Inprogress_Ca:
+                cell.status.text = INPROGRESS_CA
+                cell.status.textColor = UIColor.approvedColor()
+                break
+            case IMS_Status_Closed:
                 cell.status.text = IMS_Status_Closed
                 cell.status.textColor = UIColor.rejectedColor()
+            default:
+                print("Wrong Ticket Status")
+                break
             }
             
             cell.type.text = "IMS"

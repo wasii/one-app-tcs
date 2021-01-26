@@ -222,8 +222,8 @@
             filePath = "tcs_one_app/Controller/NotificationsViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "323"
-            endingLineNumber = "323"
+            startingLineNumber = "369"
+            endingLineNumber = "369"
             landmarkName = "tableView(_:didSelectRowAt:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -238,8 +238,8 @@
             filePath = "tcs_one_app/Core/BaseViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "375"
-            endingLineNumber = "375"
+            startingLineNumber = "382"
+            endingLineNumber = "382"
             landmarkName = "getNotificationCounts()"
             landmarkType = "7">
          </BreakpointContent>
@@ -257,22 +257,6 @@
             startingLineNumber = "301"
             endingLineNumber = "301"
             landmarkName = "downloadBtnTapped(_:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "C6D2808F-2B48-447E-A306-61BDDC91836B"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "tcs_one_app/Controller/Home Storyboard/IMS/IMSViewUpdateRequestViewController.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "962"
-            endingLineNumber = "962"
-            landmarkName = "setupPermissions()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -334,8 +318,8 @@
             filePath = "tcs_one_app/Controller/Home Storyboard/IMS/IMSViewUpdateRequestViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2255"
-            endingLineNumber = "2255"
+            startingLineNumber = "2272"
+            endingLineNumber = "2272"
             landmarkName = "setupFinancialServices()"
             landmarkType = "7">
          </BreakpointContent>
@@ -446,8 +430,8 @@
             filePath = "tcs_one_app/Controller/Home Storyboard/IMS/IMSViewUpdateRequestViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2331"
-            endingLineNumber = "2331"
+            startingLineNumber = "2348"
+            endingLineNumber = "2348"
             landmarkName = "setupDirectorOfSecurity()"
             landmarkType = "7">
          </BreakpointContent>
@@ -526,8 +510,8 @@
             filePath = "tcs_one_app/Controller/Home Storyboard/IMS/IMSViewUpdateRequestViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1125"
-            endingLineNumber = "1125"
+            startingLineNumber = "1129"
+            endingLineNumber = "1129"
             landmarkName = "forwardBtnTapped(_:)"
             landmarkType = "7">
             <Locations>
@@ -769,8 +753,8 @@
             filePath = "tcs_one_app/Controller/Home Storyboard/IMS/IMSViewUpdateRequestViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1132"
-            endingLineNumber = "1132"
+            startingLineNumber = "1136"
+            endingLineNumber = "1136"
             landmarkName = "forwardBtnTapped(_:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -785,8 +769,8 @@
             filePath = "tcs_one_app/Controller/Home Storyboard/IMS/IMSViewUpdateRequestViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2428"
-            endingLineNumber = "2428"
+            startingLineNumber = "2445"
+            endingLineNumber = "2445"
             landmarkName = "setupAreaSecurity()"
             landmarkType = "7">
          </BreakpointContent>
@@ -794,16 +778,80 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "B3E1BDAE-CCC6-4FA1-8A01-18DA542A31E4"
-            shouldBeEnabled = "Yes"
+            uuid = "2552B6B9-05A9-4C6F-974C-8D2D712F33C6"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "tcs_one_app/Controller/Home Storyboard/IMS/IMSViewUpdateRequestViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2629"
-            endingLineNumber = "2629"
-            landmarkName = "setupLineManager()"
+            startingLineNumber = "504"
+            endingLineNumber = "504"
+            landmarkName = "setupViews()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "B47F6C7D-9667-4D24-851F-7E77D4597009"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "tcs_one_app/Controller/NotificationsViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "454"
+            endingLineNumber = "454"
+            landmarkName = "tableView(_:didSelectRowAt:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "EBFD75D2-6EF1-42DF-A4A1-ED860869D9D3"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "tcs_one_app/Controller/NotificationsViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "477"
+            endingLineNumber = "477"
+            landmarkName = "tableView(_:didSelectRowAt:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "5C36DF02-7AC5-4495-8D87-66F1819210FD"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "tcs_one_app/Controller/UserCredentials Storyboard/FetchUserDataViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "46"
+            endingLineNumber = "46"
+            landmarkName = "viewDidLoad()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "70E62FB5-AD03-476D-B0FA-D9B292FF0A1F"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "tcs_one_app/Controller/Dashboard Storyboard/ComingSoonViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "41"
+            endingLineNumber = "41"
+            landmarkName = "viewDidLoad()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

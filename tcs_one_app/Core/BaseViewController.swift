@@ -290,6 +290,13 @@ class BaseViewController: UIViewController {
                 self.dismiss(animated: true, completion: nil)
             }
         }
+//        
+//        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+//            let story = UIStoryboard(name: "UserCredentials", bundle:nil)
+//            let vc = story.instantiateViewController(withIdentifier: "NewViewController") as! UINavigationController
+//            UIApplication.shared.windows.first?.rootViewController = vc
+//            UIApplication.shared.windows.first?.makeKeyAndVisible()
+//        }
     }
     
     @objc func navigateThroughtNotify(notification: Notification) {

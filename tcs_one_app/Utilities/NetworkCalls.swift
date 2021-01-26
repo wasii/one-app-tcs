@@ -132,6 +132,11 @@ class NetworkCalls: NSObject {
                             }
                             if let data = json.dictionary?[_emp_info] {
                                 do {
+                                    UserDefaults.standard.setValue(data.array?.first?["EMP_NAME"].string ?? "", forKey: "name")
+                                    UserDefaults.standard.setValue(data.array?.first?["GRADE_DESC"].string ?? "", forKey: "grade")
+                                    UserDefaults.standard.setValue(data.array?.first?["DESIG"].string ?? "", forKey: "designation")
+                                    UserDefaults.standard.setValue(data.array?.first?["DEPT"].string ?? "", forKey: "department")
+                                    UserDefaults.standard.setValue(data.array?.first?["LINE_MANAGER1"].string ?? "", forKey: "reported_by")
                                     let dictionary = try data.array!.first?.rawData()
                                     let user = try JSONDecoder().decode(User.self, from: dictionary!)
                                     AppDelegate.sharedInstance.db?.deleteAll(tableName: db_user_profile) { success in

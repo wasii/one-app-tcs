@@ -770,10 +770,16 @@ class IMSNewRequestViewController: BaseViewController {
                 AppDelegate.sharedInstance.db?.dump_tbl_hr_files(hrfile: offline_hr_files)
             }
         }
+        guard let token = UserDefaults.standard.string(forKey: USER_ACCESS_TOKEN) else {
+            self.dismiss(animated: true) {
+                Helper.topMostController().view.makeToast("Session Expired")
+            }
+            return
+        }
         
         let request = [
             "hr_request": [
-                "access_token" : UserDefaults.standard.string(forKey: USER_ACCESS_TOKEN)!,
+                "access_token" : token,
                 "tickets": [
                     "requesteremployeeid": "\(Int(offline_data.REQ_ID!))",
                     "requestmodeid": "\(offline_data.REQ_MODE!)",

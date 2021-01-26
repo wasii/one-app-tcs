@@ -507,6 +507,7 @@ var ticket_request: tbl_Hr_Request_Logs?
             } else {
                 self.insurance_claimable_switch.isOn = false
             }
+            
             self.claim_reference_number_textfield.text = "\(ticket_request?.INS_CLAIM_REFNO ?? "")"
             if havePermissionToEdit {
                 self.title = "Update Request"
@@ -597,6 +598,7 @@ var ticket_request: tbl_Hr_Request_Logs?
                 self.hr_status_textfield.isUserInteractionEnabled = true
                 
                 self.hr_status_textfield.delegate = self
+                self.hr_reference_number_textfield.delegate = self
                 
                 self.remarks_attachment_stackview.isHidden = true
                 self.attachment_view.isHidden = true
@@ -639,9 +641,11 @@ var ticket_request: tbl_Hr_Request_Logs?
                 self.title = "Update Request"
                 self.headingLabel.text = "Update Request"
                 self.hr_reference_number_textfield.isUserInteractionEnabled = true
+                
                 self.hr_status_textfield.isUserInteractionEnabled = true
                 
                 self.hr_status_textfield.delegate = self
+                self.hr_reference_number_textfield.delegate = self
                 
                 self.remarks_attachment_stackview.isHidden = true
                 self.attachment_view.isHidden = true
@@ -1771,14 +1775,27 @@ extension IMSViewUpdateRequestViewController: UITextFieldDelegate {
     }
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        if string.isEmpty {
+            return true
+        }
         switch textField.tag {
         case HR_STATUS:
-            let maxLength = 25
+            let maxLength = 20
             let currentString: NSString = textField.text as! NSString
             let newString: NSString =
                     currentString.replacingCharacters(in: range, with: string) as NSString
             if newString.length <= maxLength {
                 return true
+            }
+            return false
+        case HR_REF_NUMBER:
+            let maxlength = 20
+            let currentString: NSString = textField.text as! NSString
+            let newString: NSString = currentString.replacingCharacters(in: range, with: string) as NSString
+            if newString.length <= maxlength {
+                let alphaNumericRegEx = "[a-zA-Z0-9]"
+                let predicate = NSPredicate(format:"SELF MATCHES %@", alphaNumericRegEx)
+                return predicate.evaluate(with: string)
             }
             return false
         default:
