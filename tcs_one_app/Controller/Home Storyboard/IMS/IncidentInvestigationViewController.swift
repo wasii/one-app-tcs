@@ -353,10 +353,7 @@ extension IncidentInvestigationViewController: UITextViewDelegate {
     }
     
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
-        let maxLength = 200
-        let currentString: NSString = textView.text as! NSString
-        let newString: NSString =
-                currentString.replacingCharacters(in: range, with: text) as NSString
+        
         if let texts = textView.text,
            let textRange = Range(range, in: texts) {
             let updatedText = texts.replacingCharacters(in: textRange, with: text)
@@ -364,13 +361,36 @@ extension IncidentInvestigationViewController: UITextViewDelegate {
                 return false
             }
         }
+        var maxLength = 200
+        switch textView.tag {
+        case ENTER_PROCECUSTION_NARRATIVE_TAG:
+            maxLength = 1000
+            break
+        case ENTER_DETAIL_INVESTIGATION_TAG:
+            maxLength = 2000
+            break
+        case ENTER_FINDINGS_TAG:
+            maxLength = 1000
+            break
+        case ENTER_FACTS_TAG, ENTER_OPINIONS_TAG:
+            maxLength = 500
+            break
+        default:
+            break
+        }
+        
+        
+        let currentString: NSString = textView.text as! NSString
+        let newString: NSString =
+                currentString.replacingCharacters(in: range, with: text) as NSString
+        
         if newString.length <= maxLength {
             switch textView.tag {
             case ENTER_DETAIL_INVESTIGATION_TAG:
-                self.detail_investigation_wordcounter.text = "\(newString.length)/200"
+                self.detail_investigation_wordcounter.text = "\(newString.length)/2000"
                 return true
             case ENTER_PROCECUSTION_NARRATIVE_TAG:
-                self.prosecution_narrative_wordcounter.text = "\(newString.length)/200"
+                self.prosecution_narrative_wordcounter.text = "\(newString.length)/1000"
                 return true
             case ENTER_DEFENSE_NARRATIVE_TAG:
                 self.defense_narrative_wordcounter.text = "\(newString.length)/200"
@@ -379,13 +399,13 @@ extension IncidentInvestigationViewController: UITextViewDelegate {
                 self.challenges_wordcounter.text = "\(newString.length)/200"
                 return true
             case ENTER_FACTS_TAG:
-                self.facts_wordcounter.text = "\(newString.length)/200"
+                self.facts_wordcounter.text = "\(newString.length)/500"
                 return true
             case ENTER_FINDINGS_TAG:
-                self.findings_wordcounter.text = "\(newString.length)/200"
+                self.findings_wordcounter.text = "\(newString.length)/1000"
                 return true
             case ENTER_OPINIONS_TAG:
-                self.opinions_wordcounter.text = "\(newString.length)/200"
+                self.opinions_wordcounter.text = "\(newString.length)/500"
                 return true
             default:
                 return false
