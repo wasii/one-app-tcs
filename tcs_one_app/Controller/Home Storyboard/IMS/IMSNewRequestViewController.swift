@@ -483,9 +483,15 @@ class IMSNewRequestViewController: BaseViewController {
         }
         self.view.makeToastActivity(.center)
         self.freezeScreen()
+        guard let token = UserDefaults.standard.string(forKey: USER_ACCESS_TOKEN) else {
+            self.dismiss(animated: true) {
+                Helper.topMostController().view.makeToast("Session Expired")
+            }
+            return
+        }
         let consignment_setup = [
             "hr_request": [
-                "access_token": UserDefaults.standard.string(forKey: USER_ACCESS_TOKEN)!,
+                "access_token": token,
                 "cnno": self.consinement_number.text! //"4708109905"
             ]
         ]

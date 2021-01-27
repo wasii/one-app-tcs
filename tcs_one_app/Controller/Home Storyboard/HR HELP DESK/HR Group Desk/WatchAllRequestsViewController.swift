@@ -96,16 +96,16 @@ class WatchAllRequestsViewController: BaseViewController {
         case .iPhone5, .iPhone5S, .iPhone5C, .iPhoneSE:
             break
         case .iPhone6, .iPhone6S, .iPhone7, .iPhone8:
-            self.mainViewHeightConstraint.constant = 870
+            self.mainViewHeightConstraint.constant = 890
             break
         case .iPhone6Plus, .iPhone7Plus, .iPhone8Plus:
-            self.mainViewHeightConstraint.constant = 970
+            self.mainViewHeightConstraint.constant = 990
             break
         case .iPhoneX, .iPhoneXR, .iPhoneXS, .iPhone11Pro:
-            self.mainViewHeightConstraint.constant = 1100
+            self.mainViewHeightConstraint.constant = 1120
             break
         case .iPhone11, .iPhoneXSMax, .iPhone11ProMax:
-            self.mainViewHeightConstraint.constant = 970
+            self.mainViewHeightConstraint.constant = 990
             break
         default:
             break
