@@ -20,7 +20,7 @@ class IMSHistoryViewController: BaseViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.title = "History"
+        self.title = "IMS"
         self.makeTopCornersRounded(roundView: self.mainView)
 
         // Do any additional setup after loading the view.

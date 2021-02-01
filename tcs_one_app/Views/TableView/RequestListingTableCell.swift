@@ -12,6 +12,7 @@ class RequestListingTableCell: UITableViewCell {
 
     @IBOutlet weak var mainView: CustomView!
     @IBOutlet weak var ticketID: UILabel!
+    @IBOutlet weak var mainHeadingTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var mainHeading: UILabel!
     @IBOutlet weak var subHeading: UILabel!
     @IBOutlet weak var type: UILabel!

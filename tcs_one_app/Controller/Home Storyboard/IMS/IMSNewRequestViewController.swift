@@ -101,7 +101,7 @@ class IMSNewRequestViewController: BaseViewController {
     var offline_remarks  = tbl_Grievance_Remarks()
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.title = "New Request"
+        self.title = "IMS"
         addDoubleNavigationButtons()
         self.makeTopCornersRounded(roundView: self.mainView)
         setupMainViewHeight()
@@ -178,7 +178,7 @@ class IMSNewRequestViewController: BaseViewController {
         
         
         date.label.textColor = UIColor.nativeRedColor()
-        date.label.text = "*Date"
+        date.label.text = "*Incident Date"
         date.text = "Select Date"
         date.setOutlineColor(UIColor.nativeRedColor(), for: .normal)
         date.setOutlineColor(UIColor.nativeRedColor(), for: .editing)
@@ -290,7 +290,7 @@ class IMSNewRequestViewController: BaseViewController {
             }
             
             if ticket.TICKET_STATUS != IMS_Status_Inprogress_Rm {
-                self.title = "View Request"
+//                self.title = "View Request"
                 self.headingLabel.text = "View Request"
                 self.download_btn.isHidden = false
                 self.history_btn.isHidden = false
@@ -312,7 +312,7 @@ class IMSNewRequestViewController: BaseViewController {
                 
                 
             } else  {
-                self.title = "Update Request"
+//                self.title = "Update Request"
                 self.headingLabel.text = "Update Request"
                 self.download_btn.isHidden = true
                 self.history_btn.isHidden = true

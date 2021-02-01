@@ -52,7 +52,7 @@ class NotificationsViewController: BaseViewController {
             setup_hr_notification { (success, count) in
                 if success {
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
-                        let height = (100 * count) + 50
+                        let height = (80 * count) + 50
                         if CGFloat(height) > UIScreen.main.bounds.height {
                             self.mainViewHeightConstraint.constant = CGFloat(height)
                         } else {
@@ -76,7 +76,7 @@ class NotificationsViewController: BaseViewController {
         self.makeTopCornersRounded(roundView: self.mainView)
         
         self.tableView.register(UINib(nibName: "RequestListingTableCell", bundle: nil), forCellReuseIdentifier: "RequestListingCell")
-        self.tableView.rowHeight = 100
+        self.tableView.rowHeight = 80
     }
     
     
@@ -85,10 +85,7 @@ class NotificationsViewController: BaseViewController {
         hr_notification = AppDelegate.sharedInstance.db?.read_tbl_hr_notification_request(query: query)
         
         if hr_notification!.count > 0 {
-//            hr_notification = hr_notification?.filter({ (not1) -> Bool in
-//                not1.MODULE_ID == 1 || not1.MODULE_ID == 2
-//            })
-            
+
             hr_notification = hr_notification?.sorted(by: { (req1, req2) -> Bool in
                 req1.CREATED_DATE > req2.CREATED_DATE
             })
@@ -101,7 +98,7 @@ class NotificationsViewController: BaseViewController {
         setup_hr_notification { (success, count) in
             if success {
                 DispatchQueue.main.async {
-                    let height = (100 * count) + 50
+                    let height = (80 * count) + 50
                     if CGFloat(height) > UIScreen.main.bounds.height {
                         self.mainViewHeightConstraint.constant = CGFloat(height)
                     } else {
@@ -182,7 +179,7 @@ class NotificationsViewController: BaseViewController {
         })
         self.hr_notification = tat
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
-            let height = (100 * tat.count) + 50
+            let height = (80 * tat.count) + 50
             if CGFloat(height) > UIScreen.main.bounds.height {
                 self.mainViewHeightConstraint.constant = CGFloat(height)
             } else {
@@ -217,7 +214,8 @@ extension NotificationsViewController: UITableViewDelegate, UITableViewDataSourc
         cell.mainHeading.text = data.NOTIFY_TITLE
         cell.subHeading.text = data.TITLE_MESSAGE
         //HR FEEDBACK
-        cell.ticketID.text = "\(data.TICKET_ID)"
+        cell.ticketID.isHidden = true
+        cell.mainHeadingTopConstraint.constant = 7
         //HR FEEDBACK
         
         switch data.MODULE_ID {
@@ -324,43 +322,11 @@ extension NotificationsViewController: UITableViewDelegate, UITableViewDataSourc
         default:
             break
         }
-        
-//        cell.status.text = data.TICKET_STATUS
-//        if data.TICKET_STATUS == "approved" || data.TICKET_STATUS == "Approved" {
-//            cell.status.text = "Completed"
-//        }
-//        if data.TICKET_STATUS == "rejected" {
-//            cell.status.text = "Rejected"
-//        }
-//        switch data.TICKET_STATUS {
-//        case "Pending", "pending", "Submitted", "submitted":
-//            cell.status.textColor = UIColor.pendingColor()
-//            break
-//        case "Approved", "approved", "Completed", "completed":
-//            cell.status.textColor = UIColor.approvedColor()
-//            break
-//        case "Rejected", "rejected", "Closed", "closed":
-//            cell.status.textColor = UIColor.rejectedColor()
-//            break
-//        case "Inprogress-Er", "Inprogress-S", "Responded", "Investigating", "Inprogress-Ceo", "Inprogress-Srhrbp":
-//            cell.status.textColor = UIColor.approvedColor()
-//            cell.status.text = INREVIEW
-//            break
-//        case IMS_Status_Inprogress_As, IMS_Status_Inprogress_Hs, IMS_Status_Inprogress_Ds, IMS_Status_Inprogress_Cs, IMS_Status_Inprogress_Ro, IMS_Status_Inprogress_Ca, IMS_Status_Inprogress_Hr, IMS_Status_Inprogress_Fi, IMS_Status_Inprogress_Rm, IMS_Status_Inprogress_Fs, IMS_Status_Inprogress_Rds, IMS_Status_Inprogress_Hod, IMS_Status_Inprogress_Ins, IMS_Status_Inprogress_Rhod:
-//            cell.status.textColor = UIColor.approvedColor()
-//            cell.status.text = IMS_Status_Inprogress
-//        default:
-//            break
-//        }
         if data.CREATED_DATE == "" {
             cell.date.text = data.CREATED_DATE
         } else {
             cell.date.text = data.CREATED_DATE.dateSeperateWithT
         }
-        
-//        cell.type.text = data.MODULE_DSCRP
-        
-        
         return cell
     }
     

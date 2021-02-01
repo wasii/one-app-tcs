@@ -23,7 +23,7 @@ class IMSFilesAccordingRemarksViewController: BaseViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.title = "Downloads"
+        self.title = "IMS"
         self.makeTopCornersRounded(roundView: self.mainView)
         self.tableView.register(UINib(nibName: "GrievacneDownloadsTableCell", bundle: nil), forCellReuseIdentifier: "GrievacneDownloadsCell")
         self.tableView.rowHeight = 60
@@ -125,7 +125,7 @@ extension IMSFilesAccordingRemarksViewController: UITableViewDelegate, UITableVi
         
         let fileSize = Double(data.fileSize)
         
-        cell.fileSize.text = String(format: "(%.4f MB)", (fileSize! / 1000))
+        cell.fileSize.text = String(format: "(%.4f MB)", (fileSize! / 1000)/1024)
         
         cell.downloadBtn.tag = indexPath.row
         cell.downloadBtn.addTarget(self, action: #selector(downloadFile(sender:)), for: .touchUpInside)

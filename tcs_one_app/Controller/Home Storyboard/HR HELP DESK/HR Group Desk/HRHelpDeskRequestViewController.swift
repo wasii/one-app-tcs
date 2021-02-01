@@ -299,7 +299,7 @@ extension HRHelpDeskRequestViewController: UITableViewDelegate, UITableViewDataS
         }
         
         //HR FEEDBACK
-        cell.ticketID.text = "\(data!.SERVER_ID_PK!)"
+        cell.ticketID.text = "Ticket Id: \(data!.SERVER_ID_PK!)"
         //HR FEEDBACK
         cell.type.text = "HR"
         return cell

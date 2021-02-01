@@ -562,7 +562,7 @@ extension GrievanceHelpDeskViewController: UITableViewDataSource, UITableViewDel
                         cell.status.textColor = UIColor.rejectedColor()
                     }
                     //HR FEEDBACK
-                    cell.ticketID.text = "\(data.SERVER_ID_PK!)"
+                    cell.ticketID.text = "Ticket Id: \(data.SERVER_ID_PK!)"
                     //HR FEEDBACK
                     cell.type.text = "HR"
                     return cell
@@ -582,7 +582,7 @@ extension GrievanceHelpDeskViewController: UITableViewDataSource, UITableViewDel
             cell.subHeading.text = data!.DETAIL_QUERY!
             cell.date.text = data!.CREATED_DATE?.dateSeperateWithT ?? ""
             //HR FEEDBACK
-            cell.ticketID.text = "\(data!.SERVER_ID_PK!)"
+            cell.ticketID.text = "Ticket Id: \(data!.SERVER_ID_PK!)"
             //HR FEEDBACK
             
             if data!.TICKET_STATUS == "Submitted" || data!.TICKET_STATUS == "submitted" {

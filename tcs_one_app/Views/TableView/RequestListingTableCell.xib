@@ -21,7 +21,7 @@
                         <rect key="frame" x="5" y="5" width="310" height="90"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Ticket ID" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MWM-iw-ZkD">
-                                <rect key="frame" x="15" y="7" width="50" height="14.5"/>
+                                <rect key="frame" x="15" y="7" width="50" height="15"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                 <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
@@ -61,15 +61,15 @@
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="Lg5-Os-b6G" secondAttribute="trailing" constant="15" id="53z-QL-YSu"/>
                             <constraint firstItem="7bo-Ww-lG1" firstAttribute="top" secondItem="o9I-KM-lOp" secondAttribute="bottom" constant="5" id="8nn-wv-jEz"/>
+                            <constraint firstItem="Lg5-Os-b6G" firstAttribute="top" secondItem="VaK-nR-Hef" secondAttribute="top" constant="8.5" id="DXI-an-XlC"/>
                             <constraint firstItem="MWM-iw-ZkD" firstAttribute="leading" secondItem="VaK-nR-Hef" secondAttribute="leading" constant="15" id="GCn-go-fN8"/>
+                            <constraint firstItem="o9I-KM-lOp" firstAttribute="top" secondItem="VaK-nR-Hef" secondAttribute="top" constant="26.5" id="J5l-OV-A0Z"/>
                             <constraint firstAttribute="trailing" secondItem="QGf-la-yTE" secondAttribute="trailing" constant="15" id="P2V-8u-MiP"/>
                             <constraint firstItem="7bo-Ww-lG1" firstAttribute="leading" secondItem="VaK-nR-Hef" secondAttribute="leading" constant="15" id="Ugo-WC-NMg"/>
                             <constraint firstItem="Lrd-aA-COp" firstAttribute="leading" secondItem="VaK-nR-Hef" secondAttribute="leading" constant="15" id="evo-3I-GXx"/>
-                            <constraint firstItem="Lg5-Os-b6G" firstAttribute="centerY" secondItem="MWM-iw-ZkD" secondAttribute="centerY" id="fnl-at-RYm"/>
                             <constraint firstItem="MWM-iw-ZkD" firstAttribute="top" secondItem="VaK-nR-Hef" secondAttribute="top" constant="7" id="gOi-7F-83s"/>
                             <constraint firstItem="Lrd-aA-COp" firstAttribute="top" secondItem="7bo-Ww-lG1" secondAttribute="bottom" constant="5" id="gkk-IK-KnI"/>
                             <constraint firstAttribute="bottom" secondItem="QGf-la-yTE" secondAttribute="bottom" constant="10" id="oP7-Vc-H46"/>
-                            <constraint firstItem="o9I-KM-lOp" firstAttribute="top" secondItem="MWM-iw-ZkD" secondAttribute="bottom" constant="5" id="oaY-8L-NzB"/>
                             <constraint firstItem="o9I-KM-lOp" firstAttribute="leading" secondItem="VaK-nR-Hef" secondAttribute="leading" constant="15" id="v5p-Fn-2Y5"/>
                         </constraints>
                         <userDefinedRuntimeAttributes>
@@ -110,6 +110,7 @@
             <connections>
                 <outlet property="date" destination="Lg5-Os-b6G" id="tAF-zM-YzT"/>
                 <outlet property="mainHeading" destination="o9I-KM-lOp" id="wr6-mQ-YTM"/>
+                <outlet property="mainHeadingTopConstraint" destination="J5l-OV-A0Z" id="NWn-My-9n1"/>
                 <outlet property="mainView" destination="VaK-nR-Hef" id="qIU-Du-10u"/>
                 <outlet property="status" destination="QGf-la-yTE" id="n1n-mN-sVZ"/>
                 <outlet property="subHeading" destination="7bo-Ww-lG1" id="p5s-FQ-MdP"/>

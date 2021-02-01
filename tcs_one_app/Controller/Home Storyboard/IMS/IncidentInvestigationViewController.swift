@@ -60,7 +60,7 @@ class IncidentInvestigationViewController: BaseViewController {
     var updatedelegate: UpdateIncidentInvestigation?
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.title = "Incident Investigation"
+        self.title = "IMS"
         
         detal_investigation_textview.delegate = self
         prosecution_narrative_textview.delegate = self
