@@ -620,6 +620,12 @@ let ENTER_RISK_REMARKS = "Enter Risk Remarks"
 let ENTER_CLOSURE_REMARKS_TAG = 13
 let ENTER_CLOSURE_REMARKS = "Enter Recommendations"
 
+
+
+
+let ENTER_EMAILS_TAG = 14
+let ENTER_EMAILS = "Enter Emails  (Semi Colon Seperated)"
+
 let FILTERDATA = [
     "Weekly",
     "15 Days",

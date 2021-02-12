@@ -373,6 +373,7 @@ PODS:
     - GoogleToolboxForMac/Defines (= 2.3.0)
   - "GoogleToolboxForMac/NSData+zlib (2.3.0)":
     - GoogleToolboxForMac/Defines (= 2.3.0)
+  - GrowingTextView (0.7.2)
   - gRPC-Core (1.34.0):
     - gRPC-Core/Implementation (= 1.34.0)
     - gRPC-Core/Interface (= 1.34.0)
@@ -488,6 +489,7 @@ DEPENDENCIES:
   - Firebase/Firestore
   - Firebase/Messaging
   - Floaty
+  - GrowingTextView (= 0.7.2)
   - IQKeyboardManagerSwift
   - MarqueeLabel
   - "MaterialComponents/TextControls+OutlinedTextAreas"
@@ -517,6 +519,7 @@ SPEC REPOS:
     - FirebaseMessaging
     - Floaty
     - GoogleToolboxForMac
+    - GrowingTextView
     - gRPC
     - gRPC-Core
     - gRPC-ProtoRPC
@@ -552,6 +555,7 @@ SPEC CHECKSUMS:
   FirebaseMessaging: 75cdb862e86c30e0913a2ff307e48d49357c5b73
   Floaty: e2bd5a0f6f7f70899e26ff2da31081c8bee8d1b0
   GoogleToolboxForMac: 1350d40e86a76f7863928d63bcb0b89c84c521c5
+  GrowingTextView: 876bf42005b5e4a4fd740597db12caaf41f0fe6c
   gRPC: 659a45fd11266316f2f765c22e72cf5909750618
   gRPC-Core: 2f6b456c6bbbe6feecb350a59e5f65d950256f2e
   gRPC-ProtoRPC: 2a3e5eb6f2509613ba28845b8702775f4ddf64c6
@@ -573,6 +577,6 @@ SPEC CHECKSUMS:
   Toast-Swift: 9b6a70f28b3bf0b96c40d46c0c4b9d6639846711
   TPPDF: 000c670ca79d0b00c62dcc32b168c6f691dc92a5
 
-PODFILE CHECKSUM: 2bac86f530accb1cc4c7c33dd10742790da86257
+PODFILE CHECKSUM: 6916b55a73f52b0f21c907c55770635da090092c
 
 COCOAPODS: 1.10.1

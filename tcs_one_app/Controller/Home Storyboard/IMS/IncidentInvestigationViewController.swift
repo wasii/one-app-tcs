@@ -92,7 +92,7 @@ class IncidentInvestigationViewController: BaseViewController {
                 
             } else {
                 self.detal_investigation_textview.text = ticket?.DETAILED_INVESTIGATION ?? ""
-                self.detal_investigation_textview.isUserInteractionEnabled = false
+                self.detal_investigation_textview.isEditable = false
             }
         } else {
             self.di_view.isHidden = true
@@ -108,7 +108,7 @@ class IncidentInvestigationViewController: BaseViewController {
                     self.prosecution_narrative_textview.text = ticket?.PROSECUTION_NARRATIVE ?? ""
                 }
             } else {
-                self.prosecution_narrative_textview.isUserInteractionEnabled = false
+                self.prosecution_narrative_textview.isEditable = false
                 self.prosecution_narrative_textview.text = ticket?.PROSECUTION_NARRATIVE ?? ""
             }
         } else {
@@ -125,7 +125,7 @@ class IncidentInvestigationViewController: BaseViewController {
                     self.defense_narrative_textview.text = ticket?.DEFENSE_NARRATIVE ?? ""
                 }
             } else {
-                self.defense_narrative_textview.isUserInteractionEnabled = false
+                self.defense_narrative_textview.isEditable = false
                 self.defense_narrative_textview.text = ticket?.DEFENSE_NARRATIVE ?? ""
             }
         } else {
@@ -142,7 +142,7 @@ class IncidentInvestigationViewController: BaseViewController {
                     self.challenges_textview.text = ticket?.CHALLENGES ?? ""
                 }
             } else {
-                self.challenges_textview.isUserInteractionEnabled = false
+                self.challenges_textview.isEditable = false
                 self.challenges_textview.text = ticket?.CHALLENGES ?? ""
             }
         } else {
@@ -159,7 +159,7 @@ class IncidentInvestigationViewController: BaseViewController {
                     self.fact_textview.text = ticket?.FACTS ?? ""
                 }
             } else {
-                self.fact_textview.isUserInteractionEnabled = false
+                self.fact_textview.isEditable = false
                 self.fact_textview.text = ticket?.FACTS ?? ""
             }
         } else {
@@ -176,7 +176,7 @@ class IncidentInvestigationViewController: BaseViewController {
                     self.findings_textview.text = ticket?.FINDINGS ?? ""
                 }
             } else {
-                self.findings_textview.isUserInteractionEnabled = false
+                self.findings_textview.isEditable = false
                 self.findings_textview.text = ticket?.FINDINGS ?? ""
             }
         } else {
@@ -193,7 +193,7 @@ class IncidentInvestigationViewController: BaseViewController {
                     self.opinions_textview.text = ticket?.OPINION ?? ""
                 }
             } else {
-                self.opinions_textview.isUserInteractionEnabled = false
+                self.opinions_textview.isEditable = false
                 self.opinions_textview.text = ticket?.OPINION ?? ""
             }
         } else {

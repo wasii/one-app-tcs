@@ -22,6 +22,7 @@ pod "SwiftyJSON"
 pod 'ReachabilitySwift'
 
 #pod "PWSwitch"
+pod 'GrowingTextView', '0.7.2'
 pod 'IQKeyboardManagerSwift'
 pod 'SimplePDF'
 pod 'SwiftSVG'

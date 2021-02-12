@@ -12,6 +12,7 @@ import MobileCoreServices
 import Alamofire
 import SwiftyJSON
 import Photos
+import GrowingTextView
 
 class IMSViewUpdateRequestViewController: BaseViewController {
 var current_user = String()
@@ -30,6 +31,9 @@ var ticket_request: tbl_Hr_Request_Logs?
     @IBOutlet weak var incident_detail_word_counter: UILabel!
     @IBOutlet weak var showEnterDetailLabel: UILabel!
     
+    @IBOutlet weak var incident_detail_consignment_VIEW: UIView!
+    @IBOutlet weak var incident_detail_cityview_textfield: MDCOutlinedTextField!
+    @IBOutlet weak var incident_details_consignment_view_textfield: MDCOutlinedTextField!
     //HOD and After HOD
     
     @IBOutlet weak var incident_detail_view_hod: CustomView!
@@ -93,6 +97,8 @@ var ticket_request: tbl_Hr_Request_Logs?
     
     @IBOutlet weak var email_view: UIView!
     @IBOutlet weak var email_textfield: MDCOutlinedTextField!
+    @IBOutlet weak var email_textview: GrowingTextView!
+    @IBOutlet weak var email_textview_height: NSLayoutConstraint!
     
     @IBOutlet weak var attachement_view_height_constraint: NSLayoutConstraint!
     @IBOutlet weak var attachment_view: UIView!
@@ -413,7 +419,7 @@ var ticket_request: tbl_Hr_Request_Logs?
                 self.headingLabel.text = "View Request"
                 self.forwardBtn.isHidden = true
                 self.rejectBtn.isHidden = true
-                self.showEnterDetailLabel.text = "Show Details"
+                self.showEnterDetailLabel.text = "View Details"
             }
         }
         if IMS_Inprogress_Hs == "\(current_user)" || IMS_Inprogress_Rds == current_user {
@@ -483,7 +489,8 @@ var ticket_request: tbl_Hr_Request_Logs?
                 }
                 self.endoresement_textview.isUserInteractionEnabled = true
                 self.recommendations_textview.isUserInteractionEnabled = true
-                self.email_textfield.delegate = self
+//                self.email_textfield.delegate = self
+                self.email_textview.delegate = self
                 self.endoresement_textview.delegate = self
                 self.recommendations_textview.delegate = self
             } else {
@@ -491,11 +498,11 @@ var ticket_request: tbl_Hr_Request_Logs?
                 self.headingLabel.text = "View Request"
                 self.endoresement_textview.isUserInteractionEnabled = false
                 self.recommendations_textview.isUserInteractionEnabled = false
-                self.email_textfield.isUserInteractionEnabled = false
+                self.email_textview.isUserInteractionEnabled = false
                 
                 self.endoresement_textview.text = self.ticket_request?.DIR_SEC_ENDOR ?? ""
                 self.recommendations_textview.text = self.ticket_request?.DIR_SEC_RECOM ?? ""
-                self.email_textfield.text = self.ticket_request?.DIR_NOTIFY_EMAILS ?? ""
+                self.email_textview.text = self.ticket_request?.DIR_NOTIFY_EMAILS ?? ""
                 self.forwardBtn.isHidden = true
             }
             return
@@ -529,6 +536,7 @@ var ticket_request: tbl_Hr_Request_Logs?
                 }
                 
                 self.claim_reference_number_textfield.isUserInteractionEnabled = true
+                self.claim_reference_number_textfield.delegate = self
                 
             } else {
 //                self.title = "View Request"
@@ -716,17 +724,25 @@ var ticket_request: tbl_Hr_Request_Logs?
 //                self.title = "View Request"
                 self.headingLabel.text = "View Request"
                 self.claim_defined_switch.isEnabled = false
+                
                 self.risk_remarks_textview.text = self.ticket_request!.RISK_REMARKS ?? ""
                 self.risk_remarks_textview.isUserInteractionEnabled = false
                 
-                self.category_of_control_textfield.text = self.ticket_request!.CONTROL_CATEGORY ?? ""
-                self.category_of_control_textfield.isUserInteractionEnabled = false
+                if let category = AppDelegate.sharedInstance.db?.read_tbl_control_category(query: "SELECT * FROM \(db_lov_control_category) WHERE SERVER_ID_PK = '\(self.ticket_request!.CONTROL_CATEGORY ?? "")'").first {
+                    self.category_of_control_textfield.text = category.NAME
+                    self.category_of_control_textfield.isUserInteractionEnabled = false
+                }
                 
-                self.type_of_risk_textfield.text = self.ticket_request!.RISK_TYPE ?? ""
-                self.type_of_risk_textfield.isUserInteractionEnabled = false
+                if let risk = AppDelegate.sharedInstance.db?.read_tbl_risk_type(query: "SELECT * FROM \(db_lov_risk_type) WHERE SERVER_ID_PK = '\(self.ticket_request!.RISK_TYPE ?? "")'").first {
+                    self.type_of_risk_textfield.text = risk.NAME
+                    self.type_of_risk_textfield.isUserInteractionEnabled = false
+                }
                 
-                self.type_of_control_textfield.text = self.ticket_request!.CONTROL_TYPE ?? ""
-                self.type_of_control_textfield.isUserInteractionEnabled = false
+                if let control = AppDelegate.sharedInstance.db?.read_tbl_control_type(query: "SELECT * FROM \(db_lov_control_type) WHERE SERVER_ID_PK = '\(self.ticket_request!.CONTROL_TYPE ?? "")'").first {
+                    self.type_of_control_textfield.text = control.NAME
+                    self.type_of_control_textfield.isUserInteractionEnabled = false
+                }
+                
                 
                 self.closure_remarks_textview.text = self.ticket_request!.HR_REMARKS ?? ""
                 self.closure_remarks_textview.isUserInteractionEnabled = false
@@ -808,6 +824,8 @@ var ticket_request: tbl_Hr_Request_Logs?
         incident_detail_recovery_type.text = ""
         incident_detail_recovery_type.setOutlineColor(UIColor.nativeRedColor(), for: .normal)
         
+        
+        //after hod
         incident_detail_city_textfield.label.textColor = UIColor.nativeRedColor()
         incident_detail_city_textfield.label.text = "City"
         incident_detail_city_textfield.text = ""
@@ -817,7 +835,25 @@ var ticket_request: tbl_Hr_Request_Logs?
         incident_detail_consignment_textfield.label.text = "Consignment #"
         incident_detail_consignment_textfield.text = ""
         incident_detail_consignment_textfield.setOutlineColor(UIColor.nativeRedColor(), for: .normal)
+        //after hod
         
+        
+        //before hod
+        incident_detail_cityview_textfield.label.textColor = UIColor.nativeRedColor()
+        incident_detail_cityview_textfield.label.text = "City"
+        incident_detail_cityview_textfield.text = "\(AppDelegate.sharedInstance.db!.read_tbl_area(query: "SELECT * FROM \(db_lov_area) WHERE SERVER_ID_PK = '\(self.ticket_request!.AREA!)'").first!.AREA_NAME)"
+        incident_detail_cityview_textfield.setOutlineColor(UIColor.nativeRedColor(), for: .normal)
+        
+        
+        //before hod
+        
+        if self.ticket_request!.CNSGNO != "" {
+            self.incident_detail_consignment_VIEW.isHidden = false
+            incident_details_consignment_view_textfield.label.textColor = UIColor.nativeRedColor()
+            incident_details_consignment_view_textfield.label.text = "Consignment #"
+            incident_details_consignment_view_textfield.text = "\(self.ticket_request!.CNSGNO!)"
+            incident_details_consignment_view_textfield.setOutlineColor(UIColor.nativeRedColor(), for: .normal)
+        }
         
         classification_textfield.label.textColor = UIColor.nativeRedColor()
         classification_textfield.label.text = "Classification"
@@ -884,11 +920,11 @@ var ticket_request: tbl_Hr_Request_Logs?
         status_textfield.setOutlineColor(UIColor.nativeRedColor(), for: .normal)
         status_textfield.setOutlineColor(UIColor.nativeRedColor(), for: .editing)
         
-        email_textfield.label.textColor = UIColor.nativeRedColor()
-        email_textfield.label.text = "Emails"
-        email_textfield.placeholder = "Enter Emails  (Semi Colon Seperated)"
-        email_textfield.setOutlineColor(UIColor.nativeRedColor(), for: .normal)
-        email_textfield.setOutlineColor(UIColor.nativeRedColor(), for: .editing)
+//        email_textfield.label.textColor = UIColor.nativeRedColor()
+//        email_textfield.label.text = "Emails"
+//        email_textfield.placeholder = "Enter Emails  (Semi Colon Seperated)"
+//        email_textfield.setOutlineColor(UIColor.nativeRedColor(), for: .normal)
+//        email_textfield.setOutlineColor(UIColor.nativeRedColor(), for: .editing)
         
         
         //FS
@@ -959,7 +995,15 @@ var ticket_request: tbl_Hr_Request_Logs?
         }
         
         if AppDelegate.sharedInstance.db!.read_tbl_UserPermission(permission: IMS_View_Investigation_Summary).count > 0 {
-            self.incident_investigation_view.isHidden = false
+            if IMS_Inprogress_Cs == "\(current_user)" {
+                if self.ticket_request?.DETAILED_INVESTIGATION == "" {
+                    self.incident_investigation_view.isHidden = true
+                } else {
+                    self.incident_investigation_view.isHidden = false
+                }
+            } else {
+                self.incident_investigation_view.isHidden = false
+            }
         }
         
         
@@ -1881,7 +1925,12 @@ extension IMSViewUpdateRequestViewController: UITextViewDelegate {
     }
     
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
-        let maxLength = 200
+        var maxLength = 0
+        if textView.tag == 14 {
+            maxLength = 20000
+        } else {
+            maxLength = 200
+        }
         let currentString: NSString = textView.text as! NSString
         let newString: NSString =
                 currentString.replacingCharacters(in: range, with: text) as NSString
@@ -1911,6 +1960,8 @@ extension IMSViewUpdateRequestViewController: UITextViewDelegate {
                 return true
             case ENTER_CLOSURE_REMARKS_TAG:
                 self.closure_remarks_word_counter.text = "\(newString.length)/200"
+                return true
+            case ENTER_EMAILS_TAG:
                 return true
             default:
                 return false
@@ -2321,11 +2372,11 @@ extension IMSViewUpdateRequestViewController {
             self.view.makeToast("Recommendations is mandatory")
             return nil
         }
-        if self.email_textfield.text == "" {
+        if self.email_textview.text == "" {
             self.view.makeToast("Email is mandatory")
             return nil
         }
-        if let emails = self.email_textfield.text?.split(separator: ":") {
+        if let emails = self.email_textview.text?.split(separator: ",") {
             for email in emails {
                 if !isValidEmail(String(email)) {
                     self.view.makeToast("\(String(email)) is not a valid email.")
@@ -2333,8 +2384,8 @@ extension IMSViewUpdateRequestViewController {
                 }
             }
         } else {
-            if !isValidEmail(self.email_textfield.text!) {
-                self.view.makeToast("\(self.email_textfield.text!) is not a valid email.")
+            if !isValidEmail(self.email_textview.text!) {
+                self.view.makeToast("\(self.email_textview.text!) is not a valid email.")
                 return nil
             }
         }
@@ -2359,7 +2410,7 @@ extension IMSViewUpdateRequestViewController {
         
         if willDBInsert {
             let columns = ["DIR_SEC_ENDOR", "DIR_SEC_RECOM", "DIR_NOTIFY_EMAILS", "TICKET_STATUS"]
-            let values = [self.endoresement_textview.text!, self.recommendations_textview.text!, self.email_textfield.text!, ticket_status]
+            let values = [self.endoresement_textview.text!, self.recommendations_textview.text!, self.email_textview.text!, ticket_status]
             AppDelegate.sharedInstance.db?.updateTables(tableName: db_hr_request, columnName: columns, updateValue: values, onCondition: "SERVER_ID_PK = '\(self.ticket_request!.SERVER_ID_PK!)'", { _ in })
         }
         let json = [
@@ -2372,7 +2423,7 @@ extension IMSViewUpdateRequestViewController {
                     "closure_remarks" : "",
                     "dir_sec_endors": "\(self.endoresement_textview.text!)",
                     "dir_sec_recom": "\(self.recommendations_textview.text!)",
-                    "dir_sec_email": "\(self.email_textfield.text!)",
+                    "dir_sec_email": "\(self.email_textview.text!)",
                     "ticket_logs": [
                         [
                             "inputby": IMS_InputBy_DirectorSecurity, //"Er_Manager"
@@ -2797,7 +2848,7 @@ extension IMSViewUpdateRequestViewController {
         }
         if willDBInsert {
             let columns = ["DIR_SEC_ENDOR", "DIR_SEC_RECOM", "DIR_NOTIFY_EMAILS", "TICKET_STATUS"]
-            let values = [self.endoresement_textview.text ?? "", self.recommendations_textview.text ?? "", self.email_textfield.text ?? "", IMS_Status_Inprogress_Rds]
+            let values = [self.endoresement_textview.text ?? "", self.recommendations_textview.text ?? "", self.email_textview.text ?? "", IMS_Status_Inprogress_Rds]
             AppDelegate.sharedInstance.db?.updateTables(tableName: db_hr_request, columnName: columns, updateValue: values, onCondition: "SERVER_ID_PK = '\(self.ticket_request!.SERVER_ID_PK!)'", { _ in })
         }
         let json = [
@@ -2810,7 +2861,7 @@ extension IMSViewUpdateRequestViewController {
                     "closure_remarks" : "",
                     "dir_sec_endors": "\(self.endoresement_textview.text ?? "")",
                     "dir_sec_recom": "\(self.recommendations_textview.text ?? "")",
-                    "dir_sec_email": "\(self.email_textfield.text ?? "")",
+                    "dir_sec_email": "\(self.email_textview.text ?? "")",
                     "ticket_logs": [
                         [
                             "inputby": IMS_InputBy_DirectorSecurity, //"Er_Manager"
@@ -3120,4 +3171,29 @@ extension IMSViewUpdateRequestViewController: ConfirmationProtocol {
 struct HrSTATUS {
     var name: String
     var isSelected: Bool
+}
+
+
+
+
+
+
+
+extension IMSViewUpdateRequestViewController: GrowingTextViewDelegate {
+    func textViewDidChangeHeight(_ textView: GrowingTextView, height: CGFloat) {
+        UIView.animate(withDuration: 0.2) {
+            let currentHeight = textView.frame.size.height
+            print(currentHeight)
+            
+            if height <= 50 {
+                self.email_textview_height.constant = 50
+            } else {
+                let heightToAdd = height - currentHeight
+                self.email_textview_height.constant += heightToAdd
+            }
+            
+            
+            self.view.layoutIfNeeded()
+        }
+    }
 }

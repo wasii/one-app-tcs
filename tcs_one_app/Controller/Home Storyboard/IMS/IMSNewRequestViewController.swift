@@ -111,6 +111,7 @@ class IMSNewRequestViewController: BaseViewController {
         
         incident_detail.delegate = self
         remarks.delegate = self
+        loss_amount.delegate = self
         
         picker.delegate = self
         self.tableView.register(UINib(nibName: "AddAttachmentsTableCell", bundle: nil), forCellReuseIdentifier: "AddAttachmentsCell")
@@ -281,13 +282,15 @@ class IMSNewRequestViewController: BaseViewController {
                 self.incident_detail_top_constraint.constant -= 20
                 self.incident_detail_label.font = UIFont.systemFont(ofSize: 12)
                 self.incident_detail.text = ticket.REQ_REMARKS ?? ""
+                self.incident_word_counter.text = "\(ticket.REQ_REMARKS!.count)/200"
             }
             
-            if let initiator_remark = AppDelegate.sharedInstance.db?.read_tbl_hr_grievance(query: "SELECT * FROM \(db_grievance_remarks) WHERE TICKET_ID = '\(ticket.SERVER_ID_PK!)' AND REMARKS_INPUT = 'Initiator'").first {
-                self.remarks.text = initiator_remark.REMARKS
-                self.remarks_label_top_constraint.constant -= 20
-                self.remarks_label.font = UIFont.systemFont(ofSize: 12)
-            }
+//            if let initiator_remark = AppDelegate.sharedInstance.db?.read_tbl_hr_grievance(query: "SELECT * FROM \(db_grievance_remarks) WHERE TICKET_ID = '\(ticket.SERVER_ID_PK!)' AND REMARKS_INPUT = 'Initiator'").first {
+//                self.remarks.text = initiator_remark.REMARKS
+//                self.remarks_label_top_constraint.constant -= 20
+//                self.remarks_label.font = UIFont.systemFont(ofSize: 12)
+//                self.remarks_word_counter.text = "\(initiator_remark.REMARKS.count)/200"
+//            }
             
             if ticket.TICKET_STATUS != IMS_Status_Inprogress_Rm {
 //                self.title = "View Request"
@@ -309,13 +312,17 @@ class IMSNewRequestViewController: BaseViewController {
                 self.department.isUserInteractionEnabled = false
                 self.incident_detail.isUserInteractionEnabled = false
                 self.remarks.isUserInteractionEnabled = false
-                
+                if ticket.TICKET_STATUS == IMS_Status_Closed || ticket.TICKET_STATUS == IMS_Status_Submitted {
+                    ticket_status.text = ticket.TICKET_STATUS!
+                } else {
+                    ticket_status.text = IMS_Status_Inprogress
+                }
                 
             } else  {
 //                self.title = "Update Request"
                 self.headingLabel.text = "Update Request"
-                self.download_btn.isHidden = true
-                self.history_btn.isHidden = true
+//                self.download_btn.isHidden = true
+//                self.history_btn.isHidden = true
                 self.create_ticket_button.isHidden = false
                 
                 area.delegate = self
@@ -323,7 +330,12 @@ class IMSNewRequestViewController: BaseViewController {
                 date.delegate = self
                 department.delegate = self
                 verifyBtn.isUserInteractionEnabled = false
-                self.ticket_status.text = ticket.TICKET_STATUS ?? ""
+//                self.ticket_status.text = ticket.TICKET_STATUS ?? ""
+                if ticket.TICKET_STATUS == IMS_Status_Closed || ticket.TICKET_STATUS == IMS_Status_Submitted {
+                    ticket_status.text = ticket.TICKET_STATUS!
+                } else {
+                    ticket_status.text = IMS_Status_Inprogress
+                }
             }
             
             let downloadURL = Bundle.main.url(forResource: "download-fill-icon", withExtension: "svg")!
@@ -596,7 +608,7 @@ class IMSNewRequestViewController: BaseViewController {
         offline_data.TICKET_DATE = getCurrentDate()
         offline_data.LOGIN_ID = Int(CURRENT_USER_LOGGED_IN_ID)!
         
-        if self.title == "Update Request" {
+        if self.headingLabel.text == "Update Request" {
             offline_data.TICKET_STATUS = IMS_Inprogress_Ro
         } else {
             offline_data.TICKET_STATUS = "Submitted"
@@ -1027,6 +1039,19 @@ extension IMSNewRequestViewController: UITextFieldDelegate {
         return false
     }
     
+//    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+//        if textField.tag == 9 {
+//            print("LOSS AMOUNT")
+//            let alphaNumericRegEx = "[.0-9]"
+//            let predicate = NSPredicate(format:"SELF MATCHES %@", alphaNumericRegEx)
+//            if predicate.evaluate(with: string) {
+//                return true
+//            } else {
+//                return false
+//            }
+//        }
+//        return true
+//    }
     
 }
 
@@ -1383,7 +1408,7 @@ extension IMSNewRequestViewController: ConfirmationProtocol {
         AppDelegate.sharedInstance.db?.dump_data_HRRequest(hrrequests: offline_data, { success in
             if success {
                 print("DUMP IMS TICKET")
-                if self.title == "Update Request" {
+                if self.headingLabel.text == "Update Request" {
                     self.updateIMSTicket(offline_data: self.offline_data)
                 } else {
                     self.createImsTicket(offline_data: self.offline_data)
