@@ -110,6 +110,9 @@ var ticket_request: tbl_Hr_Request_Logs?
     @IBOutlet weak var remarks_textview: UITextView!
     @IBOutlet weak var remarks_word_counter: UILabel!
     
+    @IBOutlet weak var closure_remarks_views: UIView!
+    @IBOutlet weak var closure_remarks_textviews: UITextView!
+    @IBOutlet weak var closure_remarks_wordcounter: UILabel!
     
     @IBOutlet weak var investigation_required_view: UIView!
     @IBOutlet weak var investigation_required_switch: UISwitch!
@@ -276,7 +279,8 @@ var ticket_request: tbl_Hr_Request_Logs?
                 if remarks_permission! > 0 {
                     remarks_attachment_stackview.isHidden = false
                     remarks_view.isHidden = false
-                } else if file_attachment_permission! > 0 {
+                }
+                if file_attachment_permission! > 0 {
                     remarks_attachment_stackview.isHidden = false
                     attachment_view.isHidden = false
                 }
@@ -298,6 +302,13 @@ var ticket_request: tbl_Hr_Request_Logs?
                 incident_recovery_type.isUserInteractionEnabled = false
                 
                 
+                if ticket_request?.TICKET_STATUS == IMS_Status_Closed {
+                    remarks_attachment_stackview.isHidden = false
+                    closure_remarks_views.isHidden = false
+                    closure_remarks_textviews.text = "\(ticket_request?.HR_REMARKS ?? "")"
+                    closure_remarks_wordcounter.text = "\(ticket_request?.HR_REMARKS?.count ?? 0)/200"
+                }
+                
                 self.forwardBtn.isHidden = true
                 self.rejectBtn.isHidden = true
             }
@@ -316,7 +327,8 @@ var ticket_request: tbl_Hr_Request_Logs?
                 if remarks_permission! > 0 {
                     remarks_attachment_stackview.isHidden = false
                     remarks_view.isHidden = false
-                } else if file_attachment_permission! > 0 {
+                }
+                if file_attachment_permission! > 0 {
                     remarks_attachment_stackview.isHidden = false
                     attachment_view.isHidden = false
                 }
@@ -332,6 +344,12 @@ var ticket_request: tbl_Hr_Request_Logs?
                 
                 self.investigation_required_switch.isEnabled = false
                 
+                if ticket_request?.TICKET_STATUS == IMS_Status_Closed {
+                    remarks_attachment_stackview.isHidden = false
+                    closure_remarks_views.isHidden = false
+                    closure_remarks_textviews.text = "\(ticket_request?.HR_REMARKS ?? "")"
+                    closure_remarks_wordcounter.text = "\(ticket_request?.HR_REMARKS?.count ?? 0)/200"
+                }
                 
                 self.forwardBtn.isHidden = true
                 self.rejectBtn.isHidden = true
@@ -358,12 +376,11 @@ var ticket_request: tbl_Hr_Request_Logs?
                 let file_attachment_permission = AppDelegate.sharedInstance.db?.read_tbl_UserPermission(permission: IMS_Add_Files_Central_Security).count
                 
                 remarks_attachment_stackview.isHidden = true
-                remarks_view.isHidden = true
-                attachment_view.isHidden = true
                 if remarks_permission! > 0 {
                     remarks_attachment_stackview.isHidden = false
                     remarks_view.isHidden = false
-                } else if file_attachment_permission! > 0 {
+                }
+                if file_attachment_permission! > 0 {
                     remarks_attachment_stackview.isHidden = false
                     attachment_view.isHidden = false
                 }
@@ -385,10 +402,15 @@ var ticket_request: tbl_Hr_Request_Logs?
                 } else {
                     self.assigned_to_textfield.text = " "
                 }
-               
-                
-                
                 self.assigned_to_textfield.isUserInteractionEnabled = false
+                
+                if ticket_request?.TICKET_STATUS == IMS_Status_Closed {
+                    remarks_attachment_stackview.isHidden = false
+                    closure_remarks_views.isHidden = false
+                    closure_remarks_textviews.text = "\(ticket_request?.HR_REMARKS ?? "")"
+                    closure_remarks_wordcounter.text = "\(ticket_request?.HR_REMARKS?.count ?? 0)/200"
+                }
+                
                 self.forwardBtn.isHidden = true
                 self.rejectBtn.isHidden = true
             }
@@ -422,6 +444,12 @@ var ticket_request: tbl_Hr_Request_Logs?
                 self.forwardBtn.isHidden = true
                 self.rejectBtn.isHidden = true
                 self.showEnterDetailLabel.text = "View Details"
+                if ticket_request?.TICKET_STATUS == IMS_Status_Closed {
+                    remarks_attachment_stackview.isHidden = false
+                    closure_remarks_views.isHidden = false
+                    closure_remarks_textviews.text = "\(ticket_request?.HR_REMARKS ?? "")"
+                    closure_remarks_wordcounter.text = "\(ticket_request?.HR_REMARKS?.count ?? 0)/200"
+                }
             }
         }
         if IMS_Inprogress_Hs == "\(current_user)" || IMS_Inprogress_Rds == current_user {
@@ -461,6 +489,12 @@ var ticket_request: tbl_Hr_Request_Logs?
                 self.executive_summary_textview.text = self.ticket_request?.HO_SEC_SUMMARY ?? ""
                 self.recommendations_textview.text = self.ticket_request?.HO_SEC_RECOM ?? ""
                 
+                if ticket_request?.TICKET_STATUS == IMS_Status_Closed {
+                    remarks_attachment_stackview.isHidden = false
+                    closure_remarks_views.isHidden = false
+                    closure_remarks_textviews.text = "\(ticket_request?.HR_REMARKS ?? "")"
+                    closure_remarks_wordcounter.text = "\(ticket_request?.HR_REMARKS?.count ?? 0)/200"
+                }
                 self.forwardBtn.isHidden = true
             }
             return
@@ -506,6 +540,13 @@ var ticket_request: tbl_Hr_Request_Logs?
                 self.recommendations_textview.text = self.ticket_request?.DIR_SEC_RECOM ?? ""
                 self.email_textview.text = self.ticket_request?.DIR_NOTIFY_EMAILS ?? ""
                 self.forwardBtn.isHidden = true
+                
+                if ticket_request?.TICKET_STATUS == IMS_Status_Closed {
+                    remarks_attachment_stackview.isHidden = false
+                    closure_remarks_views.isHidden = false
+                    closure_remarks_textviews.text = "\(ticket_request?.HR_REMARKS ?? "")"
+                    closure_remarks_wordcounter.text = "\(ticket_request?.HR_REMARKS?.count ?? 0)/200"
+                }
             }
             return
         }
@@ -569,6 +610,12 @@ var ticket_request: tbl_Hr_Request_Logs?
                 }
                 
                 self.forwardBtn.isHidden = true
+                if ticket_request?.TICKET_STATUS == IMS_Status_Closed {
+                    remarks_attachment_stackview.isHidden = false
+                    closure_remarks_views.isHidden = false
+                    closure_remarks_textviews.text = "\(ticket_request?.HR_REMARKS ?? "")"
+                    closure_remarks_wordcounter.text = "\(ticket_request?.HR_REMARKS?.count ?? 0)/200"
+                }
             }
             
         }
@@ -623,7 +670,14 @@ var ticket_request: tbl_Hr_Request_Logs?
                 self.ins_insurance_claimable_switch.isOn = true
                 self.forwardBtn.isHidden = true
                 self.ins_claim_reference_number_textfield.text = "\(self.ticket_request?.INS_CLAIMED_AMOUNT ?? 0.0)"
+                if ticket_request?.TICKET_STATUS == IMS_Status_Closed {
+                    remarks_attachment_stackview.isHidden = false
+                    closure_remarks_views.isHidden = false
+                    closure_remarks_textviews.text = "\(ticket_request?.HR_REMARKS ?? "")"
+                    closure_remarks_wordcounter.text = "\(ticket_request?.HR_REMARKS?.count ?? 0)/200"
+                }
             }
+            
         }
         
         if IMS_Inprogress_Hr == "\(current_user)" {
@@ -671,6 +725,12 @@ var ticket_request: tbl_Hr_Request_Logs?
                 self.hr_reference_number_textfield.isUserInteractionEnabled = false
                 self.hr_status_textfield.isUserInteractionEnabled = false
                 self.forwardBtn.isHidden = true
+                if ticket_request?.TICKET_STATUS == IMS_Status_Closed {
+                    remarks_attachment_stackview.isHidden = false
+                    closure_remarks_views.isHidden = false
+                    closure_remarks_textviews.text = "\(ticket_request?.HR_REMARKS ?? "")"
+                    closure_remarks_wordcounter.text = "\(ticket_request?.HR_REMARKS?.count ?? 0)/200"
+                }
             }
         }
         if IMS_Inprogress_Fi == "\(current_user)" {
@@ -718,6 +778,12 @@ var ticket_request: tbl_Hr_Request_Logs?
                 self.hr_reference_number_textfield.isUserInteractionEnabled = false
                 self.hr_status_textfield.isUserInteractionEnabled = false
                 self.forwardBtn.isHidden = true
+                if ticket_request?.TICKET_STATUS == IMS_Status_Closed {
+                    remarks_attachment_stackview.isHidden = false
+                    closure_remarks_views.isHidden = false
+                    closure_remarks_textviews.text = "\(ticket_request?.HR_REMARKS ?? "")"
+                    closure_remarks_wordcounter.text = "\(ticket_request?.HR_REMARKS?.count ?? 0)/200"
+                }
             }
         }
         if IMS_Inprogress_Ca == "\(current_user)" {
@@ -793,6 +859,12 @@ var ticket_request: tbl_Hr_Request_Logs?
                 self.hr_status_textfield.text = self.ticket_request!.HR_STATUS ?? ""
                 self.hr_status_textfield.isUserInteractionEnabled = false
                 self.forwardBtn.isHidden = true
+                if ticket_request?.TICKET_STATUS == IMS_Status_Closed {
+                    remarks_attachment_stackview.isHidden = false
+                    closure_remarks_views.isHidden = false
+                    closure_remarks_textviews.text = "\(ticket_request?.HR_REMARKS ?? "")"
+                    closure_remarks_wordcounter.text = "\(ticket_request?.HR_REMARKS?.count ?? 0)/200"
+                }
             }
         }
         if IMS_Inprogress_Rds == "\(current_user)" {

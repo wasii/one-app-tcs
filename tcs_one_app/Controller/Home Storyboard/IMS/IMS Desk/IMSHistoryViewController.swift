@@ -29,9 +29,9 @@ class IMSHistoryViewController: BaseViewController {
         self.tableView.rowHeight = UITableView.automaticDimension
         
         let query = "SELECT HR_REMARKS FROM \(db_hr_request) WHERE SERVER_ID_PK = '\(ticket_id!)'"
-        if let cr = AppDelegate.sharedInstance.db?.read_column(query: query) {
-            closure_remarks = "\(cr)"
-        }
+//        if let cr = AppDelegate.sharedInstance.db?.read_column(query: query) {
+//            closure_remarks = "\(cr)"
+//        }
         
         setupIMSRemarks { (count) in
             DispatchQueue.main.async {

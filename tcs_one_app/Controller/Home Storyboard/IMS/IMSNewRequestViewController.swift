@@ -74,6 +74,17 @@ class IMSNewRequestViewController: BaseViewController {
     @IBOutlet weak var headingLabel: UILabel!
     
     
+    
+    @IBOutlet weak var tblViewTopContraint: NSLayoutConstraint!
+    
+    @IBOutlet weak var stackViewTopConstraint: NSLayoutConstraint!
+    
+    @IBOutlet weak var attachment_label: UILabel!
+    @IBOutlet weak var attachment_view: CustomView!
+    @IBOutlet weak var remarks_view: CustomView!
+    @IBOutlet weak var remarks_counter: UILabel!
+    
+    
     var emp_model = [User]()
     var tbl_request_mode:   tbl_RequestModes?
     var tbl_incident_type:  tbl_lov_incident_type?
@@ -261,7 +272,7 @@ class IMSNewRequestViewController: BaseViewController {
                 self.area.text = area.first?.AREA_NAME ?? ""
             }
             
-            if let city = AppDelegate.sharedInstance.db?.read_tbl_city(query: "SELECT * FROM \(db_lov_city) WHERE SERVER_ID_PK = '\(tbl_area!.SERVER_ID_PK)'") {
+            if let city = AppDelegate.sharedInstance.db?.read_tbl_city(query: "SELECT * FROM \(db_lov_city) WHERE AREA_CODE = '\(ticket.CITY!)'") {
                 self.tbl_city = city.first
                 self.city.text = city.first?.CITY_NAME ?? ""
             }
@@ -285,12 +296,12 @@ class IMSNewRequestViewController: BaseViewController {
                 self.incident_word_counter.text = "\(ticket.REQ_REMARKS!.count)/200"
             }
             
-//            if let initiator_remark = AppDelegate.sharedInstance.db?.read_tbl_hr_grievance(query: "SELECT * FROM \(db_grievance_remarks) WHERE TICKET_ID = '\(ticket.SERVER_ID_PK!)' AND REMARKS_INPUT = 'Initiator'").first {
-//                self.remarks.text = initiator_remark.REMARKS
-//                self.remarks_label_top_constraint.constant -= 20
-//                self.remarks_label.font = UIFont.systemFont(ofSize: 12)
-//                self.remarks_word_counter.text = "\(initiator_remark.REMARKS.count)/200"
-//            }
+            if let initiator_remark = AppDelegate.sharedInstance.db?.read_tbl_hr_grievance(query: "SELECT * FROM \(db_grievance_remarks) WHERE TICKET_ID = '\(ticket.SERVER_ID_PK!)' AND REMARKS_INPUT = 'Initiator'").first {
+                self.remarks.text = initiator_remark.REMARKS
+                self.remarks_label_top_constraint.constant -= 20
+                self.remarks_label.font = UIFont.systemFont(ofSize: 12)
+                self.remarks_word_counter.text = "\(initiator_remark.REMARKS.count)/200"
+            }
             
             if ticket.TICKET_STATUS != IMS_Status_Inprogress_Rm {
 //                self.title = "View Request"
@@ -312,9 +323,35 @@ class IMSNewRequestViewController: BaseViewController {
                 self.department.isUserInteractionEnabled = false
                 self.incident_detail.isUserInteractionEnabled = false
                 self.remarks.isUserInteractionEnabled = false
-                if ticket.TICKET_STATUS == IMS_Status_Closed || ticket.TICKET_STATUS == IMS_Status_Submitted {
+                if ticket.TICKET_STATUS == IMS_Status_Closed {
                     ticket_status.text = ticket.TICKET_STATUS!
+                    self.remarks.text = ticket.HR_REMARKS
+                    self.remarks_label.text = "Closure Remarks    "
+                    self.remarks_word_counter.text = "\(ticket.HR_REMARKS?.count ?? 0)/200"
+                } else if ticket.TICKET_STATUS == IMS_Status_Submitted {
+                    ticket_status.text = ticket.TICKET_STATUS!
+                    attachment_label.isHidden = true
+                    attachment_view.isHidden = true
+                    remarks_view!.isHidden = true
+                    remarks_counter.isHidden = true
+                    remarks_word_counter.isHidden = true
+                    remarks_label.isHidden = true
+                    
+                    tblViewTopContraint.constant = 0
+                    stackViewTopConstraint.constant = 20
+                    mainViewHeightConstraint.constant -= 175
                 } else {
+                    ticket_status.text = ticket.TICKET_STATUS!
+                    attachment_label.isHidden = true
+                    attachment_view.isHidden = true
+                    remarks_view!.isHidden = true
+                    remarks_counter.isHidden = true
+                    remarks_word_counter.isHidden = true
+                    remarks_label.isHidden = true
+                    
+                    tblViewTopContraint.constant = 0
+                    stackViewTopConstraint.constant = 20
+                    mainViewHeightConstraint.constant -= 175
                     ticket_status.text = IMS_Status_Inprogress
                 }
                 
