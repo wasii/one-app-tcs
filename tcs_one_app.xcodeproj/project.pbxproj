@@ -30,6 +30,8 @@
 		1B47F9A025A5F18300FC74A4 /* IncidentInvestigationTableCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1B47F99E25A5F18300FC74A4 /* IncidentInvestigationTableCell.xib */; };
 		1B47F9A325A5F81C00FC74A4 /* IncidentInvestigationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B47F9A225A5F81C00FC74A4 /* IncidentInvestigationViewController.swift */; };
 		1B496D8F259B130E00F3FABF /* TCSOneApp.db in Resources */ = {isa = PBXBuildFile; fileRef = 1B496D8E259B130E00F3FABF /* TCSOneApp.db */; };
+		1B4AAD1325DA781E00A26DE7 /* TrackStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1B4AAD1225DA781E00A26DE7 /* TrackStoryboard.storyboard */; };
+		1B4AAD1725DA784300A26DE7 /* TrackHomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B4AAD1625DA784300A26DE7 /* TrackHomeViewController.swift */; };
 		1B590C64255818E300C413AA /* WatchAllRequestsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B590C63255818E300C413AA /* WatchAllRequestsViewController.swift */; };
 		1B5970B0256553CF00FF8CA0 /* AddAttachmentsTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B5970AE256553CF00FF8CA0 /* AddAttachmentsTableCell.swift */; };
 		1B5970B1256553CF00FF8CA0 /* AddAttachmentsTableCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1B5970AF256553CF00FF8CA0 /* AddAttachmentsTableCell.xib */; };
@@ -141,6 +143,8 @@
 		1B47F99E25A5F18300FC74A4 /* IncidentInvestigationTableCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = IncidentInvestigationTableCell.xib; sourceTree = "<group>"; };
 		1B47F9A225A5F81C00FC74A4 /* IncidentInvestigationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IncidentInvestigationViewController.swift; sourceTree = "<group>"; };
 		1B496D8E259B130E00F3FABF /* TCSOneApp.db */ = {isa = PBXFileReference; lastKnownFileType = file; path = TCSOneApp.db; sourceTree = "<group>"; };
+		1B4AAD1225DA781E00A26DE7 /* TrackStoryboard.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = TrackStoryboard.storyboard; sourceTree = "<group>"; };
+		1B4AAD1625DA784300A26DE7 /* TrackHomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackHomeViewController.swift; sourceTree = "<group>"; };
 		1B590C63255818E300C413AA /* WatchAllRequestsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchAllRequestsViewController.swift; sourceTree = "<group>"; };
 		1B5970AE256553CF00FF8CA0 /* AddAttachmentsTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddAttachmentsTableCell.swift; sourceTree = "<group>"; };
 		1B5970AF256553CF00FF8CA0 /* AddAttachmentsTableCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AddAttachmentsTableCell.xib; sourceTree = "<group>"; };
@@ -274,6 +278,14 @@
 				1B1691B425724CE30007B3B0 /* next-icon.svg */,
 			);
 			path = "svg icons";
+			sourceTree = "<group>";
+		};
+		1B4AAD1525DA783300A26DE7 /* Track */ = {
+			isa = PBXGroup;
+			children = (
+				1B4AAD1625DA784300A26DE7 /* TrackHomeViewController.swift */,
+			);
+			path = Track;
 			sourceTree = "<group>";
 		};
 		1B5EAA78255E580800F49D09 /* HR HELP DESK */ = {
@@ -498,6 +510,7 @@
 				60E99920253D7E1900BCDAD1 /* Popups.storyboard */,
 				1B5EAA7E255E63CB00F49D09 /* GrievanceStoryboard.storyboard */,
 				1B6279E12591E54D00C88FEE /* IMSStoryboard.storyboard */,
+				1B4AAD1225DA781E00A26DE7 /* TrackStoryboard.storyboard */,
 			);
 			path = Storyboards;
 			sourceTree = "<group>";
@@ -514,6 +527,7 @@
 		60C34FE1253985D100495944 /* Home Storyboard */ = {
 			isa = PBXGroup;
 			children = (
+				1B4AAD1525DA783300A26DE7 /* Track */,
 				1B6279E42591E5B500C88FEE /* IMS */,
 				1B5EAA79255E582D00F49D09 /* GREVIANCE */,
 				1B5EAA78255E580800F49D09 /* HR HELP DESK */,
@@ -659,6 +673,7 @@
 				60E9990A253D4DF000BCDAD1 /* Dashboard.storyboard in Resources */,
 				1B1691B82572524C0007B3B0 /* right-arrow-filled.svg in Resources */,
 				1B1691B525724CE40007B3B0 /* next-icon.svg in Resources */,
+				1B4AAD1325DA781E00A26DE7 /* TrackStoryboard.storyboard in Resources */,
 				1B0C62EC255C100C00DCA76D /* ModulePermissionsTableCell.xib in Resources */,
 				1B1691BB257253C10007B3B0 /* checked-fill-icon.svg in Resources */,
 				1B6279E22591E54D00C88FEE /* IMSStoryboard.storyboard in Resources */,
@@ -763,6 +778,7 @@
 				60E99924253D848D00BCDAD1 /* RequestListingTableCell.swift in Sources */,
 				6010F4172540622500CF8597 /* NetworkCalls.swift in Sources */,
 				60E99911253D4F1300BCDAD1 /* PieChartCollectionCell.swift in Sources */,
+				1B4AAD1725DA784300A26DE7 /* TrackHomeViewController.swift in Sources */,
 				6006955A254994D400EB3865 /* HRHelpDeskRequestViewController.swift in Sources */,
 				1B7A292425A05E3C005694B6 /* IMSViewUpdateRequestViewController.swift in Sources */,
 				1B1C4294255738A300F881B6 /* NewChartListingViewController.swift in Sources */,
