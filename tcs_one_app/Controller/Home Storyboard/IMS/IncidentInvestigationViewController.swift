@@ -92,6 +92,7 @@ class IncidentInvestigationViewController: BaseViewController {
                 
             } else {
                 self.detal_investigation_textview.text = ticket?.DETAILED_INVESTIGATION ?? ""
+                self.detail_investigation_wordcounter.text = "\(ticket?.DETAILED_INVESTIGATION?.count ?? 0)/2000"
                 self.detal_investigation_textview.isEditable = false
             }
         } else {
@@ -110,6 +111,7 @@ class IncidentInvestigationViewController: BaseViewController {
             } else {
                 self.prosecution_narrative_textview.isEditable = false
                 self.prosecution_narrative_textview.text = ticket?.PROSECUTION_NARRATIVE ?? ""
+                self.prosecution_narrative_wordcounter.text = "\(ticket?.PROSECUTION_NARRATIVE?.count ?? 0)/1000"
             }
         } else {
             self.pn_view.isHidden = true
@@ -127,6 +129,7 @@ class IncidentInvestigationViewController: BaseViewController {
             } else {
                 self.defense_narrative_textview.isEditable = false
                 self.defense_narrative_textview.text = ticket?.DEFENSE_NARRATIVE ?? ""
+                self.defense_narrative_wordcounter.text = "\(ticket?.DEFENSE_NARRATIVE?.count ?? 0)/200"
             }
         } else {
             self.dn_view.isHidden = true
@@ -144,6 +147,7 @@ class IncidentInvestigationViewController: BaseViewController {
             } else {
                 self.challenges_textview.isEditable = false
                 self.challenges_textview.text = ticket?.CHALLENGES ?? ""
+                self.challenges_wordcounter.text = "\(ticket?.CHALLENGES?.count ?? 0)/200"
             }
         } else {
             self.c_view.isHidden = true
@@ -161,6 +165,7 @@ class IncidentInvestigationViewController: BaseViewController {
             } else {
                 self.fact_textview.isEditable = false
                 self.fact_textview.text = ticket?.FACTS ?? ""
+                self.facts_wordcounter.text = "\(ticket?.FACTS?.count ?? 0)/500"
             }
         } else {
             self.f_view.isHidden = true
@@ -178,6 +183,7 @@ class IncidentInvestigationViewController: BaseViewController {
             } else {
                 self.findings_textview.isEditable = false
                 self.findings_textview.text = ticket?.FINDINGS ?? ""
+                self.findings_wordcounter.text = "\(ticket?.FINDINGS?.count ?? 0)/1000"
             }
         } else {
             self.finding_view.isHidden = true
@@ -195,6 +201,7 @@ class IncidentInvestigationViewController: BaseViewController {
             } else {
                 self.opinions_textview.isEditable = false
                 self.opinions_textview.text = ticket?.OPINION ?? ""
+                self.opinions_wordcounter.text = "\(ticket?.OPINION?.count ?? 0)/500"
             }
         } else {
             self.o_view.isHidden = true

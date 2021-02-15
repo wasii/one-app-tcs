@@ -2519,17 +2519,17 @@
                                                 </constraints>
                                             </view>
                                             <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rQr-Qh-p91" userLabel="Insurance Claimable View">
-                                                <rect key="frame" x="0.0" y="120" width="393.66666666666669" height="45"/>
+                                                <rect key="frame" x="0.0" y="120" width="393.66666666666669" height="30"/>
                                                 <subviews>
                                                     <switch opaque="NO" tag="2" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="xlV-wG-RSg">
-                                                        <rect key="frame" x="188.66666666666666" y="7" width="51" height="31"/>
+                                                        <rect key="frame" x="188.66666666666666" y="-0.33333333333334281" width="51" height="31"/>
                                                         <color key="onTintColor" red="0.90196078430000004" green="0.1333333333" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                                         <connections>
                                                             <action selector="onOffSwitch:" destination="TwP-4I-OcV" eventType="valueChanged" id="bVr-DL-zfP"/>
                                                         </connections>
                                                     </switch>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Insurance Claimable" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GLI-LH-Cs2">
-                                                        <rect key="frame" x="15" y="12.333333333333341" width="153.66666666666666" height="20.333333333333329"/>
+                                                        <rect key="frame" x="15" y="5" width="153.66666666666666" height="20.333333333333332"/>
                                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                         <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -2539,10 +2539,37 @@
                                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                                 <constraints>
                                                     <constraint firstItem="GLI-LH-Cs2" firstAttribute="centerY" secondItem="rQr-Qh-p91" secondAttribute="centerY" id="Eli-zY-zXG"/>
-                                                    <constraint firstAttribute="height" constant="45" id="XBS-k2-o7D"/>
+                                                    <constraint firstAttribute="height" constant="30" id="XBS-k2-o7D"/>
                                                     <constraint firstItem="xlV-wG-RSg" firstAttribute="leading" secondItem="GLI-LH-Cs2" secondAttribute="trailing" constant="20" id="aa0-Cf-mct"/>
                                                     <constraint firstItem="GLI-LH-Cs2" firstAttribute="leading" secondItem="rQr-Qh-p91" secondAttribute="leading" constant="15" id="j9g-bk-VJb"/>
                                                     <constraint firstItem="xlV-wG-RSg" firstAttribute="centerY" secondItem="GLI-LH-Cs2" secondAttribute="centerY" id="j9t-cB-6XT"/>
+                                                </constraints>
+                                            </view>
+                                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="h5y-ld-WQ6" userLabel="INS Insurance Claimable View">
+                                                <rect key="frame" x="0.0" y="120" width="393.66666666666669" height="30"/>
+                                                <subviews>
+                                                    <switch opaque="NO" tag="3" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="0mR-G8-ZKh">
+                                                        <rect key="frame" x="143" y="-0.33333333333334281" width="51" height="31"/>
+                                                        <color key="onTintColor" red="0.90196078430000004" green="0.1333333333" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                                        <connections>
+                                                            <action selector="onOffSwitch:" destination="TwP-4I-OcV" eventType="valueChanged" id="Y71-Vp-und"/>
+                                                        </connections>
+                                                    </switch>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Claim Process" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="phb-UX-ma3">
+                                                        <rect key="frame" x="15" y="5" width="108" height="20.333333333333332"/>
+                                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                        <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                </subviews>
+                                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                                <constraints>
+                                                    <constraint firstItem="phb-UX-ma3" firstAttribute="centerY" secondItem="h5y-ld-WQ6" secondAttribute="centerY" id="0wd-EL-zho"/>
+                                                    <constraint firstItem="0mR-G8-ZKh" firstAttribute="leading" secondItem="phb-UX-ma3" secondAttribute="trailing" constant="20" id="MSa-BN-qs4"/>
+                                                    <constraint firstItem="0mR-G8-ZKh" firstAttribute="centerY" secondItem="phb-UX-ma3" secondAttribute="centerY" id="NxC-Ek-MXa"/>
+                                                    <constraint firstAttribute="height" constant="30" id="SUE-cZ-184"/>
+                                                    <constraint firstItem="phb-UX-ma3" firstAttribute="leading" secondItem="h5y-ld-WQ6" secondAttribute="leading" constant="15" id="eg5-qG-9rB"/>
                                                 </constraints>
                                             </view>
                                             <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sHt-df-aqi" userLabel="Claim Reference number view">
@@ -2561,6 +2588,24 @@
                                                     <constraint firstAttribute="height" constant="50" id="UP0-ht-qVe"/>
                                                     <constraint firstItem="aMY-rC-YXq" firstAttribute="top" secondItem="sHt-df-aqi" secondAttribute="top" id="uP5-sa-b4S"/>
                                                     <constraint firstAttribute="bottom" secondItem="aMY-rC-YXq" secondAttribute="bottom" id="usb-7L-SMn"/>
+                                                </constraints>
+                                            </view>
+                                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6XO-2s-LGx" userLabel="INS Claim Reference number view">
+                                                <rect key="frame" x="0.0" y="120" width="393.66666666666669" height="50"/>
+                                                <subviews>
+                                                    <textField opaque="NO" tag="4" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Incident Level 3" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="TMP-4h-bKB" customClass="MDCOutlinedTextField">
+                                                        <rect key="frame" x="0.0" y="0.0" width="393.66666666666669" height="50"/>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                        <textInputTraits key="textInputTraits" keyboardType="decimalPad"/>
+                                                    </textField>
+                                                </subviews>
+                                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                                <constraints>
+                                                    <constraint firstItem="TMP-4h-bKB" firstAttribute="top" secondItem="6XO-2s-LGx" secondAttribute="top" id="5p8-iN-08A"/>
+                                                    <constraint firstAttribute="height" constant="50" id="aPX-Cb-icP"/>
+                                                    <constraint firstAttribute="trailing" secondItem="TMP-4h-bKB" secondAttribute="trailing" id="m1a-l1-Qga"/>
+                                                    <constraint firstItem="TMP-4h-bKB" firstAttribute="leading" secondItem="6XO-2s-LGx" secondAttribute="leading" id="mx6-FH-vWW"/>
+                                                    <constraint firstAttribute="bottom" secondItem="TMP-4h-bKB" secondAttribute="bottom" id="sSd-XO-naG"/>
                                                 </constraints>
                                             </view>
                                             <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pNo-hQ-0zc" userLabel="Claim Defined View">
@@ -2813,33 +2858,6 @@
                                                     <constraint firstAttribute="height" constant="150" id="vgD-ie-qgA"/>
                                                 </constraints>
                                             </view>
-                                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="h5y-ld-WQ6" userLabel="INS Insurance Claimable View">
-                                                <rect key="frame" x="0.0" y="120" width="393.66666666666669" height="45"/>
-                                                <subviews>
-                                                    <switch opaque="NO" tag="3" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="0mR-G8-ZKh">
-                                                        <rect key="frame" x="205.66666666666666" y="7" width="51" height="31"/>
-                                                        <color key="onTintColor" red="0.90196078430000004" green="0.1333333333" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                                                        <connections>
-                                                            <action selector="onOffSwitch:" destination="TwP-4I-OcV" eventType="valueChanged" id="Y71-Vp-und"/>
-                                                        </connections>
-                                                    </switch>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Is Insurance Claimable" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="phb-UX-ma3">
-                                                        <rect key="frame" x="15" y="12.333333333333341" width="170.66666666666666" height="20.333333333333329"/>
-                                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                        <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                        <nil key="highlightedColor"/>
-                                                    </label>
-                                                </subviews>
-                                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                                                <constraints>
-                                                    <constraint firstItem="phb-UX-ma3" firstAttribute="centerY" secondItem="h5y-ld-WQ6" secondAttribute="centerY" id="0wd-EL-zho"/>
-                                                    <constraint firstItem="0mR-G8-ZKh" firstAttribute="leading" secondItem="phb-UX-ma3" secondAttribute="trailing" constant="20" id="MSa-BN-qs4"/>
-                                                    <constraint firstItem="0mR-G8-ZKh" firstAttribute="centerY" secondItem="phb-UX-ma3" secondAttribute="centerY" id="NxC-Ek-MXa"/>
-                                                    <constraint firstAttribute="height" constant="45" id="SUE-cZ-184"/>
-                                                    <constraint firstItem="phb-UX-ma3" firstAttribute="leading" secondItem="h5y-ld-WQ6" secondAttribute="leading" constant="15" id="eg5-qG-9rB"/>
-                                                </constraints>
-                                            </view>
                                             <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mVj-bc-kfB" userLabel="Hr Ref Number">
                                                 <rect key="frame" x="0.0" y="120" width="393.66666666666669" height="50"/>
                                                 <subviews>
@@ -2874,24 +2892,6 @@
                                                     <constraint firstItem="VPM-nN-gGn" firstAttribute="leading" secondItem="jSU-k3-fJu" secondAttribute="leading" id="Ntn-Y5-LD1"/>
                                                     <constraint firstAttribute="bottom" secondItem="VPM-nN-gGn" secondAttribute="bottom" id="sKv-VR-wru"/>
                                                     <constraint firstAttribute="height" constant="50" id="y9r-9n-wGM"/>
-                                                </constraints>
-                                            </view>
-                                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6XO-2s-LGx" userLabel="INS Claim Reference number view">
-                                                <rect key="frame" x="0.0" y="120" width="393.66666666666669" height="50"/>
-                                                <subviews>
-                                                    <textField opaque="NO" tag="4" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Incident Level 3" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="TMP-4h-bKB" customClass="MDCOutlinedTextField">
-                                                        <rect key="frame" x="0.0" y="0.0" width="393.66666666666669" height="50"/>
-                                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                        <textInputTraits key="textInputTraits"/>
-                                                    </textField>
-                                                </subviews>
-                                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                                                <constraints>
-                                                    <constraint firstItem="TMP-4h-bKB" firstAttribute="top" secondItem="6XO-2s-LGx" secondAttribute="top" id="5p8-iN-08A"/>
-                                                    <constraint firstAttribute="height" constant="50" id="aPX-Cb-icP"/>
-                                                    <constraint firstAttribute="trailing" secondItem="TMP-4h-bKB" secondAttribute="trailing" id="m1a-l1-Qga"/>
-                                                    <constraint firstItem="TMP-4h-bKB" firstAttribute="leading" secondItem="6XO-2s-LGx" secondAttribute="leading" id="mx6-FH-vWW"/>
-                                                    <constraint firstAttribute="bottom" secondItem="TMP-4h-bKB" secondAttribute="bottom" id="sSd-XO-naG"/>
                                                 </constraints>
                                             </view>
                                             <stackView hidden="YES" opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="3Ax-gP-S08" userLabel="HOD VIEW/UPDATE">
@@ -3316,7 +3316,7 @@
                                                                     <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Loss Amount" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="spX-9v-AN0" customClass="MDCOutlinedTextField">
                                                                         <rect key="frame" x="0.0" y="0.0" width="192" height="55"/>
                                                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                                        <textInputTraits key="textInputTraits" keyboardType="numbersAndPunctuation"/>
+                                                                        <textInputTraits key="textInputTraits" keyboardType="decimalPad"/>
                                                                     </textField>
                                                                 </subviews>
                                                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -5794,7 +5794,7 @@
                                                                     <textField opaque="NO" tag="9" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Loss Amount" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="ajn-dn-gyk" customClass="MDCOutlinedTextField">
                                                                         <rect key="frame" x="0.0" y="0.0" width="199" height="50"/>
                                                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                                        <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
+                                                                        <textInputTraits key="textInputTraits" keyboardType="decimalPad"/>
                                                                     </textField>
                                                                 </subviews>
                                                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -6066,7 +6066,7 @@
                                                         <rect key="frame" x="0.0" y="65" width="398" height="45"/>
                                                         <subviews>
                                                             <stackView opaque="NO" contentMode="scaleToFill" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="mAI-dp-flU">
-                                                                <rect key="frame" x="245" y="0.0" width="153" height="45"/>
+                                                                <rect key="frame" x="245.33333333333331" y="0.0" width="152.66666666666669" height="45"/>
                                                                 <subviews>
                                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="emr-kU-Iwx" customClass="CustomButton" customModule="One_App" customModuleProvider="target">
                                                                         <rect key="frame" x="0.0" y="0.0" width="45" height="45"/>
@@ -6107,7 +6107,7 @@
                                                                         </userDefinedRuntimeAttributes>
                                                                     </button>
                                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nKp-bZ-UGd" customClass="CustomButton" customModule="One_App" customModuleProvider="target">
-                                                                        <rect key="frame" x="110" y="0.0" width="43" height="45"/>
+                                                                        <rect key="frame" x="110.00000000000001" y="0.0" width="42.666666666666671" height="45"/>
                                                                         <state key="normal" image="checked-new"/>
                                                                         <userDefinedRuntimeAttributes>
                                                                             <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">

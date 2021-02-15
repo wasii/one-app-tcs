@@ -1039,19 +1039,18 @@ extension IMSNewRequestViewController: UITextFieldDelegate {
         return false
     }
     
-//    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-//        if textField.tag == 9 {
-//            print("LOSS AMOUNT")
-//            let alphaNumericRegEx = "[.0-9]"
-//            let predicate = NSPredicate(format:"SELF MATCHES %@", alphaNumericRegEx)
-//            if predicate.evaluate(with: string) {
-//                return true
-//            } else {
-//                return false
-//            }
-//        }
-//        return true
-//    }
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        if textField.tag == 9 {
+            let text = (textField.text ?? "") as NSString
+            let newText = text.replacingCharacters(in: range, with: string)
+            if let regex = try? NSRegularExpression(pattern: "^[0-9]{0,7}((\\.|,)[0-9]{0,2})?$", options: .caseInsensitive) {
+                return regex.numberOfMatches(in: newText, options: .reportProgress, range: NSRange(location: 0, length: (newText as NSString).length)) > 0
+            }
+            return false
+            
+        }
+        return true
+    }
     
 }
 

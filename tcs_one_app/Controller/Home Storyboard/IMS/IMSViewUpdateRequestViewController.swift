@@ -266,6 +266,8 @@ var ticket_request: tbl_Hr_Request_Logs?
                 incident_3_textfield.label.text = "*Incident Level 3"
                 incident_loss_amount.label.text = "*Loss Amount"
                 incident_recovery_type.label.text = "*Recovery Type"
+                incident_loss_amount.tag = LOSS_AMOUNT_TAG
+                incident_loss_amount.delegate = self
                 
                 let remarks_permission = AppDelegate.sharedInstance.db?.read_tbl_UserPermission(permission: IMS_Add_Remarks_Line_Manager).count
                 let file_attachment_permission = AppDelegate.sharedInstance.db?.read_tbl_UserPermission(permission: IMS_IMS_Add_Files_Line_Manager).count
@@ -541,21 +543,58 @@ var ticket_request: tbl_Hr_Request_Logs?
             } else {
 //                self.title = "View Request"
                 self.headingLabel.text = "View Request"
+                
+                
+                self.insurance_claimable_view.isHidden = false
+                if ticket_request!.INS_CLAIM_REFNO == "" {
+                    self.insurance_claimable_switch.isOn = false
+                    self.claim_reference_number_view.isHidden = true
+                } else {
+                    self.insurance_claimable_switch.isOn = true
+                    self.claim_reference_number_view.isHidden = false
+                }
+                
+                self.insurance_claimable_switch.isUserInteractionEnabled = false
+                self.claim_reference_number_textfield.text = "\(ticket_request?.INS_CLAIM_REFNO ?? "")"
                 self.claim_reference_number_textfield.isUserInteractionEnabled = false
-                self.insurance_claimable_switch.isOn = true
+                
+                if ticket_request!.INS_CLAIMED_AMOUNT != 0.0 {
+                    self.ins_insurance_claimable_view.isHidden = false
+                    self.ins_insurance_claimable_switch.isOn = true
+                    self.ins_insurance_claimable_switch.isUserInteractionEnabled = false
+                    
+                    self.ins_claim_reference_number_view.isHidden = false
+                    self.ins_claim_reference_number_textfield.isUserInteractionEnabled = false
+                    self.ins_claim_reference_number_textfield.text = "\(self.ticket_request?.INS_CLAIMED_AMOUNT ?? 0.0)"
+                }
+                
                 self.forwardBtn.isHidden = true
             }
             
         }
         
         if IMS_Inprogress_Ins == current_user {
+            self.claim_reference_number_view.isHidden = false
+            self.insurance_claimable_view.isHidden = false
+            self.insurance_claimable_switch.isOn = true
+            self.insurance_claimable_switch.isUserInteractionEnabled = false
+            self.claim_reference_number_textfield.text = "\(ticket_request?.INS_CLAIM_REFNO ?? "")"
+            self.claim_reference_number_textfield.isUserInteractionEnabled = false
+            
+            
             self.ins_insurance_claimable_view.isHidden = false
-            if ticket_request?.IS_INS_CLAIM_PROCESS == 1 {
-                self.ins_insurance_claimable_switch.isOn = true
-            } else {
-                self.ins_insurance_claimable_switch.isOn = false
-            }
-            self.ins_claim_reference_number_textfield.text = "\(self.ticket_request?.INS_CLAIMED_AMOUNT ?? 0.0)"
+            self.ins_insurance_claimable_switch.isOn = true
+            self.ins_insurance_claimable_switch.isUserInteractionEnabled = false
+            
+            
+            self.ins_claim_reference_number_view.isHidden = false
+//            if ticket_request?.IS_INS_CLAIM_PROCESS == 1 {
+//
+//            } else {
+//                self.ins_insurance_claimable_switch.isOn = false
+//            }
+            
+//            self.ins_claim_reference_number_textfield.text = "\(self.ticket_request?.INS_CLAIMED_AMOUNT ?? 0.0)"
             if havePermissionToEdit {
 //                self.title = "Update Request"
                 self.headingLabel.text = "Request Detail"
@@ -575,12 +614,15 @@ var ticket_request: tbl_Hr_Request_Logs?
                     attachment_view.isHidden = false
                 }
                 self.ins_claim_reference_number_textfield.isUserInteractionEnabled = true
+                self.ins_claim_reference_number_textfield.tag = LOSS_AMOUNT_TAG
+                self.ins_claim_reference_number_textfield.delegate = self
             } else {
 //                self.title = "View Request"
                 self.headingLabel.text = "View Request"
                 self.ins_claim_reference_number_textfield.isUserInteractionEnabled = false
                 self.ins_insurance_claimable_switch.isOn = true
                 self.forwardBtn.isHidden = true
+                self.ins_claim_reference_number_textfield.text = "\(self.ticket_request?.INS_CLAIMED_AMOUNT ?? 0.0)"
             }
         }
         
@@ -727,6 +769,7 @@ var ticket_request: tbl_Hr_Request_Logs?
                 
                 self.risk_remarks_textview.text = self.ticket_request!.RISK_REMARKS ?? ""
                 self.risk_remarks_textview.isUserInteractionEnabled = false
+                self.risk_remarks_word_counter.text = "\(self.ticket_request?.RISK_REMARKS?.count ?? 0)/200"
                 
                 if let category = AppDelegate.sharedInstance.db?.read_tbl_control_category(query: "SELECT * FROM \(db_lov_control_category) WHERE SERVER_ID_PK = '\(self.ticket_request!.CONTROL_CATEGORY ?? "")'").first {
                     self.category_of_control_textfield.text = category.NAME
@@ -1063,12 +1106,12 @@ var ticket_request: tbl_Hr_Request_Logs?
                 self.claim_reference_number_view.isHidden = true
             }
             break
-        case 3:
-            if sender.isOn {
-                self.ins_claim_reference_number_view.isHidden = false
-            } else {
-                self.ins_claim_reference_number_view.isHidden = true
-            }
+//        case 3:
+//            if sender.isOn {
+//                self.ins_claim_reference_number_view.isHidden = false
+//            } else {
+//                self.ins_claim_reference_number_view.isHidden = true
+//            }
         default:
             break
         }
@@ -1833,13 +1876,20 @@ extension IMSViewUpdateRequestViewController: UITextFieldDelegate {
             }
             return false
         case HR_REF_NUMBER:
-            let maxlength = 20
+            let maxlength = 25
             let currentString: NSString = textField.text as! NSString
             let newString: NSString = currentString.replacingCharacters(in: range, with: string) as NSString
             if newString.length <= maxlength {
                 let alphaNumericRegEx = "[a-zA-Z0-9]"
                 let predicate = NSPredicate(format:"SELF MATCHES %@", alphaNumericRegEx)
                 return predicate.evaluate(with: string)
+            }
+            return false
+        case LOSS_AMOUNT_TAG:
+            let text = (textField.text ?? "") as NSString
+            let newText = text.replacingCharacters(in: range, with: string)
+            if let regex = try? NSRegularExpression(pattern: "^[0-9]{0,7}((\\.|,)[0-9]{0,2})?$", options: .caseInsensitive) {
+                return regex.numberOfMatches(in: newText, options: .reportProgress, range: NSRange(location: 0, length: (newText as NSString).length)) > 0
             }
             return false
         default:
