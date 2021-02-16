@@ -283,6 +283,7 @@ class IMSNewRequestViewController: BaseViewController {
             formatter.dateFormat = "dd/MM/yyyy'T'HH:mm:ss"
             let tempdatestring = formatter.string(from: tempdate ?? Date())
             self.date.text = tempdatestring.dateOnly
+            self.ticketCreateDate = tempdatestring
             
             if let depart = AppDelegate.sharedInstance.db?.read_tbl_department(query: "SELECT * FROM \(db_lov_department) WHERE SERVER_ID_PK = '\(ticket.DEPARTMENT!)'") {
                 self.department.text = depart.first?.DEPAT_NAME  ?? ""
@@ -296,12 +297,12 @@ class IMSNewRequestViewController: BaseViewController {
                 self.incident_word_counter.text = "\(ticket.REQ_REMARKS!.count)/200"
             }
             
-            if let initiator_remark = AppDelegate.sharedInstance.db?.read_tbl_hr_grievance(query: "SELECT * FROM \(db_grievance_remarks) WHERE TICKET_ID = '\(ticket.SERVER_ID_PK!)' AND REMARKS_INPUT = 'Initiator'").first {
-                self.remarks.text = initiator_remark.REMARKS
-                self.remarks_label_top_constraint.constant -= 20
-                self.remarks_label.font = UIFont.systemFont(ofSize: 12)
-                self.remarks_word_counter.text = "\(initiator_remark.REMARKS.count)/200"
-            }
+//            if let initiator_remark = AppDelegate.sharedInstance.db?.read_tbl_hr_grievance(query: "SELECT * FROM \(db_grievance_remarks) WHERE TICKET_ID = '\(ticket.SERVER_ID_PK!)' AND REMARKS_INPUT = 'Initiator'").first {
+//                self.remarks.text = initiator_remark.REMARKS
+//                self.remarks_label_top_constraint.constant -= 20
+//                self.remarks_label.font = UIFont.systemFont(ofSize: 12)
+//                self.remarks_word_counter.text = "\(initiator_remark.REMARKS.count)/200"
+//            }
             
             if ticket.TICKET_STATUS != IMS_Status_Inprogress_Rm {
 //                self.title = "View Request"

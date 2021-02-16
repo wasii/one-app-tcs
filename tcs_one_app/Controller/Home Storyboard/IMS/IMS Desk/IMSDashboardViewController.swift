@@ -162,10 +162,7 @@ class IMSDashboardViewController: BaseViewController {
             isFiltered = false
             self.tableView.reloadData()
             
-            self.mainViewHeightConstraint.constant -= self.tableViewHeightConstraint.constant
-            self.tableViewHeightConstraint.constant = 0
-            self.tableViewHeightConstraint.constant = CGFloat((self.tbl_request_logs!.count * 100) + 50)
-            self.mainViewHeightConstraint.constant +=  self.tableViewHeightConstraint.constant
+            setupHeightView()
             return
         } else {
             self.sortedImages.forEach { (UIImageView) in
@@ -188,6 +185,10 @@ class IMSDashboardViewController: BaseViewController {
                 break
             }
         }
+    }
+    @IBAction func newRequstBtnTapped(_ sender: Any) {
+        let controller = self.storyboard?.instantiateViewController(withIdentifier: "IMSNewRequestViewController") as! IMSNewRequestViewController
+        self.navigationController?.pushViewController(controller, animated: true)
     }
     //MARK: IBACTIONS END
     
@@ -231,10 +232,7 @@ class IMSDashboardViewController: BaseViewController {
         self.isFiltered = true
         self.tableView.reloadData()
         
-        self.mainViewHeightConstraint.constant -= self.tableViewHeightConstraint.constant
-        self.tableViewHeightConstraint.constant = 0
-        self.tableViewHeightConstraint.constant = CGFloat((self.filtered_data!.count * 100) + 50)
-        self.mainViewHeightConstraint.constant +=  self.tableViewHeightConstraint.constant
+        setupHeightView()
     }
     private func setupPermission() {
         let listing_all_filter_count = AppDelegate.sharedInstance.db?.read_tbl_UserPermission(permission: IMS_Listing_All_Filters).count
@@ -284,10 +282,62 @@ class IMSDashboardViewController: BaseViewController {
         }
         
         
+        setupHeightView()
+    }
+    func setupHeightView() {
         self.mainViewHeightConstraint.constant -= self.tableViewHeightConstraint.constant
         self.tableViewHeightConstraint.constant = 0
-        self.tableViewHeightConstraint.constant = CGFloat((self.tbl_request_logs!.count * 100) + 50)
+        
+        if self.isFiltered  {
+            self.tableViewHeightConstraint.constant = CGFloat((self.filtered_data!.count * 100) + 50)
+        } else {
+            self.tableViewHeightConstraint.constant = CGFloat((self.tbl_request_logs!.count * 100) + 50)
+        }
+        
+        
+        
         self.mainViewHeightConstraint.constant +=  self.tableViewHeightConstraint.constant
+        
+        switch UIDevice().type {
+        case .iPhone5, .iPhone5S, .iPhone5C, .iPhoneSE:
+            if self.mainViewHeightConstraint.constant < 585 {
+                self.mainViewHeightConstraint.constant = 585
+            }
+            break
+        case .iPhone6, .iPhone6S, .iPhone7, .iPhone8, .iPhoneSE2:
+            if self.mainViewHeightConstraint.constant < 690 {
+                self.mainViewHeightConstraint.constant = 690
+            }
+            
+            break
+        case .iPhone6Plus, .iPhone7Plus, .iPhone8Plus:
+            if self.mainViewHeightConstraint.constant < 755 {
+                self.mainViewHeightConstraint.constant = 755
+            }
+            break
+        case .iPhoneX, .iPhoneXR, .iPhoneXS, .iPhone11Pro, .iPhone12, .iPhone12Pro:
+            if self.mainViewHeightConstraint.constant < 820 {
+                self.mainViewHeightConstraint.constant = 820
+            }
+            break
+        case .iPhone11, .iPhoneXSMax, .iPhone11ProMax:
+            if self.mainViewHeightConstraint.constant < 870 {
+                self.mainViewHeightConstraint.constant = 870
+            }
+            break
+        case .iPhone12ProMax:
+            if self.mainViewHeightConstraint.constant < 880 {
+                self.mainViewHeightConstraint.constant = 880
+            }
+            break
+        case .iPhone12Mini:
+            if self.mainViewHeightConstraint.constant < 770 {
+                self.mainViewHeightConstraint.constant = 770
+            }
+            break
+        default:
+            break
+        }
     }
     private func getFilterType() -> String {
         switch self.filterType {

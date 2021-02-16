@@ -127,7 +127,7 @@ class FetchUserDataViewController: BaseViewController {
 //
 //                }
                 DispatchQueue.main.async {
-                    self.hrSetupData_Label.text = "Successfully Synced HR Setup Data"
+                    self.hrSetupData_Label.text = "Successfully Synced HR"
                     
                     self.logReqTopConstraint.constant = 70
                     self.loaderViews[0].backgroundColor = UIColor.nativeRedColor()
@@ -145,7 +145,7 @@ class FetchUserDataViewController: BaseViewController {
                             let json = JSON(imsReponse)
                             self.initialiseIMS(response: json) { _ in
                                 DispatchQueue.main.async {
-                                    self.imsSetupData_Label.text = "Successfully Synced IMS Setup Data"
+                                    self.imsSetupData_Label.text = "Successfully Synced IMS"
                                     self.loaderViews[1].backgroundColor = UIColor.nativeRedColor()
                                     self.activityIndicator[1].stopAnimating()
                                     self.activityIndicator[1].isHidden = true
