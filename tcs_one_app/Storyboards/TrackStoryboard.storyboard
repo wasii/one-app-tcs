@@ -82,6 +82,10 @@
                                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="fRo-Yt-5iv">
                                                 <rect key="frame" x="15" y="80" width="398" height="700"/>
                                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                                <connections>
+                                                    <outlet property="dataSource" destination="Juz-JS-Fbe" id="Kcy-26-KRb"/>
+                                                    <outlet property="delegate" destination="Juz-JS-Fbe" id="zh3-d3-7TJ"/>
+                                                </connections>
                                             </tableView>
                                         </subviews>
                                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -123,6 +127,7 @@
                         <outlet property="mainView" destination="Acw-CK-zpW" id="tvM-rC-IU1"/>
                         <outlet property="mainViewHeightConstraint" destination="zgj-8g-iFu" id="SPM-Uy-jPo"/>
                         <outlet property="search_textfield" destination="lqD-Ql-2gu" id="gK0-Dz-AAH"/>
+                        <outlet property="tableView" destination="fRo-Yt-5iv" id="dsL-Hs-0K5"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="GGa-aB-u48" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>

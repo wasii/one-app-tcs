@@ -781,6 +781,32 @@ class NetworkCalls: NSObject {
             }
         }.resume()
     }
+    class func getbookingdetails(params: [String:Any], handler: @escaping(_ granted: Bool,_ response: Any) -> Void) {
+        let Url = String(format: "https://prodapi.tcscourier.com/core/api/main")
+        guard let serviceUrl = URL(string: Url) else { return }
+        var request = URLRequest(url: serviceUrl)
+        request.httpMethod = "POST"
+        request.setValue("Application/json", forHTTPHeaderField: "Content-Type")
+        guard let httpBody = try? JSONSerialization.data(withJSONObject: params, options: []) else {
+            return
+        }
+        request.httpBody = httpBody
+        let session = URLSession.shared
+        session.dataTask(with: request) { (data, response, error) in
+            if let data = data {
+                let json = JSON(data)
+                if let success = json.dictionary?[returnStatus] {
+                    if success.dictionary?[_code] == "200" {
+                        handler(true, json.dictionary?["consignment"]?.dictionary?["track"])
+                    }
+                } else {
+                    handler(false, SOMETHINGWENTWRONG)
+                }
+            } else {
+                handler(false, SOMETHINGWENTWRONG)
+            }
+        }.resume()
+    }
 }
 
 
