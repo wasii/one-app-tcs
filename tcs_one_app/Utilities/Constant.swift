@@ -21,7 +21,7 @@ var NOTIFICATION_COUNT      = 0
 //let UPLOADFILESURL          = "https://oneappapi.tcscourier.com/api/file-upload"
 
 //DEV
-let ENDPOINT                = "https://devapi.tcscourier.com/core/api/main"
+let ENDPOINT                = "https://devapi.tcscourier.com/qacore/api/main"
 let UPLOADFILESURL          = "https://pwaqaapi.tcscourier.com/api/file-upload"
 
 let LOGIN                   = "oneapp.login"
@@ -610,7 +610,10 @@ let ENTER_EXECUTIVE_SUMMARY_TAG = 9
 let ENTER_EXECUTIVE_SUMMARY = "Enter Executive Summary"
 
 let ENTER_RECOMMENDATIONS_TAG = 10
+let ENTER_DS_RECOMMENDATIONS_TAG = 15
 let ENTER_RECOMMENDATIONS = "Enter Recommendations"
+
+
 
 let ENTER_ENDORESSEMENT_TAG = 11
 let ENTER_ENDORESSEMENT = "Enter Endoresment"

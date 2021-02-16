@@ -294,7 +294,7 @@ class IMSNewRequestViewController: BaseViewController {
                 self.incident_detail_top_constraint.constant -= 20
                 self.incident_detail_label.font = UIFont.systemFont(ofSize: 12)
                 self.incident_detail.text = ticket.REQ_REMARKS ?? ""
-                self.incident_word_counter.text = "\(ticket.REQ_REMARKS!.count)/200"
+                self.incident_word_counter.text = "\(ticket.REQ_REMARKS!.count)/525"
             }
             
 //            if let initiator_remark = AppDelegate.sharedInstance.db?.read_tbl_hr_grievance(query: "SELECT * FROM \(db_grievance_remarks) WHERE TICKET_ID = '\(ticket.SERVER_ID_PK!)' AND REMARKS_INPUT = 'Initiator'").first {
@@ -305,7 +305,6 @@ class IMSNewRequestViewController: BaseViewController {
 //            }
             
             if ticket.TICKET_STATUS != IMS_Status_Inprogress_Rm {
-//                self.title = "View Request"
                 self.headingLabel.text = "View Request"
                 self.download_btn.isHidden = false
                 self.history_btn.isHidden = false
@@ -322,7 +321,7 @@ class IMSNewRequestViewController: BaseViewController {
                 self.date.isUserInteractionEnabled = false
                 self.loss_amount.isUserInteractionEnabled = false
                 self.department.isUserInteractionEnabled = false
-                self.incident_detail.isUserInteractionEnabled = false
+                self.incident_detail.isEditable = false
                 self.remarks.isUserInteractionEnabled = false
                 if ticket.TICKET_STATUS == IMS_Status_Closed {
                     ticket_status.text = ticket.TICKET_STATUS!
@@ -357,10 +356,7 @@ class IMSNewRequestViewController: BaseViewController {
                 }
                 
             } else  {
-//                self.title = "Update Request"
                 self.headingLabel.text = "Update Request"
-//                self.download_btn.isHidden = true
-//                self.history_btn.isHidden = true
                 self.create_ticket_button.isHidden = false
                 
                 area.delegate = self
@@ -368,7 +364,6 @@ class IMSNewRequestViewController: BaseViewController {
                 date.delegate = self
                 department.delegate = self
                 verifyBtn.isUserInteractionEnabled = false
-//                self.ticket_status.text = ticket.TICKET_STATUS ?? ""
                 if ticket.TICKET_STATUS == IMS_Status_Closed || ticket.TICKET_STATUS == IMS_Status_Submitted {
                     ticket_status.text = ticket.TICKET_STATUS!
                 } else {
@@ -680,7 +675,7 @@ class IMSNewRequestViewController: BaseViewController {
         offline_remarks.EMPL_NO = Int(CURRENT_USER_LOGGED_IN_ID)!
         offline_remarks.REF_ID  = refid
         offline_remarks.REMARKS_INPUT = "Initiator"
-        offline_remarks.REMARKS = self.remarks.text!
+        offline_remarks.REMARKS = self.remarks.text!.replacingOccurrences(of: "'", with: "''")
         
         
         
@@ -914,8 +909,19 @@ class IMSNewRequestViewController: BaseViewController {
                                             }
                                         })
                                     }
-                                } catch let err {
-                                    print(err.localizedDescription)
+                                } catch let DecodingError.dataCorrupted(context) {
+                                    print(context)
+                                } catch let DecodingError.keyNotFound(key, context) {
+                                    print("Key '\(key)' not found:", context.debugDescription)
+                                    print("codingPath:", context.codingPath)
+                                } catch let DecodingError.valueNotFound(value, context) {
+                                    print("Value '\(value)' not found:", context.debugDescription)
+                                    print("codingPath:", context.codingPath)
+                                } catch let DecodingError.typeMismatch(type, context)  {
+                                    print("Type '\(type)' mismatch:", context.debugDescription)
+                                    print("codingPath:", context.codingPath)
+                                } catch {
+                                    print("error: ", error)
                                 }
                             }
                         })
@@ -972,7 +978,7 @@ extension IMSNewRequestViewController: UITextViewDelegate {
     }
     
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
-        let maxLength = 200
+        let maxLength = 525
         let currentString: NSString = textView.text as! NSString
         let newString: NSString =
                 currentString.replacingCharacters(in: range, with: text) as NSString
@@ -985,9 +991,9 @@ extension IMSNewRequestViewController: UITextViewDelegate {
         }
         if newString.length <= maxLength {
             if textView.tag == 1 {
-                self.incident_word_counter.text = "\(newString.length)/200"
+                self.incident_word_counter.text = "\(newString.length)/525"
             } else if textView.tag == 2 {
-                self.remarks_word_counter.text = "\(newString.length)/200"
+                self.remarks_word_counter.text = "\(newString.length)/525"
             }
             return true
         }

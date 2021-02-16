@@ -95,6 +95,11 @@ var ticket_request: tbl_Hr_Request_Logs?
     @IBOutlet weak var recommendations_textview: UITextView!
     @IBOutlet weak var recommendations_word_counter: UILabel!
     
+    @IBOutlet weak var ds_recommendation_view: UIView!
+    @IBOutlet weak var ds_recommendation_textview: UITextView!
+    @IBOutlet weak var ds_recommendations_word_counter: UILabel!
+    
+    
     @IBOutlet weak var email_view: UIView!
     @IBOutlet weak var email_textfield: MDCOutlinedTextField!
     @IBOutlet weak var email_textview: GrowingTextView!
@@ -502,7 +507,7 @@ var ticket_request: tbl_Hr_Request_Logs?
         if IMS_Inprogress_Ds == "\(current_user)" {
             self.hod_stack_view.isHidden = false
             self.endoresement_view.isHidden = false
-            self.recommendations_view.isHidden = false
+            self.ds_recommendation_view.isHidden = false
             
             self.email_view.isHidden = false
             if havePermissionToEdit {
@@ -524,20 +529,20 @@ var ticket_request: tbl_Hr_Request_Logs?
                     attachment_view.isHidden = false
                 }
                 self.endoresement_textview.isUserInteractionEnabled = true
-                self.recommendations_textview.isUserInteractionEnabled = true
+                self.ds_recommendation_textview.isUserInteractionEnabled = true
 //                self.email_textfield.delegate = self
                 self.email_textview.delegate = self
                 self.endoresement_textview.delegate = self
-                self.recommendations_textview.delegate = self
+                self.ds_recommendation_textview.delegate = self
             } else {
 //                self.title = "View Request"
                 self.headingLabel.text = "View Request"
                 self.endoresement_textview.isUserInteractionEnabled = false
-                self.recommendations_textview.isUserInteractionEnabled = false
+                self.ds_recommendation_textview.isUserInteractionEnabled = false
                 self.email_textview.isUserInteractionEnabled = false
                 
                 self.endoresement_textview.text = self.ticket_request?.DIR_SEC_ENDOR ?? ""
-                self.recommendations_textview.text = self.ticket_request?.DIR_SEC_RECOM ?? ""
+                self.ds_recommendation_textview.text = self.ticket_request?.DIR_SEC_RECOM ?? ""
                 self.email_textview.text = self.ticket_request?.DIR_NOTIFY_EMAILS ?? ""
                 self.forwardBtn.isHidden = true
                 
@@ -643,7 +648,6 @@ var ticket_request: tbl_Hr_Request_Logs?
             
 //            self.ins_claim_reference_number_textfield.text = "\(self.ticket_request?.INS_CLAIMED_AMOUNT ?? 0.0)"
             if havePermissionToEdit {
-//                self.title = "Update Request"
                 self.headingLabel.text = "Request Detail"
                 self.remarks_attachment_stackview.isHidden = true
                 self.attachment_view.isHidden = true
@@ -664,7 +668,6 @@ var ticket_request: tbl_Hr_Request_Logs?
                 self.ins_claim_reference_number_textfield.tag = LOSS_AMOUNT_TAG
                 self.ins_claim_reference_number_textfield.delegate = self
             } else {
-//                self.title = "View Request"
                 self.headingLabel.text = "View Request"
                 self.ins_claim_reference_number_textfield.isUserInteractionEnabled = false
                 self.ins_insurance_claimable_switch.isOn = true
@@ -890,10 +893,10 @@ var ticket_request: tbl_Hr_Request_Logs?
         
         incident_detail_employee_detail.text = ticket_request!.REQ_REMARKS!
         
-        incident_detail_word_counter.text = "\(ticket_request!.REQ_REMARKS!.count)/200"
+        incident_detail_word_counter.text = "\(ticket_request!.REQ_REMARKS!.count)/525"
         
         incident_detail_employee_detail_hod.text = ticket_request!.REQ_REMARKS!
-        incident_detail_word_counter_hod.text = "\(ticket_request!.REQ_REMARKS!.count)/200"
+        incident_detail_word_counter_hod.text = "\(ticket_request!.REQ_REMARKS!.count)/525"
         
         
         incident_detail_classification.label.textColor = UIColor.nativeRedColor()
@@ -1355,9 +1358,9 @@ var ticket_request: tbl_Hr_Request_Logs?
             let is_investigation = self.investigation_required_switch.isOn ? true : false
             
             if is_investigation {
-                controller.heading = "Currently Investigation Required is On.\nAre you sure you want to proceed?"
+                controller.heading = "Submit to Security for Investigation?"
             } else {
-                controller.heading = "Currently Investigation Required is Off.\nAre you sure you want to proceed?"
+                controller.heading = "Submit without investigation ?"
             }
         }
         
@@ -1990,6 +1993,11 @@ extension IMSViewUpdateRequestViewController: UITextViewDelegate {
                 textView.text = ""
             }
             break
+        case ENTER_DS_RECOMMENDATIONS_TAG:
+            if textView.text == ENTER_RECOMMENDATIONS {
+                textView.text = ""
+            }
+            break
         case ENTER_ENDORESSEMENT_TAG:
             if textView.text == ENTER_ENDORESSEMENT {
                 textView.text = ""
@@ -2026,6 +2034,11 @@ extension IMSViewUpdateRequestViewController: UITextViewDelegate {
                 textView.text = ENTER_RECOMMENDATIONS
             }
             break
+        case ENTER_DS_RECOMMENDATIONS_TAG:
+            if textView.text.count <= 0 {
+                textView.text = ENTER_RECOMMENDATIONS
+            }
+            break
         case ENTER_ENDORESSEMENT_TAG:
             if textView.text.count <= 0 {
                 textView.text = ENTER_ENDORESSEMENT
@@ -2048,8 +2061,12 @@ extension IMSViewUpdateRequestViewController: UITextViewDelegate {
     
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
         var maxLength = 0
-        if textView.tag == 14 {
+        if textView.tag == ENTER_EMAILS_TAG { //email
             maxLength = 20000
+        } else if textView.tag == ENTER_ENDORESSEMENT_TAG || textView.tag == ENTER_DS_RECOMMENDATIONS_TAG { // ds recommendations and
+            maxLength = 1000
+        } else if textView.tag == ENTER_REMARKS_TAG {
+            maxLength = 525
         } else {
             maxLength = 200
         }
@@ -2066,7 +2083,7 @@ extension IMSViewUpdateRequestViewController: UITextViewDelegate {
         if newString.length <= maxLength {
             switch textView.tag {
             case ENTER_REMARKS_TAG:
-                self.remarks_word_counter.text = "\(newString.length)/200"
+                self.remarks_word_counter.text = "\(newString.length)/525"
                 return true
             case ENTER_EXECUTIVE_SUMMARY_TAG:
                 self.executive_summary_word_counter.text = "\(newString.length)/200"
@@ -2075,7 +2092,10 @@ extension IMSViewUpdateRequestViewController: UITextViewDelegate {
                 self.recommendations_word_counter.text = "\(newString.length)/200"
                 return true
             case ENTER_ENDORESSEMENT_TAG:
-                self.endoresement_word_counter.text = "\(newString.length)/200"
+                self.endoresement_word_counter.text = "\(newString.length)/1000"
+                return true
+            case ENTER_DS_RECOMMENDATIONS_TAG:
+                self.ds_recommendations_word_counter.text = "\(newString.length)/1000"
                 return true
             case ENTER_RISK_REMARKS_TAG:
                 self.risk_remarks_word_counter.text = "\(newString.length)/200"
@@ -2490,7 +2510,7 @@ extension IMSViewUpdateRequestViewController {
             self.view.makeToast("Endoresement is mandatory")
             return nil
         }
-        if self.recommendations_textview.text == ENTER_RECOMMENDATIONS || self.recommendations_textview.text == "" {
+        if self.ds_recommendation_textview.text == ENTER_RECOMMENDATIONS || self.ds_recommendation_textview.text == "" {
             self.view.makeToast("Recommendations is mandatory")
             return nil
         }
@@ -2532,7 +2552,7 @@ extension IMSViewUpdateRequestViewController {
         
         if willDBInsert {
             let columns = ["DIR_SEC_ENDOR", "DIR_SEC_RECOM", "DIR_NOTIFY_EMAILS", "TICKET_STATUS"]
-            let values = [self.endoresement_textview.text!, self.recommendations_textview.text!, self.email_textview.text!, ticket_status]
+            let values = [self.endoresement_textview.text?.replacingOccurrences(of: "'", with: "''") ?? "", self.ds_recommendation_textview.text?.replacingOccurrences(of: "'", with: "''") ?? "", self.email_textview.text!, ticket_status]
             AppDelegate.sharedInstance.db?.updateTables(tableName: db_hr_request, columnName: columns, updateValue: values, onCondition: "SERVER_ID_PK = '\(self.ticket_request!.SERVER_ID_PK!)'", { _ in })
         }
         let json = [
@@ -2544,7 +2564,7 @@ extension IMSViewUpdateRequestViewController {
                     "loginid": "\(CURRENT_USER_LOGGED_IN_ID)",
                     "closure_remarks" : "",
                     "dir_sec_endors": "\(self.endoresement_textview.text!)",
-                    "dir_sec_recom": "\(self.recommendations_textview.text!)",
+                    "dir_sec_recom": "\(self.ds_recommendation_textview.text!)",
                     "dir_sec_email": "\(self.email_textview.text!)",
                     "ticket_logs": [
                         [

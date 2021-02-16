@@ -65,7 +65,7 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
         chartViews = createChartViews()
         scrollView.delegate = self
         
-        pageControl.numberOfPages = module!.count
+        pageControl.numberOfPages = module!.count - 1
         pageControl.currentPage = 0
         mainView.bringSubviewToFront(pageControl)
         
@@ -123,6 +123,9 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
     func createChartViews() -> [ChartViews] {
         var chartViews = [ChartViews]()
         for module in self.module! {
+            if module.MODULENAME == "Track" {
+                continue
+            }
             let chart:ChartViews = Bundle.main.loadNibNamed("ChartViews", owner: self, options: nil)?.first as! ChartViews
             chart.heading.text = module.MODULENAME
             
