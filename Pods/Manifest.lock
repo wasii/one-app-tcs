@@ -336,6 +336,7 @@ PODS:
   - Charts/Core (3.6.0)
   - DatePickerDialog (4.0)
   - ExpandableCell (1.3.0)
+  - ExpyTableView (1.2.1)
   - Firebase/Analytics (4.13.0):
     - Firebase/Core
   - Firebase/Core (4.13.0):
@@ -486,6 +487,7 @@ DEPENDENCIES:
   - Charts
   - DatePickerDialog
   - ExpandableCell
+  - ExpyTableView
   - Firebase/Analytics (~> 4.2)
   - Firebase/Firestore
   - Firebase/Messaging
@@ -512,6 +514,7 @@ SPEC REPOS:
     - Charts
     - DatePickerDialog
     - ExpandableCell
+    - ExpyTableView
     - Firebase
     - FirebaseAnalytics
     - FirebaseCore
@@ -548,6 +551,7 @@ SPEC CHECKSUMS:
   Charts: b1e3a1f5a1c9ba5394438ca3b91bd8c9076310af
   DatePickerDialog: ccff2f91ff7a018057a4d72fa5ad6de49c8cb0cd
   ExpandableCell: 69ca7d71971c171473a7a30964d2127f4c6ceaf6
+  ExpyTableView: 19cf224c2ff04b1ec215ec52bc4ba6f81fa809ed
   Firebase: 5ec5e863d269d82d66b4bf56856726f8fb8f0fb3
   FirebaseAnalytics: 7ef69e76a5142f643aeb47c780e1cdce4e23632e
   FirebaseCore: 90cb1c53d69b556f112a1bf72b5fcfaad7650790
@@ -577,6 +581,6 @@ SPEC CHECKSUMS:
   Toast-Swift: 9b6a70f28b3bf0b96c40d46c0c4b9d6639846711
   TPPDF: 000c670ca79d0b00c62dcc32b168c6f691dc92a5
 
-PODFILE CHECKSUM: b244822cf92b311a741212944875f4d1a3c00938
+PODFILE CHECKSUM: a6e82663dd61a36101a27c72593dd56bd3e3b7c4
 
 COCOAPODS: 1.10.1

@@ -39,4 +39,5 @@ pod 'Firebase/Messaging'
 
 
 pod 'ExpandableCell'
+pod 'ExpyTableView'
 end
