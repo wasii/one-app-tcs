@@ -618,14 +618,16 @@ class FetchUserDataViewController: BaseViewController {
                             self.isTotalCounter += 1
                             let dictionary = try json.rawData()
                             let hrRequest: HrRequest = try JSONDecoder().decode(HrRequest.self, from: dictionary)
-                            
-                            AppDelegate.sharedInstance.db?.deleteRow(tableName: db_hr_request, column: "SERVER_ID_PK", ref_id: "\(hrRequest.ticketID!)", handler: { _ in
+                            AppDelegate.sharedInstance.db?.deleteRowWithMultipleConditions(tbl: db_hr_request, conditions: "SERVER_ID_PK = '\(hrRequest.ticketID!)' AND CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)'", { _ in
                                 AppDelegate.sharedInstance.db?.insert_tbl_hr_request(hrrequests: hrRequest, { _ in
                                     DispatchQueue.main.async {
                                         self.counter.text = "\(self.isTotalCounter)/\(self.count)"
                                     }
                                 })
                             })
+//                            AppDelegate.sharedInstance.db?.deleteRow(tableName: db_hr_request, column: "SERVER_ID_PK", ref_id: "\(hrRequest.ticketID!)", handler: { _ in
+//
+//                            })
                         }
                         
                         

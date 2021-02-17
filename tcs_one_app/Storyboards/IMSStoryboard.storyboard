@@ -3226,7 +3226,7 @@
                                                                             <userDefinedRuntimeAttribute type="number" keyPath="maxHeight">
                                                                                 <real key="value" value="0.0"/>
                                                                             </userDefinedRuntimeAttribute>
-                                                                            <userDefinedRuntimeAttribute type="string" keyPath="placeholder" value="Enter Emails  (Semi Colon Seperated)"/>
+                                                                            <userDefinedRuntimeAttribute type="string" keyPath="placeholder" value="Enter Emails  (Comma Seperated) "/>
                                                                         </userDefinedRuntimeAttributes>
                                                                     </textView>
                                                                 </subviews>
