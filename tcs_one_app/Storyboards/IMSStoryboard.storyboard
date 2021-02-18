@@ -2828,7 +2828,7 @@
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="viT-hf-Qr8" userLabel="remark_textview" customClass="CustomView" customModule="One_App" customModuleProvider="target">
                                                         <rect key="frame" x="0.0" y="0.0" width="345" height="120"/>
                                                         <subviews>
-                                                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" tag="13" contentMode="scaleToFill" text="Enter Recommendations" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="sTz-3i-Axy">
+                                                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" tag="13" contentMode="scaleToFill" text="Enter Remarks" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="sTz-3i-Axy">
                                                                 <rect key="frame" x="10" y="10" width="325" height="110"/>
                                                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                                                 <color key="textColor" systemColor="labelColor"/>
@@ -3843,8 +3843,10 @@
                         <outlet property="classification_view" destination="qN1-Wi-umG" id="nTq-pi-Uv0"/>
                         <outlet property="closure_remarks_textviews" destination="qrn-5B-wll" id="PZJ-MK-LwI"/>
                         <outlet property="closure_remarks_views" destination="kB0-7H-T6I" id="Q44-4U-yav"/>
-                        <outlet property="closure_remarks_word_counter" destination="3gZ-Po-IjN" id="pRf-yQ-qBQ"/>
                         <outlet property="closure_remarks_wordcounter" destination="gBb-yW-ziA" id="wtQ-dA-AOD"/>
+                        <outlet property="controller_recommendation" destination="sX6-bX-FcZ" id="J19-qK-j7h"/>
+                        <outlet property="controller_recommendation_textview" destination="sTz-3i-Axy" id="jI1-dx-82m"/>
+                        <outlet property="controller_recommendation_word_counter" destination="3gZ-Po-IjN" id="c3Q-nD-PHh"/>
                         <outlet property="downloadBtn" destination="VtW-ES-Zt8" id="HzO-xc-GrM"/>
                         <outlet property="email_textfield" destination="lTI-YL-WB7" id="CGB-XI-CN3"/>
                         <outlet property="email_textview" destination="FSj-SJ-4If" id="J7y-p9-rhK"/>
