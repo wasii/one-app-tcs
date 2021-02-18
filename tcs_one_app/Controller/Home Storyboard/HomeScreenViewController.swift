@@ -65,7 +65,7 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
         chartViews = createChartViews()
         scrollView.delegate = self
         
-        pageControl.numberOfPages = module!.count
+        pageControl.numberOfPages = module!.count - 1
         pageControl.currentPage = 0
         mainView.bringSubviewToFront(pageControl)
         
@@ -123,6 +123,9 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
     func createChartViews() -> [ChartViews] {
         var chartViews = [ChartViews]()
         for module in self.module! {
+            if module.MODULENAME == "Track" {
+                continue
+            }
             let chart:ChartViews = Bundle.main.loadNibNamed("ChartViews", owner: self, options: nil)?.first as! ChartViews
             chart.heading.text = module.MODULENAME
             
@@ -331,18 +334,17 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
         floaty.plusColor = UIColor.white
         floaty.buttonColor = UIColor.nativeRedColor()
         if let modules = self.module {
-            for (index,_) in modules.enumerated() {
-                switch index {
-//                case 0:
-//                    floaty.addItem("Add IMS Request", icon: UIImage(named: "helpdesk")) { item in
-//                        CONSTANT_MODULE_ID = AppDelegate.sharedInstance.db?.read_tbl_UserModule(query: "SELECT * FROM \(db_user_module) WHERE TAGNAME = '\(MODULE_TAG_IMS)';").first?.SERVER_ID_PK ?? -1
-//                        let storyboard = UIStoryboard(name: "IMSStoryboard", bundle: nil)
-//                        let controller = storyboard.instantiateViewController(withIdentifier: "IMSNewRequestViewController") as! IMSNewRequestViewController
-//                        self.navigationController?.pushViewController(controller, animated: true)
-//
-//                    }
-//                    break
-                case 0:
+            for i in 0..<3  {
+                switch i {
+                case 2:
+                    floaty.addItem("Add HR Request", icon: UIImage(named: "helpdesk")) { item in
+                        CONSTANT_MODULE_ID = AppDelegate.sharedInstance.db?.read_tbl_UserModule(query: "SELECT * FROM \(db_user_module) WHERE TAGNAME = '\(MODULE_TAG_HR)';").first?.SERVER_ID_PK ?? -1
+                        let controller = self.storyboard?.instantiateViewController(withIdentifier: "NewRequestViewController") as! NewRequestViewController
+                        self.navigationController?.pushViewController(controller, animated: true)
+                      
+                    }
+                    break
+                case 1:
                     floaty.addItem("Add Grievance Request", icon: UIImage(named: "helpdesk")) { item in
                         CONSTANT_MODULE_ID = AppDelegate.sharedInstance.db?.read_tbl_UserModule(query: "SELECT * FROM \(db_user_module) WHERE TAGNAME = '\(MODULE_TAG_GRIEVANCE)';").first?.SERVER_ID_PK ?? -1
                         let storyboard = UIStoryboard(name: "GrievanceStoryboard", bundle: nil)
@@ -351,10 +353,10 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
                       
                     }
                     break
-                case 1:
-                    floaty.addItem("Add HR Request", icon: UIImage(named: "helpdesk")) { item in
-                        CONSTANT_MODULE_ID = AppDelegate.sharedInstance.db?.read_tbl_UserModule(query: "SELECT * FROM \(db_user_module) WHERE TAGNAME = '\(MODULE_TAG_HR)';").first?.SERVER_ID_PK ?? -1
-                        let controller = self.storyboard?.instantiateViewController(withIdentifier: "NewRequestViewController") as! NewRequestViewController
+                case 0:
+                    floaty.addItem("Track", icon: UIImage(named: "helpdesk")) { item in
+                        let storyboard = UIStoryboard(name: "TrackStoryboard", bundle: nil)
+                        let controller = storyboard.instantiateViewController(withIdentifier: "TrackHomeViewController") as! TrackHomeViewController
                         self.navigationController?.pushViewController(controller, animated: true)
                       
                     }
@@ -363,6 +365,27 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
                     break
                 }
             }
+//            for (index,d) in modules.enumerated() {
+//                switch d.ID {
+////                case 0:
+////                    floaty.addItem("Add IMS Request", icon: UIImage(named: "helpdesk")) { item in
+////                        CONSTANT_MODULE_ID = AppDelegate.sharedInstance.db?.read_tbl_UserModule(query: "SELECT * FROM \(db_user_module) WHERE TAGNAME = '\(MODULE_TAG_IMS)';").first?.SERVER_ID_PK ?? -1
+////                        let storyboard = UIStoryboard(name: "IMSStoryboard", bundle: nil)
+////                        let controller = storyboard.instantiateViewController(withIdentifier: "IMSNewRequestViewController") as! IMSNewRequestViewController
+////                        self.navigationController?.pushViewController(controller, animated: true)
+////
+////                    }
+////                    break
+//                case 2:
+//
+//                case 1:
+//
+//                case 4:
+//
+//                default:
+//                    break
+//                }
+//            }
         }
         floaty.paddingX = (UIApplication.shared.keyWindow?.safeAreaInsets.right ?? 0) + 25
         floaty.paddingY = (UIApplication.shared.keyWindow?.safeAreaInsets.bottom ?? 0) + 75

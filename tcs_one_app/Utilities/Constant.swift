@@ -17,12 +17,12 @@ var NOTIFICATION_COUNT      = 0
 //API ENDPOINTS
 
 //PRODUCTION
-//let ENDPOINT                = "https://prodapi.tcscourier.com/core/api/main/"
-//let UPLOADFILESURL          = "https://oneappapi.tcscourier.com/api/file-upload"
+let ENDPOINT                = "https://prodapi.tcscourier.com/core/api/main/"
+let UPLOADFILESURL          = "https://oneappapi.tcscourier.com/api/file-upload"
 
 //DEV
-let ENDPOINT                = "https://devapi.tcscourier.com/qacore/api/main"
-let UPLOADFILESURL          = "https://pwaqaapi.tcscourier.com/api/file-upload"
+//let ENDPOINT                = "https://devapi.tcscourier.com/qacore/api/main"
+//let UPLOADFILESURL          = "https://pwaqaapi.tcscourier.com/api/file-upload"
 
 let LOGIN                   = "oneapp.login"
 let PIN_VALIDATE            = "oneapp.pinvalidate"

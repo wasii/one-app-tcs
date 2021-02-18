@@ -122,6 +122,29 @@ class TrackHomeViewController: BaseViewController {
         self.view.makeToastActivity(.center)
         self.freezeScreen()
         
+//        if let v = self.view.viewWithTag(0) as? UIButton {
+//            v.isSelected = false
+//        }
+//        if let v = self.view.viewWithTag(1) as? UIButton {
+//            v.isSelected = false
+//        }
+//        if let v = self.view.viewWithTag(2) as? UIButton {
+//            v.isSelected = false
+//        }
+//        if let v = self.view.viewWithTag(3) as? UIButton {
+//            v.isSelected = false
+//        }
+//        if let v = self.view.viewWithTag(4) as? UIButton {
+//            v.isSelected = false
+//        }
+//        if let v = self.view.viewWithTag(5) as? UIButton {
+//            v.isSelected = false
+//        }
+        
+        
+        self.heightConstraint.forEach { (e) in
+            e.constant = 50
+        }
         self.booking_detail_tableview_height.constant = 0
         self.deliver_detail_tableview_height.constant = 0
         self.pbag_detail_tableview_height.constant = 0
@@ -701,7 +724,7 @@ extension TrackHomeViewController: UITableViewDataSource, UITableViewDelegate {
             cell.callNo.text = "-"
             
             
-            cell.customerNumber.text = "\(data.cusNo ?? 0)"
+            cell.customerNumber.text = "\(data.cusNo)"
             cell.customerName.text = "\(data.cusNam ?? "-")"
             
             cell.customerAddress1.text = "\(data.cusAddr1 ?? "-")"

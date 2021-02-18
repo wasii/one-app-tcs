@@ -23,7 +23,7 @@ struct BookingDetail: Codable {
     let product: String?
     let wttBkg: Double?
     let courier: String?
-    let cusNo: Int?
+    let cusNo: CusNo?
     let cusNam, cusAddr1, cusAddr2, cusAddr3, cusPhne, cusFax : String?
     let cnsgeeNam, cnsgeeAddr1, cnsgeeAddr2, cnsgeeAddr3, cnsgeePhn, cnsgeeFax: String?
     let dlvryKpi, hndlgInst: String?
@@ -132,5 +132,35 @@ struct TbagDetail: Codable {
         case orgn = "ORGN"
         case courNam = "COUR_NAM"
         case trsptNo = "TRSPT_NO"
+    }
+}
+
+
+
+enum CusNo: Codable {
+    case integer(Int)
+    case string(String)
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        if let x = try? container.decode(Int.self) {
+            self = .integer(x)
+            return
+        }
+        if let x = try? container.decode(String.self) {
+            self = .string(x)
+            return
+        }
+        throw DecodingError.typeMismatch(CusNo.self, DecodingError.Context(codingPath: decoder.codingPath, debugDescription: "Wrong type for MobileNo"))
+    }
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.singleValueContainer()
+        switch self {
+        case .integer(let x):
+            try container.encode(x)
+        case .string(let x):
+            try container.encode(x)
+        }
     }
 }
