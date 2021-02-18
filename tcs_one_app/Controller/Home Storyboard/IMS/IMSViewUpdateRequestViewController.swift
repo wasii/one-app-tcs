@@ -736,6 +736,7 @@ var ticket_request: tbl_Hr_Request_Logs?
         if IMS_Inprogress_Fi == "\(current_user)" {
             hr_reference_number_view.isHidden = false
             hr_status_view.isHidden = false
+            self.hr_reference_number_textfield.label.text = "GL Transaction Number"
             if self.ticket_request?.FINANCE_GL_NO == "" {
                 self.hr_reference_number_textfield.label.text = "GL Transaction Number"
                 self.hr_reference_number_textfield.placeholder = "Enter GL Transaction Number"
@@ -792,7 +793,7 @@ var ticket_request: tbl_Hr_Request_Logs?
             self.type_of_risk_view.isHidden = false
             self.category_of_control_view.isHidden = false
             self.type_of_control_view.isHidden = false
-            self.closure_remarks_view.isHidden = false
+            self.closure_remarks_views.isHidden = false
             self.hr_status_view.isHidden = false
             
             if self.ticket_request!.IS_CONTROL_DEFINED! > 0 {
@@ -807,7 +808,7 @@ var ticket_request: tbl_Hr_Request_Logs?
 //                self.title = "Update Request"
                 self.headingLabel.text = "Request Detail"
                 self.risk_remarks_textview.delegate = self
-                self.closure_remarks_textview.delegate = self
+                self.closure_remarks_textviews.delegate = self
                 self.type_of_risk_textfield.delegate = self
                 self.category_of_control_textfield.delegate = self
                 self.type_of_control_textfield.delegate = self
@@ -853,8 +854,8 @@ var ticket_request: tbl_Hr_Request_Logs?
                 }
                 
                 
-                self.closure_remarks_textview.text = self.ticket_request!.HR_REMARKS ?? ""
-                self.closure_remarks_textview.isUserInteractionEnabled = false
+//                self.closure_remarks_textviews.text = self.ticket_request!.HR_REMARKS ?? ""
+//                self.closure_remarks_textviews.isUserInteractionEnabled = false
                 
                 self.hr_status_textfield.text = self.ticket_request!.HR_STATUS ?? ""
                 self.hr_status_textfield.isUserInteractionEnabled = false
@@ -2228,7 +2229,7 @@ extension IMSViewUpdateRequestViewController {
             self.view.makeToast("Status is mandatory")
             return nil
         }
-        if self.closure_remarks_textview.text == "" || self.closure_remarks_textview.text == ENTER_CLOSURE_REMARKS {
+        if self.closure_remarks_textviews.text == "" || self.closure_remarks_textviews.text == ENTER_CLOSURE_REMARKS {
             self.view.makeToast("Recommendations is mandatory")
             return nil
         }
