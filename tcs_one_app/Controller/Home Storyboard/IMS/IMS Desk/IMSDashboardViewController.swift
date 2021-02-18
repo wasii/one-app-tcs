@@ -763,62 +763,75 @@ extension IMSDashboardViewController: UITableViewDataSource, UITableViewDelegate
                     break
             }
         } else {
-            let controller = self.storyboard?.instantiateViewController(withIdentifier: "IMSViewUpdateRequestViewController") as! IMSViewUpdateRequestViewController
-            
-            let permissions = AppDelegate.sharedInstance.db?.read_tbl_UserPermission()
-            var current_user = ""
-            for perm in permissions! {
-                var breakk = false
-                let p = perm.PERMISSION
-                for constant in IMSAllPermissions {
-                    if p == constant {
-                        current_user = p
-                        breakk = true
-                        break
-                    }
-                }
-                if breakk {
-                    break
-                }
-            }
+            let controller = self.storyboard?.instantiateViewController(withIdentifier: "IMSNewRequestViewController") as! IMSNewRequestViewController
+            var current_ticket : tbl_Hr_Request_Logs?
             if isFiltered {
-                let current_ticket = self.filtered_data![indexPath.row]
-                let isGranted = permissions?.contains(where: { (perm) -> Bool in
-                    let permission = String(perm.PERMISSION.lowercased().split(separator: " ").last!)
-                    return permission == current_ticket.TICKET_STATUS?.lowercased()
-                })
-                
-                controller.ticket_request = current_ticket
-                controller.current_user = current_user
-                controller.havePermissionToEdit = isGranted!
-                print(current_user)
-                if current_user == "" {
-                    let controller = self.storyboard?.instantiateViewController(withIdentifier: "IMSNewRequestViewController") as! IMSNewRequestViewController
-                    controller.current_ticket = current_ticket
-                    self.navigationController?.pushViewController(controller, animated: true)
-                } else {
-                    self.navigationController?.pushViewController(controller, animated: true)
-                }
+                current_ticket = self.filtered_data![indexPath.row]
             } else {
-                let current_ticket = self.tbl_request_logs![indexPath.row]
-                let isGranted = permissions?.contains(where: { (perm) -> Bool in
-                    let permission = String(perm.PERMISSION.lowercased().split(separator: " ").last!)
-                    return permission == current_ticket.TICKET_STATUS?.lowercased()
-                })
-                
-                controller.ticket_request = current_ticket
-                controller.current_user = current_user
-                controller.havePermissionToEdit = isGranted!
-                
-                print(current_user)
-                if current_user == "" {
-                    let controller = self.storyboard?.instantiateViewController(withIdentifier: "IMSNewRequestViewController") as! IMSNewRequestViewController
-                    controller.current_ticket = current_ticket
-                    self.navigationController?.pushViewController(controller, animated: true)
-                } else {
-                    self.navigationController?.pushViewController(controller, animated: true)
-                }
+                current_ticket = self.tbl_request_logs![indexPath.row]
             }
+            controller.current_ticket = current_ticket
+            if current_ticket!.TICKET_STATUS == IMS_Status_Inprogress_Rm {
+                
+            }
+            self.navigationController?.pushViewController(controller, animated: true)
+            
+//            let controller = self.storyboard?.instantiateViewController(withIdentifier: "IMSViewUpdateRequestViewController") as! IMSViewUpdateRequestViewController
+//
+//            let permissions = AppDelegate.sharedInstance.db?.read_tbl_UserPermission()
+//            var current_user = ""
+//            for perm in permissions! {
+//                var breakk = false
+//                let p = perm.PERMISSION
+//                for constant in IMSAllPermissions {
+//                    if p == constant {
+//                        current_user = p
+//                        breakk = true
+//                        break
+//                    }
+//                }
+//                if breakk {
+//                    break
+//                }
+//            }
+//            if isFiltered {
+//                let current_ticket = self.filtered_data![indexPath.row]
+//                let isGranted = permissions?.contains(where: { (perm) -> Bool in
+//                    let permission = String(perm.PERMISSION.lowercased().split(separator: " ").last!)
+//                    return permission == current_ticket.TICKET_STATUS?.lowercased()
+//                })
+//
+//                controller.ticket_request = current_ticket
+//                controller.current_user = current_user
+//                controller.havePermissionToEdit = isGranted!
+//                print(current_user)
+//                if current_user == "" {
+//                    let controller = self.storyboard?.instantiateViewController(withIdentifier: "IMSNewRequestViewController") as! IMSNewRequestViewController
+//                    controller.current_ticket = current_ticket
+//                    self.navigationController?.pushViewController(controller, animated: true)
+//                } else {
+//                    self.navigationController?.pushViewController(controller, animated: true)
+//                }
+//            } else {
+//                let current_ticket = self.tbl_request_logs![indexPath.row]
+//                let isGranted = permissions?.contains(where: { (perm) -> Bool in
+//                    let permission = String(perm.PERMISSION.lowercased().split(separator: " ").last!)
+//                    return permission == current_ticket.TICKET_STATUS?.lowercased()
+//                })
+//
+//                controller.ticket_request = current_ticket
+//                controller.current_user = current_user
+//                controller.havePermissionToEdit = isGranted!
+//
+//                print(current_user)
+//                if current_user == "" {
+//                    let controller = self.storyboard?.instantiateViewController(withIdentifier: "IMSNewRequestViewController") as! IMSNewRequestViewController
+//                    controller.current_ticket = current_ticket
+//                    self.navigationController?.pushViewController(controller, animated: true)
+//                } else {
+//                    self.navigationController?.pushViewController(controller, animated: true)
+//                }
+//            }
         }
     }
 }

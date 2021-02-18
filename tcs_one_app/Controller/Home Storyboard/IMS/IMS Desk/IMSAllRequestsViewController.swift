@@ -106,6 +106,11 @@ class IMSAllRequestsViewController: BaseViewController {
         }
         tbl_request_logs = AppDelegate.sharedInstance.db?.read_tbl_hr_request(query: query)
         
+        tbl_request_logs = tbl_request_logs?.filter({ (logs) -> Bool in
+            logs.LOGIN_ID != Int(CURRENT_USER_LOGGED_IN_ID)
+        })
+        
+        
         if filtered_status == "" {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                 self.setupCircularViews()

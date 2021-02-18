@@ -857,15 +857,12 @@ var ticket_request: tbl_Hr_Request_Logs?
                 self.hr_status_textfield.isUserInteractionEnabled = false
                 
                 
-                self.controller_recommendation.isHidden = true
+                self.controller_recommendation.isHidden = false
+                self.controller_recommendation_textview.isEditable = false
+                self.controller_recommendation_textview.text = "\(ticket_request?.HR_REMARKS ?? "")"
+                self.controller_recommendation_word_counter.text = "\(ticket_request?.HR_REMARKS?.count ?? 0)/200"
                 
                 self.forwardBtn.isHidden = true
-                if ticket_request?.TICKET_STATUS == IMS_Status_Closed {
-                    remarks_attachment_stackview.isHidden = false
-                    closure_remarks_views.isHidden = false
-                    closure_remarks_textviews.text = "\(ticket_request?.HR_REMARKS ?? "")"
-                    closure_remarks_wordcounter.text = "\(ticket_request?.HR_REMARKS?.count ?? 0)/200"
-                }
             }
         }
         if IMS_Inprogress_Rds == "\(current_user)" {
