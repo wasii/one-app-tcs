@@ -79,7 +79,7 @@
                                                     <action selector="trackBtnTapped:" destination="Juz-JS-Fbe" eventType="touchUpInside" id="Mv3-pk-MfS"/>
                                                 </connections>
                                             </button>
-                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nxI-k5-pbO" customClass="CustomView" customModule="One_App" customModuleProvider="target">
+                                            <view tag="10" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nxI-k5-pbO" customClass="CustomView" customModule="One_App" customModuleProvider="target">
                                                 <rect key="frame" x="15" y="90" width="398" height="40"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Booking Details" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cl4-Bn-Wfu">
@@ -144,7 +144,7 @@
                                                     <outlet property="delegate" destination="Juz-JS-Fbe" id="BpP-of-h3c"/>
                                                 </connections>
                                             </tableView>
-                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5ag-Is-Zra" customClass="CustomView" customModule="One_App" customModuleProvider="target">
+                                            <view tag="20" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5ag-Is-Zra" customClass="CustomView" customModule="One_App" customModuleProvider="target">
                                                 <rect key="frame" x="15" y="140" width="398" height="40"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Delivery Details" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JYa-Gm-80C">
@@ -209,7 +209,7 @@
                                                     <outlet property="delegate" destination="Juz-JS-Fbe" id="oLr-yP-dku"/>
                                                 </connections>
                                             </tableView>
-                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="FxY-z7-tUc" customClass="CustomView" customModule="One_App" customModuleProvider="target">
+                                            <view tag="30" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="FxY-z7-tUc" customClass="CustomView" customModule="One_App" customModuleProvider="target">
                                                 <rect key="frame" x="15" y="190" width="398" height="40"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="PBag Details" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LCk-PN-isb">
@@ -274,7 +274,7 @@
                                                     <outlet property="delegate" destination="Juz-JS-Fbe" id="jKe-D8-WH6"/>
                                                 </connections>
                                             </tableView>
-                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Wlh-dT-imD" customClass="CustomView" customModule="One_App" customModuleProvider="target">
+                                            <view tag="40" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Wlh-dT-imD" customClass="CustomView" customModule="One_App" customModuleProvider="target">
                                                 <rect key="frame" x="15" y="240" width="398" height="40"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="RBag Details" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vhm-o3-chV">
@@ -339,7 +339,7 @@
                                                     <outlet property="delegate" destination="Juz-JS-Fbe" id="Heo-pg-YiD"/>
                                                 </connections>
                                             </tableView>
-                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4zZ-Io-kws" customClass="CustomView" customModule="One_App" customModuleProvider="target">
+                                            <view tag="50" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4zZ-Io-kws" customClass="CustomView" customModule="One_App" customModuleProvider="target">
                                                 <rect key="frame" x="15" y="290" width="398" height="40"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="TBag Details" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RcN-Wb-pkl">
@@ -404,7 +404,7 @@
                                                     <outlet property="delegate" destination="Juz-JS-Fbe" id="9I9-hO-dE6"/>
                                                 </connections>
                                             </tableView>
-                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LSH-Kg-0uj" customClass="CustomView" customModule="One_App" customModuleProvider="target">
+                                            <view tag="60" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LSH-Kg-0uj" customClass="CustomView" customModule="One_App" customModuleProvider="target">
                                                 <rect key="frame" x="15" y="340" width="398" height="40"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="De Manifest Details" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kUo-e8-pHe">

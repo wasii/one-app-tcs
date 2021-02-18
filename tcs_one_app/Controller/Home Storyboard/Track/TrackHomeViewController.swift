@@ -61,6 +61,25 @@ class TrackHomeViewController: BaseViewController {
         
 //        self.search_textfield.text = "779230356834"
         
+        if let v = self.view.viewWithTag(10) {
+            v.isHidden = true
+        }
+        if let v = self.view.viewWithTag(20) {
+            v.isHidden = true
+        }
+        if let v = self.view.viewWithTag(30) {
+            v.isHidden = true
+        }
+        if let v = self.view.viewWithTag(40) {
+            v.isHidden = true
+        }
+        if let v = self.view.viewWithTag(50) {
+            v.isHidden = true
+        }
+        if let v = self.view.viewWithTag(60) {
+            v.isHidden = true
+        }
+        
         self.detailLabel.forEach { (d) in
             d.isHidden = true
         }
@@ -150,6 +169,24 @@ class TrackHomeViewController: BaseViewController {
                     }
                     self.arrowImages.forEach { (i) in
                         i.isHidden = false
+                    }
+                    if let v = self.view.viewWithTag(10) {
+                        v.isHidden = false
+                    }
+                    if let v = self.view.viewWithTag(20) {
+                        v.isHidden = false
+                    }
+                    if let v = self.view.viewWithTag(30) {
+                        v.isHidden = false
+                    }
+                    if let v = self.view.viewWithTag(40) {
+                        v.isHidden = false
+                    }
+                    if let v = self.view.viewWithTag(50) {
+                        v.isHidden = false
+                    }
+                    if let v = self.view.viewWithTag(60) {
+                        v.isHidden = false
                     }
                 }
                 
@@ -547,11 +584,22 @@ class TrackHomeViewController: BaseViewController {
 extension TrackHomeViewController: UITextFieldDelegate {
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         let maxLength = 12
+        
+        
+        
         let currentString: NSString = textField.text as! NSString
         let newString: NSString =
                 currentString.replacingCharacters(in: range, with: string) as NSString
         if newString.length <= maxLength {
-            return true
+            
+            let emailRegEx = "[0-9]{0,12}"
+
+            let emailPred = NSPredicate(format:"SELF MATCHES %@", emailRegEx)
+            return emailPred.evaluate(with: newString)
+            
+            
+            
+//            return true
         }
         return false
     }
