@@ -12,6 +12,7 @@ import ExpyTableView
 
 class TrackHomeViewController: BaseViewController {
 
+    @IBOutlet weak var noRecordFound: UILabel!
     @IBOutlet weak var mainView: UIView!
     @IBOutlet weak var mainViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var search_textfield: UITextField!
@@ -42,6 +43,7 @@ class TrackHomeViewController: BaseViewController {
     
     @IBOutlet var detailLabel: [UILabel]!
     @IBOutlet var arrowImages: [UIImageView]!
+    @IBOutlet var heightConstraint: [NSLayoutConstraint]!
     
     var booking_details: [BookingDetail]?
     var delivery_details: [DeliveryDetail]?
@@ -162,31 +164,15 @@ class TrackHomeViewController: BaseViewController {
         ] as [String:Any]
         NetworkCalls.getbookingdetails(params: params) { (success, response) in
             if success {
+                var recoudFound = false
                 
                 DispatchQueue.main.async {
+                    self.noRecordFound.isHidden = true
                     self.detailLabel.forEach { (d) in
                         d.isHidden = false
                     }
                     self.arrowImages.forEach { (i) in
                         i.isHidden = false
-                    }
-                    if let v = self.view.viewWithTag(10) {
-                        v.isHidden = false
-                    }
-                    if let v = self.view.viewWithTag(20) {
-                        v.isHidden = false
-                    }
-                    if let v = self.view.viewWithTag(30) {
-                        v.isHidden = false
-                    }
-                    if let v = self.view.viewWithTag(40) {
-                        v.isHidden = false
-                    }
-                    if let v = self.view.viewWithTag(50) {
-                        v.isHidden = false
-                    }
-                    if let v = self.view.viewWithTag(60) {
-                        v.isHidden = false
                     }
                 }
                 
@@ -195,6 +181,9 @@ class TrackHomeViewController: BaseViewController {
                         DispatchQueue.main.async {
                             self.arrowImages[0].image = UIImage(named: "drop_down_white")
                             self.detailLabel[0].text = "Show Details"
+                            if let v = self.view.viewWithTag(10) {
+                                v.isHidden = false
+                            }
                         }
                         self.booking_details = [BookingDetail]()
                         for index in bd {
@@ -216,10 +205,12 @@ class TrackHomeViewController: BaseViewController {
                                 print("error: ", error)
                             }
                         }
+                        recoudFound = true
                     } else {
                         DispatchQueue.main.async {
-                            self.detailLabel[0].text = "No Records Found"
-                            self.arrowImages[0].image = nil
+                            if let v = self.view.viewWithTag(10) {
+                                v.isHidden = true
+                            }
                         }
                         
                     }
@@ -227,6 +218,9 @@ class TrackHomeViewController: BaseViewController {
                         DispatchQueue.main.async {
                             self.arrowImages[1].image = UIImage(named: "drop_down_white")
                             self.detailLabel[1].text = "Show Details"
+                            if let v = self.view.viewWithTag(20) {
+                                v.isHidden = false
+                            }
                         }
                         
                         self.delivery_details = [DeliveryDetail]()
@@ -249,10 +243,13 @@ class TrackHomeViewController: BaseViewController {
                                 print("error: ", error)
                             }
                         }
-                    }else {
+                        recoudFound = true
+                    } else {
                         DispatchQueue.main.async {
-                            self.detailLabel[1].text = "No Records Found"
-                            self.arrowImages[1].image = nil
+                            if let v = self.view.viewWithTag(20) {
+                                v.isHidden = true
+                            }
+                            
                         }
                         
                     }
@@ -261,6 +258,9 @@ class TrackHomeViewController: BaseViewController {
                         DispatchQueue.main.async {
                             self.arrowImages[2].image = UIImage(named: "drop_down_white")
                             self.detailLabel[2].text = "Show Details"
+                            if let v = self.view.viewWithTag(30) {
+                                v.isHidden = false
+                            }
                         }
                         
                         self.pBag_details = [PbagDetail]()
@@ -283,18 +283,22 @@ class TrackHomeViewController: BaseViewController {
                                 print("error: ", error)
                             }
                         }
+                        recoudFound = true
                     } else {
                         DispatchQueue.main.async {
-                            self.detailLabel[2].text = "No Records Found"
-                            self.arrowImages[2].image = nil
+                            if let v = self.view.viewWithTag(30) {
+                                v.isHidden = true
+                            }
                         }
-                        
                     }
                     
                     if let rbd = details.dictionary?["RBAG_DETAIL"]?.array {
                         DispatchQueue.main.async {
                             self.arrowImages[3].image = UIImage(named: "drop_down_white")
                             self.detailLabel[3].text = "Show Details"
+                            if let v = self.view.viewWithTag(40) {
+                                v.isHidden = false
+                            }
                         }
                         
                         self.rBag_details = [RbagDetail]()
@@ -317,17 +321,21 @@ class TrackHomeViewController: BaseViewController {
                                 print("error: ", error)
                             }
                         }
+                        recoudFound = true
                     } else {
                         DispatchQueue.main.async {
-                            self.detailLabel[3].text = "No Records Found"
-                            self.arrowImages[3].image = nil
+                            if let v = self.view.viewWithTag(40) {
+                                v.isHidden = true
+                            }
                         }
-                        
                     }
                     if let tbd = details.dictionary?["TBAG_DETAIL"]?.array {
                         DispatchQueue.main.async {
                             self.arrowImages[4].image = UIImage(named: "drop_down_white")
                             self.detailLabel[4].text = "Show Details"
+                            if let v = self.view.viewWithTag(50) {
+                                v.isHidden = false
+                            }
                         }
                         
                         self.tBag_details = [TbagDetail]()
@@ -350,18 +358,22 @@ class TrackHomeViewController: BaseViewController {
                                 print("error: ", error)
                             }
                         }
+                        recoudFound = true
                     } else {
                         DispatchQueue.main.async {
-                            self.detailLabel[4].text = "No Records Found"
-                            self.arrowImages[4].image = nil
+                            if let v = self.view.viewWithTag(50) {
+                                v.isHidden = true
+                            }
                         }
-                        
                     }
                     
                     if let dmd = details.dictionary?["DMAN_DETAIL"]?.array {
                         DispatchQueue.main.async {
                             self.arrowImages[5].image = UIImage(named: "drop_down_white")
                             self.detailLabel[5].text = "Show Details"
+                            if let v = self.view.viewWithTag(60) {
+                                v.isHidden = false
+                            }
                         }
                         
                         self.dMan_details = [DmanDetail]()
@@ -384,18 +396,22 @@ class TrackHomeViewController: BaseViewController {
                                 print("error: ", error)
                             }
                         }
+                        recoudFound = true
                     } else {
                         DispatchQueue.main.async {
-                            self.detailLabel[5].text = "No Records Found"
-                            self.arrowImages[5].image = nil
+                            if let v = self.view.viewWithTag(60) {
+                                v.isHidden = true
+                            }
                         }
-                        
                     }
                 }
                 
                 DispatchQueue.main.async {
                     self.view.hideToastActivity()
                     self.unFreezeScreen()
+                    if !recoudFound {
+                        self.noRecordFound.isHidden = false
+                    }
                 }
             } else {
                 DispatchQueue.main.async {
@@ -428,6 +444,7 @@ class TrackHomeViewController: BaseViewController {
                         self.arrowImages[0].image = UIImage(named: "up_white")
                         self.detailLabel[0].text = "Hide Details"
                         self.booking_detail_tableview_height.constant = CGFloat(booking_detail.count * 965)
+                        self.heightConstraint[0].constant += self.booking_detail_tableview_height.constant
                         self.mainViewHeightConstraint.constant += self.booking_detail_tableview_height.constant
                         self.booking_detail_tableView.reloadData()
                         self.view.layoutIfNeeded()
@@ -440,6 +457,7 @@ class TrackHomeViewController: BaseViewController {
                     UIView.animate(withDuration: 0.1) {
                         self.arrowImages[0].image = UIImage(named: "drop_down_white")
                         self.detailLabel[0].text = "Show Details"
+                        self.heightConstraint[0].constant -= self.booking_detail_tableview_height.constant
                         self.mainViewHeightConstraint.constant -= self.booking_detail_tableview_height.constant
                         self.booking_detail_tableview_height.constant = 0
                         self.view.layoutIfNeeded()
@@ -457,6 +475,7 @@ class TrackHomeViewController: BaseViewController {
                         self.arrowImages[1].image = UIImage(named: "up_white")
                         self.detailLabel[1].text = "Hide Details"
                         self.deliver_detail_tableview_height.constant = CGFloat(delivery_detail.count * 370)
+                        self.heightConstraint[1].constant += self.deliver_detail_tableview_height.constant
                         self.mainViewHeightConstraint.constant += self.deliver_detail_tableview_height.constant
                         self.deliver_detail_tableView.reloadData()
                         self.view.layoutIfNeeded()
@@ -469,6 +488,7 @@ class TrackHomeViewController: BaseViewController {
                     UIView.animate(withDuration: 0.1) {
                         self.arrowImages[1].image = UIImage(named: "drop_down_white")
                         self.detailLabel[1].text = "Show Details"
+                        self.heightConstraint[1].constant -= self.deliver_detail_tableview_height.constant
                         self.mainViewHeightConstraint.constant -= self.deliver_detail_tableview_height.constant
                         self.deliver_detail_tableview_height.constant = 0
                         self.view.layoutIfNeeded()
@@ -484,6 +504,7 @@ class TrackHomeViewController: BaseViewController {
                         self.arrowImages[2].image = UIImage(named: "up_white")
                         self.detailLabel[2].text = "Hide Details"
                         self.pbag_detail_tableview_height.constant = CGFloat(pBag.count * 160)
+                        self.heightConstraint[2].constant += self.pbag_detail_tableview_height.constant
                         self.mainViewHeightConstraint.constant += self.pbag_detail_tableview_height.constant
                         self.pbag_detail_tableview.reloadData()
                         self.view.layoutIfNeeded()
@@ -494,6 +515,7 @@ class TrackHomeViewController: BaseViewController {
                     UIView.animate(withDuration: 0.1) {
                         self.arrowImages[2].image = UIImage(named: "drop_down_white")
                         self.detailLabel[2].text = "Show Details"
+                        self.heightConstraint[2].constant -= self.pbag_detail_tableview_height.constant
                         self.mainViewHeightConstraint.constant -= self.pbag_detail_tableview_height.constant
                         self.pbag_detail_tableview_height.constant = 0
                         self.view.layoutIfNeeded()
@@ -509,6 +531,7 @@ class TrackHomeViewController: BaseViewController {
                         self.arrowImages[3].image = UIImage(named: "up_white")
                         self.detailLabel[3].text = "Hide Details"
                         self.rbag_detail_tableview_height.constant = CGFloat(rBag.count * 160)
+                        self.heightConstraint[3].constant += self.rbag_detail_tableview_height.constant
                         self.mainViewHeightConstraint.constant += self.rbag_detail_tableview_height.constant
                         self.rbag_detail_tableView.reloadData()
                         self.view.layoutIfNeeded()
@@ -519,6 +542,7 @@ class TrackHomeViewController: BaseViewController {
                     UIView.animate(withDuration: 0.1) {
                         self.arrowImages[3].image = UIImage(named: "drop_down_white")
                         self.detailLabel[3].text = "Show Details"
+                        self.heightConstraint[3].constant -= self.rbag_detail_tableview_height.constant
                         self.mainViewHeightConstraint.constant -= self.rbag_detail_tableview_height.constant
                         self.rbag_detail_tableview_height.constant = 0
                         self.view.layoutIfNeeded()
@@ -534,6 +558,7 @@ class TrackHomeViewController: BaseViewController {
                         self.arrowImages[4].image = UIImage(named: "up_white")
                         self.detailLabel[4].text = "Hide Details"
                         self.tbag_detail_tableView_height.constant = CGFloat(tBag.count * 200)
+                        self.heightConstraint[4].constant += self.tbag_detail_tableView_height.constant
                         self.mainViewHeightConstraint.constant += self.tbag_detail_tableView_height.constant
                         self.tbag_detail_tableView.reloadData()
                         self.view.layoutIfNeeded()
@@ -544,6 +569,7 @@ class TrackHomeViewController: BaseViewController {
                     UIView.animate(withDuration: 0.1) {
                         self.arrowImages[4].image = UIImage(named: "drop_down_white")
                         self.detailLabel[4].text = "Show Details"
+                        self.heightConstraint[4].constant -= self.tbag_detail_tableView_height.constant
                         self.mainViewHeightConstraint.constant -= self.tbag_detail_tableView_height.constant
                         self.tbag_detail_tableView_height.constant = 0
                         self.view.layoutIfNeeded()
@@ -559,6 +585,7 @@ class TrackHomeViewController: BaseViewController {
                         self.arrowImages[5].image = UIImage(named: "up_white")
                         self.detailLabel[5].text = "Hide Details"
                         self.dman_detail_tableview_height.constant = CGFloat(dBag.count * 200)
+                        self.heightConstraint[5].constant += self.dman_detail_tableview_height.constant
                         self.mainViewHeightConstraint.constant += self.dman_detail_tableview_height.constant
                         self.dman_detail_tableView.reloadData()
                         self.view.layoutIfNeeded()
@@ -569,6 +596,7 @@ class TrackHomeViewController: BaseViewController {
                     UIView.animate(withDuration: 0.1) {
                         self.arrowImages[5].image = UIImage(named: "drop_down_white")
                         self.detailLabel[5].text = "Show Details"
+                        self.heightConstraint[5].constant -= self.dman_detail_tableview_height.constant
                         self.mainViewHeightConstraint.constant -= self.dman_detail_tableview_height.constant
                         self.dman_detail_tableview_height.constant = 0
                         self.view.layoutIfNeeded()
