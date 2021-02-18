@@ -106,10 +106,32 @@ class IMSAllRequestsViewController: BaseViewController {
         }
         tbl_request_logs = AppDelegate.sharedInstance.db?.read_tbl_hr_request(query: query)
         
-        tbl_request_logs = tbl_request_logs?.filter({ (logs) -> Bool in
-            logs.LOGIN_ID != Int(CURRENT_USER_LOGGED_IN_ID)
-        })
-        
+//        tbl_request_logs = tbl_request_logs?.filter({ (logs) -> Bool in
+//            logs.LOGIN_ID != Int(CURRENT_USER_LOGGED_IN_ID)
+//        })
+//        var temp_logs : [tbl_Hr_Request_Logs]?
+//        if let _ = tbl_request_logs {
+//            temp_logs = [tbl_Hr_Request_Logs]()
+//
+//            for index in tbl_request_logs! {
+//                let permissions = AppDelegate.sharedInstance.db?.read_tbl_UserPermission()
+//                let isGranted = permissions?.contains(where: { (perm) -> Bool in
+//                    let permission = String(perm.PERMISSION.lowercased().split(separator: " ").last!)
+//                    return permission == index.TICKET_STATUS?.lowercased()
+//                }) ?? false
+//
+//                if index.LOGIN_ID == Int(CURRENT_USER_LOGGED_IN_ID) && isGranted {
+//                    temp_logs?.append(index)
+//                    continue
+//                }
+//                if index.LOGIN_ID == Int(CURRENT_USER_LOGGED_IN_ID) {
+//                    continue
+//                } else {
+//                    temp_logs?.append(index)
+//                }
+//            }
+//        }
+//        tbl_request_logs = temp_logs
         
         if filtered_status == "" {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
@@ -271,7 +293,7 @@ class IMSAllRequestsViewController: BaseViewController {
     @IBAction func sortedBtnTapped(_ sender: UIButton) {
         if self.sortedImages[sender.tag].image != nil {
             self.sortedImages[sender.tag].image = nil
-            
+            self.filtered_status = ""
             self.isFiltered = false
             self.tableView.reloadData()
             self.setupTableViewHeight(isFiltered: false)
