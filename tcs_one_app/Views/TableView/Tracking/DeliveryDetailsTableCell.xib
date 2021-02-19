@@ -25,13 +25,13 @@
                                 <rect key="frame" x="0.0" y="0.0" width="314" height="334"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="7PQ-5g-RMT">
-                                        <rect key="frame" x="0.0" y="0.0" width="314" height="30.5"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="314" height="28"/>
                                         <subviews>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jZM-YT-MwL" customClass="CustomView" customModule="One_App" customModuleProvider="target">
-                                                <rect key="frame" x="0.0" y="0.0" width="157" height="30.5"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="157" height="28"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Sheet No" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OYx-Hi-gcF">
-                                                        <rect key="frame" x="5" y="7" width="150" height="16"/>
+                                                        <rect key="frame" x="5" y="6" width="150" height="16"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                                         <nil key="textColor"/>
                                                         <nil key="highlightedColor"/>
@@ -53,10 +53,10 @@
                                                 </userDefinedRuntimeAttributes>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Zsg-VT-yC2" customClass="CustomView" customModule="One_App" customModuleProvider="target">
-                                                <rect key="frame" x="157" y="0.0" width="157" height="30.5"/>
+                                                <rect key="frame" x="157" y="0.0" width="157" height="28"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Consignment Number" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="V3I-b7-NnH">
-                                                        <rect key="frame" x="8" y="7" width="147" height="16"/>
+                                                        <rect key="frame" x="8" y="6" width="147" height="16"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                                         <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <nil key="highlightedColor"/>
@@ -80,13 +80,13 @@
                                         </subviews>
                                     </stackView>
                                     <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="ByX-92-lXD">
-                                        <rect key="frame" x="0.0" y="30.5" width="314" height="30"/>
+                                        <rect key="frame" x="0.0" y="28" width="314" height="27.5"/>
                                         <subviews>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="85n-db-vZa" customClass="CustomView" customModule="One_App" customModuleProvider="target">
-                                                <rect key="frame" x="0.0" y="0.0" width="157" height="30"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="157" height="27.5"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Slot" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="J2z-dN-Jgx">
-                                                        <rect key="frame" x="5" y="6.5" width="150" height="17"/>
+                                                        <rect key="frame" x="5" y="5.5" width="150" height="17"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                         <nil key="textColor"/>
                                                         <nil key="highlightedColor"/>
@@ -108,10 +108,10 @@
                                                 </userDefinedRuntimeAttributes>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="02O-1X-PE6" customClass="CustomView" customModule="One_App" customModuleProvider="target">
-                                                <rect key="frame" x="157" y="0.0" width="157" height="30"/>
+                                                <rect key="frame" x="157" y="0.0" width="157" height="27.5"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Consignment Number" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DJd-AY-RI3">
-                                                        <rect key="frame" x="8" y="7" width="147" height="16"/>
+                                                        <rect key="frame" x="8" y="6" width="147" height="16"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                                         <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <nil key="highlightedColor"/>
@@ -135,13 +135,13 @@
                                         </subviews>
                                     </stackView>
                                     <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="F3L-mj-aON">
-                                        <rect key="frame" x="0.0" y="60.5" width="314" height="30.5"/>
+                                        <rect key="frame" x="0.0" y="55.5" width="314" height="28"/>
                                         <subviews>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="i02-88-flh" customClass="CustomView" customModule="One_App" customModuleProvider="target">
-                                                <rect key="frame" x="0.0" y="0.0" width="157" height="30.5"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="157" height="28"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Route" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0ux-V0-jzx">
-                                                        <rect key="frame" x="5" y="7" width="150" height="17"/>
+                                                        <rect key="frame" x="5" y="5.5" width="150" height="17"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                         <nil key="textColor"/>
                                                         <nil key="highlightedColor"/>
@@ -163,10 +163,10 @@
                                                 </userDefinedRuntimeAttributes>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Kml-VI-Muq" customClass="CustomView" customModule="One_App" customModuleProvider="target">
-                                                <rect key="frame" x="157" y="0.0" width="157" height="30.5"/>
+                                                <rect key="frame" x="157" y="0.0" width="157" height="28"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Consignment Number" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AtV-rg-sen">
-                                                        <rect key="frame" x="8" y="7.5" width="147" height="16"/>
+                                                        <rect key="frame" x="8" y="6" width="147" height="16"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                                         <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <nil key="highlightedColor"/>
@@ -190,13 +190,13 @@
                                         </subviews>
                                     </stackView>
                                     <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="Vag-v7-wCd">
-                                        <rect key="frame" x="0.0" y="91" width="314" height="30.5"/>
+                                        <rect key="frame" x="0.0" y="83.5" width="314" height="28"/>
                                         <subviews>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="g1i-nx-xc8" customClass="CustomView" customModule="One_App" customModuleProvider="target">
-                                                <rect key="frame" x="0.0" y="0.0" width="157" height="30.5"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="157" height="28"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Courier" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UzK-Xg-Ye6">
-                                                        <rect key="frame" x="5" y="7" width="150" height="17"/>
+                                                        <rect key="frame" x="5" y="5.5" width="150" height="17"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                         <nil key="textColor"/>
                                                         <nil key="highlightedColor"/>
@@ -218,10 +218,10 @@
                                                 </userDefinedRuntimeAttributes>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hVf-fb-1xu" customClass="CustomView" customModule="One_App" customModuleProvider="target">
-                                                <rect key="frame" x="157" y="0.0" width="157" height="30.5"/>
+                                                <rect key="frame" x="157" y="0.0" width="157" height="28"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Consignment Number" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wVN-e0-VCj">
-                                                        <rect key="frame" x="8" y="7.5" width="147" height="16"/>
+                                                        <rect key="frame" x="8" y="6" width="147" height="16"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                                         <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <nil key="highlightedColor"/>
@@ -245,13 +245,13 @@
                                         </subviews>
                                     </stackView>
                                     <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="fKm-DX-QyB">
-                                        <rect key="frame" x="0.0" y="121.5" width="314" height="30.5"/>
+                                        <rect key="frame" x="0.0" y="111.5" width="314" height="27.5"/>
                                         <subviews>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="HGh-f0-FrT" customClass="CustomView" customModule="One_App" customModuleProvider="target">
-                                                <rect key="frame" x="0.0" y="0.0" width="157" height="30.5"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="157" height="27.5"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Courier Cell #" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wuh-7L-FHd">
-                                                        <rect key="frame" x="5" y="6.5" width="150" height="17"/>
+                                                        <rect key="frame" x="5" y="5.5" width="150" height="17"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                         <nil key="textColor"/>
                                                         <nil key="highlightedColor"/>
@@ -273,10 +273,10 @@
                                                 </userDefinedRuntimeAttributes>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="SNW-1u-u1x" customClass="CustomView" customModule="One_App" customModuleProvider="target">
-                                                <rect key="frame" x="157" y="0.0" width="157" height="30.5"/>
+                                                <rect key="frame" x="157" y="0.0" width="157" height="27.5"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Consignment Number" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="s2W-bN-tEQ">
-                                                        <rect key="frame" x="8" y="7" width="147" height="16"/>
+                                                        <rect key="frame" x="8" y="6" width="147" height="16"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                                         <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <nil key="highlightedColor"/>
@@ -300,13 +300,13 @@
                                         </subviews>
                                     </stackView>
                                     <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="VgU-Qc-RED">
-                                        <rect key="frame" x="0.0" y="152" width="314" height="30"/>
+                                        <rect key="frame" x="0.0" y="139" width="314" height="28"/>
                                         <subviews>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ydt-Bb-ga5" customClass="CustomView" customModule="One_App" customModuleProvider="target">
-                                                <rect key="frame" x="0.0" y="0.0" width="157" height="30"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="157" height="28"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Date" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2iw-MN-DbZ">
-                                                        <rect key="frame" x="5" y="6.5" width="150" height="17"/>
+                                                        <rect key="frame" x="5" y="5.5" width="150" height="17"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                         <nil key="textColor"/>
                                                         <nil key="highlightedColor"/>
@@ -328,10 +328,10 @@
                                                 </userDefinedRuntimeAttributes>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qJU-yd-DK0" customClass="CustomView" customModule="One_App" customModuleProvider="target">
-                                                <rect key="frame" x="157" y="0.0" width="157" height="30"/>
+                                                <rect key="frame" x="157" y="0.0" width="157" height="28"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Consignment Number" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xxD-kR-3co">
-                                                        <rect key="frame" x="8" y="7" width="147" height="16"/>
+                                                        <rect key="frame" x="8" y="6" width="147" height="16"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                                         <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <nil key="highlightedColor"/>
@@ -355,13 +355,13 @@
                                         </subviews>
                                     </stackView>
                                     <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="jJ1-wa-1JK">
-                                        <rect key="frame" x="0.0" y="182" width="314" height="30.5"/>
+                                        <rect key="frame" x="0.0" y="167" width="314" height="28"/>
                                         <subviews>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="d7J-FC-8sl" customClass="CustomView" customModule="One_App" customModuleProvider="target">
-                                                <rect key="frame" x="0.0" y="0.0" width="157" height="30.5"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="157" height="28"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Time" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Qqy-c0-9Ug">
-                                                        <rect key="frame" x="5" y="7" width="150" height="17"/>
+                                                        <rect key="frame" x="5" y="5.5" width="150" height="17"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                         <nil key="textColor"/>
                                                         <nil key="highlightedColor"/>
@@ -383,10 +383,10 @@
                                                 </userDefinedRuntimeAttributes>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="RWh-v1-0Pd" customClass="CustomView" customModule="One_App" customModuleProvider="target">
-                                                <rect key="frame" x="157" y="0.0" width="157" height="30.5"/>
+                                                <rect key="frame" x="157" y="0.0" width="157" height="28"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Consignment Number" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fHO-cx-RAX">
-                                                        <rect key="frame" x="8" y="7.5" width="147" height="16"/>
+                                                        <rect key="frame" x="8" y="6" width="147" height="16"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                                         <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <nil key="highlightedColor"/>
@@ -410,13 +410,13 @@
                                         </subviews>
                                     </stackView>
                                     <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="tY2-6D-DSA">
-                                        <rect key="frame" x="0.0" y="212.5" width="314" height="30.5"/>
+                                        <rect key="frame" x="0.0" y="195" width="314" height="27.5"/>
                                         <subviews>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="JXa-JT-kNt" customClass="CustomView" customModule="One_App" customModuleProvider="target">
-                                                <rect key="frame" x="0.0" y="0.0" width="157" height="30.5"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="157" height="27.5"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Received By" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cHc-5c-T54">
-                                                        <rect key="frame" x="5" y="6.5" width="150" height="17"/>
+                                                        <rect key="frame" x="5" y="5.5" width="150" height="17"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                         <nil key="textColor"/>
                                                         <nil key="highlightedColor"/>
@@ -438,10 +438,10 @@
                                                 </userDefinedRuntimeAttributes>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jsf-Jc-9Lt" customClass="CustomView" customModule="One_App" customModuleProvider="target">
-                                                <rect key="frame" x="157" y="0.0" width="157" height="30.5"/>
+                                                <rect key="frame" x="157" y="0.0" width="157" height="27.5"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Consignment Number" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TMD-Dj-bJe">
-                                                        <rect key="frame" x="8" y="7" width="147" height="16"/>
+                                                        <rect key="frame" x="8" y="6" width="147" height="16"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                                         <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <nil key="highlightedColor"/>
@@ -465,13 +465,13 @@
                                         </subviews>
                                     </stackView>
                                     <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="kRC-RK-rQ1">
-                                        <rect key="frame" x="0.0" y="243" width="314" height="30.5"/>
+                                        <rect key="frame" x="0.0" y="222.5" width="314" height="28"/>
                                         <subviews>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="L17-9J-48d" customClass="CustomView" customModule="One_App" customModuleProvider="target">
-                                                <rect key="frame" x="0.0" y="0.0" width="157" height="30.5"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="157" height="28"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Relation" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MN6-Yx-cVc">
-                                                        <rect key="frame" x="5" y="6.5" width="150" height="17"/>
+                                                        <rect key="frame" x="5" y="5.5" width="150" height="17"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                         <nil key="textColor"/>
                                                         <nil key="highlightedColor"/>
@@ -493,10 +493,10 @@
                                                 </userDefinedRuntimeAttributes>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oBX-Tt-TtP" customClass="CustomView" customModule="One_App" customModuleProvider="target">
-                                                <rect key="frame" x="157" y="0.0" width="157" height="30.5"/>
+                                                <rect key="frame" x="157" y="0.0" width="157" height="28"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Consignment Number" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uSe-AP-7p8">
-                                                        <rect key="frame" x="8" y="7" width="147" height="16"/>
+                                                        <rect key="frame" x="8" y="6" width="147" height="16"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                                         <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <nil key="highlightedColor"/>
@@ -519,14 +519,69 @@
                                             </view>
                                         </subviews>
                                     </stackView>
+                                    <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="uP1-AA-SNn">
+                                        <rect key="frame" x="0.0" y="250.5" width="314" height="28"/>
+                                        <subviews>
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="FDD-Ka-5CR" customClass="CustomView" customModule="One_App" customModuleProvider="target">
+                                                <rect key="frame" x="0.0" y="0.0" width="157" height="28"/>
+                                                <subviews>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="CNIC" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ejo-Na-eDe">
+                                                        <rect key="frame" x="5" y="5.5" width="150" height="17"/>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                        <nil key="textColor"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                </subviews>
+                                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                                <constraints>
+                                                    <constraint firstItem="Ejo-Na-eDe" firstAttribute="centerY" secondItem="FDD-Ka-5CR" secondAttribute="centerY" id="BvI-I0-uGZ"/>
+                                                    <constraint firstItem="Ejo-Na-eDe" firstAttribute="leading" secondItem="FDD-Ka-5CR" secondAttribute="leading" constant="5" id="cEF-bb-Czp"/>
+                                                    <constraint firstAttribute="trailing" secondItem="Ejo-Na-eDe" secondAttribute="trailing" constant="2" id="cYW-ou-me5"/>
+                                                </constraints>
+                                                <userDefinedRuntimeAttributes>
+                                                    <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
+                                                        <color key="value" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                    <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
+                                                        <real key="value" value="1"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                </userDefinedRuntimeAttributes>
+                                            </view>
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zIo-A3-Z8a" customClass="CustomView" customModule="One_App" customModuleProvider="target">
+                                                <rect key="frame" x="157" y="0.0" width="157" height="28"/>
+                                                <subviews>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="-" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="L9y-LY-1v4">
+                                                        <rect key="frame" x="8" y="6" width="147" height="16"/>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                                        <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                </subviews>
+                                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="trailing" secondItem="L9y-LY-1v4" secondAttribute="trailing" constant="2" id="44X-iK-glK"/>
+                                                    <constraint firstItem="L9y-LY-1v4" firstAttribute="centerY" secondItem="zIo-A3-Z8a" secondAttribute="centerY" id="JvZ-he-e65"/>
+                                                    <constraint firstItem="L9y-LY-1v4" firstAttribute="leading" secondItem="zIo-A3-Z8a" secondAttribute="leading" constant="8" id="eJb-Tg-wnj"/>
+                                                </constraints>
+                                                <userDefinedRuntimeAttributes>
+                                                    <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
+                                                        <real key="value" value="1"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                    <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
+                                                        <color key="value" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                </userDefinedRuntimeAttributes>
+                                            </view>
+                                        </subviews>
+                                    </stackView>
                                     <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="gAb-MM-uVK">
-                                        <rect key="frame" x="0.0" y="273.5" width="314" height="30"/>
+                                        <rect key="frame" x="0.0" y="278.5" width="314" height="27.5"/>
                                         <subviews>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kp1-Rd-IgM" customClass="CustomView" customModule="One_App" customModuleProvider="target">
-                                                <rect key="frame" x="0.0" y="0.0" width="157" height="30"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="157" height="27.5"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Status" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SUn-F8-dv5">
-                                                        <rect key="frame" x="5" y="6.5" width="150" height="17"/>
+                                                        <rect key="frame" x="5" y="5.5" width="150" height="17"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                         <nil key="textColor"/>
                                                         <nil key="highlightedColor"/>
@@ -548,10 +603,10 @@
                                                 </userDefinedRuntimeAttributes>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="FZT-2O-L1D" customClass="CustomView" customModule="One_App" customModuleProvider="target">
-                                                <rect key="frame" x="157" y="0.0" width="157" height="30"/>
+                                                <rect key="frame" x="157" y="0.0" width="157" height="27.5"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Consignment Number" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="W8T-wJ-xPo">
-                                                        <rect key="frame" x="8" y="7" width="147" height="16"/>
+                                                        <rect key="frame" x="8" y="6" width="147" height="16"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                                         <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <nil key="highlightedColor"/>
@@ -575,13 +630,13 @@
                                         </subviews>
                                     </stackView>
                                     <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="lj7-KY-e9Z">
-                                        <rect key="frame" x="0.0" y="303.5" width="314" height="30.5"/>
+                                        <rect key="frame" x="0.0" y="306" width="314" height="28"/>
                                         <subviews>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="avw-uG-07Y" customClass="CustomView" customModule="One_App" customModuleProvider="target">
-                                                <rect key="frame" x="0.0" y="0.0" width="157" height="30.5"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="157" height="28"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Pieces" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Bd8-xz-HT6">
-                                                        <rect key="frame" x="5" y="7" width="150" height="17"/>
+                                                        <rect key="frame" x="5" y="5.5" width="150" height="17"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                         <nil key="textColor"/>
                                                         <nil key="highlightedColor"/>
@@ -603,10 +658,10 @@
                                                 </userDefinedRuntimeAttributes>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cnE-ZB-0ex" customClass="CustomView" customModule="One_App" customModuleProvider="target">
-                                                <rect key="frame" x="157" y="0.0" width="157" height="30.5"/>
+                                                <rect key="frame" x="157" y="0.0" width="157" height="28"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Consignment Number" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ob0-BC-FoV">
-                                                        <rect key="frame" x="8" y="7.5" width="147" height="16"/>
+                                                        <rect key="frame" x="8" y="6" width="147" height="16"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                                         <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <nil key="highlightedColor"/>
