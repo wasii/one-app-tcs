@@ -43,6 +43,9 @@ class IMSAllRequestsViewController: BaseViewController {
     
     var filtered_status = ""
     
+    
+    var current_user = ""
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = "All Requests"
@@ -55,6 +58,55 @@ class IMSAllRequestsViewController: BaseViewController {
         
 //        self.searchTextField.delegate = self
         user_permission = AppDelegate.sharedInstance.db!.read_tbl_UserPermission()
+        
+        
+        for perm in user_permission {
+            var breakk = false
+            let p = perm.PERMISSION
+            for constant in IMSAllPermissions {
+                if p == constant {
+                    switch p {
+                    case IMS_Submitted, IMS_Inprogress_Ro, IMS_Inprogress_Rhod:
+                        current_user = IMS_InputBy_LineManager
+                        break
+                    case IMS_Inprogress_Hod:
+                        current_user = IMS_InputBy_Hod
+                        break
+                    case IMS_Inprogress_Cs:
+                        current_user = IMS_InputBy_CentralSecurity
+                        break
+                    case IMS_Inprogress_As:
+                        current_user = IMS_InputBy_AreaSecurity
+                        break
+                    case IMS_Inprogress_Hs, IMS_Inprogress_Rds:
+                        current_user = IMS_InputBy_HeadSecurity
+                        break
+                    case IMS_Inprogress_Ds:
+                        current_user = IMS_InputBy_DirectorSecurity
+                        break
+                    case IMS_Inprogress_Fs, IMS_Inprogress_Ins:
+                        current_user = IMS_InputBy_FinancialService
+                        break
+                    case IMS_Inprogress_Hr:
+                        current_user = IMS_InputBy_HumanResource
+                        break
+                    case IMS_Inprogress_Fi:
+                        current_user = IMS_InputBy_Finance
+                        break
+                    case IMS_Inprogress_Ca:
+                        current_user = IMS_InputBy_Controller
+                        break
+                    default:
+                        break
+                    }
+                    breakk = true
+                    break
+                }
+            }
+            if breakk {
+                break
+            }
+        }
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -105,33 +157,48 @@ class IMSAllRequestsViewController: BaseViewController {
              query = "SELECT * FROM REQUEST_LOGS WHERE CREATED_DATE >= '\(startday!)' AND CREATED_DATE <= '\(endday!)' AND MODULE_ID = '\(CONSTANT_MODULE_ID)' AND CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)'"
         }
         tbl_request_logs = AppDelegate.sharedInstance.db?.read_tbl_hr_request(query: query)
-        
-//        tbl_request_logs = tbl_request_logs?.filter({ (logs) -> Bool in
-//            logs.LOGIN_ID != Int(CURRENT_USER_LOGGED_IN_ID)
-//        })
-//        var temp_logs : [tbl_Hr_Request_Logs]?
-//        if let _ = tbl_request_logs {
-//            temp_logs = [tbl_Hr_Request_Logs]()
-//
-//            for index in tbl_request_logs! {
-//                let permissions = AppDelegate.sharedInstance.db?.read_tbl_UserPermission()
-//                let isGranted = permissions?.contains(where: { (perm) -> Bool in
-//                    let permission = String(perm.PERMISSION.lowercased().split(separator: " ").last!)
-//                    return permission == index.TICKET_STATUS?.lowercased()
-//                }) ?? false
-//
-//                if index.LOGIN_ID == Int(CURRENT_USER_LOGGED_IN_ID) && isGranted {
-//                    temp_logs?.append(index)
-//                    continue
-//                }
-//                if index.LOGIN_ID == Int(CURRENT_USER_LOGGED_IN_ID) {
-//                    continue
-//                } else {
-//                    temp_logs?.append(index)
-//                }
-//            }
-//        }
-//        tbl_request_logs = temp_logs
+        var temp_logs : [tbl_Hr_Request_Logs]?
+        if let _ = tbl_request_logs {
+            temp_logs = [tbl_Hr_Request_Logs]()
+
+            for index in tbl_request_logs! {
+                let permissions = AppDelegate.sharedInstance.db?.read_tbl_UserPermission()
+                let isGranted = permissions?.contains(where: { (perm) -> Bool in
+                    let permission = String(perm.PERMISSION.lowercased().split(separator: " ").last!)
+                    return permission == index.TICKET_STATUS?.lowercased()
+                }) ?? false
+
+                if index.LOGIN_ID == Int(CURRENT_USER_LOGGED_IN_ID) && isGranted {
+                    if current_user == IMS_Remarks_Line_Manager {
+                        if index.LINE_MANAGER1 == Int(CURRENT_USER_LOGGED_IN_ID)! {
+                            temp_logs?.append(index)
+                            continue
+                        }
+                    }
+                    if current_user == IMS_Remarks_Department_Head {
+                        if index.LINE_MANAGER2 == Int(CURRENT_USER_LOGGED_IN_ID)! {
+                            temp_logs?.append(index)
+                            continue
+                        }
+                    }
+                }
+                let query = "SELECT * FROM \(db_grievance_remarks) WHERE EMPL_NO = '\(Int(CURRENT_USER_LOGGED_IN_ID)!)' AND TICKET_ID = '\(index.SERVER_ID_PK!)' AND REMARKS_INPUT = '\(current_user)'"
+                
+                
+                let history = AppDelegate.sharedInstance.db?.read_tbl_hr_grievance(query: query)
+                if history!.count > 0 {
+                    temp_logs?.append(index)
+                    continue
+                }
+                if index.LOGIN_ID == Int(CURRENT_USER_LOGGED_IN_ID) {
+                    continue
+                }
+                else {
+                    temp_logs?.append(index)
+                }
+            }
+        }
+        tbl_request_logs = temp_logs
         
         if filtered_status == "" {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
@@ -330,6 +397,7 @@ extension IMSAllRequestsViewController: DateSelectionDelegate {
     
     func dateSelection(numberOfDays: Int, selected_query: String) {
         self.selected_query = selected_query
+        self.numberOfDays = numberOfDays
         self.monthlyBtn.setTitle(selected_query, for: .normal)
         
         self.start_day = nil

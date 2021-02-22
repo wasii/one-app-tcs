@@ -260,7 +260,6 @@ var ticket_request: tbl_Hr_Request_Logs?
             }
             
             if havePermissionToEdit {
-//                self.title = "Update Request"
                 self.headingLabel.text = "Request Detail"
                 
                 classification_textfield.label.text = "*Classification"
@@ -285,7 +284,6 @@ var ticket_request: tbl_Hr_Request_Logs?
                     attachment_view.isHidden = false
                 }
             } else {
-//                self.title = "View Request"
                 self.headingLabel.text = "View Request"
                 
                 classification_textfield.isUserInteractionEnabled = false
@@ -316,7 +314,6 @@ var ticket_request: tbl_Hr_Request_Logs?
         }
         if IMS_Inprogress_Hod == current_user {
             if havePermissionToEdit {
-//                self.title = "Update Request"
                 self.headingLabel.text = "Request Detail"
                 self.investigation_required_view.isHidden = false
                 self.investigation_required_switch.isUserInteractionEnabled = true
@@ -333,7 +330,6 @@ var ticket_request: tbl_Hr_Request_Logs?
                     attachment_view.isHidden = false
                 }
             } else {
-//                self.title = "View Request"
                 self.headingLabel.text = "View Request"
                 self.investigation_required_view.isHidden = false
                 if self.ticket_request!.IS_INVESTIGATION == 1 {
@@ -361,7 +357,6 @@ var ticket_request: tbl_Hr_Request_Logs?
             self.assigned_to_view.isHidden = false
             
             if havePermissionToEdit {
-//                self.title = "Update Request"
                 self.headingLabel.text = "Request Detail"
                 self.area_textfield.label.text = "*Area "
                 self.assigned_to_textfield.label.text = "*Assigned To "
@@ -386,7 +381,6 @@ var ticket_request: tbl_Hr_Request_Logs?
                 }
                 
             } else {
-//                self.title = "View Request"
                 self.headingLabel.text = "View Request"
                 self.area_textfield.isUserInteractionEnabled = false
                 self.area_textfield.label.text = "Area"
@@ -419,7 +413,6 @@ var ticket_request: tbl_Hr_Request_Logs?
         
         if IMS_Inprogress_As == "\(current_user)" {
             if havePermissionToEdit {
-//                self.title = "Update Request"
                 self.headingLabel.text = "Request Detail"
                 self.remarks_attachment_stackview.isHidden = true
                 self.attachment_view.isHidden = true
@@ -439,7 +432,6 @@ var ticket_request: tbl_Hr_Request_Logs?
                 self.showEnterDetailLabel.text = "Enter Details"
                 
             } else {
-//                self.title = "View Request"
                 self.headingLabel.text = "View Request"
                 self.forwardBtn.isHidden = true
                 self.rejectBtn.isHidden = true
@@ -459,7 +451,6 @@ var ticket_request: tbl_Hr_Request_Logs?
             
             
             if havePermissionToEdit {
-//                self.title = "Update Request"
                 self.headingLabel.text = "Request Detail"
                 self.remarks_attachment_stackview.isHidden = true
                 self.attachment_view.isHidden = true
@@ -481,7 +472,6 @@ var ticket_request: tbl_Hr_Request_Logs?
                 self.recommendations_textview.delegate = self
                 self.executive_summary_textview.delegate = self
             } else {
-//                self.title = "View Request"
                 self.headingLabel.text = "View Request"
                 self.executive_summary_textview.isUserInteractionEnabled = false
                 self.recommendations_textview.isUserInteractionEnabled = false
@@ -506,7 +496,6 @@ var ticket_request: tbl_Hr_Request_Logs?
             
             self.email_view.isHidden = false
             if havePermissionToEdit {
-//                self.title = "Update Request"
                 self.headingLabel.text = "Request Detail"
                 self.remarks_attachment_stackview.isHidden = true
                 self.attachment_view.isHidden = true
@@ -525,12 +514,11 @@ var ticket_request: tbl_Hr_Request_Logs?
                 }
                 self.endoresement_textview.isUserInteractionEnabled = true
                 self.recommendations_textview.isUserInteractionEnabled = true
-//                self.email_textfield.delegate = self
+                
                 self.email_textview.delegate = self
                 self.endoresement_textview.delegate = self
                 self.recommendations_textview.delegate = self
             } else {
-//                self.title = "View Request"
                 self.headingLabel.text = "View Request"
                 self.endoresement_textview.isUserInteractionEnabled = false
                 self.recommendations_textview.isUserInteractionEnabled = false
@@ -560,7 +548,6 @@ var ticket_request: tbl_Hr_Request_Logs?
             
             self.claim_reference_number_textfield.text = "\(ticket_request?.INS_CLAIM_REFNO ?? "")"
             if havePermissionToEdit {
-//                self.title = "Update Request"
                 self.headingLabel.text = "Request Detail"
                 self.remarks_attachment_stackview.isHidden = true
                 self.attachment_view.isHidden = true
@@ -582,7 +569,6 @@ var ticket_request: tbl_Hr_Request_Logs?
                 self.claim_reference_number_textfield.delegate = self
                 
             } else {
-//                self.title = "View Request"
                 self.headingLabel.text = "View Request"
                 
                 
@@ -635,15 +621,7 @@ var ticket_request: tbl_Hr_Request_Logs?
             
             
             self.ins_claim_reference_number_view.isHidden = false
-//            if ticket_request?.IS_INS_CLAIM_PROCESS == 1 {
-//
-//            } else {
-//                self.ins_insurance_claimable_switch.isOn = false
-//            }
-            
-//            self.ins_claim_reference_number_textfield.text = "\(self.ticket_request?.INS_CLAIMED_AMOUNT ?? 0.0)"
             if havePermissionToEdit {
-//                self.title = "Update Request"
                 self.headingLabel.text = "Request Detail"
                 self.remarks_attachment_stackview.isHidden = true
                 self.attachment_view.isHidden = true
@@ -664,7 +642,6 @@ var ticket_request: tbl_Hr_Request_Logs?
                 self.ins_claim_reference_number_textfield.tag = LOSS_AMOUNT_TAG
                 self.ins_claim_reference_number_textfield.delegate = self
             } else {
-//                self.title = "View Request"
                 self.headingLabel.text = "View Request"
                 self.ins_claim_reference_number_textfield.isUserInteractionEnabled = false
                 self.ins_insurance_claimable_switch.isOn = true
@@ -696,7 +673,6 @@ var ticket_request: tbl_Hr_Request_Logs?
             }
             
             if havePermissionToEdit {
-//                self.title = "Update Request"
                 self.headingLabel.text = "Request Detail"
                 self.hr_reference_number_textfield.isUserInteractionEnabled = true
                 self.hr_status_textfield.isUserInteractionEnabled = true
@@ -720,7 +696,6 @@ var ticket_request: tbl_Hr_Request_Logs?
                     attachment_view.isHidden = false
                 }
             } else {
-//                self.title = "View Request"
                 self.headingLabel.text = "View Request"
                 self.hr_reference_number_textfield.isUserInteractionEnabled = false
                 self.hr_status_textfield.isUserInteractionEnabled = false
@@ -749,7 +724,6 @@ var ticket_request: tbl_Hr_Request_Logs?
                 self.hr_status_textfield.text = self.ticket_request?.HR_STATUS ?? ""
             }
             if havePermissionToEdit {
-//                self.title = "Update Request"
                 self.headingLabel.text = "Request Detail"
                 self.hr_reference_number_textfield.isUserInteractionEnabled = true
                 
@@ -774,7 +748,6 @@ var ticket_request: tbl_Hr_Request_Logs?
                     attachment_view.isHidden = false
                 }
             } else {
-//                self.title = "View Request"
                 self.headingLabel.text = "View Request"
                 self.hr_reference_number_textfield.isUserInteractionEnabled = false
                 self.hr_status_textfield.isUserInteractionEnabled = false
@@ -805,7 +778,6 @@ var ticket_request: tbl_Hr_Request_Logs?
             
             self.hr_status_textfield.text = self.ticket_request?.HR_STATUS ?? ""
             if havePermissionToEdit {
-//                self.title = "Update Request"
                 self.headingLabel.text = "Request Detail"
                 self.risk_remarks_textview.delegate = self
                 self.controller_recommendation_textview.delegate = self
@@ -830,7 +802,6 @@ var ticket_request: tbl_Hr_Request_Logs?
                     attachment_view.isHidden = false
                 }
             } else {
-//                self.title = "View Request"
                 self.headingLabel.text = "View Request"
                 self.claim_defined_switch.isEnabled = false
                 
@@ -1032,14 +1003,7 @@ var ticket_request: tbl_Hr_Request_Logs?
         
         status_textfield.setOutlineColor(UIColor.nativeRedColor(), for: .normal)
         status_textfield.setOutlineColor(UIColor.nativeRedColor(), for: .editing)
-        
-//        email_textfield.label.textColor = UIColor.nativeRedColor()
-//        email_textfield.label.text = "Emails"
-//        email_textfield.placeholder = "Enter Emails  (Semi Colon Seperated)"
-//        email_textfield.setOutlineColor(UIColor.nativeRedColor(), for: .normal)
-//        email_textfield.setOutlineColor(UIColor.nativeRedColor(), for: .editing)
-        
-        
+
         //FS
         claim_reference_number_textfield.label.textColor = UIColor.nativeRedColor()
         claim_reference_number_textfield.label.text = "Claim Ref. Number"
@@ -1176,12 +1140,6 @@ var ticket_request: tbl_Hr_Request_Logs?
                 self.claim_reference_number_view.isHidden = true
             }
             break
-//        case 3:
-//            if sender.isOn {
-//                self.ins_claim_reference_number_view.isHidden = false
-//            } else {
-//                self.ins_claim_reference_number_view.isHidden = true
-//            }
         default:
             break
         }
@@ -1865,11 +1823,6 @@ extension IMSViewUpdateRequestViewController: UITextFieldDelegate {
             let controller = storyboard.instantiateViewController(withIdentifier: "NewRequestListingViewController") as! NewRequestListingViewController
             
             let query = "SELECT * FROM \(db_lov_hr_status)"
-//            if current_user == IMS_Inprogress_Ca {
-//                query = "SELECT * FROM \(db_lov_hr_status) WHERE NAME = 'Close'"
-//            } else {
-//
-//            }
             controller.hr_status = AppDelegate.sharedInstance.db?.read_tbl_hr_status(query: query)
             controller.heading = "Select Status"
             controller.isIMSUpdate = true
@@ -3311,8 +3264,6 @@ extension IMSViewUpdateRequestViewController: GrowingTextViewDelegate {
                 let heightToAdd = height - currentHeight
                 self.email_textview_height.constant += heightToAdd
             }
-            
-            
             self.view.layoutIfNeeded()
         }
     }
