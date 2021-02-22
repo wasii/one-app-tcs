@@ -112,7 +112,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1950"
             endingLineNumber = "1950"
-            landmarkName = "textField(_:shouldChangeCharactersIn:replacementString:)"
+            landmarkName = "updateRecoveryType(recoery_type:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -224,7 +224,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "288"
             endingLineNumber = "288"
-            landmarkName = "setupHeightView()"
+            landmarkName = "setupJSON(numberOfDays:startday:endday:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -288,7 +288,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "289"
             endingLineNumber = "289"
-            landmarkName = "setupHeightView()"
+            landmarkName = "setupJSON(numberOfDays:startday:endday:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -336,7 +336,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "740"
             endingLineNumber = "740"
-            landmarkName = "setupViews()"
+            landmarkName = "setupTextfields()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -352,7 +352,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "2229"
             endingLineNumber = "2229"
-            landmarkName = "setupController()"
+            landmarkName = "setupFinancialServices()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -399,9 +399,7 @@
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "766"
-            endingLineNumber = "766"
-            landmarkName = "tableView(_:didSelectRowAt:)"
-            landmarkType = "7">
+            endingLineNumber = "766">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
