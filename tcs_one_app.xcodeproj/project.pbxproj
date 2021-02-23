@@ -52,8 +52,6 @@
 		1B77CE87256257B700A821E7 /* GrievanceViewRequestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B77CE86256257B700A821E7 /* GrievanceViewRequestViewController.swift */; };
 		1B7A292425A05E3C005694B6 /* IMSViewUpdateRequestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B7A292325A05E3C005694B6 /* IMSViewUpdateRequestViewController.swift */; };
 		1B9E6C812562779D006529C3 /* GrievanceViewClosedRequestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B9E6C802562779D006529C3 /* GrievanceViewClosedRequestViewController.swift */; };
-		1BB4E73F25C0014D009AE890 /* Landing.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1BB4E73E25C0014D009AE890 /* Landing.storyboard */; };
-		1BB4E74325C001E1009AE890 /* LandingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BB4E74225C001E1009AE890 /* LandingViewController.swift */; };
 		1BB7FA4425B70CF8003AC7C4 /* IMSFilesAccordingRemarksViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BB7FA4325B70CF8003AC7C4 /* IMSFilesAccordingRemarksViewController.swift */; };
 		1BBAEA4D259DA1AA00FBDCB4 /* IMSAllRequestsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BBAEA4C259DA1AA00FBDCB4 /* IMSAllRequestsViewController.swift */; };
 		1BC42B8D257527F7000A63AF /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1BC42B8C257527F7000A63AF /* CloudKit.framework */; };
@@ -166,8 +164,6 @@
 		1B77CE86256257B700A821E7 /* GrievanceViewRequestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GrievanceViewRequestViewController.swift; sourceTree = "<group>"; };
 		1B7A292325A05E3C005694B6 /* IMSViewUpdateRequestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMSViewUpdateRequestViewController.swift; sourceTree = "<group>"; };
 		1B9E6C802562779D006529C3 /* GrievanceViewClosedRequestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GrievanceViewClosedRequestViewController.swift; sourceTree = "<group>"; };
-		1BB4E73E25C0014D009AE890 /* Landing.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Landing.storyboard; sourceTree = "<group>"; };
-		1BB4E74225C001E1009AE890 /* LandingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LandingViewController.swift; sourceTree = "<group>"; };
 		1BB7FA4325B70CF8003AC7C4 /* IMSFilesAccordingRemarksViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMSFilesAccordingRemarksViewController.swift; sourceTree = "<group>"; };
 		1BBAEA4C259DA1AA00FBDCB4 /* IMSAllRequestsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMSAllRequestsViewController.swift; sourceTree = "<group>"; };
 		1BC42B8C257527F7000A63AF /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
@@ -339,14 +335,6 @@
 			path = "IMS Desk";
 			sourceTree = "<group>";
 		};
-		1BB4E74125C001C1009AE890 /* Landing Storyboard */ = {
-			isa = PBXGroup;
-			children = (
-				1BB4E74225C001E1009AE890 /* LandingViewController.swift */,
-			);
-			path = "Landing Storyboard";
-			sourceTree = "<group>";
-		};
 		601BA4B025387B17002CFD1F = {
 			isa = PBXGroup;
 			children = (
@@ -463,7 +451,6 @@
 		609C605625387B5F0051CF28 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
-				1BB4E74125C001C1009AE890 /* Landing Storyboard */,
 				60EE11AF254B25ED00ACB45B /* User Info Storyboard */,
 				60EE11AE254B25E100ACB45B /* Mail Storyboard */,
 				60EE11AD254B25CC00ACB45B /* Message Storyboard */,
@@ -514,7 +501,6 @@
 				60E99920253D7E1900BCDAD1 /* Popups.storyboard */,
 				1B5EAA7E255E63CB00F49D09 /* GrievanceStoryboard.storyboard */,
 				1B6279E12591E54D00C88FEE /* IMSStoryboard.storyboard */,
-				1BB4E73E25C0014D009AE890 /* Landing.storyboard */,
 			);
 			path = Storyboards;
 			sourceTree = "<group>";
@@ -658,7 +644,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1BB4E73F25C0014D009AE890 /* Landing.storyboard in Resources */,
 				1B3B36102574D86B0051779A /* download-fill-icon.svg in Resources */,
 				1B5EAA7F255E63CB00F49D09 /* GrievanceStoryboard.storyboard in Resources */,
 				604B3968253ED2CD00864293 /* GraphListingTableCell.xib in Resources */,
@@ -817,7 +802,6 @@
 				609C606825387D120051CF28 /* Reachability.swift in Sources */,
 				1B9E6C812562779D006529C3 /* GrievanceViewClosedRequestViewController.swift in Sources */,
 				609C605E25387BC20051CF28 /* EnterPinViewController.swift in Sources */,
-				1BB4E74325C001E1009AE890 /* LandingViewController.swift in Sources */,
 				604B3964253ED0AF00864293 /* ChartListingViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
