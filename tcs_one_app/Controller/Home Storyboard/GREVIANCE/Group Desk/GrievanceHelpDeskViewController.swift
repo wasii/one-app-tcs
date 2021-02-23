@@ -71,10 +71,12 @@ class GrievanceHelpDeskViewController: BaseViewController {
         self.selected_query = "Weekly"
         
         self.tableView.register(UINib(nibName: "RequestListingTableCell", bundle: nil), forCellReuseIdentifier: "RequestListingCell")
-        self.tableView.rowHeight = 80
+//        self.tableView.rowHeight = 80
+        self.tableView.rowHeight = 100
         
         self.filterTableView.register(UINib(nibName: "RequestListingTableCell", bundle: nil), forCellReuseIdentifier: "RequestListingCell")
-        self.filterTableView.rowHeight = 80
+//        self.filterTableView.rowHeight = 80
+        self.filterTableView.rowHeight = 100
         
         self.permissionTableView.register(UINib(nibName: "ModulePermissionsTableCell", bundle: nil), forCellReuseIdentifier: "ModulePermissionsCell")
         self.permissionTableView.rowHeight = 70
@@ -168,7 +170,7 @@ class GrievanceHelpDeskViewController: BaseViewController {
             
             self.mainViewHeightConstraint.constant -= self.tableViewHeightConstraint.constant
             self.tableViewHeightConstraint.constant = 0
-            self.tableViewHeightConstraint.constant = CGFloat((self.tbl_request_logs!.count * 80) + 50)
+            self.tableViewHeightConstraint.constant = CGFloat((self.tbl_request_logs!.count * 100) + 50)
             self.mainViewHeightConstraint.constant +=  self.tableViewHeightConstraint.constant
             return
         } else {
@@ -222,7 +224,7 @@ class GrievanceHelpDeskViewController: BaseViewController {
         
         self.mainViewHeightConstraint.constant -= self.tableViewHeightConstraint.constant
         self.tableViewHeightConstraint.constant = 0
-        self.tableViewHeightConstraint.constant = CGFloat((self.filtered_data!.count * 80) + 50)
+        self.tableViewHeightConstraint.constant = CGFloat((self.filtered_data!.count * 100) + 50)
         self.mainViewHeightConstraint.constant +=  self.tableViewHeightConstraint.constant
     }
     
@@ -287,7 +289,7 @@ class GrievanceHelpDeskViewController: BaseViewController {
         
         self.mainViewHeightConstraint.constant -= self.tableViewHeightConstraint.constant
         self.tableViewHeightConstraint.constant = 0
-        self.tableViewHeightConstraint.constant = CGFloat((self.tbl_request_logs!.count * 80) + 50)
+        self.tableViewHeightConstraint.constant = CGFloat((self.tbl_request_logs!.count * 100) + 50)
         self.mainViewHeightConstraint.constant +=  self.tableViewHeightConstraint.constant
     }
     
@@ -489,7 +491,7 @@ extension GrievanceHelpDeskViewController: ChartViewDelegate {
         self.filterTableView.reloadData()
         
         self.filterTableViewHeightConstraint.constant = 0
-        self.filterTableViewHeightConstraint.constant = CGFloat(self.date_specific_tbl_request_logs!.count * 80) + 10
+        self.filterTableViewHeightConstraint.constant = CGFloat(self.date_specific_tbl_request_logs!.count * 100) + 10
         self.mainViewHeightConstraint.constant += self.filterTableViewHeightConstraint.constant
     }
 }
@@ -559,7 +561,9 @@ extension GrievanceHelpDeskViewController: UITableViewDataSource, UITableViewDel
                         cell.status.text = "Closed"
                         cell.status.textColor = UIColor.rejectedColor()
                     }
-                    
+                    //HR FEEDBACK
+                    cell.ticketID.text = "Ticket Id: \(data.SERVER_ID_PK!)"
+                    //HR FEEDBACK
                     cell.type.text = "HR"
                     return cell
                 }
@@ -577,6 +581,9 @@ extension GrievanceHelpDeskViewController: UITableViewDataSource, UITableViewDel
             cell.mainHeading.text = data!.MASTER_QUERY!
             cell.subHeading.text = data!.DETAIL_QUERY!
             cell.date.text = data!.CREATED_DATE?.dateSeperateWithT ?? ""
+            //HR FEEDBACK
+            cell.ticketID.text = "Ticket Id: \(data!.SERVER_ID_PK!)"
+            //HR FEEDBACK
             
             if data!.TICKET_STATUS == "Submitted" || data!.TICKET_STATUS == "submitted" {
                 cell.status.text = "Submitted"

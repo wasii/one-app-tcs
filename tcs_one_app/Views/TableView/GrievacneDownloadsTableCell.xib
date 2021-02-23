@@ -22,7 +22,7 @@
                         <rect key="frame" x="5" y="5" width="277" height="50"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ELR-y0-3Bb">
-                                <rect key="frame" x="10" y="8" width="40" height="18"/>
+                                <rect key="frame" x="10" y="8" width="212" height="18"/>
                                 <fontDescription key="fontDescription" name="Helvetica-Bold" family="Helvetica" pointSize="15"/>
                                 <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
@@ -71,6 +71,7 @@
                             <constraint firstItem="2MT-oh-2yw" firstAttribute="centerY" secondItem="sSW-p2-b1y" secondAttribute="centerY" id="Lra-Im-apS"/>
                             <constraint firstItem="sSW-p2-b1y" firstAttribute="leading" secondItem="9nl-gy-DHH" secondAttribute="trailing" constant="3" id="MAY-Pa-OQB"/>
                             <constraint firstItem="9nl-gy-DHH" firstAttribute="top" secondItem="ELR-y0-3Bb" secondAttribute="bottom" constant="5" id="NZv-4c-Rdt"/>
+                            <constraint firstItem="ye3-Bw-ggK" firstAttribute="leading" secondItem="ELR-y0-3Bb" secondAttribute="trailing" constant="10" id="Q4G-9a-Mn8"/>
                             <constraint firstItem="L4h-UB-uGI" firstAttribute="centerY" secondItem="2MT-oh-2yw" secondAttribute="centerY" id="VEF-R2-SAX"/>
                             <constraint firstItem="ELR-y0-3Bb" firstAttribute="leading" secondItem="C6K-hr-MF8" secondAttribute="leading" constant="10" id="dFx-Sa-fPr"/>
                             <constraint firstItem="sSW-p2-b1y" firstAttribute="centerY" secondItem="9nl-gy-DHH" secondAttribute="centerY" id="mO6-JU-CL1"/>
