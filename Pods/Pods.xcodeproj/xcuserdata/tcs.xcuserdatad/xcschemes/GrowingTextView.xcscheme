@@ -14,9 +14,9 @@
             buildForArchiving = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "73CDC3D182DB953135F62609681B443D"
-               BuildableName = "abseil.framework"
-               BlueprintName = "abseil"
+               BlueprintIdentifier = "1696A504A8F8B95B82B2382D0A461BF4"
+               BuildableName = "GrowingTextView.framework"
+               BlueprintName = "GrowingTextView"
                ReferencedContainer = "container:Pods.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
