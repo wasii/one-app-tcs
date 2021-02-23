@@ -36,4 +36,9 @@ pod 'Firebase/Analytics', '~> 4.2'
 #pod 'Firebase/Auth'
 pod 'Firebase/Firestore'
 pod 'Firebase/Messaging'
+
+
+
+pod 'ExpandableCell'
+pod 'ExpyTableView'
 end
