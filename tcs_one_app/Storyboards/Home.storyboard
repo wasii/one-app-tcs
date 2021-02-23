@@ -298,7 +298,7 @@
         <!--New Chart Listing View Controller-->
         <scene sceneID="bfO-rT-GOB">
             <objects>
-                <viewController storyboardIdentifier="NewChartListingViewController" hidesBottomBarWhenPushed="YES" id="z2a-Zt-5Ax" customClass="NewChartListingViewController" customModule="One_App" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="NewChartListingViewController" id="z2a-Zt-5Ax" customClass="NewChartListingViewController" customModule="One_App" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="cYZ-4g-Ht7">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="1200"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -1711,7 +1711,7 @@
                                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Rejected" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OnQ-wH-DW9">
                                                                         <rect key="frame" x="33" y="117" width="60.333333333333343" height="18"/>
                                                                         <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                                                                        <color key="textColor" red="0.87058823529411766" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                                        <color key="textColor" red="0.86666666670000003" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                                         <nil key="highlightedColor"/>
                                                                     </label>
                                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GOK-ea-xaQ" customClass="MBCircularProgressBarView">
@@ -1735,7 +1735,7 @@
                                                                                 <real key="value" value="0.0"/>
                                                                             </userDefinedRuntimeAttribute>
                                                                             <userDefinedRuntimeAttribute type="color" keyPath="fontColor">
-                                                                                <color key="value" red="0.87058823529411766" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                                                <color key="value" red="0.70196078429999997" green="0.1215686275" blue="0.13725490200000001" alpha="1" colorSpace="calibratedRGB"/>
                                                                             </userDefinedRuntimeAttribute>
                                                                             <userDefinedRuntimeAttribute type="number" keyPath="progressRotationAngle">
                                                                                 <real key="value" value="50"/>
@@ -1747,7 +1747,7 @@
                                                                                 <real key="value" value="10"/>
                                                                             </userDefinedRuntimeAttribute>
                                                                             <userDefinedRuntimeAttribute type="color" keyPath="progressColor">
-                                                                                <color key="value" red="0.87058823529411766" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                                                <color key="value" red="0.70196078429999997" green="0.1215686275" blue="0.13725490200000001" alpha="1" colorSpace="calibratedRGB"/>
                                                                             </userDefinedRuntimeAttribute>
                                                                             <userDefinedRuntimeAttribute type="color" keyPath="progressStrokeColor">
                                                                                 <color key="value" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

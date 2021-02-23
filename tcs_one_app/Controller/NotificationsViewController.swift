@@ -85,7 +85,10 @@ class NotificationsViewController: BaseViewController {
         hr_notification = AppDelegate.sharedInstance.db?.read_tbl_hr_notification_request(query: query)
         
         if hr_notification!.count > 0 {
-
+//            hr_notification = hr_notification?.filter({ (not1) -> Bool in
+//                not1.MODULE_ID == 1 || not1.MODULE_ID == 2
+//            })
+            
             hr_notification = hr_notification?.sorted(by: { (req1, req2) -> Bool in
                 req1.CREATED_DATE > req2.CREATED_DATE
             })
@@ -213,10 +216,7 @@ extension NotificationsViewController: UITableViewDelegate, UITableViewDataSourc
         }
         cell.mainHeading.text = data.NOTIFY_TITLE
         cell.subHeading.text = data.TITLE_MESSAGE
-        //HR FEEDBACK
-        cell.ticketID.isHidden = true
-        cell.mainHeadingTopConstraint.constant = 7
-        //HR FEEDBACK
+        
         
         switch data.MODULE_ID {
         case 1:
@@ -259,74 +259,60 @@ extension NotificationsViewController: UITableViewDelegate, UITableViewDataSourc
             cell.status.text = data.TICKET_STATUS
             cell.type.text = "IMS"
             switch data.TICKET_STATUS {
-            case IMS_Status_Submitted:
-                cell.status.text = "Submitted"
+            case "Submitted":
                 cell.status.textColor = UIColor.pendingColor()
                 break
-            case IMS_Status_Inprogress:
+            case IMS_Status_Inprogress_As, IMS_Status_Inprogress_Hs, IMS_Status_Inprogress_Ds, IMS_Status_Inprogress_Cs, IMS_Status_Inprogress_Ro, IMS_Status_Inprogress_Ca, IMS_Status_Inprogress_Hr, IMS_Status_Inprogress_Fi, IMS_Status_Inprogress_Rm, IMS_Status_Inprogress_Fs, IMS_Status_Inprogress_Rds, IMS_Status_Inprogress_Hod, IMS_Status_Inprogress_Ins, IMS_Status_Inprogress_Rhod:
+                cell.status.textColor = UIColor.approvedColor()
                 cell.status.text = IMS_Status_Inprogress
-                cell.status.textColor = UIColor.approvedColor()
                 break
-            case IMS_Status_Inprogress_Rm:
-                cell.status.text = INPROGRESS_INITIATOR
-                cell.status.textColor = UIColor.approvedColor()
-                break
-            case IMS_Status_Inprogress_Ro, IMS_Status_Inprogress_Rhod:
-                cell.status.text = INPROGRESS_LINEMANAGER
-                cell.status.textColor = UIColor.approvedColor()
-                break
-            case IMS_Status_Inprogress_Hod:
-                cell.status.text = INPROGRESS_HOD
-                cell.status.textColor = UIColor.approvedColor()
-                break
-            case IMS_Status_Inprogress_Cs:
-                cell.status.text = INPROGRESS_CS
-                cell.status.textColor = UIColor.approvedColor()
-                break
-            case IMS_Status_Inprogress_As:
-                cell.status.text = INPROGRESS_AS
-                cell.status.textColor = UIColor.approvedColor()
-                break
-            case IMS_Status_Inprogress_Hs, IMS_Status_Inprogress_Rds:
-                cell.status.text = INPROGRESS_HS
-                cell.status.textColor = UIColor.approvedColor()
-                break
-            case IMS_Status_Inprogress_Ds:
-                cell.status.text = INPROGRESS_DS
-                cell.status.textColor = UIColor.approvedColor()
-                break
-            case IMS_Status_Inprogress_Fs, IMS_Status_Inprogress_Ins:
-                cell.status.text = INPROGRESS_FS
-                cell.status.textColor = UIColor.approvedColor()
-                break
-            case IMS_Status_Inprogress_Hr:
-                cell.status.text = INPROGRESS_HR
-                cell.status.textColor = UIColor.approvedColor()
-                break
-            case IMS_Status_Inprogress_Fi:
-                cell.status.text = INPROGRESS_FI
-                cell.status.textColor = UIColor.approvedColor()
-                break
-            case IMS_Status_Inprogress_Ca:
-                cell.status.text = INPROGRESS_CA
-                cell.status.textColor = UIColor.approvedColor()
-                break
-            case IMS_Status_Closed:
-                cell.status.text = IMS_Status_Closed
+            case "Closed":
                 cell.status.textColor = UIColor.rejectedColor()
+                break
             default:
-                print("Wrong Ticket Status")
                 break
             }
             break
         default:
             break
         }
+        
+//        cell.status.text = data.TICKET_STATUS
+//        if data.TICKET_STATUS == "approved" || data.TICKET_STATUS == "Approved" {
+//            cell.status.text = "Completed"
+//        }
+//        if data.TICKET_STATUS == "rejected" {
+//            cell.status.text = "Rejected"
+//        }
+//        switch data.TICKET_STATUS {
+//        case "Pending", "pending", "Submitted", "submitted":
+//            cell.status.textColor = UIColor.pendingColor()
+//            break
+//        case "Approved", "approved", "Completed", "completed":
+//            cell.status.textColor = UIColor.approvedColor()
+//            break
+//        case "Rejected", "rejected", "Closed", "closed":
+//            cell.status.textColor = UIColor.rejectedColor()
+//            break
+//        case "Inprogress-Er", "Inprogress-S", "Responded", "Investigating", "Inprogress-Ceo", "Inprogress-Srhrbp":
+//            cell.status.textColor = UIColor.approvedColor()
+//            cell.status.text = INREVIEW
+//            break
+//        case IMS_Status_Inprogress_As, IMS_Status_Inprogress_Hs, IMS_Status_Inprogress_Ds, IMS_Status_Inprogress_Cs, IMS_Status_Inprogress_Ro, IMS_Status_Inprogress_Ca, IMS_Status_Inprogress_Hr, IMS_Status_Inprogress_Fi, IMS_Status_Inprogress_Rm, IMS_Status_Inprogress_Fs, IMS_Status_Inprogress_Rds, IMS_Status_Inprogress_Hod, IMS_Status_Inprogress_Ins, IMS_Status_Inprogress_Rhod:
+//            cell.status.textColor = UIColor.approvedColor()
+//            cell.status.text = IMS_Status_Inprogress
+//        default:
+//            break
+//        }
         if data.CREATED_DATE == "" {
             cell.date.text = data.CREATED_DATE
         } else {
             cell.date.text = data.CREATED_DATE.dateSeperateWithT
         }
+        
+//        cell.type.text = data.MODULE_DSCRP
+        
+        
         return cell
     }
     
@@ -416,45 +402,6 @@ extension NotificationsViewController: UITableViewDelegate, UITableViewDataSourc
             }
             break
         case 3:
-            let storyboard = UIStoryboard(name: "IMSStoryboard", bundle: nil)
-            let controller = storyboard.instantiateViewController(withIdentifier: "IMSViewUpdateRequestViewController") as! IMSViewUpdateRequestViewController
-            let permissions = AppDelegate.sharedInstance.db?.read_tbl_UserPermission()
-            var current_user = ""
-            for perm in permissions! {
-                var breakk = false
-                let p = perm.PERMISSION
-                for constant in IMSAllPermissions {
-                    if p == constant {
-                        current_user = p
-                        breakk = true
-                        break
-                    }
-                }
-                if breakk {
-                    break
-                }
-            }
-            let current_ticket = self.hr_notification![indexPath.row]
-            let isGranted = permissions?.contains(where: { (perm) -> Bool in
-                let permission = String(perm.PERMISSION.lowercased().split(separator: " ").last!)
-                return permission == current_ticket.TICKET_STATUS.lowercased()
-            })
-            
-            let query = "SELECT * FROM \(db_hr_request) WHERE SERVER_ID_PK = '\(current_ticket.TICKET_ID)'"
-            if let data = AppDelegate.sharedInstance.db?.read_tbl_hr_request(query: query).first {
-                controller.ticket_request = data
-                controller.current_user = current_user
-                controller.havePermissionToEdit = isGranted!
-                
-                print(current_user)
-                if current_user == "" {
-                    let controller = storyboard.instantiateViewController(withIdentifier: "IMSNewRequestViewController") as! IMSNewRequestViewController
-                    controller.current_ticket = data
-                    self.navigationController?.pushViewController(controller, animated: true)
-                } else {
-                    self.navigationController?.pushViewController(controller, animated: true)
-                }
-            }
             
             break
         default:

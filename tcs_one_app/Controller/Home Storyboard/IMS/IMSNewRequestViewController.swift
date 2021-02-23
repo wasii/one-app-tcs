@@ -19,7 +19,6 @@ class IMSNewRequestViewController: BaseViewController {
     
     @IBOutlet weak var employee_view: UIView!
     @IBOutlet weak var employee_id: MDCOutlinedTextField!
-    @IBOutlet weak var employee_search_btn: UIButton!
     
     @IBOutlet weak var employee_name: MDCOutlinedTextField!
     
@@ -74,17 +73,6 @@ class IMSNewRequestViewController: BaseViewController {
     @IBOutlet weak var headingLabel: UILabel!
     
     
-    
-    @IBOutlet weak var tblViewTopContraint: NSLayoutConstraint!
-    
-    @IBOutlet weak var stackViewTopConstraint: NSLayoutConstraint!
-    
-    @IBOutlet weak var attachment_label: UILabel!
-    @IBOutlet weak var attachment_view: CustomView!
-    @IBOutlet weak var remarks_view: CustomView!
-    @IBOutlet weak var remarks_counter: UILabel!
-    
-    
     var emp_model = [User]()
     var tbl_request_mode:   tbl_RequestModes?
     var tbl_incident_type:  tbl_lov_incident_type?
@@ -107,12 +95,9 @@ class IMSNewRequestViewController: BaseViewController {
     )
     
     var current_ticket: tbl_Hr_Request_Logs?
-    var offline_data = tbl_Hr_Request_Logs()
-    var offline_hr_files = tbl_Files_Table()
-    var offline_remarks  = tbl_Grievance_Remarks()
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.title = "IMS"
+        self.title = "New Request"
         addDoubleNavigationButtons()
         self.makeTopCornersRounded(roundView: self.mainView)
         setupMainViewHeight()
@@ -122,7 +107,6 @@ class IMSNewRequestViewController: BaseViewController {
         
         incident_detail.delegate = self
         remarks.delegate = self
-        loss_amount.delegate = self
         
         picker.delegate = self
         self.tableView.register(UINib(nibName: "AddAttachmentsTableCell", bundle: nil), forCellReuseIdentifier: "AddAttachmentsCell")
@@ -140,11 +124,27 @@ class IMSNewRequestViewController: BaseViewController {
     }
     func setupMainViewHeight() {
         self.mainViewHeightConstraint.constant = 950
+//        switch UIDevice().type {
+//        case .iPhone5, .iPhone5S, .iPhone5C, .iPhoneSE, .iPhone6, .iPhone6Plus, .iPhone6S, .iPhone6SPlus, .iPhone7, .iPhone7Plus, .iPhone8, .iPhone8Plus, .iPhone12, .iPhone12Pro, .iPhone12Mini:
+//            self.mainViewHeightConstraint.constant = 890
+//            break
+//        case .iPhoneX, .iPhoneXR, .iPhoneXS, .iPhone11Pro:
+//            self.mainViewHeightConstraint.constant = 790
+//            break
+//        case .iPhone11, .iPhoneXSMax, .iPhone11ProMax:
+//            self.mainViewHeightConstraint.constant = 910
+//            break
+//        case .iPhone12ProMax:
+//            self.mainViewHeightConstraint.constant = 880
+//            break
+//        default:
+//            break
+//        }
     }
     func setupTextField() {
         self.loss_amount_view.isHidden = true
         incident_mode.label.textColor = UIColor.nativeRedColor()
-        incident_mode.label.text = "*Incident Mode"
+        incident_mode.label.text = "Incident Mode"
         incident_mode.placeholder = ""
         incident_mode.setOutlineColor(UIColor.nativeRedColor(), for: .normal)
         incident_mode.setOutlineColor(UIColor.nativeRedColor(), for: .editing)
@@ -163,34 +163,34 @@ class IMSNewRequestViewController: BaseViewController {
         employee_name.setOutlineColor(UIColor.nativeRedColor(), for: .editing)
         
         incident_type.label.textColor = UIColor.nativeRedColor()
-        incident_type.label.text = "*Incident Type"
+        incident_type.label.text = "Incident Type"
         incident_type.placeholder = ""
         incident_type.setOutlineColor(UIColor.nativeRedColor(), for: .normal)
         incident_type.setOutlineColor(UIColor.nativeRedColor(), for: .editing)
         
         
         consinement_number.label.textColor = UIColor.nativeRedColor()
-        consinement_number.label.text = "*Enter CN#"
+        consinement_number.label.text = "Enter CN#"
         consinement_number.placeholder = ""
         consinement_number.setOutlineColor(UIColor.nativeRedColor(), for: .normal)
         consinement_number.setOutlineColor(UIColor.nativeRedColor(), for: .editing)
         
         city.label.textColor = UIColor.nativeRedColor()
-        city.label.text = "*City"
+        city.label.text = "City"
         city.text = "Select City"
         city.setOutlineColor(UIColor.nativeRedColor(), for: .normal)
         city.setOutlineColor(UIColor.nativeRedColor(), for: .editing)
         
         
         area.label.textColor = UIColor.nativeRedColor()
-        area.label.text = "*Area"
+        area.label.text = "Area"
         area.text = "Select Area"
         area.setOutlineColor(UIColor.nativeRedColor(), for: .normal)
         area.setOutlineColor(UIColor.nativeRedColor(), for: .editing)
         
         
         date.label.textColor = UIColor.nativeRedColor()
-        date.label.text = "*Incident Date"
+        date.label.text = "Date"
         date.text = "Select Date"
         date.setOutlineColor(UIColor.nativeRedColor(), for: .normal)
         date.setOutlineColor(UIColor.nativeRedColor(), for: .editing)
@@ -200,7 +200,7 @@ class IMSNewRequestViewController: BaseViewController {
         
          
         loss_amount.label.textColor = UIColor.nativeRedColor()
-        loss_amount.label.text = "*Loss Amount"
+        loss_amount.label.text = "Loss Amount"
         loss_amount.placeholder = ""
         loss_amount.setOutlineColor(UIColor.nativeRedColor(), for: .normal)
         loss_amount.setOutlineColor(UIColor.nativeRedColor(), for: .editing)
@@ -227,13 +227,8 @@ class IMSNewRequestViewController: BaseViewController {
                 self.employee_view.isHidden = true
             } else {
                 self.employee_name.isHidden = false
-                self.employee_search_btn.isEnabled = false
-                self.employee_id.text = "\(ticket.REQ_ID ?? 0)"
-                self.employee_id.isUserInteractionEnabled = false
-                
                 self.employee_name.text = "\(ticket.EMP_NAME!)"
                 self.employee_name.isUserInteractionEnabled = false
-                
                 self.incident_type_top_constraint.constant = 90
                 self.financial_top_constraint.constant = 93
                 
@@ -272,7 +267,7 @@ class IMSNewRequestViewController: BaseViewController {
                 self.area.text = area.first?.AREA_NAME ?? ""
             }
             
-            if let city = AppDelegate.sharedInstance.db?.read_tbl_city(query: "SELECT * FROM \(db_lov_city) WHERE AREA_CODE = '\(ticket.CITY!)'") {
+            if let city = AppDelegate.sharedInstance.db?.read_tbl_city(query: "SELECT * FROM \(db_lov_city) WHERE SERVER_ID_PK = '\(tbl_area!.SERVER_ID_PK)'") {
                 self.tbl_city = city.first
                 self.city.text = city.first?.CITY_NAME ?? ""
             }
@@ -283,7 +278,6 @@ class IMSNewRequestViewController: BaseViewController {
             formatter.dateFormat = "dd/MM/yyyy'T'HH:mm:ss"
             let tempdatestring = formatter.string(from: tempdate ?? Date())
             self.date.text = tempdatestring.dateOnly
-            self.ticketCreateDate = tempdatestring
             
             if let depart = AppDelegate.sharedInstance.db?.read_tbl_department(query: "SELECT * FROM \(db_lov_department) WHERE SERVER_ID_PK = '\(ticket.DEPARTMENT!)'") {
                 self.department.text = depart.first?.DEPAT_NAME  ?? ""
@@ -294,18 +288,16 @@ class IMSNewRequestViewController: BaseViewController {
                 self.incident_detail_top_constraint.constant -= 20
                 self.incident_detail_label.font = UIFont.systemFont(ofSize: 12)
                 self.incident_detail.text = ticket.REQ_REMARKS ?? ""
-                self.incident_word_counter.text = "\(ticket.REQ_REMARKS!.count)/200"
             }
             
-//            if let initiator_remark = AppDelegate.sharedInstance.db?.read_tbl_hr_grievance(query: "SELECT * FROM \(db_grievance_remarks) WHERE TICKET_ID = '\(ticket.SERVER_ID_PK!)' AND REMARKS_INPUT = 'Initiator'").first {
-//                self.remarks.text = initiator_remark.REMARKS
-//                self.remarks_label_top_constraint.constant -= 20
-//                self.remarks_label.font = UIFont.systemFont(ofSize: 12)
-//                self.remarks_word_counter.text = "\(initiator_remark.REMARKS.count)/200"
-//            }
+            if let initiator_remark = AppDelegate.sharedInstance.db?.read_tbl_hr_grievance(query: "SELECT * FROM \(db_grievance_remarks) WHERE TICKET_ID = '\(ticket.SERVER_ID_PK!)' AND REMARKS_INPUT = 'Initiator'").first {
+                self.remarks.text = initiator_remark.REMARKS
+                self.remarks_label_top_constraint.constant -= 20
+                self.remarks_label.font = UIFont.systemFont(ofSize: 12)
+            }
             
             if ticket.TICKET_STATUS != IMS_Status_Inprogress_Rm {
-//                self.title = "View Request"
+                self.title = "View Request"
                 self.headingLabel.text = "View Request"
                 self.download_btn.isHidden = false
                 self.history_btn.isHidden = false
@@ -324,43 +316,13 @@ class IMSNewRequestViewController: BaseViewController {
                 self.department.isUserInteractionEnabled = false
                 self.incident_detail.isUserInteractionEnabled = false
                 self.remarks.isUserInteractionEnabled = false
-                if ticket.TICKET_STATUS == IMS_Status_Closed {
-                    ticket_status.text = ticket.TICKET_STATUS!
-                    self.remarks.text = ticket.HR_REMARKS
-                    self.remarks_label.text = "Closure Remarks    "
-                    self.remarks_word_counter.text = "\(ticket.HR_REMARKS?.count ?? 0)/200"
-                } else if ticket.TICKET_STATUS == IMS_Status_Submitted {
-                    ticket_status.text = ticket.TICKET_STATUS!
-                    attachment_label.isHidden = true
-                    attachment_view.isHidden = true
-                    remarks_view!.isHidden = true
-                    remarks_counter.isHidden = true
-                    remarks_word_counter.isHidden = true
-                    remarks_label.isHidden = true
-                    
-                    tblViewTopContraint.constant = 0
-                    stackViewTopConstraint.constant = 20
-                    mainViewHeightConstraint.constant -= 175
-                } else {
-                    ticket_status.text = ticket.TICKET_STATUS!
-                    attachment_label.isHidden = true
-                    attachment_view.isHidden = true
-                    remarks_view!.isHidden = true
-                    remarks_counter.isHidden = true
-                    remarks_word_counter.isHidden = true
-                    remarks_label.isHidden = true
-                    
-                    tblViewTopContraint.constant = 0
-                    stackViewTopConstraint.constant = 20
-                    mainViewHeightConstraint.constant -= 175
-                    ticket_status.text = IMS_Status_Inprogress
-                }
+                
                 
             } else  {
-//                self.title = "Update Request"
+                self.title = "Update Request"
                 self.headingLabel.text = "Update Request"
-//                self.download_btn.isHidden = true
-//                self.history_btn.isHidden = true
+                self.download_btn.isHidden = true
+                self.history_btn.isHidden = true
                 self.create_ticket_button.isHidden = false
                 
                 area.delegate = self
@@ -368,12 +330,7 @@ class IMSNewRequestViewController: BaseViewController {
                 date.delegate = self
                 department.delegate = self
                 verifyBtn.isUserInteractionEnabled = false
-//                self.ticket_status.text = ticket.TICKET_STATUS ?? ""
-                if ticket.TICKET_STATUS == IMS_Status_Closed || ticket.TICKET_STATUS == IMS_Status_Submitted {
-                    ticket_status.text = ticket.TICKET_STATUS!
-                } else {
-                    ticket_status.text = IMS_Status_Inprogress
-                }
+                self.ticket_status.text = ticket.TICKET_STATUS ?? ""
             }
             
             let downloadURL = Bundle.main.url(forResource: "download-fill-icon", withExtension: "svg")!
@@ -533,15 +490,9 @@ class IMSNewRequestViewController: BaseViewController {
         }
         self.view.makeToastActivity(.center)
         self.freezeScreen()
-        guard let token = UserDefaults.standard.string(forKey: USER_ACCESS_TOKEN) else {
-            self.dismiss(animated: true) {
-                Helper.topMostController().view.makeToast("Session Expired")
-            }
-            return
-        }
         let consignment_setup = [
             "hr_request": [
-                "access_token": token,
+                "access_token": UserDefaults.standard.string(forKey: USER_ACCESS_TOKEN)!,
                 "cnno": self.consinement_number.text! //"4708109905"
             ]
         ]
@@ -601,7 +552,7 @@ class IMSNewRequestViewController: BaseViewController {
             return
         }
         if self.remarks.text == "" {
-            self.view.makeToast("Remarks is mandatory")
+            self.view.makeToast("Incident Detail is mandatory")
             return
         }
         
@@ -628,8 +579,6 @@ class IMSNewRequestViewController: BaseViewController {
             }
         }
         
-        self.create_ticket_button.isEnabled = false
-        
         let refid = randomString()
         var employeeId = ""
         
@@ -639,14 +588,16 @@ class IMSNewRequestViewController: BaseViewController {
             employeeId = self.employee_id.text!
         }
         
-        
+        var offline_data = tbl_Hr_Request_Logs()
+        var offline_hr_files = tbl_Files_Table()
+        var offline_remarks  = tbl_Grievance_Remarks()
         
         offline_data.REQ_ID = Int(employeeId)
         offline_data.SERVER_ID_PK = randomInt()
         offline_data.TICKET_DATE = getCurrentDate()
         offline_data.LOGIN_ID = Int(CURRENT_USER_LOGGED_IN_ID)!
         
-        if self.headingLabel.text == "Update Request" {
+        if self.title == "Update Request" {
             offline_data.TICKET_STATUS = IMS_Inprogress_Ro
         } else {
             offline_data.TICKET_STATUS = "Submitted"
@@ -684,14 +635,19 @@ class IMSNewRequestViewController: BaseViewController {
         
         
         
-        let storyboard = UIStoryboard(name: "Popups", bundle: nil)
-        let controller = storyboard.instantiateViewController(withIdentifier: "ConfirmationPopViewController") as! ConfirmationPopViewController
-        controller.delegate = self
-        if #available(iOS 13.0, *) {
-            controller.modalPresentationStyle = .overFullScreen
-        }
-        controller.modalTransitionStyle = .crossDissolve
-        Helper.topMostController().present(controller, animated: true, completion: nil)
+        AppDelegate.sharedInstance.db?.dump_data_HRRequest(hrrequests: offline_data, { success in
+            if success {
+                print("DUMP IMS TICKET")
+                if self.title == "Update Request" {
+                    self.updateIMSTicket(offline_data: offline_data)
+                } else {
+                    self.createImsTicket(offline_data: offline_data)
+                    
+                }
+                
+            }
+        })
+        self.navigationController?.popViewController(animated: true)
     }
     func updateIMSTicket(offline_data: tbl_Hr_Request_Logs) {
         var ticket_files = [[String:String]]()
@@ -824,16 +780,10 @@ class IMSNewRequestViewController: BaseViewController {
                 AppDelegate.sharedInstance.db?.dump_tbl_hr_files(hrfile: offline_hr_files)
             }
         }
-        guard let token = UserDefaults.standard.string(forKey: USER_ACCESS_TOKEN) else {
-            self.dismiss(animated: true) {
-                Helper.topMostController().view.makeToast("Session Expired")
-            }
-            return
-        }
         
         let request = [
             "hr_request": [
-                "access_token" : token,
+                "access_token" : UserDefaults.standard.string(forKey: USER_ACCESS_TOKEN)!,
                 "tickets": [
                     "requesteremployeeid": "\(Int(offline_data.REQ_ID!))",
                     "requestmodeid": "\(offline_data.REQ_MODE!)",
@@ -1077,18 +1027,6 @@ extension IMSNewRequestViewController: UITextFieldDelegate {
         return false
     }
     
-    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        if textField.tag == 9 {
-            let text = (textField.text ?? "") as NSString
-            let newText = text.replacingCharacters(in: range, with: string)
-            if let regex = try? NSRegularExpression(pattern: "^[0-9]{0,7}((\\.|,)[0-9]{0,2})?$", options: .caseInsensitive) {
-                return regex.numberOfMatches(in: newText, options: .reportProgress, range: NSRange(location: 0, length: (newText as NSString).length)) > 0
-            }
-            return false
-            
-        }
-        return true
-    }
     
 }
 
@@ -1430,33 +1368,5 @@ extension IMSNewRequestViewController: UIImagePickerControllerDelegate {
                 }
             }
         }
-    }
-}
-
-
-
-
-
-
-
-
-extension IMSNewRequestViewController: ConfirmationProtocol {
-    func confirmationProtocol() {
-        AppDelegate.sharedInstance.db?.dump_data_HRRequest(hrrequests: offline_data, { success in
-            if success {
-                print("DUMP IMS TICKET")
-                if self.headingLabel.text == "Update Request" {
-                    self.updateIMSTicket(offline_data: self.offline_data)
-                } else {
-                    self.createImsTicket(offline_data: self.offline_data)
-                    
-                }
-            }
-        })
-        self.navigationController?.popViewController(animated: true)
-    }
-    
-    func noButtonTapped() {
-        self.create_ticket_button.isEnabled = true
     }
 }

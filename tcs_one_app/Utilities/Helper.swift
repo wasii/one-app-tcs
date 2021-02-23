@@ -107,38 +107,4 @@ class Helper: NSObject {
             AppDelegate.sharedInstance.db?.updateTables(tableName: db_last_sync_status, columnName: columns, updateValue: values, onCondition: "SYNC_KEY = '\(APIName)' AND CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)'") { _ in }
         }
     }
-    
-//    func twoDigitDecimal(str: String, MAX_BEFORE_POINT: Int, MAX_DECIMAL: Int) -> String? {
-//        var str = str
-//        if (str.first == ".") {
-//            str = "0\(str)"
-//        }
-//        
-//        var max = str.count
-//        var rFinal = ""
-//        var after = false
-//        var i = 0
-//        var up = 0
-//        var decimal = 0
-//        var t: Character?
-//        while (i < max) {
-////            t = str[i]
-//            if (t != "." && !after) {
-//                up += 1
-//                if (up > MAX_BEFORE_POINT) {
-//                    return rFinal
-//                }
-//            } else if (t == ".") {
-//                after = true
-//            } else {
-//                decimal+=1
-//                if (decimal > MAX_DECIMAL) {
-//                    return rFinal
-//                }
-//            }
-//            rFinal += t
-//            i+=1
-//        }
-//        return rFinal
-//    }
 }

@@ -10,14 +10,13 @@ import UIKit
 
 class ComingSoonViewController: UIViewController {
 
-    @IBOutlet weak var comingSoonLabel: UILabel!
     
     @IBOutlet weak var id: UILabel!
     @IBOutlet weak var name: UILabel!
     @IBOutlet weak var grade: UILabel!
     @IBOutlet weak var designation: UILabel!
     @IBOutlet weak var department: UILabel!
-    @IBOutlet weak var reportedby: UILabel!
+    @IBOutlet weak var reported: UILabel!
     var emp_id: String?
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,7 +37,7 @@ class ComingSoonViewController: UIViewController {
             department.text = "Department: \(de)"
         }
         let rb = UserDefaults.standard.integer(forKey: "reported_by")
-        reportedby.text = "Reported To: \(rb)"
+        reported.text = "Reported To: \(rb)"
     }
     @IBAction func closeBtnTapped(_ sender: Any) {
         self.dismiss(animated: true, completion: nil)

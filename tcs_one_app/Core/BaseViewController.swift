@@ -280,7 +280,7 @@ class BaseViewController: UIViewController {
     }
     
     @objc func logoutUser() {
-//        AppDelegate.sharedInstance.db?.deleteRow(tableName: db_last_sync_status, column: "CURRENT_USER", ref_id: CURRENT_USER_LOGGED_IN_ID, handler: { _ in })
+        AppDelegate.sharedInstance.db?.deleteRow(tableName: db_last_sync_status, column: "CURRENT_USER", ref_id: CURRENT_USER_LOGGED_IN_ID, handler: { _ in })
         if isNavigate {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                 self.navigationController?.popViewController(animated: true)
@@ -290,13 +290,6 @@ class BaseViewController: UIViewController {
                 self.dismiss(animated: true, completion: nil)
             }
         }
-//        
-//        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-//            let story = UIStoryboard(name: "UserCredentials", bundle:nil)
-//            let vc = story.instantiateViewController(withIdentifier: "NewViewController") as! UINavigationController
-//            UIApplication.shared.windows.first?.rootViewController = vc
-//            UIApplication.shared.windows.first?.makeKeyAndVisible()
-//        }
     }
     
     @objc func navigateThroughtNotify(notification: Notification) {

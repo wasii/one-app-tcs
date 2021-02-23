@@ -69,13 +69,10 @@ class IMSDashboardViewController: BaseViewController {
         self.selected_query = "Weekly"
         
         self.tableView.register(UINib(nibName: "RequestListingTableCell", bundle: nil), forCellReuseIdentifier: "RequestListingCell")
-//        self.tableView.rowHeight = 80
-        self.tableView.rowHeight = 100
+        self.tableView.rowHeight = 70
         
         self.filteredTableView.register(UINib(nibName: "RequestListingTableCell", bundle: nil), forCellReuseIdentifier: "RequestListingCell")
-//        self.filteredTableView.rowHeight = 80
-        self.filteredTableView.rowHeight = 100
-        
+        self.filteredTableView.rowHeight = 70
         
         self.permissionTableView.register(UINib(nibName: "ModulePermissionsTableCell", bundle: nil), forCellReuseIdentifier: "ModulePermissionsCell")
         self.permissionTableView.rowHeight = 70
@@ -132,7 +129,7 @@ class IMSDashboardViewController: BaseViewController {
             controller.todate   = self.endday
         }
         controller.selected_query = self.selected_query
-        controller.delegate = self
+//        controller.delegate = self
         controller.modalTransitionStyle = .crossDissolve
         if #available(iOS 13.0, *) {
             controller.modalPresentationStyle = .overFullScreen
@@ -146,7 +143,7 @@ class IMSDashboardViewController: BaseViewController {
         
         
         controller.selected_option = self.filterType
-        controller.delegate = self
+//        controller.delegate = self
         controller.modalTransitionStyle = .crossDissolve
         if #available(iOS 13.0, *) {
             controller.modalPresentationStyle = .overFullScreen
@@ -162,7 +159,10 @@ class IMSDashboardViewController: BaseViewController {
             isFiltered = false
             self.tableView.reloadData()
             
-            setupHeightView()
+            self.mainViewHeightConstraint.constant -= self.tableViewHeightConstraint.constant
+            self.tableViewHeightConstraint.constant = 0
+            self.tableViewHeightConstraint.constant = CGFloat((self.tbl_request_logs!.count * 70) + 50)
+            self.mainViewHeightConstraint.constant +=  self.tableViewHeightConstraint.constant
             return
         } else {
             self.sortedImages.forEach { (UIImageView) in
@@ -185,10 +185,6 @@ class IMSDashboardViewController: BaseViewController {
                 break
             }
         }
-    }
-    @IBAction func newRequstBtnTapped(_ sender: Any) {
-        let controller = self.storyboard?.instantiateViewController(withIdentifier: "IMSNewRequestViewController") as! IMSNewRequestViewController
-        self.navigationController?.pushViewController(controller, animated: true)
     }
     //MARK: IBACTIONS END
     
@@ -232,11 +228,15 @@ class IMSDashboardViewController: BaseViewController {
         self.isFiltered = true
         self.tableView.reloadData()
         
-        setupHeightView()
+        self.mainViewHeightConstraint.constant -= self.tableViewHeightConstraint.constant
+        self.tableViewHeightConstraint.constant = 0
+        self.tableViewHeightConstraint.constant = CGFloat((self.filtered_data!.count * 70) + 50)
+        self.mainViewHeightConstraint.constant +=  self.tableViewHeightConstraint.constant
     }
     private func setupPermission() {
         let listing_all_filter_count = AppDelegate.sharedInstance.db?.read_tbl_UserPermission(permission: IMS_Listing_All_Filters).count
         let listing_responsible_bar_count = AppDelegate.sharedInstance.db?.read_tbl_UserPermission(permission: IMS_Listing_Responsible_Bar).count
+//        let listing_management_bar_count  = AppDelegate.sharedInstance.db?.read_tbl_UserPermission(permission: PERMISSION_GRIEVENCE_LISTING_MANAGEMENT_BAR).count
         
         user_permission_table_list = [UserPermssionsTableList]()
         if listing_all_filter_count! > 0 {
@@ -247,6 +247,10 @@ class IMSDashboardViewController: BaseViewController {
         if listing_responsible_bar_count! > 0 {
             user_permission_table_list?.append(UserPermssionsTableList(title: "IMS Requests", imageName: "helpdesk"))
         }
+        
+//        if listing_management_bar_count! > 0 {
+//            user_permission_table_list?.append(UserPermssionsTableList(title: "Grievance Monitoring", imageName: "helpdesk"))
+//        }
         
         if let _ = self.user_permission_table_list {
             self.permissionTableView.reloadData()
@@ -282,62 +286,10 @@ class IMSDashboardViewController: BaseViewController {
         }
         
         
-        setupHeightView()
-    }
-    func setupHeightView() {
         self.mainViewHeightConstraint.constant -= self.tableViewHeightConstraint.constant
         self.tableViewHeightConstraint.constant = 0
-        
-        if self.isFiltered  {
-            self.tableViewHeightConstraint.constant = CGFloat((self.filtered_data!.count * 100) + 50)
-        } else {
-            self.tableViewHeightConstraint.constant = CGFloat((self.tbl_request_logs!.count * 100) + 50)
-        }
-        
-        
-        
+        self.tableViewHeightConstraint.constant = CGFloat((self.tbl_request_logs!.count * 70) + 50)
         self.mainViewHeightConstraint.constant +=  self.tableViewHeightConstraint.constant
-        
-        switch UIDevice().type {
-        case .iPhone5, .iPhone5S, .iPhone5C, .iPhoneSE:
-            if self.mainViewHeightConstraint.constant < 585 {
-                self.mainViewHeightConstraint.constant = 585
-            }
-            break
-        case .iPhone6, .iPhone6S, .iPhone7, .iPhone8, .iPhoneSE2:
-            if self.mainViewHeightConstraint.constant < 690 {
-                self.mainViewHeightConstraint.constant = 690
-            }
-            
-            break
-        case .iPhone6Plus, .iPhone7Plus, .iPhone8Plus:
-            if self.mainViewHeightConstraint.constant < 755 {
-                self.mainViewHeightConstraint.constant = 755
-            }
-            break
-        case .iPhoneX, .iPhoneXR, .iPhoneXS, .iPhone11Pro, .iPhone12, .iPhone12Pro:
-            if self.mainViewHeightConstraint.constant < 820 {
-                self.mainViewHeightConstraint.constant = 820
-            }
-            break
-        case .iPhone11, .iPhoneXSMax, .iPhone11ProMax:
-            if self.mainViewHeightConstraint.constant < 870 {
-                self.mainViewHeightConstraint.constant = 870
-            }
-            break
-        case .iPhone12ProMax:
-            if self.mainViewHeightConstraint.constant < 880 {
-                self.mainViewHeightConstraint.constant = 880
-            }
-            break
-        case .iPhone12Mini:
-            if self.mainViewHeightConstraint.constant < 770 {
-                self.mainViewHeightConstraint.constant = 770
-            }
-            break
-        default:
-            break
-        }
     }
     private func getFilterType() -> String {
         switch self.filterType {
@@ -382,21 +334,15 @@ class IMSDashboardViewController: BaseViewController {
                 logs.TICKET_STATUS == IMS_Status_Closed
             }).count
             
+            self.submittedProgressView.maxValue = CGFloat(data.count)
+            self.inreviewProgressView.maxValue = CGFloat(data.count)
+            self.closedProgressView.maxValue = CGFloat(data.count)
             
-            
-            
-            UIView.animate(withDuration: 0.5, delay: 0.0, options: .curveLinear, animations: {
-                self.submittedProgressView.maxValue = CGFloat(data.count)
+            UIView.animate(withDuration: 0.5) {
                 self.submittedProgressView.value = CGFloat(pendingCount)
-                UIView.animate(withDuration: 0.5, delay: 0.1, options: .curveLinear, animations: {
-                    self.inreviewProgressView.maxValue = CGFloat(data.count)
-                    self.inreviewProgressView.value = CGFloat(approvedCount)
-                    UIView.animate(withDuration: 0.5, delay: 0.2, options: .curveLinear, animations: {
-                        self.closedProgressView.maxValue = CGFloat(data.count)
-                        self.closedProgressView.value = CGFloat(rejectedCount)
-                    }, completion: nil)
-                }, completion: nil)
-            }, completion: nil)
+                self.inreviewProgressView.value = CGFloat(approvedCount)
+                self.closedProgressView.value = CGFloat(rejectedCount)
+            }
         }
     }
     private func setupStackBarChart() {
@@ -502,14 +448,12 @@ class IMSDashboardViewController: BaseViewController {
         formatter.maximumFractionDigits = 0
         formatter.multiplier = 1.0
         formatter.zeroSymbol = ""
-        data.setValueFont(.systemFont(ofSize: 1, weight: .light))
+        data.setValueFont(.systemFont(ofSize: 7, weight: .light))
         data.setValueTextColor(.white)
         
         data.setValueFormatter(DefaultValueFormatter(formatter: formatter))
         barStackChart.fitBars = true
         barStackChart.data = data
-        
-        barStackChart.animate(yAxisDuration: 0.5, easing: nil)
     }
     //MARK: Custom Functions ENDS
 }
@@ -551,7 +495,7 @@ extension IMSDashboardViewController: ChartViewDelegate {
         self.filteredTableView.reloadData()
         
         self.filteredTableviewHeightConstraint.constant = 0
-        self.filteredTableviewHeightConstraint.constant = CGFloat(self.date_specific_tbl_request_logs!.count * 100) + 10
+        self.filteredTableviewHeightConstraint.constant = CGFloat(self.date_specific_tbl_request_logs!.count * 70) + 10
         self.mainViewHeightConstraint.constant += self.filteredTableviewHeightConstraint.constant
     }
 }
@@ -603,13 +547,7 @@ extension IMSDashboardViewController: UITableViewDataSource, UITableViewDelegate
                     let cell = tableView.dequeueReusableCell(withIdentifier: "RequestListingCell") as! RequestListingTableCell
                     let data = self.date_specific_tbl_request_logs![indexPath.row]
                     cell.mainHeading.text = data.INCIDENT_TYPE!
-                    if let department = AppDelegate.sharedInstance.db?.read_tbl_department(query: "SELECT * FROM \(db_lov_department) WHERE SERVER_ID_PK = '\(data.DEPARTMENT ?? "")'").first {
-                        cell.subHeading.text = department.DEPAT_NAME
-                    }
-                    
-                    //HR FEEDBACK
-                    cell.ticketID.text = "Ticket Id: \(data.SERVER_ID_PK!)"
-                    //HR FEEDBACK
+                    cell.subHeading.text = data.DETAIL_QUERY!
                     cell.date.text = data.CREATED_DATE?.dateSeperateWithT ?? ""
                     
                     if data.TICKET_STATUS == IMS_Status_Submitted {
@@ -651,97 +589,32 @@ extension IMSDashboardViewController: UITableViewDataSource, UITableViewDelegate
                 data = self.tbl_request_logs![indexPath.row]
             }
             cell.mainHeading.text = data!.INCIDENT_TYPE!
-            if let department = AppDelegate.sharedInstance.db?.read_tbl_department(query: "SELECT * FROM \(db_lov_department) WHERE SERVER_ID_PK = '\(data?.DEPARTMENT ?? "")'").first {
-                cell.subHeading.text = department.DEPAT_NAME
-            }
+            cell.subHeading.text = data!.DETAIL_QUERY!
             cell.date.text = data!.CREATED_DATE?.dateSeperateWithT ?? ""
-            //HR FEEDBACK
-            cell.ticketID.text = "Ticket Id: \(data!.SERVER_ID_PK!)"
-            //HR FEEDBACK
             
-//            if data!.TICKET_STATUS == IMS_Status_Submitted {
-//                cell.status.text = IMS_Status_Submitted
-//                cell.status.textColor = UIColor.pendingColor()
-//            } else if data!.TICKET_STATUS == IMS_Status_Inprogress ||
-//                        data!.TICKET_STATUS == IMS_Status_Inprogress_Rds ||
-//                        data!.TICKET_STATUS == IMS_Status_Inprogress_Ro ||
-//                        data!.TICKET_STATUS == IMS_Status_Inprogress_Rm ||
-//                        data!.TICKET_STATUS == IMS_Status_Inprogress_Hod ||
-//                        data!.TICKET_STATUS == IMS_Status_Inprogress_Cs ||
-//                        data!.TICKET_STATUS == IMS_Status_Inprogress_As ||
-//                        data!.TICKET_STATUS == IMS_Status_Inprogress_Hs ||
-//                        data!.TICKET_STATUS == IMS_Status_Inprogress_Ds ||
-//                        data!.TICKET_STATUS == IMS_Status_Inprogress_Fs ||
-//                        data!.TICKET_STATUS == IMS_Status_Inprogress_Ins ||
-//                        data!.TICKET_STATUS == IMS_Status_Inprogress_Hr ||
-//                        data!.TICKET_STATUS == IMS_Status_Inprogress_Fi ||
-//                        data!.TICKET_STATUS == IMS_Status_Inprogress_Ca ||
-//                        data!.TICKET_STATUS == IMS_Status_Inprogress_Rhod {
-//                cell.status.text = IMS_Status_Inprogress
-//                cell.status.textColor = UIColor.approvedColor()
-//            } else {
-//                cell.status.text = IMS_Status_Closed
-//                cell.status.textColor = UIColor.rejectedColor()
-//            }
-            switch data!.TICKET_STATUS {
-            case IMS_Status_Submitted:
-                cell.status.text = "Submitted"
+            if data!.TICKET_STATUS == IMS_Status_Submitted {
+                cell.status.text = IMS_Status_Submitted
                 cell.status.textColor = UIColor.pendingColor()
-                break
-            case IMS_Status_Inprogress:
+            } else if data!.TICKET_STATUS == IMS_Status_Inprogress ||
+                        data!.TICKET_STATUS == IMS_Status_Inprogress_Rds ||
+                        data!.TICKET_STATUS == IMS_Status_Inprogress_Ro ||
+                        data!.TICKET_STATUS == IMS_Status_Inprogress_Rm ||
+                        data!.TICKET_STATUS == IMS_Status_Inprogress_Hod ||
+                        data!.TICKET_STATUS == IMS_Status_Inprogress_Cs ||
+                        data!.TICKET_STATUS == IMS_Status_Inprogress_As ||
+                        data!.TICKET_STATUS == IMS_Status_Inprogress_Hs ||
+                        data!.TICKET_STATUS == IMS_Status_Inprogress_Ds ||
+                        data!.TICKET_STATUS == IMS_Status_Inprogress_Fs ||
+                        data!.TICKET_STATUS == IMS_Status_Inprogress_Ins ||
+                        data!.TICKET_STATUS == IMS_Status_Inprogress_Hr ||
+                        data!.TICKET_STATUS == IMS_Status_Inprogress_Fi ||
+                        data!.TICKET_STATUS == IMS_Status_Inprogress_Ca ||
+                        data!.TICKET_STATUS == IMS_Status_Inprogress_Rhod {
                 cell.status.text = IMS_Status_Inprogress
                 cell.status.textColor = UIColor.approvedColor()
-                break
-            case IMS_Status_Inprogress_Rm:
-                cell.status.text = INPROGRESS_INITIATOR
-                cell.status.textColor = UIColor.approvedColor()
-                break
-            case IMS_Status_Inprogress_Ro, IMS_Status_Inprogress_Rhod:
-                cell.status.text = INPROGRESS_LINEMANAGER
-                cell.status.textColor = UIColor.approvedColor()
-                break
-            case IMS_Status_Inprogress_Hod:
-                cell.status.text = INPROGRESS_HOD
-                cell.status.textColor = UIColor.approvedColor()
-                break
-            case IMS_Status_Inprogress_Cs:
-                cell.status.text = INPROGRESS_CS
-                cell.status.textColor = UIColor.approvedColor()
-                break
-            case IMS_Status_Inprogress_As:
-                cell.status.text = INPROGRESS_AS
-                cell.status.textColor = UIColor.approvedColor()
-                break
-            case IMS_Status_Inprogress_Hs, IMS_Status_Inprogress_Rds:
-                cell.status.text = INPROGRESS_HS
-                cell.status.textColor = UIColor.approvedColor()
-                break
-            case IMS_Status_Inprogress_Ds:
-                cell.status.text = INPROGRESS_DS
-                cell.status.textColor = UIColor.approvedColor()
-                break
-            case IMS_Status_Inprogress_Fs, IMS_Status_Inprogress_Ins:
-                cell.status.text = INPROGRESS_FS
-                cell.status.textColor = UIColor.approvedColor()
-                break
-            case IMS_Status_Inprogress_Hr:
-                cell.status.text = INPROGRESS_HR
-                cell.status.textColor = UIColor.approvedColor()
-                break
-            case IMS_Status_Inprogress_Fi:
-                cell.status.text = INPROGRESS_FI
-                cell.status.textColor = UIColor.approvedColor()
-                break
-            case IMS_Status_Inprogress_Ca:
-                cell.status.text = INPROGRESS_CA
-                cell.status.textColor = UIColor.approvedColor()
-                break
-            case IMS_Status_Closed:
+            } else {
                 cell.status.text = IMS_Status_Closed
                 cell.status.textColor = UIColor.rejectedColor()
-            default:
-                print("Wrong Ticket Status")
-                break
             }
             
             cell.type.text = "IMS"
@@ -763,75 +636,64 @@ extension IMSDashboardViewController: UITableViewDataSource, UITableViewDelegate
                     break
             }
         } else {
-            let controller = self.storyboard?.instantiateViewController(withIdentifier: "IMSNewRequestViewController") as! IMSNewRequestViewController
-            var current_ticket : tbl_Hr_Request_Logs?
-            if isFiltered {
-                current_ticket = self.filtered_data![indexPath.row]
-            } else {
-                current_ticket = self.tbl_request_logs![indexPath.row]
+            let controller = self.storyboard?.instantiateViewController(withIdentifier: "IMSViewUpdateRequestViewController") as! IMSViewUpdateRequestViewController
+            
+            let permissions = AppDelegate.sharedInstance.db?.read_tbl_UserPermission()
+            var current_user = ""
+            for perm in permissions! {
+                var breakk = false
+                let p = perm.PERMISSION
+                for constant in IMSAllPermissions {
+                    if p == constant {
+                        current_user = p
+                        breakk = true
+                        break
+                    }
+                }
+                if breakk {
+                    break
+                }
             }
-            controller.current_ticket = current_ticket
-            if current_ticket!.TICKET_STATUS == IMS_Status_Inprogress_Rm {
+            if isFiltered {
+                let current_ticket = self.filtered_data![indexPath.row]
+                let isGranted = permissions?.contains(where: { (perm) -> Bool in
+                    let permission = String(perm.PERMISSION.lowercased().split(separator: " ").last!)
+                    return permission == current_ticket.TICKET_STATUS?.lowercased()
+                })
+                
+                controller.ticket_request = current_ticket
+                controller.current_user = current_user
+                controller.havePermissionToEdit = isGranted!
+                print(current_user)
+                if current_user == "" {
+                    let controller = self.storyboard?.instantiateViewController(withIdentifier: "IMSNewRequestViewController") as! IMSNewRequestViewController
+                    controller.current_ticket = current_ticket
+                    self.navigationController?.pushViewController(controller, animated: true)
+                } else {
+                    self.navigationController?.pushViewController(controller, animated: true)
+                }
+//                self.navigationController?.pushViewController(controller, animated: true)
+            } else {
+                let current_ticket = self.tbl_request_logs![indexPath.row]
+                let isGranted = permissions?.contains(where: { (perm) -> Bool in
+                    let permission = String(perm.PERMISSION.lowercased().split(separator: " ").last!)
+                    return permission == current_ticket.TICKET_STATUS?.lowercased()
+                })
+                
+                controller.ticket_request = current_ticket
+                controller.current_user = current_user
+                controller.havePermissionToEdit = isGranted!
+                
+                print(current_user)
+                if current_user == "" {
+                    let controller = self.storyboard?.instantiateViewController(withIdentifier: "IMSNewRequestViewController") as! IMSNewRequestViewController
+                    controller.current_ticket = current_ticket
+                    self.navigationController?.pushViewController(controller, animated: true)
+                } else {
+                    self.navigationController?.pushViewController(controller, animated: true)
+                }
                 
             }
-            self.navigationController?.pushViewController(controller, animated: true)
-            
-//            let controller = self.storyboard?.instantiateViewController(withIdentifier: "IMSViewUpdateRequestViewController") as! IMSViewUpdateRequestViewController
-//
-//            let permissions = AppDelegate.sharedInstance.db?.read_tbl_UserPermission()
-//            var current_user = ""
-//            for perm in permissions! {
-//                var breakk = false
-//                let p = perm.PERMISSION
-//                for constant in IMSAllPermissions {
-//                    if p == constant {
-//                        current_user = p
-//                        breakk = true
-//                        break
-//                    }
-//                }
-//                if breakk {
-//                    break
-//                }
-//            }
-//            if isFiltered {
-//                let current_ticket = self.filtered_data![indexPath.row]
-//                let isGranted = permissions?.contains(where: { (perm) -> Bool in
-//                    let permission = String(perm.PERMISSION.lowercased().split(separator: " ").last!)
-//                    return permission == current_ticket.TICKET_STATUS?.lowercased()
-//                })
-//
-//                controller.ticket_request = current_ticket
-//                controller.current_user = current_user
-//                controller.havePermissionToEdit = isGranted!
-//                print(current_user)
-//                if current_user == "" {
-//                    let controller = self.storyboard?.instantiateViewController(withIdentifier: "IMSNewRequestViewController") as! IMSNewRequestViewController
-//                    controller.current_ticket = current_ticket
-//                    self.navigationController?.pushViewController(controller, animated: true)
-//                } else {
-//                    self.navigationController?.pushViewController(controller, animated: true)
-//                }
-//            } else {
-//                let current_ticket = self.tbl_request_logs![indexPath.row]
-//                let isGranted = permissions?.contains(where: { (perm) -> Bool in
-//                    let permission = String(perm.PERMISSION.lowercased().split(separator: " ").last!)
-//                    return permission == current_ticket.TICKET_STATUS?.lowercased()
-//                })
-//
-//                controller.ticket_request = current_ticket
-//                controller.current_user = current_user
-//                controller.havePermissionToEdit = isGranted!
-//
-//                print(current_user)
-//                if current_user == "" {
-//                    let controller = self.storyboard?.instantiateViewController(withIdentifier: "IMSNewRequestViewController") as! IMSNewRequestViewController
-//                    controller.current_ticket = current_ticket
-//                    self.navigationController?.pushViewController(controller, animated: true)
-//                } else {
-//                    self.navigationController?.pushViewController(controller, animated: true)
-//                }
-//            }
         }
     }
 }
@@ -862,12 +724,6 @@ extension IMSDashboardViewController: DateSelectionDelegate {
     
     func requestModeSelected(selected_query: String) {
         self.filterType = selected_query
-        if selected_query == "All" {
-            allRequestBtn.setTitle("All Requests", for: .normal)
-        } else {
-            allRequestBtn.setTitle(selected_query, for: .normal)
-        }
-        
         self.setupJSON(numberOfDays: self.numberOfDays, startday: self.startday, endday: self.endday)
     }
 }

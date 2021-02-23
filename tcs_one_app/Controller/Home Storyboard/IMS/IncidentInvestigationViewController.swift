@@ -38,29 +38,13 @@ class IncidentInvestigationViewController: BaseViewController {
     @IBOutlet weak var opinions_textview: UITextView!
     @IBOutlet weak var opinions_wordcounter: UILabel!
     
-    @IBOutlet weak var es_view: UIView!
-    @IBOutlet weak var es_textview: UITextView!
-    @IBOutlet weak var es_wordcounter: UILabel!
-    
-    @IBOutlet weak var recommendation_view: UIView!
-    @IBOutlet weak var recommendation_textview: UITextView!
-    @IBOutlet weak var recommendation_wordcounter: UILabel!
-    
-    @IBOutlet weak var endoresement_view: UIView!
-    @IBOutlet weak var endorsement_textview: UITextView!
-    @IBOutlet weak var endoresement_wordcounter: UILabel!
-    
-    @IBOutlet weak var ds_recommendation_view: UIView!
-    @IBOutlet weak var ds_recommendation_textview: UITextView!
-    @IBOutlet weak var ds_recommendation_wordcounter: UILabel!
-    
     var ticket: tbl_Hr_Request_Logs?
     var isEditable = false
     
     var updatedelegate: UpdateIncidentInvestigation?
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.title = "IMS"
+        self.title = "Incident Investigation"
         
         detal_investigation_textview.delegate = self
         prosecution_narrative_textview.delegate = self
@@ -92,8 +76,7 @@ class IncidentInvestigationViewController: BaseViewController {
                 
             } else {
                 self.detal_investigation_textview.text = ticket?.DETAILED_INVESTIGATION ?? ""
-                self.detail_investigation_wordcounter.text = "\(ticket?.DETAILED_INVESTIGATION?.count ?? 0)/2000"
-                self.detal_investigation_textview.isEditable = false
+                self.detal_investigation_textview.isUserInteractionEnabled = false
             }
         } else {
             self.di_view.isHidden = true
@@ -109,9 +92,8 @@ class IncidentInvestigationViewController: BaseViewController {
                     self.prosecution_narrative_textview.text = ticket?.PROSECUTION_NARRATIVE ?? ""
                 }
             } else {
-                self.prosecution_narrative_textview.isEditable = false
+                self.prosecution_narrative_textview.isUserInteractionEnabled = false
                 self.prosecution_narrative_textview.text = ticket?.PROSECUTION_NARRATIVE ?? ""
-                self.prosecution_narrative_wordcounter.text = "\(ticket?.PROSECUTION_NARRATIVE?.count ?? 0)/1000"
             }
         } else {
             self.pn_view.isHidden = true
@@ -127,9 +109,8 @@ class IncidentInvestigationViewController: BaseViewController {
                     self.defense_narrative_textview.text = ticket?.DEFENSE_NARRATIVE ?? ""
                 }
             } else {
-                self.defense_narrative_textview.isEditable = false
+                self.defense_narrative_textview.isUserInteractionEnabled = false
                 self.defense_narrative_textview.text = ticket?.DEFENSE_NARRATIVE ?? ""
-                self.defense_narrative_wordcounter.text = "\(ticket?.DEFENSE_NARRATIVE?.count ?? 0)/200"
             }
         } else {
             self.dn_view.isHidden = true
@@ -145,9 +126,8 @@ class IncidentInvestigationViewController: BaseViewController {
                     self.challenges_textview.text = ticket?.CHALLENGES ?? ""
                 }
             } else {
-                self.challenges_textview.isEditable = false
+                self.challenges_textview.isUserInteractionEnabled = false
                 self.challenges_textview.text = ticket?.CHALLENGES ?? ""
-                self.challenges_wordcounter.text = "\(ticket?.CHALLENGES?.count ?? 0)/200"
             }
         } else {
             self.c_view.isHidden = true
@@ -163,9 +143,8 @@ class IncidentInvestigationViewController: BaseViewController {
                     self.fact_textview.text = ticket?.FACTS ?? ""
                 }
             } else {
-                self.fact_textview.isEditable = false
+                self.fact_textview.isUserInteractionEnabled = false
                 self.fact_textview.text = ticket?.FACTS ?? ""
-                self.facts_wordcounter.text = "\(ticket?.FACTS?.count ?? 0)/500"
             }
         } else {
             self.f_view.isHidden = true
@@ -181,9 +160,8 @@ class IncidentInvestigationViewController: BaseViewController {
                     self.findings_textview.text = ticket?.FINDINGS ?? ""
                 }
             } else {
-                self.findings_textview.isEditable = false
+                self.findings_textview.isUserInteractionEnabled = false
                 self.findings_textview.text = ticket?.FINDINGS ?? ""
-                self.findings_wordcounter.text = "\(ticket?.FINDINGS?.count ?? 0)/1000"
             }
         } else {
             self.finding_view.isHidden = true
@@ -194,62 +172,17 @@ class IncidentInvestigationViewController: BaseViewController {
             if self.isEditable {
                 self.opinions_textview.isUserInteractionEnabled = true
                 if ticket?.OPINION == "" {
-                    self.opinions_textview.text = ENTER_OPINIONS
+                    self.opinions_textview.text = ENTER_FINDINGS
                 } else {
                     self.opinions_textview.text = ticket?.OPINION ?? ""
                 }
             } else {
-                self.opinions_textview.isEditable = false
+                self.opinions_textview.isUserInteractionEnabled = false
                 self.opinions_textview.text = ticket?.OPINION ?? ""
-                self.opinions_wordcounter.text = "\(ticket?.OPINION?.count ?? 0)/500"
             }
         } else {
             self.o_view.isHidden = true
         }
-        
-        //HS
-        if AppDelegate.sharedInstance.db!.read_tbl_UserPermission(permission: IMS_View_Executive_Summary).count > 0 {
-            if ticket?.HO_SEC_SUMMARY == ""  {
-                self.es_view.isHidden = true
-            } else {
-                self.es_view.isHidden = false
-                self.es_textview.text = ticket?.HO_SEC_SUMMARY ?? ""
-                self.es_wordcounter.text = "\(ticket?.HO_SEC_SUMMARY?.count ?? 0)/200"
-            }
-        }
-        if AppDelegate.sharedInstance.db!.read_tbl_UserPermission(permission: IMS_View_HS_Recommendation).count > 0 {
-            if ticket?.HO_SEC_RECOM == "" {
-                self.recommendation_view.isHidden = true
-            } else {
-                self.recommendation_view.isHidden = false
-                self.recommendation_textview.text = ticket?.HO_SEC_RECOM ?? ""
-                self.recommendation_wordcounter.text = "\(ticket?.HO_SEC_RECOM?.count ?? 0)/200"
-            }
-        }
-        
-        //DS
-        if AppDelegate.sharedInstance.db!.read_tbl_UserPermission(permission: IMS_View_Endorsement).count > 0 {
-            if ticket?.DIR_SEC_ENDOR == ""  {
-                self.endoresement_view.isHidden = true
-            } else {
-                self.endoresement_view.isHidden = false
-                self.endorsement_textview.text = ticket?.DIR_SEC_ENDOR ?? ""
-                self.endoresement_wordcounter.text = "\(ticket?.DIR_SEC_ENDOR?.count ?? 0)/200"
-            }
-        }
-        if AppDelegate.sharedInstance.db!.read_tbl_UserPermission(permission: IMS_View_DS_Recommendation).count > 0 {
-            if ticket?.DIR_SEC_RECOM == "" {
-                self.ds_recommendation_view.isHidden = true
-            } else {
-                self.ds_recommendation_view.isHidden = false
-                self.ds_recommendation_textview.text = ticket?.DIR_SEC_RECOM ?? ""
-                self.ds_recommendation_wordcounter.text = "\(ticket?.DIR_SEC_RECOM?.count ?? 0)/200"
-            }
-        }
-    }
-    
-    @IBAction func back_button_tapped(_ sender: Any) {
-        self.navigationController?.popViewController(animated: true)
     }
 }
 
@@ -360,7 +293,10 @@ extension IncidentInvestigationViewController: UITextViewDelegate {
     }
     
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
-        
+        let maxLength = 200
+        let currentString: NSString = textView.text as! NSString
+        let newString: NSString =
+                currentString.replacingCharacters(in: range, with: text) as NSString
         if let texts = textView.text,
            let textRange = Range(range, in: texts) {
             let updatedText = texts.replacingCharacters(in: textRange, with: text)
@@ -368,36 +304,13 @@ extension IncidentInvestigationViewController: UITextViewDelegate {
                 return false
             }
         }
-        var maxLength = 200
-        switch textView.tag {
-        case ENTER_PROCECUSTION_NARRATIVE_TAG:
-            maxLength = 1000
-            break
-        case ENTER_DETAIL_INVESTIGATION_TAG:
-            maxLength = 2000
-            break
-        case ENTER_FINDINGS_TAG:
-            maxLength = 1000
-            break
-        case ENTER_FACTS_TAG, ENTER_OPINIONS_TAG:
-            maxLength = 500
-            break
-        default:
-            break
-        }
-        
-        
-        let currentString: NSString = textView.text as! NSString
-        let newString: NSString =
-                currentString.replacingCharacters(in: range, with: text) as NSString
-        
         if newString.length <= maxLength {
             switch textView.tag {
             case ENTER_DETAIL_INVESTIGATION_TAG:
-                self.detail_investigation_wordcounter.text = "\(newString.length)/2000"
+                self.detail_investigation_wordcounter.text = "\(newString.length)/200"
                 return true
             case ENTER_PROCECUSTION_NARRATIVE_TAG:
-                self.prosecution_narrative_wordcounter.text = "\(newString.length)/1000"
+                self.prosecution_narrative_wordcounter.text = "\(newString.length)/200"
                 return true
             case ENTER_DEFENSE_NARRATIVE_TAG:
                 self.defense_narrative_wordcounter.text = "\(newString.length)/200"
@@ -406,13 +319,13 @@ extension IncidentInvestigationViewController: UITextViewDelegate {
                 self.challenges_wordcounter.text = "\(newString.length)/200"
                 return true
             case ENTER_FACTS_TAG:
-                self.facts_wordcounter.text = "\(newString.length)/500"
+                self.facts_wordcounter.text = "\(newString.length)/200"
                 return true
             case ENTER_FINDINGS_TAG:
-                self.findings_wordcounter.text = "\(newString.length)/1000"
+                self.findings_wordcounter.text = "\(newString.length)/200"
                 return true
             case ENTER_OPINIONS_TAG:
-                self.opinions_wordcounter.text = "\(newString.length)/500"
+                self.opinions_wordcounter.text = "\(newString.length)/200"
                 return true
             default:
                 return false

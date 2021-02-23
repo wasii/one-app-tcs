@@ -22,10 +22,10 @@
                         <rect key="frame" x="0.0" y="0.0" width="170" height="170"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="SCC-pw-vyb" customClass="MBCircularProgressBarView">
-                                <rect key="frame" x="25" y="5" width="120" height="120"/>
+                                <rect key="frame" x="35" y="5" width="100" height="100"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="120" id="DgY-0f-v9t"/>
+                                    <constraint firstAttribute="height" constant="100" id="DgY-0f-v9t"/>
                                     <constraint firstAttribute="width" secondItem="SCC-pw-vyb" secondAttribute="height" id="Sdb-RW-u4y"/>
                                 </constraints>
                                 <userDefinedRuntimeAttributes>
@@ -57,10 +57,10 @@
                                         <real key="value" value="100"/>
                                     </userDefinedRuntimeAttribute>
                                     <userDefinedRuntimeAttribute type="number" keyPath="progressLineWidth">
-                                        <real key="value" value="10"/>
+                                        <real key="value" value="6"/>
                                     </userDefinedRuntimeAttribute>
                                     <userDefinedRuntimeAttribute type="number" keyPath="emptyLineWidth">
-                                        <real key="value" value="10"/>
+                                        <real key="value" value="6"/>
                                     </userDefinedRuntimeAttribute>
                                     <userDefinedRuntimeAttribute type="color" keyPath="emptyLineColor">
                                         <color key="value" red="0.94901960780000005" green="0.95294117649999999" blue="0.95686274510000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -71,7 +71,7 @@
                                 </userDefinedRuntimeAttributes>
                             </view>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Attendance &amp; Leaves" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oOf-60-az7">
-                                <rect key="frame" x="20" y="125" width="130" height="45"/>
+                                <rect key="frame" x="20" y="105" width="130" height="65"/>
                                 <fontDescription key="fontDescription" type="system" weight="light" pointSize="12"/>
                                 <color key="textColor" red="0.11372549019607843" green="0.40000000000000002" blue="0.55294117647058827" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
