@@ -1423,7 +1423,7 @@
         <!--Watch All Requests View Controller-->
         <scene sceneID="IDQ-Gv-giZ">
             <objects>
-                <viewController storyboardIdentifier="WatchAllRequestsViewController" hidesBottomBarWhenPushed="YES" id="zlu-sz-YwB" customClass="WatchAllRequestsViewController" customModule="One_App" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="WatchAllRequestsViewController" id="zlu-sz-YwB" customClass="WatchAllRequestsViewController" customModule="One_App" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="DdR-3B-mpZ">
                         <rect key="frame" x="0.0" y="0.0" width="428" height="926"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

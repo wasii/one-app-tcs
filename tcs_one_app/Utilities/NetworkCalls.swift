@@ -137,6 +137,7 @@ class NetworkCalls: NSObject {
                                     UserDefaults.standard.setValue(data.array?.first?["DESIG"].string ?? "", forKey: "designation")
                                     UserDefaults.standard.setValue(data.array?.first?["DEPT"].string ?? "", forKey: "department")
                                     UserDefaults.standard.setValue(data.array?.first?["LINE_MANAGER1"].int ?? 0, forKey: "reported_by")
+
                                     let dictionary = try data.array!.first?.rawData()
                                     let user = try JSONDecoder().decode(User.self, from: dictionary!)
                                     AppDelegate.sharedInstance.db?.deleteAll(tableName: db_user_profile) { success in
@@ -774,6 +775,32 @@ class NetworkCalls: NSObject {
                     if success.dictionary?[_code] == "0208" {
                         handler(false, "Already Reported.")
                     }
+                }
+            } else {
+                handler(false, SOMETHINGWENTWRONG)
+            }
+        }.resume()
+    }
+    class func getbookingdetails(params: [String:Any], handler: @escaping(_ granted: Bool,_ response: Any) -> Void) {
+        let Url = String(format: "https://prodapi.tcscourier.com/core/api/main")
+        guard let serviceUrl = URL(string: Url) else { return }
+        var request = URLRequest(url: serviceUrl)
+        request.httpMethod = "POST"
+        request.setValue("Application/json", forHTTPHeaderField: "Content-Type")
+        guard let httpBody = try? JSONSerialization.data(withJSONObject: params, options: []) else {
+            return
+        }
+        request.httpBody = httpBody
+        let session = URLSession.shared
+        session.dataTask(with: request) { (data, response, error) in
+            if let data = data {
+                let json = JSON(data)
+                if let success = json.dictionary?[returnStatus] {
+                    if success.dictionary?[_code] == "200" {
+                        handler(true, json.dictionary?["consignment"]?.dictionary?["track"])
+                    }
+                } else {
+                    handler(false, SOMETHINGWENTWRONG)
                 }
             } else {
                 handler(false, SOMETHINGWENTWRONG)
