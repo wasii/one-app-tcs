@@ -55,6 +55,21 @@
 		1BB7FA4425B70CF8003AC7C4 /* IMSFilesAccordingRemarksViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BB7FA4325B70CF8003AC7C4 /* IMSFilesAccordingRemarksViewController.swift */; };
 		1BBAEA4D259DA1AA00FBDCB4 /* IMSAllRequestsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BBAEA4C259DA1AA00FBDCB4 /* IMSAllRequestsViewController.swift */; };
 		1BC42B8D257527F7000A63AF /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1BC42B8C257527F7000A63AF /* CloudKit.framework */; };
+		1BFCE61F25E51A740019A4B2 /* TrackStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1BFCE61E25E51A740019A4B2 /* TrackStoryboard.storyboard */; };
+		1BFCE62825E51AE10019A4B2 /* TrackingModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BFCE62725E51AE10019A4B2 /* TrackingModel.swift */; };
+		1BFCE62D25E51B180019A4B2 /* TrackHomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BFCE62C25E51B180019A4B2 /* TrackHomeViewController.swift */; };
+		1BFCE63D25E51DE10019A4B2 /* TBagDetailsTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BFCE63125E51DDF0019A4B2 /* TBagDetailsTableCell.swift */; };
+		1BFCE63E25E51DE10019A4B2 /* DManDetailsTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BFCE63225E51DE00019A4B2 /* DManDetailsTableCell.swift */; };
+		1BFCE63F25E51DE10019A4B2 /* BookingDetailsTableCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1BFCE63325E51DE00019A4B2 /* BookingDetailsTableCell.xib */; };
+		1BFCE64025E51DE10019A4B2 /* DeliveryDetailsTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BFCE63425E51DE00019A4B2 /* DeliveryDetailsTableCell.swift */; };
+		1BFCE64125E51DE10019A4B2 /* PBagDetailsTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1BFCE63525E51DE00019A4B2 /* PBagDetailsTableViewCell.xib */; };
+		1BFCE64225E51DE10019A4B2 /* RBagDetailsTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BFCE63625E51DE00019A4B2 /* RBagDetailsTableCell.swift */; };
+		1BFCE64325E51DE10019A4B2 /* DManDetailsTableCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1BFCE63725E51DE00019A4B2 /* DManDetailsTableCell.xib */; };
+		1BFCE64425E51DE10019A4B2 /* PBagDetailsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BFCE63825E51DE10019A4B2 /* PBagDetailsTableViewCell.swift */; };
+		1BFCE64525E51DE10019A4B2 /* RBagDetailsTableCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1BFCE63925E51DE10019A4B2 /* RBagDetailsTableCell.xib */; };
+		1BFCE64625E51DE10019A4B2 /* TBagDetailsTableCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1BFCE63A25E51DE10019A4B2 /* TBagDetailsTableCell.xib */; };
+		1BFCE64725E51DE10019A4B2 /* BookingDetailsTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BFCE63B25E51DE10019A4B2 /* BookingDetailsTableCell.swift */; };
+		1BFCE64825E51DE10019A4B2 /* DeliveryDetailsTableCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1BFCE63C25E51DE10019A4B2 /* DeliveryDetailsTableCell.xib */; };
 		4EDC7C88E5B17C3133E5ABA9 /* Pods_tcs_one_app.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CA51BA4126CEE514AB22E928 /* Pods_tcs_one_app.framework */; };
 		6006955A254994D400EB3865 /* HRHelpDeskRequestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60069559254994D400EB3865 /* HRHelpDeskRequestViewController.swift */; };
 		6010F41025400E3300CF8597 /* CicrularProgressBarCollectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6010F40E25400E3300CF8597 /* CicrularProgressBarCollectionCell.swift */; };
@@ -167,6 +182,21 @@
 		1BB7FA4325B70CF8003AC7C4 /* IMSFilesAccordingRemarksViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMSFilesAccordingRemarksViewController.swift; sourceTree = "<group>"; };
 		1BBAEA4C259DA1AA00FBDCB4 /* IMSAllRequestsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMSAllRequestsViewController.swift; sourceTree = "<group>"; };
 		1BC42B8C257527F7000A63AF /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
+		1BFCE61E25E51A740019A4B2 /* TrackStoryboard.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = TrackStoryboard.storyboard; sourceTree = "<group>"; };
+		1BFCE62725E51AE10019A4B2 /* TrackingModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrackingModel.swift; sourceTree = "<group>"; };
+		1BFCE62C25E51B180019A4B2 /* TrackHomeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrackHomeViewController.swift; sourceTree = "<group>"; };
+		1BFCE63125E51DDF0019A4B2 /* TBagDetailsTableCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TBagDetailsTableCell.swift; sourceTree = "<group>"; };
+		1BFCE63225E51DE00019A4B2 /* DManDetailsTableCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DManDetailsTableCell.swift; sourceTree = "<group>"; };
+		1BFCE63325E51DE00019A4B2 /* BookingDetailsTableCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BookingDetailsTableCell.xib; sourceTree = "<group>"; };
+		1BFCE63425E51DE00019A4B2 /* DeliveryDetailsTableCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeliveryDetailsTableCell.swift; sourceTree = "<group>"; };
+		1BFCE63525E51DE00019A4B2 /* PBagDetailsTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PBagDetailsTableViewCell.xib; sourceTree = "<group>"; };
+		1BFCE63625E51DE00019A4B2 /* RBagDetailsTableCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RBagDetailsTableCell.swift; sourceTree = "<group>"; };
+		1BFCE63725E51DE00019A4B2 /* DManDetailsTableCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DManDetailsTableCell.xib; sourceTree = "<group>"; };
+		1BFCE63825E51DE10019A4B2 /* PBagDetailsTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PBagDetailsTableViewCell.swift; sourceTree = "<group>"; };
+		1BFCE63925E51DE10019A4B2 /* RBagDetailsTableCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = RBagDetailsTableCell.xib; sourceTree = "<group>"; };
+		1BFCE63A25E51DE10019A4B2 /* TBagDetailsTableCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TBagDetailsTableCell.xib; sourceTree = "<group>"; };
+		1BFCE63B25E51DE10019A4B2 /* BookingDetailsTableCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BookingDetailsTableCell.swift; sourceTree = "<group>"; };
+		1BFCE63C25E51DE10019A4B2 /* DeliveryDetailsTableCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DeliveryDetailsTableCell.xib; sourceTree = "<group>"; };
 		60069559254994D400EB3865 /* HRHelpDeskRequestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HRHelpDeskRequestViewController.swift; sourceTree = "<group>"; };
 		6010F40E25400E3300CF8597 /* CicrularProgressBarCollectionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CicrularProgressBarCollectionCell.swift; sourceTree = "<group>"; };
 		6010F40F25400E3300CF8597 /* CicrularProgressBarCollectionCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CicrularProgressBarCollectionCell.xib; sourceTree = "<group>"; };
@@ -335,6 +365,33 @@
 			path = "IMS Desk";
 			sourceTree = "<group>";
 		};
+		1BFCE62B25E51B100019A4B2 /* Track */ = {
+			isa = PBXGroup;
+			children = (
+				1BFCE62C25E51B180019A4B2 /* TrackHomeViewController.swift */,
+			);
+			path = Track;
+			sourceTree = "<group>";
+		};
+		1BFCE63025E51DAC0019A4B2 /* Tracking */ = {
+			isa = PBXGroup;
+			children = (
+				1BFCE63B25E51DE10019A4B2 /* BookingDetailsTableCell.swift */,
+				1BFCE63325E51DE00019A4B2 /* BookingDetailsTableCell.xib */,
+				1BFCE63425E51DE00019A4B2 /* DeliveryDetailsTableCell.swift */,
+				1BFCE63C25E51DE10019A4B2 /* DeliveryDetailsTableCell.xib */,
+				1BFCE63225E51DE00019A4B2 /* DManDetailsTableCell.swift */,
+				1BFCE63725E51DE00019A4B2 /* DManDetailsTableCell.xib */,
+				1BFCE63825E51DE10019A4B2 /* PBagDetailsTableViewCell.swift */,
+				1BFCE63525E51DE00019A4B2 /* PBagDetailsTableViewCell.xib */,
+				1BFCE63625E51DE00019A4B2 /* RBagDetailsTableCell.swift */,
+				1BFCE63925E51DE10019A4B2 /* RBagDetailsTableCell.xib */,
+				1BFCE63125E51DDF0019A4B2 /* TBagDetailsTableCell.swift */,
+				1BFCE63A25E51DE10019A4B2 /* TBagDetailsTableCell.xib */,
+			);
+			path = Tracking;
+			sourceTree = "<group>";
+		};
 		601BA4B025387B17002CFD1F = {
 			isa = PBXGroup;
 			children = (
@@ -395,6 +452,7 @@
 		604FD75E2539B762007E9E87 /* TableView */ = {
 			isa = PBXGroup;
 			children = (
+				1BFCE63025E51DAC0019A4B2 /* Tracking */,
 				60E99922253D848D00BCDAD1 /* RequestListingTableCell.swift */,
 				60E99923253D848D00BCDAD1 /* RequestListingTableCell.xib */,
 				60E99929253D9FB200BCDAD1 /* FilterListingDataTableCell.swift */,
@@ -427,6 +485,7 @@
 		609C605425387B560051CF28 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				1BFCE62725E51AE10019A4B2 /* TrackingModel.swift */,
 				605CE772254196E000509434 /* User.swift */,
 				605CE7742541977100509434 /* PinValidator.swift */,
 				60584D752542EA3D00AD5DA8 /* Setup.swift */,
@@ -495,6 +554,7 @@
 		609C605925387B7A0051CF28 /* Storyboards */ = {
 			isa = PBXGroup;
 			children = (
+				1BFCE61E25E51A740019A4B2 /* TrackStoryboard.storyboard */,
 				609C605A25387B900051CF28 /* UserCredentials.storyboard */,
 				60C34FDF2539830E00495944 /* Home.storyboard */,
 				60E99909253D4DF000BCDAD1 /* Dashboard.storyboard */,
@@ -517,6 +577,7 @@
 		60C34FE1253985D100495944 /* Home Storyboard */ = {
 			isa = PBXGroup;
 			children = (
+				1BFCE62B25E51B100019A4B2 /* Track */,
 				1B6279E42591E5B500C88FEE /* IMS */,
 				1B5EAA79255E582D00F49D09 /* GREVIANCE */,
 				1B5EAA78255E580800F49D09 /* HR HELP DESK */,
@@ -645,16 +706,21 @@
 			buildActionMask = 2147483647;
 			files = (
 				1B3B36102574D86B0051779A /* download-fill-icon.svg in Resources */,
+				1BFCE64825E51DE10019A4B2 /* DeliveryDetailsTableCell.xib in Resources */,
 				1B5EAA7F255E63CB00F49D09 /* GrievanceStoryboard.storyboard in Resources */,
+				1BFCE64125E51DE10019A4B2 /* PBagDetailsTableViewCell.xib in Resources */,
+				1BFCE64325E51DE10019A4B2 /* DManDetailsTableCell.xib in Resources */,
 				604B3968253ED2CD00864293 /* GraphListingTableCell.xib in Resources */,
 				1B496D8F259B130E00F3FABF /* TCSOneApp.db in Resources */,
 				1B3B36162574DC860051779A /* history-icon-fill.svg in Resources */,
+				1BFCE64525E51DE10019A4B2 /* RBagDetailsTableCell.xib in Resources */,
 				1B281768257F7D44009AE4E3 /* ChartViews.xib in Resources */,
 				60978BE125523E0B009AA2F3 /* MultiplePieCharCollectionCell.xib in Resources */,
 				605CE76D2541459800509434 /* sandboxcert.p12 in Resources */,
 				1B6B049F25665C6500CDEF66 /* GrievancesHistoryTableCell.xib in Resources */,
 				1B1C0B6A2583DBB500AAAAE9 /* NewRequestsListingTableCell.xib in Resources */,
 				6010F41125400E3300CF8597 /* CicrularProgressBarCollectionCell.xib in Resources */,
+				1BFCE63F25E51DE10019A4B2 /* BookingDetailsTableCell.xib in Resources */,
 				60E99925253D848D00BCDAD1 /* RequestListingTableCell.xib in Resources */,
 				601BA4C925387B18002CFD1F /* LaunchScreen.storyboard in Resources */,
 				60E99918253D548200BCDAD1 /* ModulesCollectionCell.xib in Resources */,
@@ -662,6 +728,8 @@
 				60E9990A253D4DF000BCDAD1 /* Dashboard.storyboard in Resources */,
 				1B1691B82572524C0007B3B0 /* right-arrow-filled.svg in Resources */,
 				1B1691B525724CE40007B3B0 /* next-icon.svg in Resources */,
+				1BFCE61F25E51A740019A4B2 /* TrackStoryboard.storyboard in Resources */,
+				1BFCE64625E51DE10019A4B2 /* TBagDetailsTableCell.xib in Resources */,
 				1B0C62EC255C100C00DCA76D /* ModulePermissionsTableCell.xib in Resources */,
 				1B1691BB257253C10007B3B0 /* checked-fill-icon.svg in Resources */,
 				1B6279E22591E54D00C88FEE /* IMSStoryboard.storyboard in Resources */,
@@ -736,6 +804,7 @@
 				609C606625387CCD0051CF28 /* Helper.swift in Sources */,
 				606D6403254974BC00F67B77 /* ConnectionManager.swift in Sources */,
 				1B1862EA25B2CA1000F18059 /* FilesAccordingRemarksViewController.swift in Sources */,
+				1BFCE62825E51AE10019A4B2 /* TrackingModel.swift in Sources */,
 				609C606425387C920051CF28 /* Extensions.swift in Sources */,
 				1B77CE87256257B700A821E7 /* GrievanceViewRequestViewController.swift in Sources */,
 				60978BDB2551D06B009AA2F3 /* LogoutPopupViewController.swift in Sources */,
@@ -753,11 +822,16 @@
 				1B5EAACD255EB71C00F49D09 /* GrievanceNewRequestViewController.swift in Sources */,
 				1B5EAA83255EA4A600F49D09 /* GrievanceHelpDeskRequestsViewController.swift in Sources */,
 				6010F41025400E3300CF8597 /* CicrularProgressBarCollectionCell.swift in Sources */,
+				1BFCE64425E51DE10019A4B2 /* PBagDetailsTableViewCell.swift in Sources */,
 				60E99928253D9EF900BCDAD1 /* FilterDataPopupViewController.swift in Sources */,
 				602011A12542948100759D2E /* NewRequestListingViewController.swift in Sources */,
 				604B3967253ED2CD00864293 /* GraphListingTableCell.swift in Sources */,
+				1BFCE64025E51DE10019A4B2 /* DeliveryDetailsTableCell.swift in Sources */,
 				1B6B049E25665C6500CDEF66 /* GrievancesHistoryTableCell.swift in Sources */,
+				1BFCE64725E51DE10019A4B2 /* BookingDetailsTableCell.swift in Sources */,
 				1B47F9A325A5F81C00FC74A4 /* IncidentInvestigationViewController.swift in Sources */,
+				1BFCE63E25E51DE10019A4B2 /* DManDetailsTableCell.swift in Sources */,
+				1BFCE63D25E51DE10019A4B2 /* TBagDetailsTableCell.swift in Sources */,
 				605CE7752541977100509434 /* PinValidator.swift in Sources */,
 				60C34FE3253985DD00495944 /* HomeScreenViewController.swift in Sources */,
 				1BB7FA4425B70CF8003AC7C4 /* IMSFilesAccordingRemarksViewController.swift in Sources */,
@@ -765,6 +839,7 @@
 				609922962547F43900534577 /* HRNotifications.swift in Sources */,
 				1B326588259C95BF001B94C0 /* IMSDashboardViewController.swift in Sources */,
 				60E99924253D848D00BCDAD1 /* RequestListingTableCell.swift in Sources */,
+				1BFCE62D25E51B180019A4B2 /* TrackHomeViewController.swift in Sources */,
 				6010F4172540622500CF8597 /* NetworkCalls.swift in Sources */,
 				60E99911253D4F1300BCDAD1 /* PieChartCollectionCell.swift in Sources */,
 				6006955A254994D400EB3865 /* HRHelpDeskRequestViewController.swift in Sources */,
@@ -780,6 +855,7 @@
 				1B590C64255818E300C413AA /* WatchAllRequestsViewController.swift in Sources */,
 				1B71451825AF7E9A0058C36C /* IMSHistoryViewController.swift in Sources */,
 				1B6B04A3256660CD00CDEF66 /* GrievacneDownloadsTableCell.swift in Sources */,
+				1BFCE64225E51DE10019A4B2 /* RBagDetailsTableCell.swift in Sources */,
 				1B1C0B692583DBB500AAAAE9 /* NewRequestsListingTableCell.swift in Sources */,
 				1B6B049A256642FF00CDEF66 /* GrievanceRemarksHistoryViewController.swift in Sources */,
 				1B77CE842562509B00A821E7 /* DownloadListViewController.swift in Sources */,
@@ -949,6 +1025,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.tcs.tcsoneapp;
 				PRODUCT_NAME = "One App";
 				SWIFT_VERSION = 4.2;
@@ -971,6 +1048,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.tcs.tcsoneapp;
 				PRODUCT_NAME = "One App";
 				SWIFT_VERSION = 4.2;
