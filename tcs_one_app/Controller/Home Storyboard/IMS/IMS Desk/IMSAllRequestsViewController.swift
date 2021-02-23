@@ -43,6 +43,9 @@ class IMSAllRequestsViewController: BaseViewController {
     
     var filtered_status = ""
     
+    
+    var current_user = ""
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = "All Requests"
@@ -50,10 +53,60 @@ class IMSAllRequestsViewController: BaseViewController {
         self.makeTopCornersRounded(roundView: self.mainView)
         self.selected_query = "Weekly"
         self.tableView.register(UINib(nibName: "RequestListingTableCell", bundle: nil), forCellReuseIdentifier: "RequestListingCell")
-        self.tableView.rowHeight = 70
+//        self.tableView.rowHeight = 70
+        self.tableView.rowHeight = 100
         
 //        self.searchTextField.delegate = self
         user_permission = AppDelegate.sharedInstance.db!.read_tbl_UserPermission()
+        
+        
+        for perm in user_permission {
+            var breakk = false
+            let p = perm.PERMISSION
+            for constant in IMSAllPermissions {
+                if p == constant {
+                    switch p {
+                    case IMS_Submitted, IMS_Inprogress_Ro, IMS_Inprogress_Rhod:
+                        current_user = IMS_InputBy_LineManager
+                        break
+                    case IMS_Inprogress_Hod:
+                        current_user = IMS_InputBy_Hod
+                        break
+                    case IMS_Inprogress_Cs:
+                        current_user = IMS_InputBy_CentralSecurity
+                        break
+                    case IMS_Inprogress_As:
+                        current_user = IMS_InputBy_AreaSecurity
+                        break
+                    case IMS_Inprogress_Hs, IMS_Inprogress_Rds:
+                        current_user = IMS_InputBy_HeadSecurity
+                        break
+                    case IMS_Inprogress_Ds:
+                        current_user = IMS_InputBy_DirectorSecurity
+                        break
+                    case IMS_Inprogress_Fs, IMS_Inprogress_Ins:
+                        current_user = IMS_InputBy_FinancialService
+                        break
+                    case IMS_Inprogress_Hr:
+                        current_user = IMS_InputBy_HumanResource
+                        break
+                    case IMS_Inprogress_Fi:
+                        current_user = IMS_InputBy_Finance
+                        break
+                    case IMS_Inprogress_Ca:
+                        current_user = IMS_InputBy_Controller
+                        break
+                    default:
+                        break
+                    }
+                    breakk = true
+                    break
+                }
+            }
+            if breakk {
+                break
+            }
+        }
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -104,6 +157,48 @@ class IMSAllRequestsViewController: BaseViewController {
              query = "SELECT * FROM REQUEST_LOGS WHERE CREATED_DATE >= '\(startday!)' AND CREATED_DATE <= '\(endday!)' AND MODULE_ID = '\(CONSTANT_MODULE_ID)' AND CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)'"
         }
         tbl_request_logs = AppDelegate.sharedInstance.db?.read_tbl_hr_request(query: query)
+        var temp_logs : [tbl_Hr_Request_Logs]?
+        if let _ = tbl_request_logs {
+            temp_logs = [tbl_Hr_Request_Logs]()
+
+            for index in tbl_request_logs! {
+                let permissions = AppDelegate.sharedInstance.db?.read_tbl_UserPermission()
+                let isGranted = permissions?.contains(where: { (perm) -> Bool in
+                    let permission = String(perm.PERMISSION.lowercased().split(separator: " ").last!)
+                    return permission == index.TICKET_STATUS?.lowercased()
+                }) ?? false
+
+                if index.LOGIN_ID == Int(CURRENT_USER_LOGGED_IN_ID) && isGranted {
+                    if current_user == IMS_Remarks_Line_Manager {
+                        if index.LINE_MANAGER1 == Int(CURRENT_USER_LOGGED_IN_ID)! {
+                            temp_logs?.append(index)
+                            continue
+                        }
+                    }
+                    if current_user == IMS_Remarks_Department_Head {
+                        if index.LINE_MANAGER2 == Int(CURRENT_USER_LOGGED_IN_ID)! {
+                            temp_logs?.append(index)
+                            continue
+                        }
+                    }
+                }
+                let query = "SELECT * FROM \(db_grievance_remarks) WHERE EMPL_NO = '\(Int(CURRENT_USER_LOGGED_IN_ID)!)' AND TICKET_ID = '\(index.SERVER_ID_PK!)' AND REMARKS_INPUT = '\(current_user)'"
+                
+                
+                let history = AppDelegate.sharedInstance.db?.read_tbl_hr_grievance(query: query)
+                if history!.count > 0 {
+                    temp_logs?.append(index)
+                    continue
+                }
+                if index.LOGIN_ID == Int(CURRENT_USER_LOGGED_IN_ID) {
+                    continue
+                }
+                else {
+                    temp_logs?.append(index)
+                }
+            }
+        }
+        tbl_request_logs = temp_logs
         
         if filtered_status == "" {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
@@ -118,9 +213,9 @@ class IMSAllRequestsViewController: BaseViewController {
     func setupTableViewHeight(isFiltered: Bool) {
         var height: CGFloat = 0.0
         if isFiltered {
-            height = CGFloat((filtered_data!.count * 70) + 300)
+            height = CGFloat((filtered_data!.count * 100) + 300)
         } else {
-            height = CGFloat((tbl_request_logs!.count * 70) + 300)
+            height = CGFloat((tbl_request_logs!.count * 100) + 300)
         }
         self.mainViewHeightConstraint.constant = 280
         switch UIDevice().type {
@@ -209,7 +304,6 @@ class IMSAllRequestsViewController: BaseViewController {
             self.inreviewProgressView.value = CGFloat(approvedCount ?? 0)
             self.closedProgressView.value = CGFloat(rejectedCount ?? 0)
         }
-        
     }
     
     func filteredData(status: String) {
@@ -254,7 +348,7 @@ class IMSAllRequestsViewController: BaseViewController {
         }
         
         controller.selected_query = self.selected_query
-//        controller.delegate = self
+        controller.delegate = self
         controller.modalTransitionStyle = .crossDissolve
         if #available(iOS 13.0, *) {
             controller.modalPresentationStyle = .overFullScreen
@@ -266,7 +360,7 @@ class IMSAllRequestsViewController: BaseViewController {
     @IBAction func sortedBtnTapped(_ sender: UIButton) {
         if self.sortedImages[sender.tag].image != nil {
             self.sortedImages[sender.tag].image = nil
-            
+            self.filtered_status = ""
             self.isFiltered = false
             self.tableView.reloadData()
             self.setupTableViewHeight(isFiltered: false)
@@ -303,6 +397,7 @@ extension IMSAllRequestsViewController: DateSelectionDelegate {
     
     func dateSelection(numberOfDays: Int, selected_query: String) {
         self.selected_query = selected_query
+        self.numberOfDays = numberOfDays
         self.monthlyBtn.setTitle(selected_query, for: .normal)
         
         self.start_day = nil
@@ -348,32 +443,73 @@ extension IMSAllRequestsViewController: UITableViewDataSource, UITableViewDelega
             data = self.tbl_request_logs![indexPath.row]
         }
         cell.mainHeading.text = data!.INCIDENT_TYPE!
-        cell.subHeading.text = data!.DETAIL_QUERY!
+        if let department = AppDelegate.sharedInstance.db?.read_tbl_department(query: "SELECT * FROM \(db_lov_department) WHERE SERVER_ID_PK = '\(data?.DEPARTMENT ?? "")'").first {
+            cell.subHeading.text = department.DEPAT_NAME
+        }
         cell.date.text = data!.CREATED_DATE?.dateSeperateWithT ?? ""
+        //HR FEEDBACK
+        cell.ticketID.text = "Ticket Id: \(data!.SERVER_ID_PK!)"
+        //HR FEEDBACK
         
-        if data!.TICKET_STATUS == IMS_Status_Submitted {
+        switch data!.TICKET_STATUS {
+        case IMS_Status_Submitted:
             cell.status.text = "Submitted"
             cell.status.textColor = UIColor.pendingColor()
-        } else if data!.TICKET_STATUS == IMS_Status_Inprogress ||
-                    data!.TICKET_STATUS == IMS_Status_Inprogress_Rds ||
-                    data!.TICKET_STATUS == IMS_Status_Inprogress_Ro ||
-                    data!.TICKET_STATUS == IMS_Status_Inprogress_Rm ||
-                    data!.TICKET_STATUS == IMS_Status_Inprogress_Hod ||
-                    data!.TICKET_STATUS == IMS_Status_Inprogress_Cs ||
-                    data!.TICKET_STATUS == IMS_Status_Inprogress_As ||
-                    data!.TICKET_STATUS == IMS_Status_Inprogress_Hs ||
-                    data!.TICKET_STATUS == IMS_Status_Inprogress_Ds ||
-                    data!.TICKET_STATUS == IMS_Status_Inprogress_Fs ||
-                    data!.TICKET_STATUS == IMS_Status_Inprogress_Ins ||
-                    data!.TICKET_STATUS == IMS_Status_Inprogress_Hr ||
-                    data!.TICKET_STATUS == IMS_Status_Inprogress_Fi ||
-                    data!.TICKET_STATUS == IMS_Status_Inprogress_Ca ||
-                    data!.TICKET_STATUS == IMS_Status_Inprogress_Rhod {
+            break
+        case IMS_Status_Inprogress:
             cell.status.text = IMS_Status_Inprogress
             cell.status.textColor = UIColor.approvedColor()
-        } else {
-            cell.status.text = "Closed"
+            break
+        case IMS_Status_Inprogress_Rm:
+            cell.status.text = INPROGRESS_INITIATOR
+            cell.status.textColor = UIColor.approvedColor()
+            break
+        case IMS_Status_Inprogress_Ro, IMS_Status_Inprogress_Rhod:
+            cell.status.text = INPROGRESS_LINEMANAGER
+            cell.status.textColor = UIColor.approvedColor()
+            break
+        case IMS_Status_Inprogress_Hod:
+            cell.status.text = INPROGRESS_HOD
+            cell.status.textColor = UIColor.approvedColor()
+            break
+        case IMS_Status_Inprogress_Cs:
+            cell.status.text = INPROGRESS_CS
+            cell.status.textColor = UIColor.approvedColor()
+            break
+        case IMS_Status_Inprogress_As:
+            cell.status.text = INPROGRESS_AS
+            cell.status.textColor = UIColor.approvedColor()
+            break
+        case IMS_Status_Inprogress_Hs, IMS_Status_Inprogress_Rds:
+            cell.status.text = INPROGRESS_HS
+            cell.status.textColor = UIColor.approvedColor()
+            break
+        case IMS_Status_Inprogress_Ds:
+            cell.status.text = INPROGRESS_DS
+            cell.status.textColor = UIColor.approvedColor()
+            break
+        case IMS_Status_Inprogress_Fs, IMS_Status_Inprogress_Ins:
+            cell.status.text = INPROGRESS_FS
+            cell.status.textColor = UIColor.approvedColor()
+            break
+        case IMS_Status_Inprogress_Hr:
+            cell.status.text = INPROGRESS_HR
+            cell.status.textColor = UIColor.approvedColor()
+            break
+        case IMS_Status_Inprogress_Fi:
+            cell.status.text = INPROGRESS_FI
+            cell.status.textColor = UIColor.approvedColor()
+            break
+        case IMS_Status_Inprogress_Ca:
+            cell.status.text = INPROGRESS_CA
+            cell.status.textColor = UIColor.approvedColor()
+            break
+        case IMS_Status_Closed:
+            cell.status.text = IMS_Status_Closed
             cell.status.textColor = UIColor.rejectedColor()
+        default:
+            print("Wrong Ticket Status")
+            break
         }
         
         cell.type.text = "IMS"
@@ -475,4 +611,3 @@ extension IMSAllRequestsViewController: UITableViewDataSource, UITableViewDelega
         }
     }
 }
-

@@ -164,6 +164,12 @@ class GrievanceViewRequestViewController: BaseViewController {
                     case "Responded", "Submitted":
                         status.text = "Inprogress Er-Manager"
                         break
+                    case "Inprogress-Srhrbp":
+                        status.text = "Inprogress-Srhrbp"
+                        break
+                    case "Inprogress-Ceo":
+                        status.text = "Inprogress-Ceo"
+                        break
                     default:
                         break
                     }
@@ -190,14 +196,14 @@ class GrievanceViewRequestViewController: BaseViewController {
             securityBtn.isHidden = true
             self.ticket_status = request_logs?.TICKET_STATUS ?? ""
             
-            if request_logs?.TICKET_STATUS ?? "" == "Submitted" {
-                status.text = "Submitted"
-            } else if request_logs?.TICKET_STATUS ?? "" == "Closed" {
-                status.text = "Closed"
-            } else {
-                status.text = INREVIEW
-            }
-            print(self.ticket_status)
+//            if request_logs?.TICKET_STATUS ?? "" == "Submitted" {
+//                status.text = "Submitted"
+//            } else if request_logs?.TICKET_STATUS ?? "" == "Closed" {
+//                status.text = "Closed"
+//            } else {
+//                status.text = INREVIEW
+//            }
+//            print(self.ticket_status)
             
             for permission in user_permission {
                 let s = String(permission.PERMISSION.lowercased().split(separator: " ").last!)

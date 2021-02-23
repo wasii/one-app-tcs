@@ -23,7 +23,7 @@ class IMSFilesViewController: BaseViewController {
     var fileDownloadedURL: URL?
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.title = "Downloads"
+        self.title = "IMS"
         
         self.makeTopCornersRounded(roundView: self.mainView)
         self.tableView.register(UINib(nibName: "GrievacneDownloadsTableCell", bundle: nil), forCellReuseIdentifier: "GrievacneDownloadsCell")
@@ -220,7 +220,7 @@ extension IMSFilesViewController: UITableViewDelegate, UITableViewDataSource {
         
         let fileSize = Double(data.fileSize)
         
-        cell.fileSize.text = String(format: "(%.4f MB)", (fileSize! / 1024) / 1024)
+        cell.fileSize.text = String(format: "(%.4f MB)", (fileSize! / 1000)/1024)
         
         cell.downloadBtn.tag = indexPath.row
         cell.downloadBtn.addTarget(self, action: #selector(downloadFile(sender:)), for: .touchUpInside)
@@ -237,7 +237,7 @@ extension IMSFilesViewController: UITableViewDelegate, UITableViewDataSource {
         let fileUrl = self.fileAttachments![sender.tag].fileUrl
         let fileName = String(fileUrl.split(separator: "/").last!)
         
-        let url = URL(string: fileUrl)
+        let url = URL(string: fileUrl.replacingOccurrences(of: " ", with: "%20"))
 
         let fileManager = FileManager.default
         let documentsURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first!
