@@ -162,6 +162,7 @@ class IMSAllRequestsViewController: BaseViewController {
             temp_logs = [tbl_Hr_Request_Logs]()
 
             for index in tbl_request_logs! {
+                print(index.SERVER_ID_PK!)
                 let permissions = AppDelegate.sharedInstance.db?.read_tbl_UserPermission()
                 
                 let isGranted = permissions?.contains(where: { (perm) -> Bool in
@@ -182,6 +183,8 @@ class IMSAllRequestsViewController: BaseViewController {
                             continue
                         }
                     }
+                    temp_logs?.append(index)
+                    continue
                 }
                 let query = "SELECT * FROM \(db_grievance_remarks) WHERE EMPL_NO = '\(Int(CURRENT_USER_LOGGED_IN_ID)!)' AND TICKET_ID = '\(index.SERVER_ID_PK!)' AND REMARKS_INPUT = '\(current_user)'"
                 
