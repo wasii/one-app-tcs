@@ -65,7 +65,7 @@ class GrievanceHelpDeskViewController: BaseViewController {
         super.viewDidLoad()
         
         self.mainViewHeightConstraint.constant = 600.0
-        self.title = "Grievance Help Desk"
+        self.title = "Awaz Help Desk"
         makeTopCornersRounded(roundView: self.mainView)
         
         self.selected_query = "Weekly"
@@ -242,11 +242,11 @@ class GrievanceHelpDeskViewController: BaseViewController {
         }
         
         if listing_responsible_bar_count! > 0 {
-            user_permission_table_list?.append(UserPermssionsTableList(title: "Grievance Requests", imageName: "helpdesk"))
+            user_permission_table_list?.append(UserPermssionsTableList(title: "Awaz Requests", imageName: "helpdesk"))
         }
         
         if listing_management_bar_count! > 0 {
-            user_permission_table_list?.append(UserPermssionsTableList(title: "Grievance Monitoring", imageName: "helpdesk"))
+            user_permission_table_list?.append(UserPermssionsTableList(title: "Awaz Monitoring", imageName: "helpdesk"))
         }
         
         if let _ = self.user_permission_table_list {
@@ -564,7 +564,7 @@ extension GrievanceHelpDeskViewController: UITableViewDataSource, UITableViewDel
                     //HR FEEDBACK
                     cell.ticketID.text = "Ticket Id: \(data.SERVER_ID_PK!)"
                     //HR FEEDBACK
-                    cell.type.text = "HR"
+                    cell.type.text = "Awaz"
                     return cell
                 }
             }
@@ -601,7 +601,7 @@ extension GrievanceHelpDeskViewController: UITableViewDataSource, UITableViewDel
                 cell.status.textColor = UIColor.rejectedColor()
             }
             
-            cell.type.text = "HR"
+            cell.type.text = "Awaz"
             return cell
         }
     }
@@ -611,12 +611,12 @@ extension GrievanceHelpDeskViewController: UITableViewDataSource, UITableViewDel
         if tableView == permissionTableView {
             self.permissionTableView.deselectRow(at: indexPath, animated: true)
             switch self.user_permission_table_list![indexPath.row].title {
-                case "Grievance Requests":
+                case "Awaz Requests":
                     let controller = self.storyboard?.instantiateViewController(withIdentifier: "GrievanceHelpDeskRequestsViewController") as! GrievanceHelpDeskRequestsViewController
                     
                     self.navigationController?.pushViewController(controller, animated: true)
                     break
-                case "Grievance Monitoring":
+                case "Awaz Monitoring":
                     let storyboard = UIStoryboard(name: "Home", bundle: nil)
                     let controller = storyboard.instantiateViewController(withIdentifier: "NewChartListingViewController") as! NewChartListingViewController
                     controller.title = "Dashboard"

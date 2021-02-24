@@ -163,6 +163,7 @@ class IMSAllRequestsViewController: BaseViewController {
 
             for index in tbl_request_logs! {
                 let permissions = AppDelegate.sharedInstance.db?.read_tbl_UserPermission()
+                
                 let isGranted = permissions?.contains(where: { (perm) -> Bool in
                     let permission = String(perm.PERMISSION.lowercased().split(separator: " ").last!)
                     return permission == index.TICKET_STATUS?.lowercased()
