@@ -843,7 +843,9 @@ extension GrievanceNewRequestViewController: ConfirmationProtocol {
             }
         })
     }
-    func noButtonTapped() {}
+    func noButtonTapped() {
+        self.submitBtn.isEnabled = true
+    }
 }
 
 

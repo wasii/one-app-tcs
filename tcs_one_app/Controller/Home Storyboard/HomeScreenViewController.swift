@@ -138,7 +138,7 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
                                                   rejected: "Rejected",
                                                   tag: module.SERVER_ID_PK)
                 break
-            case "Grievance":
+            case "Awaz":
                 chart.pieChart = self.setupGraphs(pieChartView: chart.pieChart,
                                                   module_id: module.SERVER_ID_PK,
                                                   pending: "Submitted",
@@ -345,7 +345,7 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
                     }
                     break
                 case 1:
-                    floaty.addItem("Add Grievance Request", icon: UIImage(named: "helpdesk")) { item in
+                    floaty.addItem("Add Awaz Request", icon: UIImage(named: "helpdesk")) { item in
                         CONSTANT_MODULE_ID = AppDelegate.sharedInstance.db?.read_tbl_UserModule(query: "SELECT * FROM \(db_user_module) WHERE TAGNAME = '\(MODULE_TAG_GRIEVANCE)';").first?.SERVER_ID_PK ?? -1
                         let storyboard = UIStoryboard(name: "GrievanceStoryboard", bundle: nil)
                         let controller = storyboard.instantiateViewController(withIdentifier: "GrievanceNewRequestViewController") as! GrievanceNewRequestViewController
@@ -461,7 +461,7 @@ extension HomeScreenViewController: UICollectionViewDelegate, UICollectionViewDa
             let controller = self.storyboard?.instantiateViewController(withIdentifier: "HRHelpDeskViewController") as! HRHelpDeskViewController
             self.navigationController?.pushViewController(controller, animated: true)
             break
-        case "Grievance":
+        case "Awaz":
             CONSTANT_MODULE_ID = AppDelegate.sharedInstance.db?.read_tbl_UserModule(query: "SELECT * FROM \(db_user_module) WHERE TAGNAME = '\(MODULE_TAG_GRIEVANCE)';").first?.SERVER_ID_PK ?? -1
             let storyboard = UIStoryboard(name: "GrievanceStoryboard", bundle: nil)
             let controller = storyboard.instantiateViewController(withIdentifier: "GrievanceHelpDeskViewController") as! GrievanceHelpDeskViewController
