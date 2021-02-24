@@ -138,7 +138,7 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
                                                   rejected: "Rejected",
                                                   tag: module.SERVER_ID_PK)
                 break
-            case "Grievance":
+            case "Awaz":
                 chart.pieChart = self.setupGraphs(pieChartView: chart.pieChart,
                                                   module_id: module.SERVER_ID_PK,
                                                   pending: "Submitted",
@@ -146,14 +146,14 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
                                                   rejected: "Closed",
                                                   tag: module.SERVER_ID_PK)
                 break
-            case "IMS":
-                chart.pieChart = self.setupGraphs(pieChartView: chart.pieChart,
-                                                  module_id: module.SERVER_ID_PK,
-                                                  pending: "Submitted",
-                                                  approved: INREVIEW,
-                                                  rejected: "Closed",
-                                                  tag: module.SERVER_ID_PK)
-            break
+//            case "IMS":
+//                chart.pieChart = self.setupGraphs(pieChartView: chart.pieChart,
+//                                                  module_id: module.SERVER_ID_PK,
+//                                                  pending: "Submitted",
+//                                                  approved: INREVIEW,
+//                                                  rejected: "Closed",
+//                                                  tag: module.SERVER_ID_PK)
+//            break
             default:
                 break
             }
@@ -334,27 +334,18 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
         floaty.plusColor = UIColor.white
         floaty.buttonColor = UIColor.nativeRedColor()
         if let modules = self.module {
-            for (index,_) in modules.enumerated() {
-                switch index {
-                case 0:
-                    floaty.addItem("Track", icon: UIImage(named: "helpdesk")) { item in
-                        let storyboard = UIStoryboard(name: "TrackStoryboard", bundle: nil)
-                        let controller = storyboard.instantiateViewController(withIdentifier: "TrackHomeViewController") as! TrackHomeViewController
+            for i in 0..<3  {
+                switch i {
+                case 2:
+                    floaty.addItem("Add HR Request", icon: UIImage(named: "helpdesk")) { item in
+                        CONSTANT_MODULE_ID = AppDelegate.sharedInstance.db?.read_tbl_UserModule(query: "SELECT * FROM \(db_user_module) WHERE TAGNAME = '\(MODULE_TAG_HR)';").first?.SERVER_ID_PK ?? -1
+                        let controller = self.storyboard?.instantiateViewController(withIdentifier: "NewRequestViewController") as! NewRequestViewController
                         self.navigationController?.pushViewController(controller, animated: true)
-
+                      
                     }
                     break
                 case 1:
-                    floaty.addItem("Add IMS Request", icon: UIImage(named: "helpdesk")) { item in
-                        CONSTANT_MODULE_ID = AppDelegate.sharedInstance.db?.read_tbl_UserModule(query: "SELECT * FROM \(db_user_module) WHERE TAGNAME = '\(MODULE_TAG_IMS)';").first?.SERVER_ID_PK ?? -1
-                        let storyboard = UIStoryboard(name: "IMSStoryboard", bundle: nil)
-                        let controller = storyboard.instantiateViewController(withIdentifier: "IMSNewRequestViewController") as! IMSNewRequestViewController
-                        self.navigationController?.pushViewController(controller, animated: true)
-
-                    }
-                    break
-                case 2:
-                    floaty.addItem("Add Grievance Request", icon: UIImage(named: "helpdesk")) { item in
+                    floaty.addItem("Add Awaz Request", icon: UIImage(named: "helpdesk")) { item in
                         CONSTANT_MODULE_ID = AppDelegate.sharedInstance.db?.read_tbl_UserModule(query: "SELECT * FROM \(db_user_module) WHERE TAGNAME = '\(MODULE_TAG_GRIEVANCE)';").first?.SERVER_ID_PK ?? -1
                         let storyboard = UIStoryboard(name: "GrievanceStoryboard", bundle: nil)
                         let controller = storyboard.instantiateViewController(withIdentifier: "GrievanceNewRequestViewController") as! GrievanceNewRequestViewController
@@ -362,10 +353,10 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
                       
                     }
                     break
-                case 3:
-                    floaty.addItem("Add HR Request", icon: UIImage(named: "helpdesk")) { item in
-                        CONSTANT_MODULE_ID = AppDelegate.sharedInstance.db?.read_tbl_UserModule(query: "SELECT * FROM \(db_user_module) WHERE TAGNAME = '\(MODULE_TAG_HR)';").first?.SERVER_ID_PK ?? -1
-                        let controller = self.storyboard?.instantiateViewController(withIdentifier: "NewRequestViewController") as! NewRequestViewController
+                case 0:
+                    floaty.addItem("Track", icon: UIImage(named: "helpdesk")) { item in
+                        let storyboard = UIStoryboard(name: "TrackStoryboard", bundle: nil)
+                        let controller = storyboard.instantiateViewController(withIdentifier: "TrackHomeViewController") as! TrackHomeViewController
                         self.navigationController?.pushViewController(controller, animated: true)
                       
                     }
@@ -374,6 +365,27 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
                     break
                 }
             }
+//            for (index,d) in modules.enumerated() {
+//                switch d.ID {
+////                case 0:
+////                    floaty.addItem("Add IMS Request", icon: UIImage(named: "helpdesk")) { item in
+////                        CONSTANT_MODULE_ID = AppDelegate.sharedInstance.db?.read_tbl_UserModule(query: "SELECT * FROM \(db_user_module) WHERE TAGNAME = '\(MODULE_TAG_IMS)';").first?.SERVER_ID_PK ?? -1
+////                        let storyboard = UIStoryboard(name: "IMSStoryboard", bundle: nil)
+////                        let controller = storyboard.instantiateViewController(withIdentifier: "IMSNewRequestViewController") as! IMSNewRequestViewController
+////                        self.navigationController?.pushViewController(controller, animated: true)
+////
+////                    }
+////                    break
+//                case 2:
+//
+//                case 1:
+//
+//                case 4:
+//
+//                default:
+//                    break
+//                }
+//            }
         }
         floaty.paddingX = (UIApplication.shared.keyWindow?.safeAreaInsets.right ?? 0) + 25
         floaty.paddingY = (UIApplication.shared.keyWindow?.safeAreaInsets.bottom ?? 0) + 75
@@ -449,7 +461,7 @@ extension HomeScreenViewController: UICollectionViewDelegate, UICollectionViewDa
             let controller = self.storyboard?.instantiateViewController(withIdentifier: "HRHelpDeskViewController") as! HRHelpDeskViewController
             self.navigationController?.pushViewController(controller, animated: true)
             break
-        case "Grievance":
+        case "Awaz":
             CONSTANT_MODULE_ID = AppDelegate.sharedInstance.db?.read_tbl_UserModule(query: "SELECT * FROM \(db_user_module) WHERE TAGNAME = '\(MODULE_TAG_GRIEVANCE)';").first?.SERVER_ID_PK ?? -1
             let storyboard = UIStoryboard(name: "GrievanceStoryboard", bundle: nil)
             let controller = storyboard.instantiateViewController(withIdentifier: "GrievanceHelpDeskViewController") as! GrievanceHelpDeskViewController
@@ -461,12 +473,12 @@ extension HomeScreenViewController: UICollectionViewDelegate, UICollectionViewDa
             let controller = storyboard.instantiateViewController(withIdentifier: "TrackHomeViewController") as! TrackHomeViewController
             self.navigationController?.pushViewController(controller, animated: true)
             break
-        case "IMS":
-            CONSTANT_MODULE_ID = AppDelegate.sharedInstance.db?.read_tbl_UserModule(query: "SELECT * FROM \(db_user_module) WHERE TAGNAME = '\(MODULE_TAG_IMS)';").first?.SERVER_ID_PK ?? -1
-            let storyboard = UIStoryboard(name: "IMSStoryboard", bundle: nil)
-            let controller = storyboard.instantiateViewController(withIdentifier: "IMSDashboardViewController") as! IMSDashboardViewController
-            self.navigationController?.pushViewController(controller, animated: true)
-            break
+//        case "IMS":
+//            CONSTANT_MODULE_ID = AppDelegate.sharedInstance.db?.read_tbl_UserModule(query: "SELECT * FROM \(db_user_module) WHERE TAGNAME = '\(MODULE_TAG_IMS)';").first?.SERVER_ID_PK ?? -1
+//            let storyboard = UIStoryboard(name: "IMSStoryboard", bundle: nil)
+//            let controller = storyboard.instantiateViewController(withIdentifier: "IMSDashboardViewController") as! IMSDashboardViewController
+//            self.navigationController?.pushViewController(controller, animated: true)
+//            break
             
         default:
             break

@@ -239,7 +239,7 @@ extension NotificationsViewController: UITableViewDelegate, UITableViewDataSourc
             break
         case 2:
             cell.status.text = data.TICKET_STATUS
-            cell.type.text = "Grievance"
+            cell.type.text = "Awaz"
             switch data.TICKET_STATUS.lowercased() {
             case "submitted":
                 cell.status.textColor = UIColor.pendingColor()
