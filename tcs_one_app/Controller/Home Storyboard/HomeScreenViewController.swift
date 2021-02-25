@@ -334,9 +334,9 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
         floaty.plusColor = UIColor.white
         floaty.buttonColor = UIColor.nativeRedColor()
         if let modules = self.module {
-            for i in 0..<3  {
+            for i in 0..<4  {
                 switch i {
-                case 2:
+                case 3:
                     floaty.addItem("Add HR Request", icon: UIImage(named: "helpdesk")) { item in
                         CONSTANT_MODULE_ID = AppDelegate.sharedInstance.db?.read_tbl_UserModule(query: "SELECT * FROM \(db_user_module) WHERE TAGNAME = '\(MODULE_TAG_HR)';").first?.SERVER_ID_PK ?? -1
                         let controller = self.storyboard?.instantiateViewController(withIdentifier: "NewRequestViewController") as! NewRequestViewController
@@ -344,7 +344,7 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
                       
                     }
                     break
-                case 1:
+                case 2:
                     floaty.addItem("Add Awaz Request", icon: UIImage(named: "helpdesk")) { item in
                         CONSTANT_MODULE_ID = AppDelegate.sharedInstance.db?.read_tbl_UserModule(query: "SELECT * FROM \(db_user_module) WHERE TAGNAME = '\(MODULE_TAG_GRIEVANCE)';").first?.SERVER_ID_PK ?? -1
                         let storyboard = UIStoryboard(name: "GrievanceStoryboard", bundle: nil)
@@ -353,12 +353,19 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
                       
                     }
                     break
-                case 0:
+                case 1:
                     floaty.addItem("Track", icon: UIImage(named: "helpdesk")) { item in
                         let storyboard = UIStoryboard(name: "TrackStoryboard", bundle: nil)
                         let controller = storyboard.instantiateViewController(withIdentifier: "TrackHomeViewController") as! TrackHomeViewController
                         self.navigationController?.pushViewController(controller, animated: true)
                       
+                    }
+                    break
+                case 1:
+                    floaty.addItem("Leadership Awaz", icon: UIImage(named: "helpdesk")) { item in
+//                        let storyboard = UIStoryboard(name: "TrackStoryboard", bundle: nil)
+//                        let controller = storyboard.instantiateViewController(withIdentifier: "TrackHomeViewController") as! TrackHomeViewController
+//                        self.navigationController?.pushViewController(controller, animated: true)
                     }
                     break
                 default:
@@ -471,6 +478,11 @@ extension HomeScreenViewController: UICollectionViewDelegate, UICollectionViewDa
             print("Track")
             let storyboard = UIStoryboard(name: "TrackStoryboard", bundle: nil)
             let controller = storyboard.instantiateViewController(withIdentifier: "TrackHomeViewController") as! TrackHomeViewController
+            self.navigationController?.pushViewController(controller, animated: true)
+            break
+        case "Awaz-Test":
+            let storyboard = UIStoryboard(name: "LeadershipAwaz", bundle: nil)
+            let controller = storyboard.instantiateViewController(withIdentifier: "ChairmenListingViewController") as! ChairmenListingViewController
             self.navigationController?.pushViewController(controller, animated: true)
             break
 //        case "IMS":
