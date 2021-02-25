@@ -146,14 +146,14 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
                                                   rejected: "Closed",
                                                   tag: module.SERVER_ID_PK)
                 break
-//            case "IMS":
-//                chart.pieChart = self.setupGraphs(pieChartView: chart.pieChart,
-//                                                  module_id: module.SERVER_ID_PK,
-//                                                  pending: "Submitted",
-//                                                  approved: INREVIEW,
-//                                                  rejected: "Closed",
-//                                                  tag: module.SERVER_ID_PK)
-//            break
+            case "IMS":
+                chart.pieChart = self.setupGraphs(pieChartView: chart.pieChart,
+                                                  module_id: module.SERVER_ID_PK,
+                                                  pending: "Submitted",
+                                                  approved: INREVIEW,
+                                                  rejected: "Closed",
+                                                  tag: module.SERVER_ID_PK)
+                break
             default:
                 break
             }
