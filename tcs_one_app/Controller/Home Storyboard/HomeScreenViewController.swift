@@ -482,7 +482,7 @@ extension HomeScreenViewController: UICollectionViewDelegate, UICollectionViewDa
             break
         case "Awaz-Test":
             let storyboard = UIStoryboard(name: "LeadershipAwaz", bundle: nil)
-            let controller = storyboard.instantiateViewController(withIdentifier: "ChairmenListingViewController") as! ChairmenListingViewController
+            let controller = storyboard.instantiateViewController(withIdentifier: "NewRequestLeadershipAwazViewController") as! NewRequestLeadershipAwazViewController
             self.navigationController?.pushViewController(controller, animated: true)
             break
 //        case "IMS":

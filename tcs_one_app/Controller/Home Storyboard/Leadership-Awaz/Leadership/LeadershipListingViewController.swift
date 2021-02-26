@@ -7,9 +7,28 @@
 //
 
 import UIKit
+import Charts
+import MBCircularProgressBar
 
-class LeadershipListingViewController: UIViewController {
+class LeadershipListingViewController: BaseViewController {
 
+    @IBOutlet weak var mainView: UIView!
+    @IBOutlet weak var mainViewHeightConstraint: NSLayoutConstraint!
+    
+    @IBOutlet weak var search_textfield: UITextField!
+    @IBOutlet weak var allRequest_btn: UIButton!
+    
+    @IBOutlet weak var this_week_btn: UIButton!
+    @IBOutlet weak var barChartView: BarChartView!
+    
+    @IBOutlet weak var pending_circular_view: MBCircularProgressBarView!
+    @IBOutlet weak var approved_circular_view: MBCircularProgressBarView!
+    @IBOutlet weak var rejected_circular_view: MBCircularProgressBarView!
+    
+    @IBOutlet var sortedImages: [UIImageView]!
+    
+    
+    @IBOutlet weak var tableView: UITableView!
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = "Leadership Awaz"

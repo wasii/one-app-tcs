@@ -66,6 +66,7 @@
 		1B77CE842562509B00A821E7 /* DownloadListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B77CE832562509B00A821E7 /* DownloadListViewController.swift */; };
 		1B77CE87256257B700A821E7 /* GrievanceViewRequestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B77CE86256257B700A821E7 /* GrievanceViewRequestViewController.swift */; };
 		1B7A292425A05E3C005694B6 /* IMSViewUpdateRequestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B7A292325A05E3C005694B6 /* IMSViewUpdateRequestViewController.swift */; };
+		1B96C0A325E8D3020059775C /* NewRequestLeadershipAwazViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B96C0A225E8D3020059775C /* NewRequestLeadershipAwazViewController.swift */; };
 		1B9E6C812562779D006529C3 /* GrievanceViewClosedRequestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B9E6C802562779D006529C3 /* GrievanceViewClosedRequestViewController.swift */; };
 		1BBAEA4D259DA1AA00FBDCB4 /* IMSAllRequestsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BBAEA4C259DA1AA00FBDCB4 /* IMSAllRequestsViewController.swift */; };
 		1BC42B8D257527F7000A63AF /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1BC42B8C257527F7000A63AF /* CloudKit.framework */; };
@@ -195,6 +196,7 @@
 		1B77CE832562509B00A821E7 /* DownloadListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadListViewController.swift; sourceTree = "<group>"; };
 		1B77CE86256257B700A821E7 /* GrievanceViewRequestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GrievanceViewRequestViewController.swift; sourceTree = "<group>"; };
 		1B7A292325A05E3C005694B6 /* IMSViewUpdateRequestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMSViewUpdateRequestViewController.swift; sourceTree = "<group>"; };
+		1B96C0A225E8D3020059775C /* NewRequestLeadershipAwazViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewRequestLeadershipAwazViewController.swift; sourceTree = "<group>"; };
 		1B9E6C802562779D006529C3 /* GrievanceViewClosedRequestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GrievanceViewClosedRequestViewController.swift; sourceTree = "<group>"; };
 		1BBAEA4C259DA1AA00FBDCB4 /* IMSAllRequestsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMSAllRequestsViewController.swift; sourceTree = "<group>"; };
 		1BC42B8C257527F7000A63AF /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
@@ -400,6 +402,7 @@
 			children = (
 				1BF25A4D25E7D49F008CE34F /* Chairmen */,
 				1BF25A4C25E7D496008CE34F /* Leadership */,
+				1B96C0A225E8D3020059775C /* NewRequestLeadershipAwazViewController.swift */,
 			);
 			path = "Leadership-Awaz";
 			sourceTree = "<group>";
@@ -851,6 +854,7 @@
 				609C606025387C4B0051CF28 /* BaseViewController.swift in Sources */,
 				1B6279E72591E5E200C88FEE /* IMSNewRequestViewController.swift in Sources */,
 				60C34FDA25397D1600495944 /* FetchUserDataViewController.swift in Sources */,
+				1B96C0A325E8D3020059775C /* NewRequestLeadershipAwazViewController.swift in Sources */,
 				1B5EAACD255EB71C00F49D09 /* GrievanceNewRequestViewController.swift in Sources */,
 				1B61B2BC25DD25DD00CDAAE2 /* DManDetailsTableCell.swift in Sources */,
 				1B5EAA83255EA4A600F49D09 /* GrievanceHelpDeskRequestsViewController.swift in Sources */,
