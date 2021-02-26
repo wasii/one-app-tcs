@@ -122,44 +122,90 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
     }
     func createChartViews() -> [ChartViews] {
         var chartViews = [ChartViews]()
-        for module in self.module! {
-            if module.MODULENAME == "Track" {
-                continue
-            }
+        for index in 1...5 {
             let chart:ChartViews = Bundle.main.loadNibNamed("ChartViews", owner: self, options: nil)?.first as! ChartViews
-            chart.heading.text = module.MODULENAME
-            
-            switch module.MODULENAME {
-            case "HR Help Desk":
+            switch index {
+            case 1:
+                chart.heading.text = "HR Dashboard"
                 chart.pieChart = self.setupGraphs(pieChartView: chart.pieChart,
-                                                  module_id: module.SERVER_ID_PK,
+                                                  module_id: index,
                                                   pending: "Pending",
                                                   approved: "Completed",
                                                   rejected: "Rejected",
-                                                  tag: module.SERVER_ID_PK)
+                                                  tag: index)
                 break
-            case "Awaz":
+            case 2:
+                chart.heading.text = "Awaz Dashboard"
                 chart.pieChart = self.setupGraphs(pieChartView: chart.pieChart,
-                                                  module_id: module.SERVER_ID_PK,
+                                                  module_id: index,
                                                   pending: "Submitted",
                                                   approved: INREVIEW,
                                                   rejected: "Closed",
-                                                  tag: module.SERVER_ID_PK)
+                                                  tag: index)
                 break
-//            case "IMS":
+            case 4:
+                chart.heading.text = "Leadership Awaz Dashboard"
+                chart.pieChart = self.setupGraphs(pieChartView: chart.pieChart,
+                                                  module_id: index,
+                                                  pending: "Submitted",
+                                                  approved: INREVIEW,
+                                                  rejected: "Closed",
+                                                  tag: index)
+                break
+            case 5:
+                chart.heading.text = "Login Count"
+                chart.pieChart = self.setupGraphs(pieChartView: chart.pieChart,
+                                                  module_id: index,
+                                                  pending: "Web",
+                                                  approved: "Android",
+                                                  rejected: "iOS",
+                                                  tag: index)
+                break
+            default:
+                continue
+            }
+        }
+//        for module in self.module! {
+//            if module.MODULENAME == "Track" {
+//                continue
+//            }
+//            let chart:ChartViews = Bundle.main.loadNibNamed("ChartViews", owner: self, options: nil)?.first as! ChartViews
+//            
+//            
+//            switch module.MODULENAME {
+//            case "HR Help Desk":
+//                chart.heading.text = "HR Dashboard"
+//                chart.pieChart = self.setupGraphs(pieChartView: chart.pieChart,
+//                                                  module_id: module.SERVER_ID_PK,
+//                                                  pending: "Pending",
+//                                                  approved: "Completed",
+//                                                  rejected: "Rejected",
+//                                                  tag: module.SERVER_ID_PK)
+//                break
+//            case "Awaz":
+//                chart.heading.text = "Awaz Dashboard"
 //                chart.pieChart = self.setupGraphs(pieChartView: chart.pieChart,
 //                                                  module_id: module.SERVER_ID_PK,
 //                                                  pending: "Submitted",
 //                                                  approved: INREVIEW,
 //                                                  rejected: "Closed",
 //                                                  tag: module.SERVER_ID_PK)
-//            break
-            default:
-                break
-            }
-            
-            chartViews.append(chart)
-        }
+//                break
+////            case "IMS":
+////                chart.heading.text = "IMS Dashboard"
+////                chart.pieChart = self.setupGraphs(pieChartView: chart.pieChart,
+////                                                  module_id: module.SERVER_ID_PK,
+////                                                  pending: "Submitted",
+////                                                  approved: INREVIEW,
+////                                                  rejected: "Closed",
+////                                                  tag: module.SERVER_ID_PK)
+////            break
+//            default:
+//                break
+//            }
+//            
+//            chartViews.append(chart)
+//        }
         
         
         return chartViews
@@ -217,7 +263,7 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
             let key = data.ticket_status ?? ""
 
             switch tag {
-            case 1:
+            case 1, 4:
                 switch key {
                     case "Pending", "pending":
                         pendingCounter = chartValue
@@ -480,7 +526,7 @@ extension HomeScreenViewController: UICollectionViewDelegate, UICollectionViewDa
             let controller = storyboard.instantiateViewController(withIdentifier: "TrackHomeViewController") as! TrackHomeViewController
             self.navigationController?.pushViewController(controller, animated: true)
             break
-        case "Awaz-Test":
+        case "Leadership Awaz":
             let storyboard = UIStoryboard(name: "LeadershipAwaz", bundle: nil)
             let controller = storyboard.instantiateViewController(withIdentifier: "NewRequestLeadershipAwazViewController") as! NewRequestLeadershipAwazViewController
             self.navigationController?.pushViewController(controller, animated: true)

@@ -305,6 +305,64 @@ class NetworkCalls: NSObject {
                                 print(err.localizedDescription)
                             }
                         }
+                        var login_count = [LoginCount]()
+                        if let data = json.dictionary?[_login_count] {
+                            do {
+                                if let array = data.array {
+                                    for json in array {
+                                        let dictionary = try json.rawData()
+                                        login_count.append(try JSONDecoder().decode(LoginCount.self, from: dictionary))
+                                    }
+                                    AppDelegate.sharedInstance.db?.deleteAll(tableName: db_login_count, handler: { _ in
+                                        for count in login_count {
+                                            AppDelegate.sharedInstance.db?.insert_tbl_login_count(login_count: count)
+                                        }
+                                    })
+                                }
+                            }catch let DecodingError.dataCorrupted(context) {
+                                print(context)
+                            } catch let DecodingError.keyNotFound(key, context) {
+                                print("Key '\(key)' not found:", context.debugDescription)
+                                print("codingPath:", context.codingPath)
+                            } catch let DecodingError.valueNotFound(value, context) {
+                                print("Value '\(value)' not found:", context.debugDescription)
+                                print("codingPath:", context.codingPath)
+                            } catch let DecodingError.typeMismatch(type, context)  {
+                                print("Type '\(type)' mismatch:", context.debugDescription)
+                                print("codingPath:", context.codingPath)
+                            } catch {
+                                print("error: ", error)
+                            }
+                        }
+                        var ad_group = [LeadershipAwazAdGroup]()
+                        if let data = json.dictionary?[_ad_group] {
+                            do {
+                                if let array = data.array {
+                                    for json in array {
+                                        let dictionary = try json.rawData()
+                                        ad_group.append(try JSONDecoder().decode(LeadershipAwazAdGroup.self, from: dictionary))
+                                    }
+                                    AppDelegate.sharedInstance.db?.deleteAll(tableName: db_la_ad_group) { _ in
+                                        for la_adGroup in ad_group {
+                                            AppDelegate.sharedInstance.db?.insert_tbl_la_ad_group(la_adGroup: la_adGroup)
+                                        }
+                                    }
+                                }
+                            }catch let DecodingError.dataCorrupted(context) {
+                                print(context)
+                            } catch let DecodingError.keyNotFound(key, context) {
+                                print("Key '\(key)' not found:", context.debugDescription)
+                                print("codingPath:", context.codingPath)
+                            } catch let DecodingError.valueNotFound(value, context) {
+                                print("Value '\(value)' not found:", context.debugDescription)
+                                print("codingPath:", context.codingPath)
+                            } catch let DecodingError.typeMismatch(type, context)  {
+                                print("Type '\(type)' mismatch:", context.debugDescription)
+                                print("codingPath:", context.codingPath)
+                            } catch {
+                                print("error: ", error)
+                            }
+                        }
                         handler(true, "SUCCESS")
                     } else {
                         //Session Expired

@@ -8,6 +8,7 @@
 
 import UIKit
 import SwiftyJSON
+import FirebaseMessaging
 
 class FetchUserDataViewController: BaseViewController {
     
@@ -666,6 +667,9 @@ class FetchUserDataViewController: BaseViewController {
                         print("error: ", error)
                     }
                 } else {
+                    DispatchQueue.main.async {
+                        self.logRequest_Label.text = "Synced HR Log Requests"
+                    }
                     self.count = 0
                     self.skip = 0
                     self.getHrNotifications()
@@ -787,6 +791,9 @@ extension FetchUserDataViewController {
                             print(err.localizedDescription)
                         }
                     } else {
+                        DispatchQueue.main.async {
+                            self.hrNotification_Label.text = "Synced HR Notifications Log"
+                        }
                         self.navigateHomeScreen()
                     }
 
@@ -826,6 +833,13 @@ extension FetchUserDataViewController {
             
             Helper.topMostController().present(controller, animated: true, completion: nil)
             self.navigationController?.popViewController(animated: true)
+        }
+        Messaging.messaging().subscribe(toTopic: BROADCAST_KEY) { error in
+            guard let err = error else {
+                print("user subscribed")
+                return
+            }
+            print(err.localizedDescription)
         }
     }
 }

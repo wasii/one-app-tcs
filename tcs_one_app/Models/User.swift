@@ -54,6 +54,8 @@ struct User: Codable {
     let productPdt, projectPrjCode, projectPrj, userid: String?
     let userPass, areaCode, stationCode, hubCode: String?
     let region: String?
+    let highness: String?
+    
 
     enum CodingKeys: String, CodingKey {
         case empid = "EMPID"
@@ -142,5 +144,6 @@ struct User: Codable {
         case stationCode = "STATION_CODE"
         case hubCode = "HUB_CODE"
         case region = "REGION"
+        case highness = "HIGHNESS"
     }
 }

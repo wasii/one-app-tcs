@@ -11,7 +11,9 @@ let ACTIVE                  = "ACTIVE"
 let BACKGROUND              = "BACKGROUND"
 let INACTIVE                = "INACTIVE"
 let API_KEY                 = "5E4D0F6D8E12D8EC5EA3BBB11B63B2F88E39A7561F25EC67CCB440F782FD0360"
+let BROADCAST_KEY           = "broadcastios"
 
+let IS_NEW_DATABASE: Bool   = true
 var NOTIFICATION_COUNT      = 0
 
 //API ENDPOINTS
@@ -91,6 +93,9 @@ let _control_category       = "control_category"
 let _risk_type              = "risk_type"
 let _control_type           = "control_type"
 
+//Leadership Awaz Keys
+let _ad_group               = "ad_group"
+let _login_count            = "login_count"
 
 //Local Storage (Database) tablename keys
 let db_user_module          = "USER_MODULE"
@@ -113,6 +118,8 @@ let db_last_sync_status     = "LAST_SYNC_STATUS"
 let db_files                = "FILES_TABLE"
 let db_grievance_remarks    = "GRIEVANCE_REMARKS_TABLE"
 
+let db_login_count          = "LOGIN_COUNT"
+let db_la_ad_group             = "LA_AdGROUP"
 // IMS
 let db_lov_master           = "IMS_LOV_MASTER_TABLE"
 let db_lov_detail           = "IMS_LOV_DETAIL_TABLE"

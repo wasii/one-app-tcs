@@ -27,27 +27,44 @@ class DBHelper {
             let filePath = pathComponent.path
             let fileManager = FileManager.default
             if fileManager.fileExists(atPath: filePath) {
-                print("FILE AVAILABLE: \(pathComponent)")
+                let new_db = UserDefaults.standard.bool(forKey: "NEWDB")
+                if !new_db {
+                    do {
+                        try fileManager.removeItem(at: pathComponent)
+                        UserDefaults.standard.removeObject(forKey: "CurrentUser")
+                        UserDefaults.standard.removeObject(forKey: USER_ACCESS_TOKEN)
+                        UserDefaults.standard.set(true, forKey: "NEWDB")
+                        return self.copy_database(databaseName: databaseName, pathComponent: pathComponent)
+                        
+                    } catch let err {
+                        print(err.localizedDescription)
+                    }
+                }
                 return pathComponent
             } else {
-                if let bundleURL = Bundle.main.url(forResource: databaseName, withExtension: "db") {
-                    do {
-                        try fileManager.copyItem(at: bundleURL, to: pathComponent)
-                        return pathComponent
-                    } catch let error {
-                        print(error.localizedDescription)
-                    }
-                } else {
-                    
-                }
-                print("FILE NOT AVAILABLE")
+                UserDefaults.standard.set(true, forKey: "NEWDB")
+                return self.copy_database(databaseName: databaseName, pathComponent: pathComponent)
             }
         } else {
             print("FILE PATH NOT AVAILABLE")
         }
-
         return nil
-        
+    }
+    
+    private func copy_database(databaseName: String, pathComponent: URL) -> URL? {
+        if let bundleURL = Bundle.main.url(forResource: databaseName, withExtension: "db") {
+            do {
+                let filePath = pathComponent.path
+                let fileManager = FileManager.default
+                try fileManager.copyItem(at: bundleURL, to: pathComponent)
+                return pathComponent
+            } catch let error {
+                print(error.localizedDescription)
+            }
+        } else {
+            
+        }
+        return nil
     }
     func openDatabase(databaseName: String) -> OpaquePointer?
     {
@@ -66,6 +83,23 @@ class DBHelper {
     
     func closeDatabase() {
         sqlite3_close(db)
+    }
+    
+    
+    private func modify_tables() {
+        var createTableStatement: OpaquePointer?
+        let create_la_ad_group = "CREATE TABLE LA_AdGROUP (ID INTEGER PRIMARY KEY AUTOINCREMENT, SERVER_ID_PK    INTEGER, AD_GROUP_NAME TEXT, AD_GROUP_EMAIL_ID TEXT, STATUS TEXT, CREATED_DATE TEXT, CREATED_BY TEXT, UPDATED_DATE TEXT, UPDATED_BY TEXT)"
+        if sqlite3_prepare_v2(db, create_la_ad_group, -1, &createTableStatement, nil) == SQLITE_OK {
+            if sqlite3_step(createTableStatement) == SQLITE_DONE {
+                print("\nLeadership-Awaz AD_GROUP table created.")
+            } else {
+                print("\nLeadership-Awaz AD_GROUP table is not created.")
+            }
+        } else {
+            print("\nCREATE TABLE statement is not prepared.")
+        }
+        sqlite3_finalize(createTableStatement)
+        
     }
     
     //MARK: GLOBAL METHODs
@@ -431,7 +465,7 @@ class DBHelper {
     }
     //MARK: USER_PROFILE
     func insert_tbl_UserProfile(user: User) {
-        let insertStatementString = "INSERT INTO \(db_user_profile)(SERVER_ID_PK,EMP_NAME,GENDER,CNIC_NO,DISABLE_STATUS,CURR_CITY,EMP_CELL_1,EMP_CELL_2,GRADE_CODE,EMP_STATUS,UNIT_CODE,WORKING_DESIG_CODE,DESIG_CODE,DEPT_CODE,SUB_DEPT_CODE,USERID,AREA_CODE,STATION_CODE,HUB_CODE,ACCESSTOKEN) VALUES (?, ?, ?, ?,?, ?, ?, ?,?, ?, ?, ?,?, ?, ?, ?,?, ?, ?, ?);"
+        let insertStatementString = "INSERT INTO \(db_user_profile)(SERVER_ID_PK,EMP_NAME,GENDER,CNIC_NO,DISABLE_STATUS,CURR_CITY,EMP_CELL_1,EMP_CELL_2,GRADE_CODE,EMP_STATUS,UNIT_CODE,WORKING_DESIG_CODE,DESIG_CODE,DEPT_CODE,SUB_DEPT_CODE,USERID,AREA_CODE,STATION_CODE,HUB_CODE,ACCESSTOKEN, HIGHNESS) VALUES (?, ?, ?, ?,?, ?, ?, ?,?, ?, ?, ?,?, ?, ?, ?,?, ?, ?, ?, ?);"
         
         var insertStatement: OpaquePointer? = nil
         if sqlite3_prepare_v2(self.db, insertStatementString, -1, &insertStatement, nil) == SQLITE_OK {
@@ -456,7 +490,7 @@ class DBHelper {
             sqlite3_bind_text(insertStatement, 18, ((user.stationCode ?? "") as NSString).utf8String, -1, nil)
             sqlite3_bind_text(insertStatement, 19, ((user.hubCode ?? "") as NSString).utf8String, -1, nil)
             sqlite3_bind_text(insertStatement, 20, ((UserDefaults.standard.string(forKey: USER_ACCESS_TOKEN) ?? "") as NSString).utf8String, -1, nil)
-            
+            sqlite3_bind_text(insertStatement, 21, ((user.highness ?? "") as NSString).utf8String, -1, nil)
             
             if sqlite3_step(insertStatement) == SQLITE_DONE {
                 //print("\(db_user_profile): Successfully inserted row.")
@@ -497,8 +531,9 @@ class DBHelper {
                 let station_code = String(describing: String(cString: sqlite3_column_text(queryStatement, 18)))
                 let hub_code = String(describing: String(cString: sqlite3_column_text(queryStatement, 19)))
                 let access_token = String(describing: String(cString: sqlite3_column_text(queryStatement, 20)))
+                let highness = String(describing: String(cString: sqlite3_column_text(queryStatement, 21)))
                 
-                tbl_userprofile.append(tbl_UserProfile(ID: id, SERVER_ID_PK: server_id_pk, EMP_NAME: emp_name, GENDER: gender, CNIC_NO: cnic_no, DISABLE_STATUS: disable_status, CURR_CITY: curr_city, EMP_CELL_1: emp_cell_1, EMP_CELL_2: emp_cell_2, GRADE_CODE: grade_code, EMP_STATUS: emp_status, UNIT_CODE: unit_code, WORKING_DESIG_CODE: working_desig_code, DESIG_CODE: desig_code, DEPT_CODE: dept_code, SUB_DEPT_CODE: sub_dept_code, USERID: user_id, AREA_CODE: area_code, STATION_CODE: station_code, HUB_CODE: hub_code, ACCESSTOKEN: access_token))
+                tbl_userprofile.append(tbl_UserProfile(ID: id, SERVER_ID_PK: server_id_pk, EMP_NAME: emp_name, GENDER: gender, CNIC_NO: cnic_no, DISABLE_STATUS: disable_status, CURR_CITY: curr_city, EMP_CELL_1: emp_cell_1, EMP_CELL_2: emp_cell_2, GRADE_CODE: grade_code, EMP_STATUS: emp_status, UNIT_CODE: unit_code, WORKING_DESIG_CODE: working_desig_code, DESIG_CODE: desig_code, DEPT_CODE: dept_code, SUB_DEPT_CODE: sub_dept_code, USERID: user_id, AREA_CODE: area_code, STATION_CODE: station_code, HUB_CODE: hub_code, ACCESSTOKEN: access_token, HIGHNESS: highness))
             }
         } else {
             print("\(db_user_profile): SELECT statement could not be prepared")
@@ -2399,6 +2434,93 @@ class DBHelper {
         }
         return tblLovControlType
     }
+    
+    
+    func insert_tbl_la_ad_group(la_adGroup: LeadershipAwazAdGroup) {
+        let insertStatementString = "INSERT INTO \(db_la_ad_group)(SERVER_ID_PK, AD_GROUP_NAME, AD_GROUP_EMAIL_ID, STATUS, CREATED_DATE, CREATED_BY, UPDATED_DATE, UPDATED_BY) VALUES (?,?,?,?,?,?,?,?);"
+        
+        var insertStatement: OpaquePointer? = nil
+        if sqlite3_prepare_v2(self.db, insertStatementString, -1, &insertStatement, nil) == SQLITE_OK {
+            sqlite3_bind_int(insertStatement, 1, Int32(la_adGroup.adMastID))
+            sqlite3_bind_text(insertStatement, 2, ((la_adGroup.adGroupName ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 3, ((la_adGroup.adGroupEmailID ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 4, ((la_adGroup.status ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 5, ((la_adGroup.createdDate ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 6, ((la_adGroup.createdBy ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 7, ((la_adGroup.updatedDate ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 8, ((la_adGroup.updatedBy ?? "") as NSString).utf8String, -1, nil)
+            if sqlite3_step(insertStatement) == SQLITE_DONE {
+                print("\(db_la_ad_group): Successfully inserted row.")
+            } else {
+                print("\(db_la_ad_group): Could not insert row.")
+            }
+        } else {
+            print("\(db_la_ad_group): INSERT statement could not be prepared.")
+        }
+        sqlite3_finalize(insertStatement)
+    }
+    func read_tbl_la_ad_group(query: String) -> [LeadershipAwazAdGroup] {
+        let queryStatementString = query
+        var queryStatement: OpaquePointer? = nil
+        var tblLAAdGroup: [LeadershipAwazAdGroup] = []
+        
+        if sqlite3_prepare_v2(db, queryStatementString, -1, &queryStatement, nil) == SQLITE_OK {
+            while sqlite3_step(queryStatement) == SQLITE_ROW {
+                let id = Int(sqlite3_column_int(queryStatement, 0))
+                
+                let adMastID = Int(sqlite3_column_int(queryStatement, 1))
+                let adGroupName = String(describing: String(cString: sqlite3_column_text(queryStatement, 2)))
+                let adGroupEmailID = String(describing: String(cString: sqlite3_column_text(queryStatement, 3)))
+                let status = String(describing: String(cString: sqlite3_column_text(queryStatement, 4)))
+                let createdDate = String(describing: String(cString: sqlite3_column_text(queryStatement, 5)))
+                let createdBy = String(describing: String(cString: sqlite3_column_text(queryStatement, 6)))
+                let updatedDate = String(describing: String(cString: sqlite3_column_text(queryStatement, 7)))
+                let updatedBy = String(describing: String(cString: sqlite3_column_text(queryStatement, 8)))
+                
+                tblLAAdGroup.append(LeadershipAwazAdGroup(adMastID: adMastID, adGroupName: adGroupName, adGroupEmailID: adGroupEmailID, status: status, createdDate: createdDate, createdBy: createdBy, updatedDate: updatedDate, updatedBy: updatedBy))
+            }
+        } else {
+            print("SELECT statement \(db_la_ad_group) could not be prepared")
+        }
+        return tblLAAdGroup
+    }
+    
+    func insert_tbl_login_count(login_count: LoginCount) {
+        let insertStatementString = "INSERT INTO \(db_login_count)(APPLICATION, COUNT) VALUES (?,?);"
+        
+        var insertStatement: OpaquePointer? = nil
+        if sqlite3_prepare_v2(self.db, insertStatementString, -1, &insertStatement, nil) == SQLITE_OK {
+            sqlite3_bind_text(insertStatement, 1, (login_count.application as NSString).utf8String, -1, nil)
+            sqlite3_bind_int(insertStatement, 2, Int32(login_count.countXEmpno))
+            if sqlite3_step(insertStatement) == SQLITE_DONE {
+                print("\(db_login_count): Successfully inserted row.")
+            } else {
+                print("\(db_login_count): Could not insert row.")
+            }
+        } else {
+            print("\(db_login_count): INSERT statement could not be prepared.")
+        }
+        sqlite3_finalize(insertStatement)
+    }
+    func read_tbl_login_count(query: String) -> [LoginCount] {
+        let queryStatementString = query
+        var queryStatement: OpaquePointer? = nil
+        var loginCount: [LoginCount] = []
+        
+        if sqlite3_prepare_v2(db, queryStatementString, -1, &queryStatement, nil) == SQLITE_OK {
+            while sqlite3_step(queryStatement) == SQLITE_ROW {
+                let id = Int(sqlite3_column_int(queryStatement, 0))
+                
+                let application = String(describing: String(cString: sqlite3_column_text(queryStatement, 1)))
+                let count = Int(sqlite3_column_int(queryStatement, 2))
+                
+                loginCount.append(LoginCount(application: application, countXEmpno: count))
+            }
+        } else {
+            print("SELECT statement \(db_login_count) could not be prepared")
+        }
+        return loginCount
+    }
 }
 
 
@@ -2460,6 +2582,7 @@ struct tbl_UserProfile: Encodable, Decodable {
     var STATION_CODE: String = ""
     var HUB_CODE: String = ""
     var ACCESSTOKEN: String = ""
+    var HIGHNESS: String = ""
 }
 
 //MARK: SETUP API
@@ -2841,4 +2964,22 @@ struct tbl_last_sync_status {
     var TAKE: Int = 0
     var TOTAL_RECORDS: Int = 0
     var CURRENT_USER: String = ""
+}
+
+
+struct tbl_la_ad_group {
+    var ID: Int = -1
+    var SERVER_ID_PK: Int = -1
+    var AD_GROUP_NAME: String = ""
+    var AD_GROUP_EMAIL_ID: String = ""
+    var STATUS: String = ""
+    var CREATED_DATE: String = ""
+    var CREATED_BY: String = ""
+    var UPDATED_DATE: String = ""
+    var UPDATED_BY: String = ""
+}
+struct tbl_login_count {
+    var ID: Int = -1
+    var APPLICATION: String = ""
+    var COUNT: String = ""
 }
