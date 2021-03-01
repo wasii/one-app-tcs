@@ -20,6 +20,8 @@ class NewRequestListingViewController: UIViewController {
     var imsdelegate: IMSNewRequestDelegate?
     var imsupdatedelegate: IMSUpdateRequestDelegate?
     
+    var leadershipawazdelegate: LeadershipAwazDelegate?
+    
     var request_mode: [tbl_RequestModes]?
     var master_query: [tbl_MasterQuery]?
     var detail_query: [tbl_DetailQuery]?
@@ -49,6 +51,9 @@ class NewRequestListingViewController: UIViewController {
     
     var sendertag: Int?
     var isIMSUpdate = false
+    
+    //LeadershipAwaz
+    var la_ad_group:            [tbl_la_ad_group]?
     override func viewDidLoad() {
         super.viewDidLoad()
         topHeading.text = heading ?? ""
@@ -195,6 +200,15 @@ class NewRequestListingViewController: UIViewController {
                     self.mainViewHeightConstraint.constant += self.tableView.contentSize.height//(CGFloat(count) * 50) - 30
                 }
             }
+            
+            //LeadershipAwaz
+            if let count = self.la_ad_group?.count {
+                if count > 12 {
+                    self.mainViewHeightConstraint.constant = 540
+                } else {
+                    self.mainViewHeightConstraint.constant += self.tableView.contentSize.height//(CGFloat(count) * 50) - 30
+                }
+            }
         }
         
 //        tableView.estimatedRowHeight = 45
@@ -267,6 +281,11 @@ extension NewRequestListingViewController: UITableViewDataSource, UITableViewDel
             return count
         }
         if let count = self.lov_category_control?.count {
+            return count
+        }
+        
+        //LeadershipAwaz
+        if let count = self.la_ad_group?.count {
             return count
         }
         
@@ -358,6 +377,12 @@ extension NewRequestListingViewController: UITableViewDataSource, UITableViewDel
             let data = self.lov_type_of_control![indexPath.row]
             cell.headingLabel.text = data.NAME
         }
+        
+        //LeadershipAwaz
+        if la_ad_group != nil {
+            let data = self.la_ad_group![indexPath.row]
+            cell.headingLabel.text = data.AD_GROUP_NAME
+        }
         return cell
     }
     
@@ -367,6 +392,8 @@ extension NewRequestListingViewController: UITableViewDataSource, UITableViewDel
             dismiss(animated: true) {
                 let requestmode = self.request_mode![indexPath.row]
                 switch CONSTANT_MODULE_ID {
+                case 4:
+                    self.leadershipawazdelegate?.updateRequestMode(requestmode: requestmode)
                 case 3:
                     self.imsdelegate?.updateRequestMode(requestmode: requestmode)
                     break
@@ -495,6 +522,13 @@ extension NewRequestListingViewController: UITableViewDataSource, UITableViewDel
             dismiss(animated: true) {
                 let type_of_control = self.lov_type_of_control![indexPath.row]
                 self.imsupdatedelegate?.updateTypeControl(type_control: type_of_control)
+            }
+        }
+        
+        if la_ad_group != nil {
+            dismiss(animated: true) {
+                let la_ad_group = self.la_ad_group![indexPath.row]
+                self.leadershipawazdelegate?.updateMessageSubject(messagesubject: la_ad_group)
             }
         }
     }

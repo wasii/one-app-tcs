@@ -52,6 +52,9 @@ struct HrRequest: Encodable, Decodable {
     let isInvestigation: Int?
     let lineManager1, lineManager2: Int?
     
+    //Leadership Awaz
+    let viewCount: String?
+    
     enum CodingKeys: String, CodingKey {
         case ticketID = "TICKET_ID"
         case ticketDate = "TICKET_DATE"
@@ -144,5 +147,6 @@ struct HrRequest: Encodable, Decodable {
         case isInvestigation = "IS_INVESTIGATION"
         case lineManager1 = "LINE_MANAGER1"
         case lineManager2 = "LINE_MANAGER2"
+        case viewCount = "VIEW_COUNT"
     }
 }

@@ -291,6 +291,7 @@ let TAG_NOTIFICATION_LISTING = "notification-listing";
 let MODULE_TAG_HR = "hr-help-desk";
 let MODULE_TAG_GRIEVANCE = "Grievance";
 let MODULE_TAG_IMS = "IMS"
+let MODULE_TAG_LEADERSHIPAWAZ = "AWAZ"
 
 
 let DOC = "application/msword";

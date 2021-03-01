@@ -4,6 +4,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17505"/>
+        <capability name="Image references" minToolsVersion="12.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -538,10 +539,45 @@
                                     <constraint firstAttribute="trailing" secondItem="pHq-rE-3c6" secondAttribute="trailing" id="gbv-2G-KLL"/>
                                 </constraints>
                             </scrollView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="oUS-T8-TaS" customClass="CustomButton" customModule="One_App" customModuleProvider="target">
+                                <rect key="frame" x="300" y="592" width="50" height="50"/>
+                                <color key="backgroundColor" red="0.70196078429999997" green="0.13725490200000001" blue="0.1215686275" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="50" id="7VR-wQ-nie"/>
+                                    <constraint firstAttribute="width" secondItem="oUS-T8-TaS" secondAttribute="height" id="8Fx-Ay-FY5"/>
+                                </constraints>
+                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <state key="normal">
+                                    <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                    <imageReference key="image" image="plus" catalog="system" symbolScale="large"/>
+                                </state>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="bgColor">
+                                        <color key="value" red="0.86666666670000003" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                        <real key="value" value="25"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="size" keyPath="shadowOffSet">
+                                        <size key="value" width="0.0" height="1"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="shadowRadius">
+                                        <real key="value" value="2"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="shadowOpacity">
+                                        <real key="value" value="0.5"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <action selector="newRequestTapped:" destination="0z6-GP-MWp" eventType="touchUpInside" id="2wz-TA-5ht"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="l5F-Zx-kl8"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
+                            <constraint firstItem="l5F-Zx-kl8" firstAttribute="trailing" secondItem="oUS-T8-TaS" secondAttribute="trailing" constant="25" id="4dg-6l-09g"/>
+                            <constraint firstItem="l5F-Zx-kl8" firstAttribute="bottom" secondItem="oUS-T8-TaS" secondAttribute="bottom" constant="25" id="IFt-JU-so5"/>
                             <constraint firstItem="pWb-UM-40j" firstAttribute="leading" secondItem="l5F-Zx-kl8" secondAttribute="leading" id="S0z-Jx-0f1"/>
                             <constraint firstItem="l5F-Zx-kl8" firstAttribute="trailing" secondItem="pWb-UM-40j" secondAttribute="trailing" id="Slb-op-MG8"/>
                             <constraint firstItem="pWb-UM-40j" firstAttribute="top" secondItem="l5F-Zx-kl8" secondAttribute="top" id="iEe-4N-V34"/>
@@ -694,7 +730,7 @@
                                                             <constraint firstAttribute="width" secondItem="Brt-4w-ghn" secondAttribute="height" id="Lht-6I-Wxg"/>
                                                         </constraints>
                                                     </imageView>
-                                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Group" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="EtZ-Wx-79Y" customClass="MDCOutlinedTextField">
+                                                    <textField opaque="NO" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Group" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="EtZ-Wx-79Y" customClass="MDCOutlinedTextField">
                                                         <rect key="frame" x="15" y="5" width="345" height="50"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                         <textInputTraits key="textInputTraits"/>
@@ -721,6 +757,9 @@
                                             <constraint firstAttribute="height" constant="50" id="ltZ-BJ-HaQ"/>
                                         </constraints>
                                         <state key="normal" image="forward-new"/>
+                                        <connections>
+                                            <action selector="forwardBtn_Tapped:" destination="mUa-5Z-ktD" eventType="touchUpInside" id="1Un-xT-ctW"/>
+                                        </connections>
                                     </button>
                                 </subviews>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -747,6 +786,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="3ue-zU-4bh"/>
                     <connections>
+                        <outlet property="forwardBtn" destination="HbY-7n-OIP" id="CKi-Pn-pHC"/>
                         <outlet property="mainView" destination="Ksd-1q-ffY" id="cXu-Nc-SSs"/>
                         <outlet property="message_group" destination="EtZ-Wx-79Y" id="kOW-x3-UiP"/>
                         <outlet property="message_textview" destination="kZ1-IR-jZt" id="S2c-46-vuB"/>
@@ -1341,12 +1381,18 @@
             <point key="canvasLocation" x="-975.36231884057975" y="878.57142857142856"/>
         </scene>
     </scenes>
+    <designables>
+        <designable name="oUS-T8-TaS">
+            <size key="intrinsicContentSize" width="21.5" height="22"/>
+        </designable>
+    </designables>
     <resources>
         <image name="drop_down_red" width="128" height="128"/>
         <image name="droparrowG" width="32" height="32"/>
         <image name="forward-new" width="42" height="42"/>
         <image name="helpdesk" width="32" height="32"/>
         <image name="magnifyingglass" catalog="system" width="128" height="115"/>
+        <image name="plus" catalog="system" width="128" height="113"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

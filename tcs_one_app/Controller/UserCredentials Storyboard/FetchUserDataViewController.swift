@@ -600,7 +600,6 @@ class FetchUserDataViewController: BaseViewController {
         let params = self.getAPIParameter(service_name: GET_HR_REQUEST, request_body: hr_request)
         NetworkCalls.hr_request(params: params) { success, response in
             if success {
-                
                 self.count = JSON(response).dictionary![_count]!.intValue
                 if self.count < 0 {
                     self.getHrNotifications()
@@ -673,6 +672,13 @@ class FetchUserDataViewController: BaseViewController {
                     self.count = 0
                     self.skip = 0
                     self.getHrNotifications()
+                }
+            } else {
+                DispatchQueue.main.async {
+                    self.view.makeToast(SOMETHINGWENTWRONG)
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                        self.navigationController?.popViewController(animated: true)
+                    }
                 }
             }
         }

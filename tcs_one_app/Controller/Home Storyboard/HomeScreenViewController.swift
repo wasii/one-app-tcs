@@ -164,50 +164,8 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
             default:
                 continue
             }
+            chartViews.append(chart)
         }
-//        for module in self.module! {
-//            if module.MODULENAME == "Track" {
-//                continue
-//            }
-//            let chart:ChartViews = Bundle.main.loadNibNamed("ChartViews", owner: self, options: nil)?.first as! ChartViews
-//            
-//            
-//            switch module.MODULENAME {
-//            case "HR Help Desk":
-//                chart.heading.text = "HR Dashboard"
-//                chart.pieChart = self.setupGraphs(pieChartView: chart.pieChart,
-//                                                  module_id: module.SERVER_ID_PK,
-//                                                  pending: "Pending",
-//                                                  approved: "Completed",
-//                                                  rejected: "Rejected",
-//                                                  tag: module.SERVER_ID_PK)
-//                break
-//            case "Awaz":
-//                chart.heading.text = "Awaz Dashboard"
-//                chart.pieChart = self.setupGraphs(pieChartView: chart.pieChart,
-//                                                  module_id: module.SERVER_ID_PK,
-//                                                  pending: "Submitted",
-//                                                  approved: INREVIEW,
-//                                                  rejected: "Closed",
-//                                                  tag: module.SERVER_ID_PK)
-//                break
-////            case "IMS":
-////                chart.heading.text = "IMS Dashboard"
-////                chart.pieChart = self.setupGraphs(pieChartView: chart.pieChart,
-////                                                  module_id: module.SERVER_ID_PK,
-////                                                  pending: "Submitted",
-////                                                  approved: INREVIEW,
-////                                                  rejected: "Closed",
-////                                                  tag: module.SERVER_ID_PK)
-////            break
-//            default:
-//                break
-//            }
-//            
-//            chartViews.append(chart)
-//        }
-        
-        
         return chartViews
     }
     
@@ -252,65 +210,89 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
         var set : PieChartDataSet?
         var colors = [UIColor]()
 
-        let query = "select TICKET_STATUS, count(ID) as ticketTotal, TICKET_DATE from \(db_hr_request) WHERE module_id = '\(module_id)' AND CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)' AND REQUEST_LOGS_SYNC_STATUS != '\(0)' GROUP BY TICKET_STATUS;"
-        let chart = AppDelegate.sharedInstance.db?.getCounts(query: query)
-        
         var pendingCounter :Double = 0
         var approvedCounter :Double = 0
         var rejectedCounter :Double = 0
-        for data in chart! {
-            let chartValue = ((data.ticket_total ?? "0") as NSString).doubleValue
-            let key = data.ticket_status ?? ""
-
-            switch tag {
-            case 1, 4:
-                switch key {
-                    case "Pending", "pending":
-                        pendingCounter = chartValue
+        
+        if tag == 5 {
+            let appCount = AppDelegate.sharedInstance.db?.read_tbl_login_count(query: "SELECT * FROM \(db_login_count)")
+            if let data = appCount {
+                for index in data {
+                    switch index.application {
+                    case "Web-App":
+                        pendingCounter = Double(index.countXEmpno)
                         break
-                    case "Approved", "approved":
-                        approvedCounter = chartValue
+                    case "Android":
+                        approvedCounter = Double(index.countXEmpno)
                         break
-                    case "Rejected", "rejected":
-                        rejectedCounter = chartValue
+                    case "Ios-Apple":
+                        rejectedCounter = Double(index.countXEmpno)
                         break
                     default:
                         break
+                    }
                 }
-                break
-            case 2:
-                switch key {
-                    case "Submitted":
+            }
+        } else {
+            let query = "select TICKET_STATUS, count(ID) as ticketTotal, TICKET_DATE from \(db_hr_request) WHERE module_id = '\(module_id)' AND CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)' AND REQUEST_LOGS_SYNC_STATUS != '\(0)' GROUP BY TICKET_STATUS;"
+            let chart = AppDelegate.sharedInstance.db?.getCounts(query: query)
+            
+            
+            for data in chart! {
+                let chartValue = ((data.ticket_total ?? "0") as NSString).doubleValue
+                let key = data.ticket_status ?? ""
+
+                switch tag {
+                case 1, 4:
+                    switch key {
+                        case "Pending", "pending":
+                            pendingCounter = chartValue
+                            break
+                        case "Approved", "approved":
+                            approvedCounter = chartValue
+                            break
+                        case "Rejected", "rejected":
+                            rejectedCounter = chartValue
+                            break
+                        default:
+                            break
+                    }
+                    break
+                case 2:
+                    switch key {
+                        case "Submitted":
+                            pendingCounter += chartValue
+                            break
+                        case "Inprogress-Er", "Inprogress-S", "Responded", "Investigating":
+                            approvedCounter += chartValue
+                            break
+                        case "Closed":
+                            rejectedCounter += chartValue
+                            break
+                        default:
+                            break
+                    }
+                    break
+                case 3:
+                    switch key {
+                    case IMS_Status_Submitted:
                         pendingCounter += chartValue
                         break
-                    case "Inprogress-Er", "Inprogress-S", "Responded", "Investigating":
+                    case IMS_Status_Inprogress, IMS_Status_Inprogress_Rds, IMS_Status_Inprogress_Ro, IMS_Status_Inprogress_Rm, IMS_Status_Inprogress_Hod, IMS_Status_Inprogress_Cs, IMS_Status_Inprogress_As , IMS_Status_Inprogress_Hs, IMS_Status_Inprogress_Ds, IMS_Status_Inprogress_Fs, IMS_Status_Inprogress_Ins, IMS_Status_Inprogress_Hr, IMS_Status_Inprogress_Fi, IMS_Status_Inprogress_Ca, IMS_Status_Inprogress_Rhod:
                         approvedCounter += chartValue
                         break
-                    case "Closed":
+                    case IMS_Status_Closed:
                         rejectedCounter += chartValue
                         break
                     default:
                         break
-                }
-                break
-            case 3:
-                switch key {
-                case IMS_Status_Submitted:
-                    pendingCounter += chartValue
-                    break
-                case IMS_Status_Inprogress, IMS_Status_Inprogress_Rds, IMS_Status_Inprogress_Ro, IMS_Status_Inprogress_Rm, IMS_Status_Inprogress_Hod, IMS_Status_Inprogress_Cs, IMS_Status_Inprogress_As , IMS_Status_Inprogress_Hs, IMS_Status_Inprogress_Ds, IMS_Status_Inprogress_Fs, IMS_Status_Inprogress_Ins, IMS_Status_Inprogress_Hr, IMS_Status_Inprogress_Fi, IMS_Status_Inprogress_Ca, IMS_Status_Inprogress_Rhod:
-                    approvedCounter += chartValue
-                    break
-                case IMS_Status_Closed:
-                    rejectedCounter += chartValue
-                    break
+                    }
                 default:
                     break
                 }
-            default:
-                break
             }
         }
+        
         entries.append(PieChartDataEntry(value: pendingCounter, label: pending))
         entries.append(PieChartDataEntry(value: approvedCounter, label: approved))
         entries.append(PieChartDataEntry(value: rejectedCounter, label: rejected))
@@ -345,7 +327,13 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
                     default: break
                 }
             break
-                
+            case 5:
+                switch data.label {
+                case "Web": colors.append(UIColor.pendingColor()); break
+                case "Android": colors.append(UIColor.approvedColor()); break
+                case "iOS": colors.append(UIColor.rejectedColor()); break
+                default: break
+                }
             default:
             break
             }
@@ -526,10 +514,18 @@ extension HomeScreenViewController: UICollectionViewDelegate, UICollectionViewDa
             let controller = storyboard.instantiateViewController(withIdentifier: "TrackHomeViewController") as! TrackHomeViewController
             self.navigationController?.pushViewController(controller, animated: true)
             break
-        case "Leadership Awaz":
+        case "Leadership Connect":
+            CONSTANT_MODULE_ID = AppDelegate.sharedInstance.db?.read_tbl_UserModule(query: "SELECT * FROM \(db_user_module) WHERE TAGNAME = '\(MODULE_TAG_LEADERSHIPAWAZ)';").first?.SERVER_ID_PK ?? -1
             let storyboard = UIStoryboard(name: "LeadershipAwaz", bundle: nil)
-            let controller = storyboard.instantiateViewController(withIdentifier: "NewRequestLeadershipAwazViewController") as! NewRequestLeadershipAwazViewController
-            self.navigationController?.pushViewController(controller, animated: true)
+            if let emp_info = AppDelegate.sharedInstance.db?.read_tbl_UserProfile().first {
+                if emp_info.HIGHNESS == "1" {
+                    let controller = storyboard.instantiateViewController(withIdentifier: "ChairmenListingViewController") as! ChairmenListingViewController
+                    self.navigationController?.pushViewController(controller, animated: true)
+                } else {
+                    let controller = storyboard.instantiateViewController(withIdentifier: "LeadershipListingViewController") as! LeadershipListingViewController
+                    self.navigationController?.pushViewController(controller, animated: true)
+                }
+            }
             break
 //        case "IMS":
 //            CONSTANT_MODULE_ID = AppDelegate.sharedInstance.db?.read_tbl_UserModule(query: "SELECT * FROM \(db_user_module) WHERE TAGNAME = '\(MODULE_TAG_IMS)';").first?.SERVER_ID_PK ?? -1

@@ -33,4 +33,9 @@ class LeadershipListingViewController: BaseViewController {
         super.viewDidLoad()
         self.title = "Leadership Awaz"
     }
+    @IBAction func newRequestTapped(_ sender: Any) {
+        let controller = self.storyboard?.instantiateViewController(withIdentifier: "NewRequestLeadershipAwazViewController") as! NewRequestLeadershipAwazViewController
+        
+        self.navigationController?.pushViewController(controller, animated: true)
+    }
 }
