@@ -925,7 +925,8 @@ var ticket_request: tbl_Hr_Request_Logs?
         //before hod
         incident_detail_cityview_textfield.label.textColor = UIColor.nativeRedColor()
         incident_detail_cityview_textfield.label.text = "City"
-        incident_detail_cityview_textfield.text = "\(AppDelegate.sharedInstance.db!.read_tbl_area(query: "SELECT * FROM \(db_lov_area) WHERE SERVER_ID_PK = '\(self.ticket_request!.AREA!)'").first!.AREA_NAME)"
+        let query = "SELECT * FROM \(db_lov_city) WHERE AREA_CODE = '\(self.ticket_request!.CITY!)'"
+        incident_detail_cityview_textfield.text = "\(AppDelegate.sharedInstance.db?.read_tbl_city(query: query).first!.CITY_NAME ?? "")"
         incident_detail_cityview_textfield.setOutlineColor(UIColor.nativeRedColor(), for: .normal)
         
         
@@ -1150,9 +1151,6 @@ var ticket_request: tbl_Hr_Request_Logs?
             if IMS_Submitted == "\(current_user)" || IMS_Inprogress_Ro == "\(current_user)" || IMS_Inprogress_Rhod == "\(current_user)" {
                 UIView.animate(withDuration: 0.2) {
                     self.incident_detail_view.isHidden = false
-                    self.showHideImage.image = UIImage(named: "up_white")
-                    self.showHideLabel.text = "Hide Details"
-                    self.view.layoutIfNeeded()
                     
                     self.showHideImage.image = UIImage(named: "up_white")
                     self.showHideLabel.text = "Hide Details"
@@ -1161,7 +1159,8 @@ var ticket_request: tbl_Hr_Request_Logs?
             } else {
                 UIView.animate(withDuration: 0.2) {
                     self.incident_detail_view_hod.isHidden = false
-                    self.incident_detail_city_textfield.text = "\(AppDelegate.sharedInstance.db!.read_tbl_area(query: "SELECT * FROM \(db_lov_area) WHERE SERVER_ID_PK = '\(self.ticket_request!.AREA!)'").first!.AREA_NAME)"
+                    let query = "SELECT * FROM \(db_lov_city) WHERE AREA_CODE = '\(self.ticket_request!.CITY!)'"
+                    self.incident_detail_city_textfield.text = "\(AppDelegate.sharedInstance.db?.read_tbl_city(query: query).first!.CITY_NAME ?? "")"
                     if self.ticket_request!.CNSGNO != "" {
                         self.incident_detail_consignment_view.isHidden = false
                         self.incident_detail_consignment_textfield.text = "\(self.ticket_request!.CNSGNO!)"
@@ -1181,9 +1180,6 @@ var ticket_request: tbl_Hr_Request_Logs?
             if IMS_Submitted == "\(current_user)" || IMS_Inprogress_Ro == "\(current_user)" || IMS_Inprogress_Rhod == "\(current_user)" {
                 UIView.animate(withDuration: 0.2) {
                     self.incident_detail_view.isHidden = true
-                    self.showHideImage.image = UIImage(named: "drop_down_white")
-                    self.showHideLabel.text = "Show Details"
-                    self.view.layoutIfNeeded()
                     
                     self.showHideImage.image = UIImage(named: "drop_down_white")
                     self.showHideLabel.text = "Show Details"
@@ -1192,18 +1188,6 @@ var ticket_request: tbl_Hr_Request_Logs?
             } else {
                 UIView.animate(withDuration: 0.2) {
                     self.incident_detail_view_hod.isHidden = true
-                    self.incident_detail_city_textfield.text = "\(AppDelegate.sharedInstance.db!.read_tbl_area(query: "SELECT * FROM \(db_lov_area) WHERE SERVER_ID_PK = '\(self.ticket_request!.AREA!)'").first!.AREA_NAME)"
-                    
-                    if self.ticket_request!.CNSGNO != "" {
-                        self.incident_detail_consignment_view.isHidden = false
-                        self.incident_detail_consignment_textfield.text = "\(self.ticket_request!.CNSGNO!)"
-                    }
-                    if self.ticket_request!.IS_FINANCIAL == 1 {
-                        self.incident_detail_view_height_constraint.constant = 640
-                        self.incident_detail_loss_amount_view.isHidden = false
-                        self.incident_detail_loss_amount.text = "\(self.ticket_request!.AMOUNT ?? 0.0)"
-                        self.incident_detail_recovery_type.text = "\(self.ticket_request!.RECOVERY_TYPE!)"
-                    }
                     self.showHideImage.image = UIImage(named: "drop_down_white")
                     self.showHideLabel.text = "Show Details"
                     self.view.layoutIfNeeded()
