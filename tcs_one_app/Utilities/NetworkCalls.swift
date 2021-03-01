@@ -865,6 +865,49 @@ class NetworkCalls: NSObject {
             }
         }.resume()
     }
+    
+    //Leadership Awaz
+    class func addawazrequest(params: [String:Any], handler: @escaping(_ granted: Bool,_ response: Any) -> Void) {
+        let Url = String(format: ENDPOINT)
+        guard let serviceUrl = URL(string: Url) else { return }
+        var request = URLRequest(url: serviceUrl)
+        request.httpMethod = "POST"
+        request.setValue("Application/json", forHTTPHeaderField: "Content-Type")
+        guard let httpBody = try? JSONSerialization.data(withJSONObject: params, options: []) else {
+            return
+        }
+        request.httpBody = httpBody
+        
+        let session = URLSession.shared
+        session.dataTask(with: request) { (data, response, error) in
+            if let data = data {
+                let json = JSON(data)
+                if let success = json.dictionary?[returnStatus] {
+                    //SUCCESS
+                    if success.dictionary?[_code] == "0200" {
+                        if let _ = json.dictionary {
+                            handler(true, json.dictionary)
+                            return
+                        }
+                        handler(true, data)
+                    }
+                    //FAILED
+                    if success.dictionary?[_code] == "0400" {
+                        handler(false, SOMETHINGWENTWRONG)
+                    }
+                    
+                    if success.dictionary?[_code] == "0403" {
+                        handler(false, SOMETHINGWENTWRONG)
+                    }
+                    if success.dictionary?[_code] == "0404" {
+                        handler(false, SOMETHINGWENTWRONG)
+                    }
+                }
+            } else {
+                handler(false, SOMETHINGWENTWRONG)
+            }
+        }.resume()
+    }
 }
 
 

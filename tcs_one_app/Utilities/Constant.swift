@@ -46,6 +46,9 @@ let PROCCONSIGNMENTVALIDATE = "oneapp.procconsignmentvalidate"
 let ADDREQUESTIMS           = "oneapp.addrequestims"
 let IMSUPDATE               = "oneapp.imsupdate"
 
+//LEADERSHIP AWAZ
+let ADDAWAZTICKET           = "oneapp.addawazticket"
+
 //API BACKEND KEYS
 let eAI_MESSAGE             = "eAI_MESSAGE"
 let eAI_BODY                = "eAI_BODY"

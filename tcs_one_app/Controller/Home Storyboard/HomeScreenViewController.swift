@@ -62,7 +62,7 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
         
         
         setupUserModules()
-        chartViews = createChartViews()
+//        chartViews = createChartViews()
         scrollView.delegate = self
         
         pageControl.numberOfPages = module!.count - 1
@@ -84,8 +84,8 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
             self.notification_view.isHidden = true
             self.notification_label.text = ""
         }
-        chartViews = [ChartViews]()
-        chartViews = createChartViews()
+//        chartViews = [ChartViews]()
+//        chartViews = createChartViews()
 
         viewDidLayoutSubviews()
     }
@@ -102,8 +102,8 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
             self.notification_view.isHidden = true
             self.notification_label.text = ""
         }
-        chartViews = [ChartViews]()
-        chartViews = createChartViews()
+//        chartViews = [ChartViews]()
+//        chartViews = createChartViews()
     }
     override func viewDidDisappear(_ animated: Bool) {
         NotificationCenter.default.removeObserver(self)
@@ -112,7 +112,7 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
     
     
     override func viewDidLayoutSubviews() {
-        setupSlideScrollView(chartViews: chartViews)
+//        setupSlideScrollView(chartViews: chartViews)
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
@@ -273,20 +273,20 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
                             break
                     }
                     break
-                case 3:
-                    switch key {
-                    case IMS_Status_Submitted:
-                        pendingCounter += chartValue
-                        break
-                    case IMS_Status_Inprogress, IMS_Status_Inprogress_Rds, IMS_Status_Inprogress_Ro, IMS_Status_Inprogress_Rm, IMS_Status_Inprogress_Hod, IMS_Status_Inprogress_Cs, IMS_Status_Inprogress_As , IMS_Status_Inprogress_Hs, IMS_Status_Inprogress_Ds, IMS_Status_Inprogress_Fs, IMS_Status_Inprogress_Ins, IMS_Status_Inprogress_Hr, IMS_Status_Inprogress_Fi, IMS_Status_Inprogress_Ca, IMS_Status_Inprogress_Rhod:
-                        approvedCounter += chartValue
-                        break
-                    case IMS_Status_Closed:
-                        rejectedCounter += chartValue
-                        break
-                    default:
-                        break
-                    }
+//                case 3:
+//                    switch key {
+//                    case IMS_Status_Submitted:
+//                        pendingCounter += chartValue
+//                        break
+//                    case IMS_Status_Inprogress, IMS_Status_Inprogress_Rds, IMS_Status_Inprogress_Ro, IMS_Status_Inprogress_Rm, IMS_Status_Inprogress_Hod, IMS_Status_Inprogress_Cs, IMS_Status_Inprogress_As , IMS_Status_Inprogress_Hs, IMS_Status_Inprogress_Ds, IMS_Status_Inprogress_Fs, IMS_Status_Inprogress_Ins, IMS_Status_Inprogress_Hr, IMS_Status_Inprogress_Fi, IMS_Status_Inprogress_Ca, IMS_Status_Inprogress_Rhod:
+//                        approvedCounter += chartValue
+//                        break
+//                    case IMS_Status_Closed:
+//                        rejectedCounter += chartValue
+//                        break
+//                    default:
+//                        break
+//                    }
                 default:
                     break
                 }

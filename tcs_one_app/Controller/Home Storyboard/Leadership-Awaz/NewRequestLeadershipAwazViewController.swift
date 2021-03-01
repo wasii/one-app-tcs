@@ -8,11 +8,13 @@
 
 import UIKit
 import MaterialComponents.MaterialTextControls_OutlinedTextFields
+import GrowingTextView
+import SwiftyJSON
 
 class NewRequestLeadershipAwazViewController: BaseViewController {
     @IBOutlet weak var mainView: UIView!
-    @IBOutlet weak var message_type: MDCOutlinedTextField!
     
+    @IBOutlet weak var message_subject: UITextView!
     @IBOutlet weak var message_textview: UITextView!
     @IBOutlet weak var message_group: MDCOutlinedTextField!
     @IBOutlet weak var word_counter: UILabel!
@@ -22,25 +24,28 @@ class NewRequestLeadershipAwazViewController: BaseViewController {
     var request_mode:   tbl_RequestModes?
     var ad_group:       tbl_la_ad_group?
     
+    
+    var ticket_request: tbl_Hr_Request_Logs?
     override func viewDidLoad() {
         super.viewDidLoad()
         self.makeTopCornersRounded(roundView: self.mainView)
         self.title = "New Request"
         setupTextFields()
         
+        message_subject.delegate = self
         message_textview.delegate = self
-        
-        message_type.delegate = self
         message_group.delegate = self
+        
+        if let tr = ticket_request {
+            self.title = "View Request"
+            self.message_subject.text = "\(tr.REQ_REMARKS ?? "")"
+            self.message_textview.text = "\(tr.HR_REMARKS ?? "")"
+//            let query = AppDelegate.sharedInstance.db.read_tbl_
+//            self.message_group.text = "\(tr.)"
+        }
     }
     
     func setupTextFields() {
-        message_type.label.textColor = UIColor.nativeRedColor()
-        message_type.label.text = "Message Type"
-        message_type.placeholder = ""
-        message_type.setOutlineColor(UIColor.nativeRedColor(), for: .normal)
-        message_type.setOutlineColor(UIColor.nativeRedColor(), for: .editing)
-        
         message_group.label.textColor = UIColor.nativeRedColor()
         message_group.label.text = "Select Group"
         message_group.placeholder = ""
@@ -49,8 +54,8 @@ class NewRequestLeadershipAwazViewController: BaseViewController {
     }
     
     @IBAction func forwardBtn_Tapped(_ sender: Any) {
-        if request_mode == nil {
-            self.view.makeToast("Message Type is mandatory")
+        if message_subject.text == "Enter Subject" {
+            self.view.makeToast("Subject is mandatory")
             return
         }
         if message_textview.text == "Enter your message." {
@@ -75,39 +80,32 @@ class NewRequestLeadershipAwazViewController: BaseViewController {
 
 extension NewRequestLeadershipAwazViewController: UITextFieldDelegate {
     func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
-        let storyboard = UIStoryboard(name: "Popups", bundle: nil)
-        let controller = storyboard.instantiateViewController(withIdentifier: "NewRequestListingViewController") as! NewRequestListingViewController
+        
         switch textField.tag {
         case 0:
-            controller.request_mode = AppDelegate.sharedInstance.db?.read_tbl_requestModes(module_id: CONSTANT_MODULE_ID).sorted(by: { (list1, list2) -> Bool in
-                list1.REQ_MODE_DESC < list2.REQ_MODE_DESC
-            })
-            controller.heading = "Message Type"
-            break
+            return true
         case 1:
+            let storyboard = UIStoryboard(name: "Popups", bundle: nil)
+            let controller = storyboard.instantiateViewController(withIdentifier: "NewRequestListingViewController") as! NewRequestListingViewController
             controller.la_ad_group = AppDelegate.sharedInstance.db?.read_tbl_la_ad_group(query: "SELECT * FROM \(db_la_ad_group)").sorted(by: { (list1, list2) -> Bool in
                 list1.AD_GROUP_NAME < list2.AD_GROUP_NAME
             })
             controller.heading = "Message Subject"
-            break
+            if #available(iOS 13.0, *) {
+                controller.modalPresentationStyle = .overFullScreen
+            }
+            controller.modalTransitionStyle = .crossDissolve
+            controller.leadershipawazdelegate = self
+            Helper.topMostController().present(controller, animated: true, completion: nil)
+            return false
         default:
-            break
+            return false
         }
-        if #available(iOS 13.0, *) {
-            controller.modalPresentationStyle = .overFullScreen
-        }
-        controller.modalTransitionStyle = .crossDissolve
-        controller.leadershipawazdelegate = self
-        Helper.topMostController().present(controller, animated: true, completion: nil)
-        return false
     }
 }
 
 extension NewRequestLeadershipAwazViewController: LeadershipAwazDelegate {
-    func updateRequestMode(requestmode: tbl_RequestModes) {
-        self.request_mode = requestmode
-        self.message_type.text = requestmode.REQ_MODE_DESC
-    }
+    func updateRequestMode(requestmode: tbl_RequestModes) {}
     
     func updateMessageSubject(messagesubject: tbl_la_ad_group) {
         self.ad_group = messagesubject
@@ -117,60 +115,163 @@ extension NewRequestLeadershipAwazViewController: LeadershipAwazDelegate {
 
 extension NewRequestLeadershipAwazViewController: UITextViewDelegate {
     func textViewDidBeginEditing(_ textView: UITextView) {
-        if textView.text == "Enter your message." {
-            textView.text = ""
-            textView.textColor = UIColor.black
+        switch textView.tag {
+        case 0:
+            if textView.text == "Enter Subject" {
+                textView.text = ""
+                textView.textColor = UIColor.black
+            }
+            break
+        case 1:
+            if textView.text == "Enter your message." {
+                textView.text = ""
+                textView.textColor = UIColor.black
+            }
+            break
+        default:
+            break
         }
+        
     }
     
     func textViewDidEndEditing(_ textView: UITextView) {
-        if textView.text.count <= 0 {
-            textView.text = "Enter your message."
-            textView.textColor = UIColor.lightGray
+        switch textView.tag {
+        case 0:
+            if textView.text.count <= 0 {
+                textView.text = "Enter Subject"
+                textView.textColor = UIColor.lightGray
+            }
+            break
+        case 1:
+            if textView.text.count <= 0 {
+                textView.text = "Enter your message."
+                textView.textColor = UIColor.lightGray
+            }
+            break
+        default:
+            break
         }
     }
     
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
-        let maxLength = 525
-        let currentString: NSString = textView.text as! NSString
-        let newString: NSString =
-                currentString.replacingCharacters(in: range, with: text) as NSString
-        if let texts = textView.text,
-           let textRange = Range(range, in: texts) {
-            let updatedText = texts.replacingCharacters(in: textRange, with: text)
-            if updatedText.containsEmoji {
-                return false
+        switch textView.tag {
+        case 1:
+            let maxLength = 525
+            let currentString: NSString = textView.text as! NSString
+            let newString: NSString =
+                    currentString.replacingCharacters(in: range, with: text) as NSString
+            if let texts = textView.text,
+               let textRange = Range(range, in: texts) {
+                let updatedText = texts.replacingCharacters(in: textRange, with: text)
+                if updatedText.containsEmoji {
+                    return false
+                }
             }
-        }
-        if newString.length <= maxLength {
-            self.word_counter.text = "\(newString.length)/525"
+            if newString.length <= maxLength {
+                self.word_counter.text = "\(newString.length)/525"
+                return true
+            }
+            return false
+        default:
             return true
         }
-        return false
     }
 }
 
 
 extension NewRequestLeadershipAwazViewController: ConfirmationProtocol {
     func confirmationProtocol() {
-        var offline_data = tbl_Hr_Request_Logs()
-        offline_data.REQ_ID = Int(CURRENT_USER_LOGGED_IN_ID)!
-        offline_data.SERVER_ID_PK = randomInt()
-        offline_data.TICKET_DATE = getLocalCurrentDate()
-        offline_data.LOGIN_ID = Int(CURRENT_USER_LOGGED_IN_ID)!
-        
-        offline_data.REQ_MODE = self.request_mode!.SERVER_ID_PK
-        
-        offline_data.CREATED_DATE = getCurrentDate()
-        offline_data.REQ_REMARKS = self.message_textview.text?.replacingOccurrences(of: "'", with: "''")
-        offline_data.REF_ID = randomString()
-        
-        
+        self.addrequesttoserver()
+        self.navigationController?.popViewController(animated: true)
     }
     
     func noButtonTapped() {
         forwardBtn.isEnabled = true
     }
     
-    
+    func addrequesttoserver() {
+        var req_mod_id = AppDelegate.sharedInstance.db?.read_tbl_requestModes(module_id: CONSTANT_MODULE_ID)
+        req_mod_id = req_mod_id?.filter({ f -> Bool in
+            f.REQ_MODE_DESC == "Broadcasting"
+        })
+        let json = [
+            "addawazticket" : [
+                "access_token": UserDefaults.standard.string(forKey: USER_ACCESS_TOKEN)!,
+                "tickets" : [
+                    "requestmodeid" : "\(req_mod_id?.first?.SERVER_ID_PK ?? 0)",
+                    "reqsubject" : "\(self.message_subject.text.replacingOccurrences(of: "'", with: "''"))",
+                    "requesterremarks" : "\(self.message_textview.text.replacingOccurrences(of: "'", with: "''"))",
+                    "requestgroup" : "\(self.ad_group!.SERVER_ID_PK)",
+                    "refid" : randomString(),
+                    "ticketdate" : getCurrentDate()
+                ]
+            ]
+        ] as [String:Any]
+        let params = getAPIParameter(service_name: ADDAWAZTICKET, request_body: json)
+        NetworkCalls.addawazrequest(params: params) { (granted, response) in
+            if granted {
+                var hrFile = [HrFiles]()
+                var hrLog = [HrLog]()
+                
+                if let returnResponse = JSON(response).dictionary {
+                    if let hr_logs  = returnResponse[_hr_logs]?.array {
+                        for logs in hr_logs {
+                            do {
+                                let dictionary = try logs.rawData()
+                                hrLog.append(try JSONDecoder().decode(HrLog.self, from: dictionary))
+                            } catch let err {
+                                print(err.localizedDescription)
+                            }
+                        }
+                        for logs in hrLog {
+                            AppDelegate.sharedInstance.db?.insert_tbl_hr_grievance(hr_log: logs)
+                        }
+                    }
+                    if let hr_files = returnResponse[_hr_files]?.array {
+                        for files in hr_files {
+                            do {
+                                let dictionary = try files.rawData()
+                                hrFile.append(try JSONDecoder().decode(HrFiles.self, from: dictionary))
+                            } catch let err {
+                                print(err.localizedDescription)
+                            }
+                        }
+                        for files in hrFile {
+                            AppDelegate.sharedInstance.db?.insert_tbl_hr_files(hrfile: files)
+                        }
+                    }
+                    let ticket_logs = returnResponse[_tickets_logs]?.array?.first
+                    
+                    DispatchQueue.main.async {
+                        let ref_id = ticket_logs?["REF_ID"].string ?? ""
+                        AppDelegate.sharedInstance.db?.deleteRow(tableName: db_hr_request, column: "REF_ID", ref_id: ref_id, handler: { success in
+                            if success {
+                                do {
+                                    let dictionary = try ticket_logs?.rawData()
+                                    let hrgrievance = try JSONDecoder().decode(HrRequest.self, from: dictionary!)
+                                    
+                                    DispatchQueue.main.async {
+                                        AppDelegate.sharedInstance.db?.insert_tbl_hr_request(hrrequests: hrgrievance, { dump_succes in
+                                            if success {
+                                                DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                                                    NotificationCenter.default.post(Notification.init(name: .refreshedViews))
+                                                    Helper.topMostController().view.makeToast("Request Saved Successfully")
+                                                }
+                                                print("DUMPED UPDATED TICKET")
+                                            }
+                                        })
+                                    }
+                                } catch let err {
+                                    print(err.localizedDescription)
+                                }
+                            }
+                        })
+                    }
+                    print(returnResponse)
+                }
+            } else {
+                print(response)
+            }
+        }
+    }
 }

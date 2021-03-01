@@ -21,10 +21,10 @@ struct HrRequest: Encodable, Decodable {
     var updatedBy: Int?
     var reqEmailLog, reqEmailLogTime, reqEmailStatus, reqEmailStatusTime: String?
     var tatDays: Int?
-    var remTatStatus, remTatStatusTime, assignedTo: String?
+    var remTatStatus, remTatStatusTime: String?
     var refID, areaCode, stationCode, hubCode: String?
     var latitude, longitude: String?
-    var moduleID: Int?
+    var moduleID, assignedTo: Int?
     var requesterName, requesterPhone: String?
     var responsibleEmpno: Int?
     var responsibleName, responsibleDesig, masterQuery, detailQuery: String?
@@ -53,7 +53,7 @@ struct HrRequest: Encodable, Decodable {
     let lineManager1, lineManager2: Int?
     
     //Leadership Awaz
-    let viewCount: String?
+    let viewCount: Int?
     
     enum CodingKeys: String, CodingKey {
         case ticketID = "TICKET_ID"
