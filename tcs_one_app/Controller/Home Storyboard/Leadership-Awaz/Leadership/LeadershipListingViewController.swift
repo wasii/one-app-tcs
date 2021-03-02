@@ -58,8 +58,8 @@ class LeadershipListingViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.makeTopCornersRounded(roundView: self.mainView)
-        self.title = "Leadership Awaz"
-        
+        self.title = "Leadership Connect"
+        self.selected_query = "Weekly"
         self.tableView.register(UINib(nibName: "RequestListingTableCell", bundle: nil), forCellReuseIdentifier: "RequestListingCell")
         self.tableView.rowHeight = 80
         
@@ -95,7 +95,7 @@ class LeadershipListingViewController: BaseViewController {
                 btn.removeBadge()
             }
         }
-//        self.setupJSON(numberOfDays: numberOfDays, startday: startday, endday: endday)
+        self.setupJSON(numberOfDays: numberOfDays, startday: startday, endday: endday)
     }
     override func viewDidDisappear(_ animated: Bool) {
         NotificationCenter.default.removeObserver(self)
@@ -266,6 +266,23 @@ class LeadershipListingViewController: BaseViewController {
     //MARK: Custom Functions ENDS
     
     
+    @IBAction func thisWeekBtn_Tapped(_ sender: Any) {
+        let storyboard = UIStoryboard(name: "Popups", bundle: nil)
+        let controller = storyboard.instantiateViewController(withIdentifier: "FilterDataPopupViewController") as! FilterDataPopupViewController
+        if self.selected_query == "Custom Selection" {
+            controller.fromdate = self.startday
+            controller.todate   = self.endday
+        }
+        
+        controller.selected_query = self.selected_query
+        controller.delegate = self
+        controller.modalTransitionStyle = .crossDissolve
+        if #available(iOS 13.0, *) {
+            controller.modalPresentationStyle = .overFullScreen
+        }
+        
+        Helper.topMostController().present(controller, animated: true, completion: nil)
+    }
     @IBAction func newRequestTapped(_ sender: Any) {
         let controller = self.storyboard?.instantiateViewController(withIdentifier: "NewRequestLeadershipAwazViewController") as! NewRequestLeadershipAwazViewController
         
@@ -273,7 +290,39 @@ class LeadershipListingViewController: BaseViewController {
     }
 }
 
-
+extension LeadershipListingViewController: DateSelectionDelegate {
+    func requestModeSelected(selected_query: String) {}
+    
+    func dateSelection(numberOfDays: Int, selected_query: String) {
+        self.selected_query = selected_query
+        self.numberOfDays = numberOfDays
+        self.this_week_btn.setTitle(selected_query, for: .normal)
+        
+        self.startday = nil
+        self.endday = nil
+        
+        self.setupJSON(numberOfDays: numberOfDays,  startday: nil, endday: nil)
+    }
+    func dateSelection(startDate: String, endDate: String, selected_query: String) {
+        self.selected_query = selected_query
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd'T'hh:mm:ss"
+        let sDate = dateFormatter.date(from: startDate)
+        let eDate = dateFormatter.date(from: endDate)
+        
+        dateFormatter.dateFormat = "dd-MMM-yyyy"
+        let sDateS = dateFormatter.string(from: sDate ?? Date())
+        let eDateS = dateFormatter.string(from: eDate ?? Date())
+        
+        
+        self.this_week_btn.setTitle("\(sDateS) TO \(eDateS)", for: .normal)
+        
+        self.startday = startDate
+        self.endday = endDate
+        self.setupJSON(numberOfDays: 0, startday: startDate, endday: endDate)
+    }
+}
 
 extension LeadershipListingViewController: ChartViewDelegate {
     func chartValueSelected(_ chartView: ChartViewBase, entry: ChartDataEntry, highlight: Highlight) {
@@ -404,7 +453,7 @@ extension LeadershipListingViewController: UITableViewDelegate, UITableViewDataS
             data = self.tbl_request_logs![indexPath.row]
         }
         
-        controller.ticket_request = data
+        controller.ticket_id = data!.SERVER_ID_PK
         self.navigationController?.pushViewController(controller, animated: true)
     }
 }

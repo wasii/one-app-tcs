@@ -1,30 +1,29 @@
 //
-//  ChairmenListingViewController.swift
+//  LeadershipAwazAllRequestViewController.swift
 //  tcs_one_app
 //
-//  Created by TCS on 25/02/2021.
+//  Created by TCS on 02/03/2021.
 //  Copyright © 2021 Personal. All rights reserved.
 //
 
 import UIKit
 import MBCircularProgressBar
 
-class ChairmenListingViewController: BaseViewController {
+
+class LeadershipAwazAllRequestViewController: BaseViewController {
 
     @IBOutlet weak var mainView: UIView!
     @IBOutlet weak var mainViewHeightConstraint: NSLayoutConstraint!
+    @IBOutlet weak var searchtextField: UITextField!
+    @IBOutlet weak var thisWeekBtn: UIButton!
+    @IBOutlet weak var tableView: UITableView!
     
-    @IBOutlet weak var search_textfield: UITextField!
     
     @IBOutlet weak var pending_circular_view: MBCircularProgressBarView!
     @IBOutlet weak var approved_circular_view: MBCircularProgressBarView!
     @IBOutlet weak var rejected_circular_view: MBCircularProgressBarView!
     
     @IBOutlet var sortedImages: [UIImageView]!
-    
-    @IBOutlet weak var tableView: UITableView!
-    
-    //MARK: Variables
     var isFiltered = false
     var numberOfDays = 7
     var tbl_request_logs: [tbl_Hr_Request_Logs]?
@@ -43,12 +42,12 @@ class ChairmenListingViewController: BaseViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.title = "All Requests"
         
         self.makeTopCornersRounded(roundView: self.mainView)
         self.selected_query = "Weekly"
         self.tableView.register(UINib(nibName: "RequestListingTableCell", bundle: nil), forCellReuseIdentifier: "RequestListingCell")
         self.tableView.rowHeight = 80
-        self.title = "Leadership Connect"
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -84,7 +83,9 @@ class ChairmenListingViewController: BaseViewController {
         }
         self.setupJSON(numberOfDays: numberOfDays, startday: start_day, endday: end_day)
     }
-    
+    override func viewDidDisappear(_ animated: Bool) {
+        NotificationCenter.default.removeObserver(self)
+    }
     func setupJSON(numberOfDays: Int, startday: String?, endday: String?) {
         var query = ""
         
@@ -97,11 +98,10 @@ class ChairmenListingViewController: BaseViewController {
              query = "SELECT * FROM REQUEST_LOGS WHERE CREATED_DATE >= '\(startday!)' AND CREATED_DATE <= '\(endday!)' AND MODULE_ID = '\(CONSTANT_MODULE_ID)' AND CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)'"
         }
         tbl_request_logs = AppDelegate.sharedInstance.db?.read_tbl_hr_request(query: query)
-        if let _ = tbl_request_logs {
-            tbl_request_logs = tbl_request_logs?.filter({ (logs) -> Bool in
-                logs.LOGIN_ID == Int(CURRENT_USER_LOGGED_IN_ID)!
-            })
-        }
+        
+        tbl_request_logs = tbl_request_logs?.filter({ (logs) -> Bool in
+            logs.LOGIN_ID != Int(CURRENT_USER_LOGGED_IN_ID)!
+        })
         
         if filtered_status == "" {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
@@ -116,9 +116,9 @@ class ChairmenListingViewController: BaseViewController {
     func setupTableViewHeight(isFiltered: Bool) {
         var height: CGFloat = 0.0
         if isFiltered {
-            height = CGFloat((filtered_data!.count * 80) + 400)
+            height = CGFloat((filtered_data!.count * 80) + 300)
         } else {
-            height = CGFloat((tbl_request_logs!.count * 80) + 400)
+            height = CGFloat((tbl_request_logs!.count * 80) + 300)
         }
         self.mainViewHeightConstraint.constant = 280
         switch UIDevice().type {
@@ -182,8 +182,7 @@ class ChairmenListingViewController: BaseViewController {
             logs.TICKET_STATUS == "approved"
         }).count
         let rejectedCount = self.tbl_request_logs?.filter({ (logs) -> Bool in
-            logs.TICKET_STATUS == "Rejected" ||
-            logs.TICKET_STATUS == "rejected"
+            logs.TICKET_STATUS == "Rejected"
         }).count
         
         self.pending_circular_view.maxValue = CGFloat(self.tbl_request_logs?.count ?? 0)
@@ -195,33 +194,40 @@ class ChairmenListingViewController: BaseViewController {
             self.approved_circular_view.value = CGFloat(approvedCount ?? 0)
             self.rejected_circular_view.value = CGFloat(rejectedCount ?? 0)
         }
-        
     }
+    
     func filteredData(status: String) {
+        
         self.filtered_data = self.tbl_request_logs?.filter({ (logs) -> Bool in
-            logs.TICKET_STATUS == status
+            logs.TICKET_STATUS?.lowercased() == status.lowercased()
         })
         self.filtered_status = status
         self.isFiltered = true
         self.tableView.reloadData()
         self.setupTableViewHeight(isFiltered: true)
     }
-    
-    
-    @IBAction func newRequest_tapped(_ sender: Any) {
-        let controller = self.storyboard?.instantiateViewController(withIdentifier: "NewRequestLeadershipAwazViewController") as! NewRequestLeadershipAwazViewController
+    @IBAction func thisWeekBtn_tapped(_ sender: Any) {
+        let storyboard = UIStoryboard(name: "Popups", bundle: nil)
+        let controller = storyboard.instantiateViewController(withIdentifier: "FilterDataPopupViewController") as! FilterDataPopupViewController
+        if self.selected_query == "Custom Selection" {
+            controller.fromdate = self.start_day
+            controller.todate   = self.end_day
+        }
         
-        self.navigationController?.pushViewController(controller, animated: true)
+        controller.selected_query = self.selected_query
+        controller.delegate = self
+        controller.modalTransitionStyle = .crossDissolve
+        if #available(iOS 13.0, *) {
+            controller.modalPresentationStyle = .overFullScreen
+        }
+        
+        Helper.topMostController().present(controller, animated: true, completion: nil)
     }
-    @IBAction func monitoring_tapped(_ sender: Any) {
-        let controller = self.storyboard?.instantiateViewController(withIdentifier: "LeadershipAwazAllRequestViewController") as! LeadershipAwazAllRequestViewController
-        self.navigationController?.pushViewController(controller, animated: true)
-    }
-    @IBAction func sortedBtn_Tapped(_ sender: Any) {
-        let s = sender as! UIButton
-        if self.sortedImages[s.tag].image != nil {
-            self.sortedImages[s.tag].image = nil
-            
+    
+    @IBAction func sortingBtn_Tapped(_ sender: UIButton) {
+        if self.sortedImages[sender.tag].image != nil {
+            self.sortedImages[sender.tag].image = nil
+            self.filtered_status = ""
             self.isFiltered = false
             self.tableView.reloadData()
             self.setupTableViewHeight(isFiltered: false)
@@ -230,7 +236,7 @@ class ChairmenListingViewController: BaseViewController {
             self.sortedImages.forEach { (UIImageView) in
                 UIImageView.image = nil
             }
-            switch s.tag {
+            switch sender.tag {
             case 0:
                 self.sortedImages[0].image = UIImage(named: "rightY")
                 self.filteredData(status: "Pending")
@@ -251,9 +257,42 @@ class ChairmenListingViewController: BaseViewController {
 }
 
 
+extension LeadershipAwazAllRequestViewController: DateSelectionDelegate {
+    func requestModeSelected(selected_query: String) {}
+    
+    func dateSelection(numberOfDays: Int, selected_query: String) {
+        self.selected_query = selected_query
+        self.numberOfDays = numberOfDays
+        self.thisWeekBtn.setTitle(selected_query, for: .normal)
+        
+        self.start_day = nil
+        self.end_day = nil
+        
+        self.setupJSON(numberOfDays: numberOfDays,  startday: nil, endday: nil)
+    }
+    func dateSelection(startDate: String, endDate: String, selected_query: String) {
+        self.selected_query = selected_query
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd'T'hh:mm:ss"
+        let sDate = dateFormatter.date(from: startDate)
+        let eDate = dateFormatter.date(from: endDate)
+        
+        dateFormatter.dateFormat = "dd-MMM-yyyy"
+        let sDateS = dateFormatter.string(from: sDate ?? Date())
+        let eDateS = dateFormatter.string(from: eDate ?? Date())
+        
+        
+        self.thisWeekBtn.setTitle("\(sDateS) TO \(eDateS)", for: .normal)
+        
+        self.start_day = startDate
+        self.end_day = endDate
+        self.setupJSON(numberOfDays: 0, startday: startDate, endday: endDate)
+    }
+}
 
 
-extension ChairmenListingViewController: UITableViewDataSource, UITableViewDelegate {
+extension LeadershipAwazAllRequestViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if isFiltered {
             if let count = self.filtered_data?.count {
@@ -283,29 +322,42 @@ extension ChairmenListingViewController: UITableViewDataSource, UITableViewDeleg
         cell.subHeading.text = data!.HR_REMARKS!
         cell.date.text = data!.CREATED_DATE?.dateSeperateWithT ?? ""
         
-//        switch data!.TICKET_STATUS {
-//        case "Pending":
-//            cell.status.text = "Pending"
-//            cell.status.textColor = UIColor.pendingColor()
-//            break
-//        case "Approved", "approved":
-//            cell.status.text = "Approved"
-//            cell.status.textColor = UIColor.approvedColor()
-//            break
-//        case "Rejected", "rejected":
-//            cell.status.text = "Rejected"
-//            cell.status.textColor = UIColor.rejectedColor()
-//            break
-//        default:
-//            break
-//        }
-        cell.status.text = "Views: \(data!.VIEW_COUNT ?? 0)"
-        cell.status.textColor = UIColor.rejectedColor()
+        switch data!.TICKET_STATUS {
+        case "Pending":
+            cell.status.text = "Pending"
+            cell.status.textColor = UIColor.pendingColor()
+            break
+        case "Approved", "approved":
+            cell.status.text = "Approved"
+            cell.status.textColor = UIColor.approvedColor()
+            break
+        case "Rejected", "rejected":
+            cell.status.text = "Rejected"
+            cell.status.textColor = UIColor.rejectedColor()
+            break
+        default:
+            print("Wrong Ticket Status")
+            break
+        }
+        
         cell.type.text = "Leadership Connect"
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        <#code#>
+        self.indexPath = indexPath
+        let controller = self.storyboard?.instantiateViewController(withIdentifier: "NewRequestLeadershipAwazViewController") as! NewRequestLeadershipAwazViewController
+        
+        
+        if isFiltered {
+            let current_ticket = self.filtered_data![indexPath.row]
+            controller.ticket_id = current_ticket.SERVER_ID_PK
+            self.navigationController?.pushViewController(controller, animated: true)
+        } else {
+            let current_ticket = self.tbl_request_logs![indexPath.row]
+            controller.ticket_id = current_ticket.SERVER_ID_PK
+            self.navigationController?.pushViewController(controller, animated: true)
+        }
     }
 }
+

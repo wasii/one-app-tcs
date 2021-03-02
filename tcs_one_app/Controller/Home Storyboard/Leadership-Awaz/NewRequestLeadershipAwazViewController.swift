@@ -18,7 +18,7 @@ class NewRequestLeadershipAwazViewController: BaseViewController {
     @IBOutlet weak var message_textview: UITextView!
     @IBOutlet weak var message_group: MDCOutlinedTextField!
     @IBOutlet weak var word_counter: UILabel!
-    @IBOutlet weak var forwardBtn: UIButton!
+    
     
     
     var request_mode:   tbl_RequestModes?
@@ -26,13 +26,17 @@ class NewRequestLeadershipAwazViewController: BaseViewController {
     
     
     var ticket_request: tbl_Hr_Request_Logs?
+    var ticket_id: Int?
+    
+    var isChairmen = false
+    var chairmanStatus = ""
     @IBOutlet weak var mainHeading: UILabel!
     
     @IBOutlet weak var forward_btn: UIButton!
     @IBOutlet weak var reject_btn: UIButton!
     @IBOutlet weak var broadcast_btn: UIButton!
     
-    var isChairmen = false
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.makeTopCornersRounded(roundView: self.mainView)
@@ -43,41 +47,73 @@ class NewRequestLeadershipAwazViewController: BaseViewController {
         message_textview.delegate = self
         message_group.delegate = self
         
-        if let tr = ticket_request {
-            self.message_textview.isEditable = false
-            self.message_subject.isEditable = false
-            self.message_group.isUserInteractionEnabled = false
-            
-            if let emp_info = AppDelegate.sharedInstance.db?.read_tbl_UserProfile().first {
-                if emp_info.HIGHNESS == "1" {
-                    isChairmen = true
+        if let _ = ticket_id {
+            ticket_request = AppDelegate.sharedInstance.db?.read_tbl_hr_request(ticketId: ticket_id!).first
+        }
+        if let emp_info = AppDelegate.sharedInstance.db?.read_tbl_UserProfile().first {
+            if emp_info.HIGHNESS == "1" {
+                if let tr = ticket_request {
                     if tr.TICKET_STATUS == "Pending" {
-                        self.title = "Update Request"
-                        self.mainHeading.text = "Update Request"
-                        
+                        isChairmen = true
                         self.broadcast_btn.isHidden = false
                         self.reject_btn.isHidden = false
-                        self.forwardBtn.isHidden = true
+                        self.title = "Update Request"
+                        self.mainHeading.text = "Update Request"
+                    } else if tr.TICKET_STATUS == "Approved" || tr.TICKET_STATUS == "Rejected" {
+                        self.broadcast_btn.isHidden = true
+                        self.reject_btn.isHidden = true
+                        self.title = "View Request"
+                        self.mainHeading.text = "View Request"
                     }
+                    
+                    self.message_textview.text = "\(tr.HR_REMARKS ?? "")"
+                    self.message_textview.textColor = UIColor.black
+                    self.message_textview.isEditable = false
+                    
+                    self.message_subject.text = "\(tr.REQ_REMARKS ?? "")"
+                    self.message_subject.textColor = UIColor.black
+                    self.message_subject.isEditable = false
+                    
+                    self.word_counter.text = "\(tr.HR_REMARKS?.count ?? 0)/525"
+                    self.forward_btn.isHidden = true
+                    
+                    let query = "SELECT * FROM \(db_la_ad_group) WHERE SERVER_ID_PK = '\(tr.ASSIGNED_TO!)'"
+                    let groupName = AppDelegate.sharedInstance.db?.read_tbl_la_ad_group(query: query).first?.AD_GROUP_NAME
+                    self.message_group.text = "\(groupName ?? "")"
+                    self.message_group.isUserInteractionEnabled = false
                 } else {
+                    self.forward_btn.isHidden = false
+                    self.forward_btn.setImage(UIImage(named: "broadcast-new"), for: .normal)
+                }
+            } else {
+                self.forward_btn.isHidden = false
+                if let tr = ticket_request {
+                    self.message_textview.isEditable = false
+                    self.message_subject.isEditable = false
+                    self.message_group.isUserInteractionEnabled = false
+                    
                     isChairmen = false
                     self.title = "View Request"
                     self.mainHeading.text = "View Request"
-                    self.forwardBtn.isHidden = true
+                    self.forward_btn.isHidden = true
+                    
+                    self.message_subject.text = "\(tr.REQ_REMARKS ?? "")"
+                    self.message_subject.textColor = UIColor.black
+                    
+                    self.message_textview.text = "\(tr.HR_REMARKS ?? "")"
+                    self.message_textview.textColor = UIColor.black
+                    self.word_counter.text = "\(tr.HR_REMARKS?.count ?? 0)/525"
+                    
+                    let query = "SELECT * FROM \(db_la_ad_group) WHERE SERVER_ID_PK = '\(tr.ASSIGNED_TO!)'"
+                    let groupName = AppDelegate.sharedInstance.db?.read_tbl_la_ad_group(query: query).first?.AD_GROUP_NAME
+                    self.message_group.text = "\(groupName ?? "")"
                 }
             }
-            
-            self.message_subject.text = "\(tr.REQ_REMARKS ?? "")"
-            self.message_subject.textColor = UIColor.black
-            
-            self.message_textview.text = "\(tr.HR_REMARKS ?? "")"
-            self.message_textview.textColor = UIColor.black
-            self.word_counter.text = "\(tr.HR_REMARKS?.count ?? 0)/525"
-            
-            let query = "SELECT * FROM \(db_la_ad_group) WHERE SERVER_ID_PK = '\(tr.ASSIGNED_TO!)'"
-            let groupName = AppDelegate.sharedInstance.db?.read_tbl_la_ad_group(query: query).first?.AD_GROUP_NAME
-            self.message_group.text = "\(groupName ?? "")"
         }
+    }
+    
+    func setupView(ticket_request: tbl_Hr_Request_Logs?) {
+        
     }
     
     func setupTextFields() {
@@ -101,7 +137,7 @@ class NewRequestLeadershipAwazViewController: BaseViewController {
             self.view.makeToast("Select Group is mandatory")
             return
         }
-        forwardBtn.isEnabled = false
+        forward_btn.isEnabled = false
         let popup = UIStoryboard(name: "Popups", bundle: nil)
         let controller = popup.instantiateViewController(withIdentifier: "ConfirmationPopViewController") as! ConfirmationPopViewController
         if #available(iOS 13.0, *) {
@@ -112,7 +148,34 @@ class NewRequestLeadershipAwazViewController: BaseViewController {
         Helper.topMostController().present(controller, animated: true, completion: nil)
     }
     @IBAction func broadcastBtnTapped(_ sender: Any) {
-        
+        if !CustomReachability.isConnectedNetwork() {
+            self.view.makeToast(NOINTERNETCONNECTION)
+            return
+        }
+        self.chairmanStatus = "Approved"
+        let popup = UIStoryboard(name: "Popups", bundle: nil)
+        let controller = popup.instantiateViewController(withIdentifier: "ConfirmationPopViewController") as! ConfirmationPopViewController
+        if #available(iOS 13.0, *) {
+            controller.modalPresentationStyle = .overFullScreen
+        }
+        controller.modalTransitionStyle = .crossDissolve
+        controller.delegate = self
+        Helper.topMostController().present(controller, animated: true, completion: nil)
+    }
+    @IBAction func rejectBtnTapped(_ sender: Any) {
+        if !CustomReachability.isConnectedNetwork() {
+            self.view.makeToast(NOINTERNETCONNECTION)
+            return
+        }
+        self.chairmanStatus = "Rejected"
+        let popup = UIStoryboard(name: "Popups", bundle: nil)
+        let controller = popup.instantiateViewController(withIdentifier: "ConfirmationPopViewController") as! ConfirmationPopViewController
+        if #available(iOS 13.0, *) {
+            controller.modalPresentationStyle = .overFullScreen
+        }
+        controller.modalTransitionStyle = .crossDissolve
+        controller.delegate = self
+        Helper.topMostController().present(controller, animated: true, completion: nil)
     }
 }
 
@@ -193,6 +256,15 @@ extension NewRequestLeadershipAwazViewController: UITextViewDelegate {
     
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
         switch textView.tag {
+        case 0:
+            if let texts = textView.text,
+               let textRange = Range(range, in: texts) {
+                let updatedText = texts.replacingCharacters(in: textRange, with: text)
+                if updatedText.containsEmoji {
+                    return false
+                }
+            }
+            return true
         case 1:
             let maxLength = 525
             let currentString: NSString = textView.text as! NSString
@@ -220,7 +292,15 @@ extension NewRequestLeadershipAwazViewController: UITextViewDelegate {
 extension NewRequestLeadershipAwazViewController: ConfirmationProtocol {
     func confirmationProtocol() {
         if isChairmen {
-            self.broadcastMessage()
+            AppDelegate.sharedInstance.db?.updateTables(
+                tableName: db_hr_request,
+                columnName: ["TICKET_STATUS"],
+                updateValue: [self.chairmanStatus],
+                onCondition: "SERVER_ID_PK = '\(self.ticket_request!.SERVER_ID_PK!)'", { success in
+                    if success {
+                        self.broadcastMessage()
+                    }
+                })
         } else {
             self.addrequesttoserver()
         }
@@ -228,20 +308,86 @@ extension NewRequestLeadershipAwazViewController: ConfirmationProtocol {
     }
     
     func noButtonTapped() {
-        forwardBtn.isEnabled = true
+        self.forward_btn.isEnabled = true
     }
     
     private func broadcastMessage() {
+        print(self.chairmanStatus)
         let json = [
             "updawazticket" : [
                 "access_token" : UserDefaults.standard.string(forKey: USER_ACCESS_TOKEN)!,
                 "tickets": [
-                    "status" : "Approved",
+                    "status" : self.chairmanStatus,
                     "ticket_id": "\(self.ticket_request!.SERVER_ID_PK!)"
                 ]
             ]
         ] as [String:Any]
-        let params = getAPIParameter(service_name: <#T##String#>, request_body: json)
+        let params = getAPIParameter(service_name: UPDATEAWAZTICKET, request_body: json)
+        NetworkCalls.updateawazrequest(params: params) { (granted, response) in
+            if granted {
+                var hrFile = [HrFiles]()
+                var hrLog = [HrLog]()
+                
+                if let returnResponse = JSON(response).dictionary {
+                    if let hr_logs  = returnResponse[_hr_logs]?.array {
+                        for logs in hr_logs {
+                            do {
+                                let dictionary = try logs.rawData()
+                                hrLog.append(try JSONDecoder().decode(HrLog.self, from: dictionary))
+                            } catch let err {
+                                print(err.localizedDescription)
+                            }
+                        }
+                        for logs in hrLog {
+                            AppDelegate.sharedInstance.db?.insert_tbl_hr_grievance(hr_log: logs)
+                        }
+                    }
+                    if let hr_files = returnResponse[_hr_files]?.array {
+                        for files in hr_files {
+                            do {
+                                let dictionary = try files.rawData()
+                                hrFile.append(try JSONDecoder().decode(HrFiles.self, from: dictionary))
+                            } catch let err {
+                                print(err.localizedDescription)
+                            }
+                        }
+                        for files in hrFile {
+                            AppDelegate.sharedInstance.db?.insert_tbl_hr_files(hrfile: files)
+                        }
+                    }
+                    let ticket_logs = returnResponse[_tickets_logs]?.array?.first
+                    
+                    DispatchQueue.main.async {
+                        let ref_id = ticket_logs?["REF_ID"].string ?? ""
+                        AppDelegate.sharedInstance.db?.deleteRow(tableName: db_hr_request, column: "REF_ID", ref_id: ref_id, handler: { success in
+                            if success {
+                                do {
+                                    let dictionary = try ticket_logs?.rawData()
+                                    let hrgrievance = try JSONDecoder().decode(HrRequest.self, from: dictionary!)
+                                    
+                                    DispatchQueue.main.async {
+                                        AppDelegate.sharedInstance.db?.insert_tbl_hr_request(hrrequests: hrgrievance, { dump_succes in
+                                            if success {
+                                                DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                                                    NotificationCenter.default.post(Notification.init(name: .refreshedViews))
+                                                    Helper.topMostController().view.makeToast("Request Update Successfully")
+                                                }
+                                                print("DUMPED UPDATED TICKET")
+                                            }
+                                        })
+                                    }
+                                } catch let err {
+                                    print(err.localizedDescription)
+                                }
+                            }
+                        })
+                    }
+                    print(returnResponse)
+                }
+            } else {
+                print(response)
+            }
+        }
     }
     
     

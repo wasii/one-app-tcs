@@ -273,6 +273,24 @@ extension NotificationsViewController: UITableViewDelegate, UITableViewDataSourc
                 break
             }
             break
+        case 4:
+            cell.status.text = data.TICKET_STATUS
+            cell.type.text = "Leadership Connect"
+            switch data.TICKET_STATUS.lowercased() {
+                case "pending":
+                    cell.status.textColor = UIColor.pendingColor()
+                    break
+                case "approved":
+                    cell.status.textColor = UIColor.approvedColor()
+                    cell.status.text = "Completed"
+                    break
+                case "rejected":
+                    cell.status.textColor = UIColor.rejectedColor()
+                    break
+            default:
+                break
+            }
+            break
         default:
             break
         }
@@ -402,7 +420,13 @@ extension NotificationsViewController: UITableViewDelegate, UITableViewDataSourc
             }
             break
         case 3:
+            break
+        case 4:
+            let storyboard = UIStoryboard(name: "LeadershipAwaz", bundle: nil)
+            let controller = storyboard.instantiateViewController(withIdentifier: "NewRequestLeadershipAwazViewController") as! NewRequestLeadershipAwazViewController
             
+            controller.ticket_id = self.hr_notification![indexPath.row].TICKET_ID
+            self.navigationController?.pushViewController(controller, animated: true)
             break
         default:
             break
