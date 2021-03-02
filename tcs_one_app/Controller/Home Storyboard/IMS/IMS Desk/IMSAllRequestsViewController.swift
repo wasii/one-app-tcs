@@ -171,20 +171,20 @@ class IMSAllRequestsViewController: BaseViewController {
                 }) ?? false
 
                 if index.LOGIN_ID == Int(CURRENT_USER_LOGGED_IN_ID) && isGranted {
-                    if current_user == IMS_Remarks_Line_Manager {
+                    if current_user == IMS_InputBy_LineManager {
                         if index.LINE_MANAGER1 == Int(CURRENT_USER_LOGGED_IN_ID)! {
                             temp_logs?.append(index)
                             continue
                         }
-                    }
-                    if current_user == IMS_Remarks_Department_Head {
+                    } else if current_user == IMS_InputBy_Hod {
                         if index.LINE_MANAGER2 == Int(CURRENT_USER_LOGGED_IN_ID)! {
                             temp_logs?.append(index)
                             continue
                         }
+                    } else {
+                        temp_logs?.append(index)
+                        continue
                     }
-                    temp_logs?.append(index)
-                    continue
                 }
                 let query = "SELECT * FROM \(db_grievance_remarks) WHERE EMPL_NO = '\(Int(CURRENT_USER_LOGGED_IN_ID)!)' AND TICKET_ID = '\(index.SERVER_ID_PK!)' AND REMARKS_INPUT = '\(current_user)'"
                 
