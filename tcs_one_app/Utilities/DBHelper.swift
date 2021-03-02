@@ -1589,7 +1589,7 @@ class DBHelper {
             
             sqlite3_bind_text(insertStatement, 21, ((hrrequests.REM_TAT_STATUS ?? "") as NSString).utf8String, -1, nil)
             sqlite3_bind_text(insertStatement, 22, ((hrrequests.REM_TAT_STATUS_TIME ?? "") as NSString).utf8String, -1, nil)
-            sqlite3_bind_int(insertStatement, 23, Int32(hrrequests.TAT_DAYS ?? -1))
+            sqlite3_bind_int(insertStatement, 23, Int32(hrrequests.ASSIGNED_TO ?? -1))
             sqlite3_bind_text(insertStatement, 24, ((hrrequests.REF_ID ?? "") as NSString).utf8String, -1, nil)
             sqlite3_bind_text(insertStatement, 25, ((hrrequests.AREA_CODE ?? "") as NSString).utf8String, -1, nil)
             sqlite3_bind_text(insertStatement, 26, ((hrrequests.STATION_CODE ?? "") as NSString).utf8String, -1, nil)

@@ -26,6 +26,13 @@ class NewRequestLeadershipAwazViewController: BaseViewController {
     
     
     var ticket_request: tbl_Hr_Request_Logs?
+    @IBOutlet weak var mainHeading: UILabel!
+    
+    @IBOutlet weak var forward_btn: UIButton!
+    @IBOutlet weak var reject_btn: UIButton!
+    @IBOutlet weak var broadcast_btn: UIButton!
+    
+    var isChairmen = false
     override func viewDidLoad() {
         super.viewDidLoad()
         self.makeTopCornersRounded(roundView: self.mainView)
@@ -37,11 +44,39 @@ class NewRequestLeadershipAwazViewController: BaseViewController {
         message_group.delegate = self
         
         if let tr = ticket_request {
-            self.title = "View Request"
+            self.message_textview.isEditable = false
+            self.message_subject.isEditable = false
+            self.message_group.isUserInteractionEnabled = false
+            
+            if let emp_info = AppDelegate.sharedInstance.db?.read_tbl_UserProfile().first {
+                if emp_info.HIGHNESS == "1" {
+                    isChairmen = true
+                    if tr.TICKET_STATUS == "Pending" {
+                        self.title = "Update Request"
+                        self.mainHeading.text = "Update Request"
+                        
+                        self.broadcast_btn.isHidden = false
+                        self.reject_btn.isHidden = false
+                        self.forwardBtn.isHidden = true
+                    }
+                } else {
+                    isChairmen = false
+                    self.title = "View Request"
+                    self.mainHeading.text = "View Request"
+                    self.forwardBtn.isHidden = true
+                }
+            }
+            
             self.message_subject.text = "\(tr.REQ_REMARKS ?? "")"
+            self.message_subject.textColor = UIColor.black
+            
             self.message_textview.text = "\(tr.HR_REMARKS ?? "")"
-//            let query = AppDelegate.sharedInstance.db.read_tbl_
-//            self.message_group.text = "\(tr.)"
+            self.message_textview.textColor = UIColor.black
+            self.word_counter.text = "\(tr.HR_REMARKS?.count ?? 0)/525"
+            
+            let query = "SELECT * FROM \(db_la_ad_group) WHERE SERVER_ID_PK = '\(tr.ASSIGNED_TO!)'"
+            let groupName = AppDelegate.sharedInstance.db?.read_tbl_la_ad_group(query: query).first?.AD_GROUP_NAME
+            self.message_group.text = "\(groupName ?? "")"
         }
     }
     
@@ -75,6 +110,9 @@ class NewRequestLeadershipAwazViewController: BaseViewController {
         controller.modalTransitionStyle = .crossDissolve
         controller.delegate = self
         Helper.topMostController().present(controller, animated: true, completion: nil)
+    }
+    @IBAction func broadcastBtnTapped(_ sender: Any) {
+        
     }
 }
 
@@ -181,7 +219,11 @@ extension NewRequestLeadershipAwazViewController: UITextViewDelegate {
 
 extension NewRequestLeadershipAwazViewController: ConfirmationProtocol {
     func confirmationProtocol() {
-        self.addrequesttoserver()
+        if isChairmen {
+            self.broadcastMessage()
+        } else {
+            self.addrequesttoserver()
+        }
         self.navigationController?.popViewController(animated: true)
     }
     
@@ -189,7 +231,21 @@ extension NewRequestLeadershipAwazViewController: ConfirmationProtocol {
         forwardBtn.isEnabled = true
     }
     
-    func addrequesttoserver() {
+    private func broadcastMessage() {
+        let json = [
+            "updawazticket" : [
+                "access_token" : UserDefaults.standard.string(forKey: USER_ACCESS_TOKEN)!,
+                "tickets": [
+                    "status" : "Approved",
+                    "ticket_id": "\(self.ticket_request!.SERVER_ID_PK!)"
+                ]
+            ]
+        ] as [String:Any]
+        let params = getAPIParameter(service_name: <#T##String#>, request_body: json)
+    }
+    
+    
+    private func addrequesttoserver() {
         var req_mod_id = AppDelegate.sharedInstance.db?.read_tbl_requestModes(module_id: CONSTANT_MODULE_ID)
         req_mod_id = req_mod_id?.filter({ f -> Bool in
             f.REQ_MODE_DESC == "Broadcasting"

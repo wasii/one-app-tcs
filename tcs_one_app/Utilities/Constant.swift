@@ -48,6 +48,7 @@ let IMSUPDATE               = "oneapp.imsupdate"
 
 //LEADERSHIP AWAZ
 let ADDAWAZTICKET           = "oneapp.addawazticket"
+let UPDATEAWAZTICKET        = "oneapp.updawazticket"
 
 //API BACKEND KEYS
 let eAI_MESSAGE             = "eAI_MESSAGE"

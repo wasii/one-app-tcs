@@ -785,26 +785,58 @@
                                             </view>
                                         </subviews>
                                     </stackView>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HbY-7n-OIP">
+                                    <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="QZy-oA-PxL">
                                         <rect key="frame" x="310" y="449" width="50" height="50"/>
+                                        <subviews>
+                                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZsG-I6-4oN">
+                                                <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" secondItem="ZsG-I6-4oN" secondAttribute="height" id="KhC-sx-sdA"/>
+                                                    <constraint firstAttribute="height" constant="50" id="T9X-Kg-KJe"/>
+                                                </constraints>
+                                                <state key="normal" image="cancel-new"/>
+                                                <connections>
+                                                    <action selector="forwardBtn_Tapped:" destination="mUa-5Z-ktD" eventType="touchUpInside" id="IPO-vT-mPm"/>
+                                                </connections>
+                                            </button>
+                                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Dtk-Dx-g2q">
+                                                <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="50" id="9Xm-7D-k6u"/>
+                                                    <constraint firstAttribute="width" secondItem="Dtk-Dx-g2q" secondAttribute="height" id="TRc-uF-znA"/>
+                                                </constraints>
+                                                <state key="normal" image="broadcast-new"/>
+                                                <connections>
+                                                    <action selector="broadcastBtnTapped:" destination="mUa-5Z-ktD" eventType="touchUpInside" id="Dnq-cK-Ncp"/>
+                                                    <action selector="forwardBtn_Tapped:" destination="mUa-5Z-ktD" eventType="touchUpInside" id="fqO-6v-F21"/>
+                                                </connections>
+                                            </button>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HbY-7n-OIP">
+                                                <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" secondItem="HbY-7n-OIP" secondAttribute="height" id="ZJb-ho-FIU"/>
+                                                    <constraint firstAttribute="height" constant="50" id="ltZ-BJ-HaQ"/>
+                                                </constraints>
+                                                <state key="normal" image="forward-new"/>
+                                                <connections>
+                                                    <action selector="forwardBtn_Tapped:" destination="mUa-5Z-ktD" eventType="touchUpInside" id="1Un-xT-ctW"/>
+                                                </connections>
+                                            </button>
+                                        </subviews>
                                         <constraints>
-                                            <constraint firstAttribute="width" secondItem="HbY-7n-OIP" secondAttribute="height" id="ZJb-ho-FIU"/>
-                                            <constraint firstAttribute="height" constant="50" id="ltZ-BJ-HaQ"/>
+                                            <constraint firstItem="ZsG-I6-4oN" firstAttribute="width" secondItem="ZsG-I6-4oN" secondAttribute="height" id="laA-U6-PCR"/>
+                                            <constraint firstItem="Dtk-Dx-g2q" firstAttribute="width" secondItem="Dtk-Dx-g2q" secondAttribute="height" id="xf6-Hb-yKt"/>
                                         </constraints>
-                                        <state key="normal" image="broadcast-new"/>
-                                        <connections>
-                                            <action selector="forwardBtn_Tapped:" destination="mUa-5Z-ktD" eventType="touchUpInside" id="1Un-xT-ctW"/>
-                                        </connections>
-                                    </button>
+                                    </stackView>
                                 </subviews>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <constraints>
-                                    <constraint firstItem="HbY-7n-OIP" firstAttribute="top" secondItem="5w5-cb-chY" secondAttribute="bottom" constant="15" id="2to-gx-tEf"/>
+                                    <constraint firstItem="QZy-oA-PxL" firstAttribute="top" secondItem="5w5-cb-chY" secondAttribute="bottom" constant="15" id="5FH-0T-1Q2"/>
                                     <constraint firstItem="5w5-cb-chY" firstAttribute="width" secondItem="Ksd-1q-ffY" secondAttribute="width" id="L4T-mC-dNY"/>
                                     <constraint firstItem="5w5-cb-chY" firstAttribute="leading" secondItem="Ksd-1q-ffY" secondAttribute="leading" id="L8u-pV-UHd"/>
                                     <constraint firstItem="9Oc-wQ-jg4" firstAttribute="centerX" secondItem="Ksd-1q-ffY" secondAttribute="centerX" id="Nli-FM-r1U"/>
-                                    <constraint firstAttribute="trailing" secondItem="HbY-7n-OIP" secondAttribute="trailing" constant="15" id="X4r-Gg-E6T"/>
                                     <constraint firstItem="5w5-cb-chY" firstAttribute="top" secondItem="9Oc-wQ-jg4" secondAttribute="bottom" constant="15" id="am1-8V-LST"/>
+                                    <constraint firstAttribute="trailing" secondItem="QZy-oA-PxL" secondAttribute="trailing" constant="15" id="e45-rY-qsi"/>
                                     <constraint firstAttribute="trailing" secondItem="5w5-cb-chY" secondAttribute="trailing" id="goq-Sf-0cG"/>
                                     <constraint firstItem="9Oc-wQ-jg4" firstAttribute="top" secondItem="Ksd-1q-ffY" secondAttribute="top" constant="10" id="yZC-dO-EbG"/>
                                 </constraints>
@@ -821,11 +853,15 @@
                     </view>
                     <navigationItem key="navigationItem" id="3ue-zU-4bh"/>
                     <connections>
+                        <outlet property="broadcast_btn" destination="Dtk-Dx-g2q" id="xiW-nH-0CD"/>
                         <outlet property="forwardBtn" destination="HbY-7n-OIP" id="CKi-Pn-pHC"/>
+                        <outlet property="forward_btn" destination="HbY-7n-OIP" id="kg1-97-sHb"/>
+                        <outlet property="mainHeading" destination="9Oc-wQ-jg4" id="plP-Zs-NgI"/>
                         <outlet property="mainView" destination="Ksd-1q-ffY" id="cXu-Nc-SSs"/>
                         <outlet property="message_group" destination="EtZ-Wx-79Y" id="kOW-x3-UiP"/>
                         <outlet property="message_subject" destination="XMU-lL-xPR" id="5fK-62-4J9"/>
                         <outlet property="message_textview" destination="kZ1-IR-jZt" id="S2c-46-vuB"/>
+                        <outlet property="reject_btn" destination="ZsG-I6-4oN" id="Gb1-ZZ-9bp"/>
                         <outlet property="word_counter" destination="xHL-eZ-sm5" id="Fi4-yd-8I9"/>
                     </connections>
                 </viewController>
@@ -1423,8 +1459,10 @@
     </designables>
     <resources>
         <image name="broadcast-new" width="42" height="42"/>
+        <image name="cancel-new" width="42" height="42"/>
         <image name="drop_down_red" width="128" height="128"/>
         <image name="droparrowG" width="32" height="32"/>
+        <image name="forward-new" width="42" height="42"/>
         <image name="helpdesk" width="32" height="32"/>
         <image name="magnifyingglass" catalog="system" width="128" height="115"/>
         <image name="plus" catalog="system" width="128" height="113"/>
