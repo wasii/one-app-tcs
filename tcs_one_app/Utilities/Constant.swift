@@ -619,6 +619,11 @@ let ENTER_RISK_REMARKS = "Enter Risk Remarks"
 let ENTER_CLOSURE_REMARKS_TAG = 13
 let ENTER_CLOSURE_REMARKS = "Enter Recommendations"
 
+
+
+//MARK: LEADERSHIP AWAZ
+let PERMISSION_ViewBroadcastMode = "View Broadcast Mode"
+
 let FILTERDATA = [
     "Weekly",
     "15 Days",

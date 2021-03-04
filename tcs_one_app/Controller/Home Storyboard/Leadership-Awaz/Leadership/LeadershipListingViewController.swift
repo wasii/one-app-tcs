@@ -110,9 +110,9 @@ class LeadershipListingViewController: BaseViewController {
             let weekly = previousDate.convertDateToString(date: previousDate)
             
             
-            query = "SELECT * FROM REQUEST_LOGS WHERE CREATED_DATE >= '\(weekly)' AND CREATED_DATE <= '\(getLocalCurrentDate())' AND MODULE_ID = '\(CONSTANT_MODULE_ID)' AND CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)' order by CREATED_DATE DESC LIMIT 0,50"
+            query = "SELECT * FROM REQUEST_LOGS WHERE CREATED_DATE >= '\(weekly)' AND CREATED_DATE <= '\(getLocalCurrentDate())' AND MODULE_ID = '\(CONSTANT_MODULE_ID)' AND CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)' order by CREATED_DATE DESC"
         } else {
-            query = "SELECT * FROM REQUEST_LOGS WHERE CREATED_DATE >= '\(startday!)' AND CREATED_DATE <= '\(endday!)' AND MODULE_ID = '\(CONSTANT_MODULE_ID)' AND CURRENT_USER = \(CURRENT_USER_LOGGED_IN_ID) order by CREATED_DATE DESC LIMIT 0,50"
+            query = "SELECT * FROM REQUEST_LOGS WHERE CREATED_DATE >= '\(startday!)' AND CREATED_DATE <= '\(endday!)' AND MODULE_ID = '\(CONSTANT_MODULE_ID)' AND CURRENT_USER = \(CURRENT_USER_LOGGED_IN_ID) order by CREATED_DATE DESC`1"
         }
         
         tbl_request_logs = AppDelegate.sharedInstance.db?.read_tbl_hr_request(query: query)
@@ -126,7 +126,6 @@ class LeadershipListingViewController: BaseViewController {
             self.filteredTableviewHeightConstraint.constant = 0
             self.getDateSpecificWiseRecords(date: self.stackBarChartDate)
         }
-        
         
         self.mainViewHeightConstraint.constant -= self.tableViewHeightConstraint.constant
         self.tableViewHeightConstraint.constant = 0
@@ -345,7 +344,7 @@ extension LeadershipListingViewController: ChartViewDelegate {
     }
     
     func getDateSpecificWiseRecords(date: String) {
-        let query = "SELECT * FROM REQUEST_LOGS WHERE CREATED_DATE >= '\(date)T00:00:00' AND CREATED_DATE <= '\(date)T23:59:59' AND MODULE_ID = '\(CONSTANT_MODULE_ID)' AND CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)' order by CREATED_DATE DESC LIMIT 0,50"
+        let query = "SELECT * FROM REQUEST_LOGS WHERE CREATED_DATE >= '\(date)T00:00:00' AND CREATED_DATE <= '\(date)T23:59:59' AND MODULE_ID = '\(CONSTANT_MODULE_ID)' AND CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)' order by CREATED_DATE DESC"
         self.date_specific_tbl_request_logs = AppDelegate.sharedInstance.db?.read_tbl_hr_request(query: query).filter({ (logs) -> Bool in
             logs.MODULE_ID! == CONSTANT_MODULE_ID
         })
@@ -425,14 +424,14 @@ extension LeadershipListingViewController: UITableViewDelegate, UITableViewDataS
             data = self.tbl_request_logs![indexPath.row]
         }
         cell.mainHeading.text = data!.REQ_REMARKS!
-        cell.subHeading.text = data!.HR_REMARKS!
+        cell.subHeading.text = "Ticket Id: \(data!.SERVER_ID_PK!)"
         cell.date.text = data!.CREATED_DATE?.dateSeperateWithT ?? ""
         
         if data!.TICKET_STATUS == "Pending" || data!.TICKET_STATUS == "pending" {
             cell.status.text = "Pending"
             cell.status.textColor = UIColor.pendingColor()
         } else if data!.TICKET_STATUS == "Approved" || data!.TICKET_STATUS == "approved" {
-            cell.status.text = "Completed"
+            cell.status.text = "Approved"
             cell.status.textColor = UIColor.approvedColor()
         } else {
             cell.status.text = "Rejected"

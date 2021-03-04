@@ -319,7 +319,7 @@ extension LeadershipAwazAllRequestViewController: UITableViewDataSource, UITable
         }
         
         cell.mainHeading.text = data!.REQ_REMARKS!
-        cell.subHeading.text = data!.HR_REMARKS!
+        cell.subHeading.text = "Ticket Id: \(data!.SERVER_ID_PK!)"
         cell.date.text = data!.CREATED_DATE?.dateSeperateWithT ?? ""
         
         switch data!.TICKET_STATUS {

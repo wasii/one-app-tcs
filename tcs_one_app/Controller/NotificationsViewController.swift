@@ -16,8 +16,12 @@ class NotificationsViewController: BaseViewController {
     
     @IBOutlet weak var tableViewTopConstraint: NSLayoutConstraint!
 
+    @IBOutlet weak var highAlertView: UIView!
     @IBOutlet weak var hightAlertSwitch: UISwitch!
-    @IBOutlet weak var highAlertLabel: UILabel!
+    
+    @IBOutlet weak var broadcastView: UIView!
+    @IBOutlet weak var broadCastSwitch: UISwitch!
+    
     var ticket_id: Int?
     var hr_notification: [tbl_HR_Notification_Request]?
     var indexPath: IndexPath?
@@ -29,6 +33,7 @@ class NotificationsViewController: BaseViewController {
         }
         NotificationCenter.default.addObserver(self, selector: #selector(refreshedView(notification:)), name: .refreshedViews, object: nil)
         hightAlertSwitch.addTarget(self, action: #selector(switchChanged(mySwitch:)), for: .valueChanged)
+        broadCastSwitch.addTarget(self, action: #selector(broadCastSwitchChanged(mySwitch:)), for: .valueChanged)
         if isSwitchOn {
             self.getBreachedTickets()
         } else {
@@ -42,7 +47,7 @@ class NotificationsViewController: BaseViewController {
         
     }
     @objc func switchChanged(mySwitch: UISwitch) {
-//        let value = mySwitch.isOn
+        self.broadCastSwitch.isOn = false
         if mySwitch.isOn {
             print("ON")
             self.isSwitchOn = true
@@ -64,6 +69,24 @@ class NotificationsViewController: BaseViewController {
                 }
             }
             print("OFF")
+        }
+    }
+    
+    @objc func broadCastSwitchChanged(mySwitch: UISwitch) {
+        self.hightAlertSwitch.isOn = false
+        setup_hr_notification { (success, count) in
+            if success {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
+                    let height = (80 * count) + 50
+                    if CGFloat(height) > UIScreen.main.bounds.height {
+                        self.mainViewHeightConstraint.constant = CGFloat(height)
+                    } else {
+                        self.mainViewHeightConstraint.constant = UIScreen.main.bounds.height
+                    }
+                    self.mainView.layoutIfNeeded()
+                    self.tableView.reloadData()
+                }
+            }
         }
     }
     
@@ -93,6 +116,16 @@ class NotificationsViewController: BaseViewController {
                 req1.CREATED_DATE > req2.CREATED_DATE
             })
             
+            if self.broadCastSwitch.isOn {
+                hr_notification = hr_notification?.filter({ (logs) -> Bool in
+                    logs.MODULE_ID == 4
+                })
+            } else {
+                hr_notification = hr_notification?.filter({ (logs) -> Bool in
+                    logs.MODULE_ID != 4
+                })
+            }
+            
             handler(true, hr_notification!.count)
         }
     }
@@ -121,15 +154,19 @@ class NotificationsViewController: BaseViewController {
         }
         if let management_bar = AppDelegate.sharedInstance.db?.read_tbl_UserPermission(permission: PERMISSION_HR_LISTING_MANAGEMENT_BAR).count {
             if management_bar > 0 {
-                highAlertLabel.isHidden = false
-                hightAlertSwitch.isHidden = false
+                highAlertView.isHidden = false
                 tableViewTopConstraint.constant = 50
             }
         }
         if let management_bar = AppDelegate.sharedInstance.db?.read_tbl_UserPermission(permission: PERMISSION_GRIEVENCE_LISTING_MANAGEMENT_BAR).count {
             if management_bar > 0 {
-                highAlertLabel.isHidden = false
-                hightAlertSwitch.isHidden = false
+                highAlertView.isHidden = false
+                tableViewTopConstraint.constant = 50
+            }
+        }
+        if let viewGraph = AppDelegate.sharedInstance.db?.read_tbl_UserPermission(permission: PERMISSION_ViewBroadcastMode).count {
+            if viewGraph > 0 {
+                broadcastView.isHidden = false
                 tableViewTopConstraint.constant = 50
             }
         }

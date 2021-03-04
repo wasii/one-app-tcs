@@ -323,6 +323,6 @@ struct LoginCount: Codable {
 
     enum CodingKeys: String, CodingKey {
         case application = "APPLICATION"
-        case countXEmpno = "COUNT(X.EMPNO)"
+        case countXEmpno = "EMP_COUNT"
     }
 }

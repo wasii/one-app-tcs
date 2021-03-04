@@ -714,6 +714,7 @@ class FetchUserDataViewController: BaseViewController {
                 })
             }
         }
+        self.count = 0
         self.isTotalCounter = 0
         self.getHrNotifications()
     }
@@ -799,8 +800,8 @@ extension FetchUserDataViewController {
                                 }
                             } else {
                                 DispatchQueue.main.async {
-                                    self.counter.isHidden = false
-                                    self.counter.text = "\(self.isTotalCounter)/\(self.count)"
+                                    self.notification_counter.isHidden = false
+                                    self.notification_counter.text = "\(self.isTotalCounter)/\(self.count)"
                                 }
                                 self.skip += 80
                                 self.getHrNotifications()

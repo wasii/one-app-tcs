@@ -280,7 +280,7 @@ extension ChairmenListingViewController: UITableViewDataSource, UITableViewDeleg
         }
         
         cell.mainHeading.text = data!.REQ_REMARKS!
-        cell.subHeading.text = data!.HR_REMARKS!
+        cell.subHeading.text = "Ticket Id: \(data!.SERVER_ID_PK!)"
         cell.date.text = data!.CREATED_DATE?.dateSeperateWithT ?? ""
         
 //        switch data!.TICKET_STATUS {
@@ -306,6 +306,6 @@ extension ChairmenListingViewController: UITableViewDataSource, UITableViewDeleg
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        <#code#>
+        
     }
 }

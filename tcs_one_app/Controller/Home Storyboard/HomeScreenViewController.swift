@@ -41,6 +41,8 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
     
     var pageControllIndex = 0
     var chartViews:[ChartViews] = []
+    var ViewBroadCastPermission = true
+    var ModuleCount = 0
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = "Dashboard"
@@ -62,10 +64,10 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
         
         
         setupUserModules()
-//        chartViews = createChartViews()
+        chartViews = createChartViews()
         scrollView.delegate = self
         
-        pageControl.numberOfPages = module!.count - 1
+        pageControl.numberOfPages = self.ModuleCount
         pageControl.currentPage = 0
         mainView.bringSubviewToFront(pageControl)
         
@@ -84,8 +86,8 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
             self.notification_view.isHidden = true
             self.notification_label.text = ""
         }
-//        chartViews = [ChartViews]()
-//        chartViews = createChartViews()
+        chartViews = [ChartViews]()
+        chartViews = createChartViews()
 
         viewDidLayoutSubviews()
     }
@@ -102,8 +104,8 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
             self.notification_view.isHidden = true
             self.notification_label.text = ""
         }
-//        chartViews = [ChartViews]()
-//        chartViews = createChartViews()
+        chartViews = [ChartViews]()
+        chartViews = createChartViews()
     }
     override func viewDidDisappear(_ animated: Bool) {
         NotificationCenter.default.removeObserver(self)
@@ -112,7 +114,7 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
     
     
     override func viewDidLayoutSubviews() {
-//        setupSlideScrollView(chartViews: chartViews)
+        setupSlideScrollView(chartViews: chartViews)
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
@@ -121,51 +123,76 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
         self.pageControllIndex = Int(pageIndex)
     }
     func createChartViews() -> [ChartViews] {
-        var chartViews = [ChartViews]()
-        for index in 1...5 {
-            let chart:ChartViews = Bundle.main.loadNibNamed("ChartViews", owner: self, options: nil)?.first as! ChartViews
-            switch index {
-            case 1:
-                chart.heading.text = "HR Dashboard"
-                chart.pieChart = self.setupGraphs(pieChartView: chart.pieChart,
-                                                  module_id: index,
-                                                  pending: "Pending",
-                                                  approved: "Completed",
-                                                  rejected: "Rejected",
-                                                  tag: index)
-                break
-            case 2:
-                chart.heading.text = "Awaz Dashboard"
-                chart.pieChart = self.setupGraphs(pieChartView: chart.pieChart,
-                                                  module_id: index,
-                                                  pending: "Submitted",
-                                                  approved: INREVIEW,
-                                                  rejected: "Closed",
-                                                  tag: index)
-                break
-            case 4:
-                chart.heading.text = "Leadership Awaz Dashboard"
-                chart.pieChart = self.setupGraphs(pieChartView: chart.pieChart,
-                                                  module_id: index,
-                                                  pending: "Submitted",
-                                                  approved: INREVIEW,
-                                                  rejected: "Closed",
-                                                  tag: index)
-                break
-            case 5:
-                chart.heading.text = "Login Count"
-                chart.pieChart = self.setupGraphs(pieChartView: chart.pieChart,
-                                                  module_id: index,
-                                                  pending: "Web",
-                                                  approved: "Android",
-                                                  rejected: "iOS",
-                                                  tag: index)
-                break
-            default:
-                continue
+        if let _ = self.module {
+            chartViews = [ChartViews]()
+            for mod in self.module! {
+                if mod.MODULENAME == "Track" || mod.MODULENAME == "IMS" {
+                    continue
+                }
+                let chart:ChartViews = Bundle.main.loadNibNamed("ChartViews", owner: self, options: nil)?.first as! ChartViews
+                switch mod.MODULENAME {
+                case "HR Help Desk":
+                    chart.heading.text = "HR Dashboard"
+                    chart.pieChart = self.setupGraphs(pieChartView: chart.pieChart,
+                                                      module_id: mod.SERVER_ID_PK,
+                                                      pending: "Pending",
+                                                      approved: "Completed",
+                                                      rejected: "Rejected",
+                                                      tag: mod.SERVER_ID_PK)
+                    self.ModuleCount += 1
+                    break
+                case "Awaz":
+                    chart.heading.text = "Awaz Dashboard"
+                    chart.pieChart = self.setupGraphs(pieChartView: chart.pieChart,
+                                                      module_id: mod.SERVER_ID_PK,
+                                                      pending: "Submitted",
+                                                      approved: INREVIEW,
+                                                      rejected: "Closed",
+                                                      tag: mod.SERVER_ID_PK)
+                    self.ModuleCount += 1
+                    break
+//                case "IMS":
+//                    chart.heading.text = "IMS Dashboard"
+//                    chart.pieChart = self.setupGraphs(pieChartView: chart.pieChart,
+//                                                      module_id: mod.SERVER_ID_PK,
+//                                                      pending: "Submitted",
+//                                                      approved: IMS_Status_Inprogress,
+//                                                      rejected: "Closed",
+//                                                      tag: mod.SERVER_ID_PK)
+//                    break
+                case "Leadership Connect":
+                    chart.heading.text = "Leadership Connect Dashboard"
+                    chart.pieChart = self.setupGraphs(pieChartView: chart.pieChart,
+                                                      module_id: mod.SERVER_ID_PK,
+                                                      pending: "Pending",
+                                                      approved: "Approved",
+                                                      rejected: "Rejected",
+                                                      tag: mod.SERVER_ID_PK)
+                    self.ModuleCount += 1
+                    break
+                default:
+                    break
+                }
+                chartViews.append(chart)
             }
-            chartViews.append(chart)
         }
+        if ViewBroadCastPermission {
+            if let appCount = AppDelegate.sharedInstance.db?.read_tbl_login_count(query: "SELECT * FROM \(db_login_count)") {
+                if appCount.count > 0 {
+                    let chart:ChartViews = Bundle.main.loadNibNamed("ChartViews", owner: self, options: nil)?.first as! ChartViews
+                    chart.heading.text = "OneApp Installs"
+                    chart.pieChart = self.setupGraphs(pieChartView: chart.pieChart,
+                                                      module_id: -1,
+                                                      pending: "Web",
+                                                      approved: "Android",
+                                                      rejected: "iOS",
+                                                      tag: -1)
+                    self.ModuleCount += 1
+                    chartViews.append(chart)
+                }
+            }
+        }
+        
         return chartViews
     }
     
@@ -214,7 +241,7 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
         var approvedCounter :Double = 0
         var rejectedCounter :Double = 0
         
-        if tag == 5 {
+        if tag == -1 {
             let appCount = AppDelegate.sharedInstance.db?.read_tbl_login_count(query: "SELECT * FROM \(db_login_count)")
             if let data = appCount {
                 for index in data {
@@ -303,11 +330,11 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
 
         for data in entries {
             switch tag {
-            case 1:
+            case 1, 4:
                 switch data.label {
                 case "Pending", "pending": colors.append(UIColor.pendingColor())
                     break
-                case "Completed" : colors.append(UIColor.approvedColor())
+                case "Completed", "Approved" : colors.append(UIColor.approvedColor())
                     break
                 case "Rejected", "rejected" : colors.append(UIColor.rejectedColor())
                     break
@@ -327,7 +354,7 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
                     default: break
                 }
             break
-            case 5:
+            case -1:
                 switch data.label {
                 case "Web": colors.append(UIColor.pendingColor()); break
                 case "Android": colors.append(UIColor.approvedColor()); break
@@ -358,8 +385,18 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
     }
     func setupUserModules() {
         module = AppDelegate.sharedInstance.db?.read_tbl_UserModule(query: "Select * from \(db_user_module) GROUP BY SERVER_ID_PK")
+        if let permission = AppDelegate.sharedInstance.db?.read_tbl_UserPermission(permission: PERMISSION_ViewBroadcastMode).count {
+            if permission <= 0 {
+                for (i, m) in module!.enumerated() {
+                    if m.MODULENAME == "Leadership Connect" {
+                        self.module?.remove(at: i)
+                        self.ViewBroadCastPermission = false
+                        break
+                    }
+                }
+            }
+        }
         DispatchQueue.main.async {
-//            self.module?.removeLast()
             self.module_CollectionView.reloadData()
         }
     }
@@ -367,7 +404,7 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
     func layoutFAB() {
         floaty.plusColor = UIColor.white
         floaty.buttonColor = UIColor.nativeRedColor()
-        if let modules = self.module {
+        if let _ = self.module {
             for i in 0..<4  {
                 switch i {
                 case 3:
@@ -395,11 +432,13 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
                       
                     }
                     break
-                case 1:
-                    floaty.addItem("Leadership Awaz", icon: UIImage(named: "helpdesk")) { item in
-//                        let storyboard = UIStoryboard(name: "TrackStoryboard", bundle: nil)
-//                        let controller = storyboard.instantiateViewController(withIdentifier: "TrackHomeViewController") as! TrackHomeViewController
-//                        self.navigationController?.pushViewController(controller, animated: true)
+                case 0:
+                    if ViewBroadCastPermission {
+                        floaty.addItem("Add Leadership Connect", icon: UIImage(named: "helpdesk")) { item in
+                            let storyboard = UIStoryboard(name: "LeadershipAwaz", bundle: nil)
+                            let controller = storyboard.instantiateViewController(withIdentifier: "NewRequestLeadershipAwazViewController") as! NewRequestLeadershipAwazViewController
+                            self.navigationController?.pushViewController(controller, animated: true)
+                        }
                     }
                     break
                 default:
