@@ -225,6 +225,9 @@
                                                                     </view>
                                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mNH-RO-RjG">
                                                                         <rect key="frame" x="0.0" y="0.0" width="108.5" height="140"/>
+                                                                        <connections>
+                                                                            <action selector="sortedBtn_Tapped:" destination="0z6-GP-MWp" eventType="touchUpInside" id="G2b-oz-m3s"/>
+                                                                        </connections>
                                                                     </button>
                                                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="oeo-Rm-ppL">
                                                                         <rect key="frame" x="84.5" y="4" width="20" height="20"/>
@@ -343,6 +346,9 @@
                                                                     </view>
                                                                     <button opaque="NO" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="k9G-9y-L5L">
                                                                         <rect key="frame" x="0.0" y="0.0" width="108" height="140"/>
+                                                                        <connections>
+                                                                            <action selector="sortedBtn_Tapped:" destination="0z6-GP-MWp" eventType="touchUpInside" id="u6Q-Vh-CI5"/>
+                                                                        </connections>
                                                                     </button>
                                                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" tag="1" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="82q-kr-BwB">
                                                                         <rect key="frame" x="84" y="4" width="20" height="20"/>
@@ -455,6 +461,9 @@
                                                                     </view>
                                                                     <button opaque="NO" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="66F-uv-QRp">
                                                                         <rect key="frame" x="0.0" y="0.0" width="108.5" height="140"/>
+                                                                        <connections>
+                                                                            <action selector="sortedBtn_Tapped:" destination="0z6-GP-MWp" eventType="touchUpInside" id="FnU-UI-P3J"/>
+                                                                        </connections>
                                                                     </button>
                                                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" tag="2" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="4bk-EN-7xs">
                                                                         <rect key="frame" x="84.5" y="4" width="20" height="20"/>
@@ -510,11 +519,8 @@
                                                 </constraints>
                                             </stackView>
                                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="nod-Cm-qa1">
-                                                <rect key="frame" x="15" y="515" width="345" height="0.0"/>
+                                                <rect key="frame" x="15" y="515" width="345" height="40"/>
                                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="height" id="UlU-7w-54m"/>
-                                                </constraints>
                                                 <connections>
                                                     <outlet property="dataSource" destination="0z6-GP-MWp" id="Q45-WW-ACK"/>
                                                     <outlet property="delegate" destination="0z6-GP-MWp" id="R1Z-GN-CX2"/>
@@ -539,6 +545,7 @@
                                             <constraint firstItem="qNm-Nt-T7T" firstAttribute="leading" secondItem="pHq-rE-3c6" secondAttribute="leading" constant="10" id="imq-nh-E3q"/>
                                             <constraint firstAttribute="trailing" secondItem="f9e-k0-kdF" secondAttribute="trailing" constant="15" id="nPh-Nz-dR4"/>
                                             <constraint firstItem="qNm-Nt-T7T" firstAttribute="top" secondItem="PeD-fc-2eg" secondAttribute="bottom" constant="10" id="pRz-5a-M99"/>
+                                            <constraint firstAttribute="bottom" secondItem="nod-Cm-qa1" secondAttribute="bottom" constant="15" id="vtG-uz-fGy"/>
                                         </constraints>
                                     </view>
                                 </subviews>
@@ -607,7 +614,6 @@
                         <outlet property="rejected_circular_view" destination="Pjv-gM-t6i" id="abf-M3-jRc"/>
                         <outlet property="search_textfield" destination="WKw-0y-W9s" id="VFq-fg-CrQ"/>
                         <outlet property="tableView" destination="nod-Cm-qa1" id="W22-Hv-sHK"/>
-                        <outlet property="tableViewHeightConstraint" destination="UlU-7w-54m" id="zBo-0c-iNi"/>
                         <outlet property="this_week_btn" destination="XLL-nt-9xg" id="TWc-RT-BK5"/>
                         <outletCollection property="sortedImages" destination="oeo-Rm-ppL" collectionClass="NSMutableArray" id="zA1-Gd-OeT"/>
                         <outletCollection property="sortedImages" destination="82q-kr-BwB" collectionClass="NSMutableArray" id="dPE-3k-Ti1"/>

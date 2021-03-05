@@ -386,15 +386,25 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
     func setupUserModules() {
         module = AppDelegate.sharedInstance.db?.read_tbl_UserModule(query: "Select * from \(db_user_module) GROUP BY SERVER_ID_PK")
         if let permission = AppDelegate.sharedInstance.db?.read_tbl_UserPermission(permission: PERMISSION_ViewBroadcastMode).count {
-            if permission <= 0 {
-                for (i, m) in module!.enumerated() {
-                    if m.MODULENAME == "Leadership Connect" {
-                        self.module?.remove(at: i)
-                        self.ViewBroadCastPermission = false
-                        break
+            if let emp_info = AppDelegate.sharedInstance.db?.read_tbl_UserProfile().first {
+                if emp_info.HIGHNESS == "1" {
+                    DispatchQueue.main.async {
+                        self.module_CollectionView.reloadData()
+                    }
+                    self.ViewBroadCastPermission = true
+                    return
+                }
+                if permission <= 0  {
+                    for (i, m) in module!.enumerated() {
+                        if m.MODULENAME == "Leadership Connect" {
+                            self.module?.remove(at: i)
+                            self.ViewBroadCastPermission = false
+                            break
+                        }
                     }
                 }
             }
+            
         }
         DispatchQueue.main.async {
             self.module_CollectionView.reloadData()
@@ -434,6 +444,7 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
                     break
                 case 0:
                     if ViewBroadCastPermission {
+                        CONSTANT_MODULE_ID = AppDelegate.sharedInstance.db?.read_tbl_UserModule(query: "SELECT * FROM \(db_user_module) WHERE TAGNAME = '\(MODULE_TAG_LEADERSHIPAWAZ)';").first?.SERVER_ID_PK ?? -1
                         floaty.addItem("Add Leadership Connect", icon: UIImage(named: "helpdesk")) { item in
                             let storyboard = UIStoryboard(name: "LeadershipAwaz", bundle: nil)
                             let controller = storyboard.instantiateViewController(withIdentifier: "NewRequestLeadershipAwazViewController") as! NewRequestLeadershipAwazViewController

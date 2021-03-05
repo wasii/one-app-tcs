@@ -47,7 +47,7 @@ class LeadershipListingViewController: BaseViewController {
     var conditions = ""
     var selected_query: String?
     var numberOfDays = 7
-    var filterType = "Self"
+    var filtered_status = ""
     var indexPath: IndexPath?
     var startday: String?
     var endday: String?
@@ -112,25 +112,20 @@ class LeadershipListingViewController: BaseViewController {
             
             query = "SELECT * FROM REQUEST_LOGS WHERE CREATED_DATE >= '\(weekly)' AND CREATED_DATE <= '\(getLocalCurrentDate())' AND MODULE_ID = '\(CONSTANT_MODULE_ID)' AND CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)' order by CREATED_DATE DESC"
         } else {
-            query = "SELECT * FROM REQUEST_LOGS WHERE CREATED_DATE >= '\(startday!)' AND CREATED_DATE <= '\(endday!)' AND MODULE_ID = '\(CONSTANT_MODULE_ID)' AND CURRENT_USER = \(CURRENT_USER_LOGGED_IN_ID) order by CREATED_DATE DESC`1"
+            query = "SELECT * FROM REQUEST_LOGS WHERE CREATED_DATE >= '\(startday!)' AND CREATED_DATE <= '\(endday!)' AND MODULE_ID = '\(CONSTANT_MODULE_ID)' AND CURRENT_USER = \(CURRENT_USER_LOGGED_IN_ID) order by CREATED_DATE DESC"
         }
         
         tbl_request_logs = AppDelegate.sharedInstance.db?.read_tbl_hr_request(query: query)
-        setupStackBarChart()
-        setupCircularView()
-        self.tableView.reloadData()
-        self.filteredTableView.reloadData()
-        
-        if self.filteredTableviewHeightConstraint.constant != 0 {
-            self.mainViewHeightConstraint.constant -= self.filteredTableviewHeightConstraint.constant
-            self.filteredTableviewHeightConstraint.constant = 0
-            self.getDateSpecificWiseRecords(date: self.stackBarChartDate)
+        if filtered_status == "" {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                self.setupCircularView()
+                self.setupStackBarChart()
+                self.tableView.reloadData()
+                self.setupTableViewHeight(isFiltered: false)
+            }
+        } else {
+            self.filteredData(status: self.filtered_status)
         }
-        
-        self.mainViewHeightConstraint.constant -= self.tableViewHeightConstraint.constant
-        self.tableViewHeightConstraint.constant = 0
-        self.tableViewHeightConstraint.constant = CGFloat((self.tbl_request_logs!.count * 80) + 50)
-        self.mainViewHeightConstraint.constant +=  self.tableViewHeightConstraint.constant
     }
     func setupCircularView() {
         if let data = self.tbl_request_logs {
@@ -148,9 +143,9 @@ class LeadershipListingViewController: BaseViewController {
             self.approved_circular_view.maxValue = CGFloat(data.count)
             self.rejected_circular_view.maxValue = CGFloat(data.count)
             UIView.animate(withDuration: 0.5) {
-            self.pending_circular_view.value = CGFloat(pendingCount)
-            self.approved_circular_view.value = CGFloat(approvedCount)
-            self.rejected_circular_view.value = CGFloat(rejectedCount)
+                self.pending_circular_view.value = CGFloat(pendingCount)
+                self.approved_circular_view.value = CGFloat(approvedCount)
+                self.rejected_circular_view.value = CGFloat(rejectedCount)
             }
         }
     }
@@ -265,6 +260,105 @@ class LeadershipListingViewController: BaseViewController {
     //MARK: Custom Functions ENDS
     
     
+    @IBAction func sortedBtn_Tapped(_ sender: UIButton) {
+        if self.sortedImages[sender.tag].image != nil {
+            self.sortedImages[sender.tag].image = nil
+            self.filtered_status = ""
+            self.isFiltered = false
+            self.tableView.reloadData()
+            self.setupTableViewHeight(isFiltered: false)
+            return
+        } else {
+            self.sortedImages.forEach { (UIImageView) in
+                UIImageView.image = nil
+            }
+            switch sender.tag {
+            case 0:
+                self.sortedImages[0].image = UIImage(named: "rightY")
+                self.filteredData(status: "Pending")
+                break
+            case 1:
+                self.sortedImages[1].image = UIImage(named: "rightG")
+                self.filteredData(status: "Approved")
+                break
+            case 2:
+                self.sortedImages[2].image = UIImage(named: "rightR")
+                self.filteredData(status: "Rejected")
+                break
+            default:
+                break
+            }
+        }
+    }
+    func filteredData(status: String) {
+        self.filtered_data = self.tbl_request_logs?.filter({ (logs) -> Bool in
+            logs.TICKET_STATUS?.lowercased() == status.lowercased()
+        })
+        self.filtered_status = status
+        self.isFiltered = true
+        self.setupStackBarChart()
+        self.tableView.reloadData()
+        self.setupTableViewHeight(isFiltered: true)
+    }
+    func setupTableViewHeight(isFiltered: Bool) {
+        var height: CGFloat = 0.0
+        if isFiltered {
+            height = CGFloat((filtered_data!.count * 80) + 580)
+        } else {
+            height = CGFloat((tbl_request_logs!.count * 80) + 580)
+        }
+        self.mainViewHeightConstraint.constant = 280
+        switch UIDevice().type {
+        case .iPhone5, .iPhone5S, .iPhone5C, .iPhoneSE:
+            if height > 570 {
+                self.mainViewHeightConstraint.constant = height
+            } else {
+                self.mainViewHeightConstraint.constant = 570
+            }
+            break
+        case .iPhone6, .iPhone6S, .iPhone7, .iPhone8:
+            if height > 670 {
+                self.mainViewHeightConstraint.constant = height
+            } else {
+                self.mainViewHeightConstraint.constant = 670
+            }
+        case .iPhone6Plus, .iPhone7Plus, .iPhone8Plus:
+            if height > 740 {
+                self.mainViewHeightConstraint.constant = height
+            } else {
+                self.mainViewHeightConstraint.constant = 740
+            }
+            break
+        case .iPhoneX, .iPhoneXR, .iPhoneXS, .iPhone11Pro, .iPhone12, .iPhone12Pro:
+            if height > 790 {
+                self.mainViewHeightConstraint.constant = height
+            } else {
+                self.mainViewHeightConstraint.constant = 790
+            }
+        case .iPhone11, .iPhoneXSMax, .iPhone11ProMax:
+            if height > 840 {
+                self.mainViewHeightConstraint.constant = height
+            } else {
+                self.mainViewHeightConstraint.constant = 840
+            }
+            break
+        case .iPhone12ProMax:
+            if height > 880 {
+                self.mainViewHeightConstraint.constant = height
+            } else {
+                self.mainViewHeightConstraint.constant = 880
+            }
+            break
+        case .iPhone12Mini:
+            if height > 770 {
+                self.mainViewHeightConstraint.constant = height
+            } else {
+                self.mainViewHeightConstraint.constant = 770
+            }
+        default:
+            break
+        }
+    }
     @IBAction func thisWeekBtn_Tapped(_ sender: Any) {
         let storyboard = UIStoryboard(name: "Popups", bundle: nil)
         let controller = storyboard.instantiateViewController(withIdentifier: "FilterDataPopupViewController") as! FilterDataPopupViewController
