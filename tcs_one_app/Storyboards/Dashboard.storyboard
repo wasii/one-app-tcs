@@ -206,7 +206,7 @@
                                         <rect key="frame" x="0.0" y="0.0" width="375" height="400"/>
                                         <subviews>
                                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="7A4-1Y-gte">
-                                                <rect key="frame" x="0.0" y="10" width="375" height="390"/>
+                                                <rect key="frame" x="0.0" y="50" width="375" height="350"/>
                                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                                 <connections>
                                                     <outlet property="dataSource" destination="LD2-pQ-5S3" id="ajG-uU-kMk"/>
@@ -214,7 +214,7 @@
                                                 </connections>
                                             </tableView>
                                             <stackView opaque="NO" contentMode="scaleToFill" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="Tz2-7b-ylz">
-                                                <rect key="frame" x="360" y="10" width="0.0" height="0.0"/>
+                                                <rect key="frame" x="195" y="10" width="165" height="32"/>
                                                 <subviews>
                                                     <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tuN-gN-QtL" userLabel="HighAlertView">
                                                         <rect key="frame" x="0.0" y="0.0" width="140" height="32"/>
@@ -240,7 +240,7 @@
                                                             <constraint firstAttribute="height" constant="32" id="wFQ-rG-V4p"/>
                                                         </constraints>
                                                     </view>
-                                                    <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="OgF-G2-E5K" userLabel="BroadcastView">
+                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="OgF-G2-E5K" userLabel="BroadcastView">
                                                         <rect key="frame" x="0.0" y="0.0" width="165" height="32"/>
                                                         <subviews>
                                                             <switch opaque="NO" tag="1" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="rzg-Er-FJY">
@@ -275,7 +275,7 @@
                                             <constraint firstAttribute="bottom" secondItem="7A4-1Y-gte" secondAttribute="bottom" id="XLR-o2-wAN"/>
                                             <constraint firstAttribute="height" constant="400" id="d2J-XV-NOl"/>
                                             <constraint firstAttribute="trailing" secondItem="7A4-1Y-gte" secondAttribute="trailing" id="kho-p5-e18"/>
-                                            <constraint firstItem="7A4-1Y-gte" firstAttribute="top" secondItem="5Mf-VI-MrO" secondAttribute="top" constant="10" id="kuX-Oy-VOe"/>
+                                            <constraint firstItem="7A4-1Y-gte" firstAttribute="top" secondItem="5Mf-VI-MrO" secondAttribute="top" constant="50" id="kuX-Oy-VOe"/>
                                         </constraints>
                                     </view>
                                 </subviews>

@@ -615,7 +615,8 @@ class FetchUserDataViewController: BaseViewController {
                         
                         for json in hr_response {
                             self.isTotalCounter += 1
-                            print("Assigned_TO: \(json.dictionary?["ASSIGNED_TO"]?.int ?? -111)")
+//                            print("ASSIGNED_TO: \(json.dictionary?["ASSIGNED_TO"]?.int ?? -111)")
+                            print("VIEW_COUNT: \(json.dictionary?["VIEW_COUNT"]?.int ?? -111)")
                             let dictionary = try json.rawData()
                             let hrRequest: HrRequest = try JSONDecoder().decode(HrRequest.self, from: dictionary)
                             AppDelegate.sharedInstance.db?.deleteRowWithMultipleConditions(tbl: db_hr_request, conditions: "SERVER_ID_PK = '\(hrRequest.ticketID!)' AND CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)'", { _ in

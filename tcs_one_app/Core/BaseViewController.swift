@@ -9,6 +9,7 @@
 import UIKit
 import Photos
 import SwiftyJSON
+import FirebaseMessaging
 
 class BaseViewController: UIViewController {
 
@@ -281,6 +282,7 @@ class BaseViewController: UIViewController {
     
     @objc func logoutUser() {
 //        AppDelegate.sharedInstance.db?.deleteRow(tableName: db_last_sync_status, column: "CURRENT_USER", ref_id: CURRENT_USER_LOGGED_IN_ID, handler: { _ in })
+        Messaging.messaging().unsubscribe(fromTopic: BROADCAST_KEY)
         AppDelegate.sharedInstance.db?.deleteRow(tableName: db_last_sync_status, column: "SYNC_KEY", ref_id: "oneapp.gethrnotification", handler: { _ in })
         AppDelegate.sharedInstance.db?.deleteAll(tableName: db_hr_notifications, handler: { _ in })
         if isNavigate {
@@ -338,6 +340,13 @@ class BaseViewController: UIViewController {
                             print("NOT CONTAINS")
                         }
                     }
+                    break
+                case 4:
+                    let storyboard = UIStoryboard(name: "LeadershipAwaz", bundle: nil)
+                    let controller = storyboard.instantiateViewController(withIdentifier: "NewRequestLeadershipAwazViewController") as! NewRequestLeadershipAwazViewController
+                    controller.ticket_id = hr_request.SERVER_ID_PK
+                    controller.hidesBottomBarWhenPushed = true
+                    self.navigationController?.pushViewController(controller, animated: true)
                     break
                 default:
                     break

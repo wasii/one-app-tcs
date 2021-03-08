@@ -57,7 +57,7 @@ class NotificationsViewController: BaseViewController {
             setup_hr_notification { (success, count) in
                 if success {
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
-                        let height = (80 * count) + 50
+                        let height = (80 * count) + 70
                         if CGFloat(height) > UIScreen.main.bounds.height {
                             self.mainViewHeightConstraint.constant = CGFloat(height)
                         } else {
@@ -77,7 +77,7 @@ class NotificationsViewController: BaseViewController {
         setup_hr_notification { (success, count) in
             if success {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
-                    let height = (80 * count) + 50
+                    let height = (80 * count) + 70
                     if CGFloat(height) > UIScreen.main.bounds.height {
                         self.mainViewHeightConstraint.constant = CGFloat(height)
                     } else {
@@ -108,10 +108,6 @@ class NotificationsViewController: BaseViewController {
         hr_notification = AppDelegate.sharedInstance.db?.read_tbl_hr_notification_request(query: query)
         
         if hr_notification!.count > 0 {
-//            hr_notification = hr_notification?.filter({ (not1) -> Bool in
-//                not1.MODULE_ID == 1 || not1.MODULE_ID == 2
-//            })
-            
             hr_notification = hr_notification?.sorted(by: { (req1, req2) -> Bool in
                 req1.CREATED_DATE > req2.CREATED_DATE
             })
@@ -134,7 +130,7 @@ class NotificationsViewController: BaseViewController {
         setup_hr_notification { (success, count) in
             if success {
                 DispatchQueue.main.async {
-                    let height = (80 * count) + 50
+                    let height = (80 * count) + 70
                     if CGFloat(height) > UIScreen.main.bounds.height {
                         self.mainViewHeightConstraint.constant = CGFloat(height)
                     } else {
@@ -161,12 +157,6 @@ class NotificationsViewController: BaseViewController {
         if let management_bar = AppDelegate.sharedInstance.db?.read_tbl_UserPermission(permission: PERMISSION_GRIEVENCE_LISTING_MANAGEMENT_BAR).count {
             if management_bar > 0 {
                 highAlertView.isHidden = false
-                tableViewTopConstraint.constant = 50
-            }
-        }
-        if let viewGraph = AppDelegate.sharedInstance.db?.read_tbl_UserPermission(permission: PERMISSION_ViewBroadcastMode).count {
-            if viewGraph > 0 {
-                broadcastView.isHidden = false
                 tableViewTopConstraint.constant = 50
             }
         }
@@ -219,7 +209,7 @@ class NotificationsViewController: BaseViewController {
         })
         self.hr_notification = tat
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
-            let height = (80 * tat.count) + 50
+            let height = (80 * tat.count) + 70
             if CGFloat(height) > UIScreen.main.bounds.height {
                 self.mainViewHeightConstraint.constant = CGFloat(height)
             } else {
@@ -319,7 +309,7 @@ extension NotificationsViewController: UITableViewDelegate, UITableViewDataSourc
                     break
                 case "approved":
                     cell.status.textColor = UIColor.approvedColor()
-                    cell.status.text = "Completed"
+                    cell.status.text = "Approved"
                     break
                 case "rejected":
                     cell.status.textColor = UIColor.rejectedColor()

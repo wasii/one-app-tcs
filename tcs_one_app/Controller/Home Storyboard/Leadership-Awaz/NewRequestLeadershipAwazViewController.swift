@@ -18,6 +18,7 @@ class NewRequestLeadershipAwazViewController: BaseViewController {
     @IBOutlet weak var message_textview: UITextView!
     @IBOutlet weak var message_group: MDCOutlinedTextField!
     @IBOutlet weak var word_counter: UILabel!
+    @IBOutlet weak var subject_wordcounter: UILabel!
     
     
     
@@ -40,7 +41,7 @@ class NewRequestLeadershipAwazViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.makeTopCornersRounded(roundView: self.mainView)
-        self.title = "New Request"
+        self.title = "Leadership Connect"
         setupTextFields()
         
         message_subject.delegate = self
@@ -57,12 +58,12 @@ class NewRequestLeadershipAwazViewController: BaseViewController {
                         isChairmen = true
                         self.broadcast_btn.isHidden = false
                         self.reject_btn.isHidden = false
-                        self.title = "Update Request"
+//                        self.title = "Update Request"
                         self.mainHeading.text = "Update Request"
                     } else if tr.TICKET_STATUS == "Approved" || tr.TICKET_STATUS == "Rejected" {
                         self.broadcast_btn.isHidden = true
                         self.reject_btn.isHidden = true
-                        self.title = "View Request"
+//                        self.title = "View Request"
                         self.mainHeading.text = "View Request"
                     }
                     
@@ -74,6 +75,7 @@ class NewRequestLeadershipAwazViewController: BaseViewController {
                     self.message_subject.textColor = UIColor.black
                     self.message_subject.isEditable = false
                     
+                    self.subject_wordcounter.text = "\(tr.REQ_REMARKS?.count ?? 0)/256"
                     self.word_counter.text = "\(tr.HR_REMARKS?.count ?? 0)/525"
                     self.forward_btn.isHidden = true
                     
@@ -93,7 +95,7 @@ class NewRequestLeadershipAwazViewController: BaseViewController {
                     self.message_group.isUserInteractionEnabled = false
                     
                     isChairmen = false
-                    self.title = "View Request"
+//                    self.title = "View Request"
                     self.mainHeading.text = "View Request"
                     self.forward_btn.isHidden = true
                     
@@ -103,6 +105,7 @@ class NewRequestLeadershipAwazViewController: BaseViewController {
                     self.message_textview.text = "\(tr.HR_REMARKS ?? "")"
                     self.message_textview.textColor = UIColor.black
                     self.word_counter.text = "\(tr.HR_REMARKS?.count ?? 0)/525"
+                    self.subject_wordcounter.text = "\(tr.REQ_REMARKS?.count ?? 0)/256"
                     
                     let query = "SELECT * FROM \(db_la_ad_group) WHERE SERVER_ID_PK = '\(tr.ASSIGNED_TO!)'"
                     let groupName = AppDelegate.sharedInstance.db?.read_tbl_la_ad_group(query: query).first?.AD_GROUP_NAME
@@ -191,7 +194,7 @@ extension NewRequestLeadershipAwazViewController: UITextFieldDelegate {
             controller.la_ad_group = AppDelegate.sharedInstance.db?.read_tbl_la_ad_group(query: "SELECT * FROM \(db_la_ad_group)").sorted(by: { (list1, list2) -> Bool in
                 list1.AD_GROUP_NAME < list2.AD_GROUP_NAME
             })
-            controller.heading = "Message Subject"
+            controller.heading = "Groups"
             if #available(iOS 13.0, *) {
                 controller.modalPresentationStyle = .overFullScreen
             }
@@ -255,36 +258,67 @@ extension NewRequestLeadershipAwazViewController: UITextViewDelegate {
     }
     
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        if let texts = textView.text,
+           let textRange = Range(range, in: texts) {
+            let updatedText = texts.replacingCharacters(in: textRange, with: text)
+            if updatedText.containsEmoji {
+                return false
+            }
+        }
+        var maxLength = 0
+        let currentString: NSString = textView.text as! NSString
+        let newString: NSString =
+                currentString.replacingCharacters(in: range, with: text) as NSString
         switch textView.tag {
         case 0:
-            if let texts = textView.text,
-               let textRange = Range(range, in: texts) {
-                let updatedText = texts.replacingCharacters(in: textRange, with: text)
-                if updatedText.containsEmoji {
-                    return false
-                }
+            maxLength = 256
+            if newString.length <= maxLength {
+                self.subject_wordcounter.text = "\(newString.length)/256"
+                return true
             }
-            return true
+            break
         case 1:
-            let maxLength = 525
-            let currentString: NSString = textView.text as! NSString
-            let newString: NSString =
-                    currentString.replacingCharacters(in: range, with: text) as NSString
-            if let texts = textView.text,
-               let textRange = Range(range, in: texts) {
-                let updatedText = texts.replacingCharacters(in: textRange, with: text)
-                if updatedText.containsEmoji {
-                    return false
-                }
-            }
+            maxLength = 525
             if newString.length <= maxLength {
                 self.word_counter.text = "\(newString.length)/525"
                 return true
             }
-            return false
         default:
-            return true
+            return false
         }
+        
+        
+//        switch textView.tag {
+//        case 0:
+//            if let texts = textView.text,
+//               let textRange = Range(range, in: texts) {
+//                let updatedText = texts.replacingCharacters(in: textRange, with: text)
+//                if updatedText.containsEmoji {
+//                    return false
+//                }
+//            }
+//            return true
+//        case 1:
+//            let maxLength = 525
+//            let currentString: NSString = textView.text as! NSString
+//            let newString: NSString =
+//                    currentString.replacingCharacters(in: range, with: text) as NSString
+//            if let texts = textView.text,
+//               let textRange = Range(range, in: texts) {
+//                let updatedText = texts.replacingCharacters(in: textRange, with: text)
+//                if updatedText.containsEmoji {
+//                    return false
+//                }
+//            }
+//            if newString.length <= maxLength {
+//                self.word_counter.text = "\(newString.length)/525"
+//                return true
+//            }
+//            return false
+//        default:
+//            return true
+//        }
+        return false
     }
 }
 

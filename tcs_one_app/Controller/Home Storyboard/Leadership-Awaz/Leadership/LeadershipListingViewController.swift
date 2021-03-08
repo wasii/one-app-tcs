@@ -303,9 +303,19 @@ class LeadershipListingViewController: BaseViewController {
     func setupTableViewHeight(isFiltered: Bool) {
         var height: CGFloat = 0.0
         if isFiltered {
-            height = CGFloat((filtered_data!.count * 80) + 580)
+            if isLoadFilteredData {
+                height = CGFloat((filtered_data!.count * 80) + 580)
+                height += self.filteredTableviewHeightConstraint.constant
+            } else {
+                height = CGFloat((filtered_data!.count * 80) + 580)
+            }
         } else {
-            height = CGFloat((tbl_request_logs!.count * 80) + 580)
+            if isLoadFilteredData {
+                height = CGFloat((tbl_request_logs!.count * 80) + 580)
+                height += self.filteredTableviewHeightConstraint.constant
+            } else {
+                height = CGFloat((tbl_request_logs!.count * 80) + 580)
+            }
         }
         self.mainViewHeightConstraint.constant = 280
         switch UIDevice().type {
@@ -488,8 +498,8 @@ extension LeadershipListingViewController: UITableViewDelegate, UITableViewDataS
             if tableView == self.filteredTableView {
                 let cell = tableView.dequeueReusableCell(withIdentifier: "RequestListingCell") as! RequestListingTableCell
                 let data = self.date_specific_tbl_request_logs![indexPath.row]
-                cell.mainHeading.text = data.REQ_REMARKS!
-                cell.subHeading.text = data.HR_REMARKS!
+                cell.mainHeading.text = "Ticket Id: \(data.SERVER_ID_PK!)"
+                cell.subHeading.text = data.REQ_REMARKS!
                 cell.date.text = data.CREATED_DATE?.dateSeperateWithT ?? ""
                 
                 if data.TICKET_STATUS == "Pending" || data.TICKET_STATUS == "pending" {
@@ -517,8 +527,8 @@ extension LeadershipListingViewController: UITableViewDelegate, UITableViewDataS
         } else {
             data = self.tbl_request_logs![indexPath.row]
         }
-        cell.mainHeading.text = data!.REQ_REMARKS!
-        cell.subHeading.text = "Ticket Id: \(data!.SERVER_ID_PK!)"
+        cell.mainHeading.text = "Ticket Id: \(data!.SERVER_ID_PK!)"
+        cell.subHeading.text = data!.REQ_REMARKS!
         cell.date.text = data!.CREATED_DATE?.dateSeperateWithT ?? ""
         
         if data!.TICKET_STATUS == "Pending" || data!.TICKET_STATUS == "pending" {

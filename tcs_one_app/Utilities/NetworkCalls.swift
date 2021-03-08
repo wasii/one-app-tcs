@@ -203,19 +203,22 @@ class NetworkCalls: NSObject {
                         var querymatrix = [QueryMatrix]()
                         if let data = json.dictionary?[_query_matrix] {
                             do {
-                                for json in data.array! {
-                                    let dictionary = try json.rawData()
-                                    querymatrix.append(try JSONDecoder().decode(QueryMatrix.self, from: dictionary))
-                                }
-                                DispatchQueue.main.async {
-                                    AppDelegate.sharedInstance.db?.deleteAll(tableName: db_query_matrix) { success in
-                                        if success {
-                                            for qm in querymatrix {
-                                                AppDelegate.sharedInstance.db?.insert_tbl_queryMatrix(querymatrix: qm)
+                                if let _ = data.array {
+                                    for json in data.array! {
+                                        let dictionary = try json.rawData()
+                                        querymatrix.append(try JSONDecoder().decode(QueryMatrix.self, from: dictionary))
+                                    }
+                                    DispatchQueue.main.async {
+                                        AppDelegate.sharedInstance.db?.deleteAll(tableName: db_query_matrix) { success in
+                                            if success {
+                                                for qm in querymatrix {
+                                                    AppDelegate.sharedInstance.db?.insert_tbl_queryMatrix(querymatrix: qm)
+                                                }
                                             }
                                         }
                                     }
                                 }
+                                
                                 
                             } catch let err {
                                 print(err.localizedDescription)
@@ -223,86 +226,94 @@ class NetworkCalls: NSObject {
                         }
                         var masterquery = [MasterQuery]()
                         if let data = json.dictionary?[_master_query] {
-                            do {
-                                for json in data.array! {
-                                    let dictionary = try json.rawData()
-                                    masterquery.append(try JSONDecoder().decode(MasterQuery.self, from: dictionary))
-                                }
-                                DispatchQueue.main.async {
-                                    AppDelegate.sharedInstance.db?.deleteAll(tableName: db_master_query) { success in
-                                        if success {
-                                            for mq in masterquery {
-                                                AppDelegate.sharedInstance.db?.insert_tbl_masterQuery(masterquery: mq)
+                            if let _ = data.array {
+                                do {
+                                    for json in data.array! {
+                                        let dictionary = try json.rawData()
+                                        masterquery.append(try JSONDecoder().decode(MasterQuery.self, from: dictionary))
+                                    }
+                                    DispatchQueue.main.async {
+                                        AppDelegate.sharedInstance.db?.deleteAll(tableName: db_master_query) { success in
+                                            if success {
+                                                for mq in masterquery {
+                                                    AppDelegate.sharedInstance.db?.insert_tbl_masterQuery(masterquery: mq)
+                                                }
                                             }
                                         }
                                     }
+                                    
+                                } catch let err {
+                                    print(err.localizedDescription)
                                 }
-                                
-                            } catch let err {
-                                print(err.localizedDescription)
                             }
                         }
                         var detailquery = [DetailQuery]()
                         if let data = json.dictionary?[_detail_query] {
-                            do {
-                                for json in data.array! {
-                                    let dictionary = try json.rawData()
-                                    detailquery.append(try JSONDecoder().decode(DetailQuery.self, from: dictionary))
-                                }
-                                DispatchQueue.main.async {
-                                    AppDelegate.sharedInstance.db?.deleteAll(tableName: db_detail_query) { success in
-                                        if success {
-                                            for dq in detailquery {
-                                                AppDelegate.sharedInstance.db?.insert_tbl_detailQuery(detailquery: dq)
+                            if let _ = data.array {
+                                do {
+                                    for json in data.array! {
+                                        let dictionary = try json.rawData()
+                                        detailquery.append(try JSONDecoder().decode(DetailQuery.self, from: dictionary))
+                                    }
+                                    DispatchQueue.main.async {
+                                        AppDelegate.sharedInstance.db?.deleteAll(tableName: db_detail_query) { success in
+                                            if success {
+                                                for dq in detailquery {
+                                                    AppDelegate.sharedInstance.db?.insert_tbl_detailQuery(detailquery: dq)
+                                                }
                                             }
                                         }
                                     }
+                                    
+                                } catch let err {
+                                    print(err.localizedDescription)
                                 }
-                                
-                            } catch let err {
-                                print(err.localizedDescription)
                             }
                         }
                         var searchkeywords = [SearchKeyword]()
                         if let data = json.dictionary?[_search_keyword] {
-                            do {
-                                for json in data.array! {
-                                    let dictionary = try json.rawData()
-                                    searchkeywords.append(try JSONDecoder().decode(SearchKeyword.self, from: dictionary))
-                                }
-                                DispatchQueue.main.async {
-                                    AppDelegate.sharedInstance.db?.deleteAll(tableName: db_search_keywords) { success in
-                                        if success {
-                                            for sk in searchkeywords {
-                                                AppDelegate.sharedInstance.db?.insert_tbl_serachKeywords(searchkeywords: sk)
+                            if let _ = data.array {
+                                do {
+                                    for json in data.array! {
+                                        let dictionary = try json.rawData()
+                                        searchkeywords.append(try JSONDecoder().decode(SearchKeyword.self, from: dictionary))
+                                    }
+                                    DispatchQueue.main.async {
+                                        AppDelegate.sharedInstance.db?.deleteAll(tableName: db_search_keywords) { success in
+                                            if success {
+                                                for sk in searchkeywords {
+                                                    AppDelegate.sharedInstance.db?.insert_tbl_serachKeywords(searchkeywords: sk)
+                                                }
                                             }
                                         }
                                     }
+                                    
+                                } catch let err {
+                                    print(err.localizedDescription)
                                 }
-                                
-                            } catch let err {
-                                print(err.localizedDescription)
                             }
                         }
                         var apprequestmode = [AppRequestMode]()
                         if let data = json.dictionary?[_app_request_mode] {
-                            do {
-                                for json in data.array! {
-                                    let dictionary = try json.rawData()
-                                    apprequestmode.append(try JSONDecoder().decode(AppRequestMode.self, from: dictionary))
-                                }
-                                DispatchQueue.main.async {
-                                    AppDelegate.sharedInstance.db?.deleteAll(tableName: db_request_modes) { success in
-                                        if success {
-                                            for arm in apprequestmode {
-                                                AppDelegate.sharedInstance.db?.insert_tbl_requestModes(apprequestmode: arm)
+                            if let _ = data.array {
+                                do {
+                                    for json in data.array! {
+                                        let dictionary = try json.rawData()
+                                        apprequestmode.append(try JSONDecoder().decode(AppRequestMode.self, from: dictionary))
+                                    }
+                                    DispatchQueue.main.async {
+                                        AppDelegate.sharedInstance.db?.deleteAll(tableName: db_request_modes) { success in
+                                            if success {
+                                                for arm in apprequestmode {
+                                                    AppDelegate.sharedInstance.db?.insert_tbl_requestModes(apprequestmode: arm)
+                                                }
                                             }
                                         }
                                     }
+                                    
+                                } catch let err {
+                                    print(err.localizedDescription)
                                 }
-                                
-                            } catch let err {
-                                print(err.localizedDescription)
                             }
                         }
                         var login_count = [LoginCount]()

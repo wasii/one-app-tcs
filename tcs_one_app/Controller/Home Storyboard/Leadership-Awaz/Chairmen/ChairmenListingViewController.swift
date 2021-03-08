@@ -279,33 +279,33 @@ extension ChairmenListingViewController: UITableViewDataSource, UITableViewDeleg
             data = self.tbl_request_logs![indexPath.row]
         }
         
-        cell.mainHeading.text = data!.REQ_REMARKS!
-        cell.subHeading.text = "Ticket Id: \(data!.SERVER_ID_PK!)"
+        cell.mainHeading.text = "Ticket Id: \(data!.SERVER_ID_PK!)"
+        cell.subHeading.text =  data!.REQ_REMARKS!
         cell.date.text = data!.CREATED_DATE?.dateSeperateWithT ?? ""
         
-//        switch data!.TICKET_STATUS {
-//        case "Pending":
-//            cell.status.text = "Pending"
-//            cell.status.textColor = UIColor.pendingColor()
-//            break
-//        case "Approved", "approved":
-//            cell.status.text = "Approved"
-//            cell.status.textColor = UIColor.approvedColor()
-//            break
-//        case "Rejected", "rejected":
-//            cell.status.text = "Rejected"
-//            cell.status.textColor = UIColor.rejectedColor()
-//            break
-//        default:
-//            break
-//        }
-        cell.status.text = "Views: \(data!.VIEW_COUNT ?? 0)"
+        let query = "SELECT VIEW_COUNT FROM \(db_hr_request) WHERE SERVER_ID_PK = '\(data!.SERVER_ID_PK!)' AND CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)'"
+
+        if let view_count = AppDelegate.sharedInstance.db?.read_column(query: query) {
+            cell.status.text = "Views: \(view_count)"
+        }
+        
+        
         cell.status.textColor = UIColor.rejectedColor()
         cell.type.text = "Leadership Connect"
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        var data : tbl_Hr_Request_Logs?
         
+        if isFiltered {
+            data = self.filtered_data![indexPath.row]
+        } else {
+            data = self.tbl_request_logs![indexPath.row]
+        }
+        let controller = self.storyboard?.instantiateViewController(withIdentifier: "NewRequestLeadershipAwazViewController") as! NewRequestLeadershipAwazViewController
+        controller.ticket_id = data!.SERVER_ID_PK!
+        
+        self.navigationController?.pushViewController(controller, animated: true)
     }
 }
