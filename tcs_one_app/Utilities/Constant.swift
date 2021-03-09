@@ -16,6 +16,7 @@ let BROADCAST_KEY           = "broadcastios"
 let IS_NEW_DATABASE: Bool   = true
 var NOTIFICATION_COUNT      = 0
 
+var RECORD_ID               = 0
 //API ENDPOINTS
 
 //PRODUCTION

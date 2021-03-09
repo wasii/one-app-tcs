@@ -300,6 +300,33 @@ class BaseViewController: UIViewController {
         NotificationCenter.default.removeObserver(self)
         if let hr_request = notification.object as? tbl_Hr_Request_Logs {
             if let module_id = hr_request.MODULE_ID {
+                let columns = ["READ_STATUS_DTTM"]
+                let values  = ["1"]
+                
+                if RECORD_ID != 0 {
+                    AppDelegate.sharedInstance.db?.updateTables(tableName: db_hr_notifications, columnName: columns, updateValue: values, onCondition: "RECORD_ID = '\(RECORD_ID)'", { (success) in
+                        if success {
+                            DispatchQueue.main.async {
+                                let read_notification = [
+                                    "hr_request": [
+                                        "access_token": UserDefaults.standard.string(forKey: USER_ACCESS_TOKEN)!,
+                                        "notificationid" :"\(RECORD_ID)"
+                                    ]
+                                ]
+                                let params = self.getAPIParameter(service_name: READ_NOTIFICATION, request_body: read_notification)
+                                NetworkCalls.read_notification(params: params) { (success, response) in
+                                    if success {
+                                        RECORD_ID = 0
+                                        print("NOTIFICATION READ FROM POPUP.")
+                                    } else {
+                                        print("NOTIFICATION NOT READ FROM POPUP.")
+                                    }
+                                }
+                            }
+                        }
+                    })
+                }
+                
                 switch module_id {
                 case 1:
                     let storyboard = UIStoryboard(name: "Home", bundle: nil)

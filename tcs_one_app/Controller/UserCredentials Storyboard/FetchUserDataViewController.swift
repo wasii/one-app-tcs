@@ -783,11 +783,7 @@ extension FetchUserDataViewController {
                                     })
                                 })
                             }
-                            
-                            
-                            
-                            if self.count == self.isTotalCounter {
-                                
+                            if self.isTotalCounter  >= self.count {
                                 DispatchQueue.main.async {
                                     Helper.updateLastSyncStatus(APIName: GET_HR_NOTIFICATION,
                                                               date: sync_date,

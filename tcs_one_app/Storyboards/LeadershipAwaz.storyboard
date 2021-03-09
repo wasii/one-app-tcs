@@ -138,22 +138,35 @@
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="PeD-fc-2eg" userLabel="Filtered TableView" customClass="CustomView" customModule="One_App" customModuleProvider="target">
                                                 <rect key="frame" x="15" y="340" width="345" height="0.0"/>
                                                 <subviews>
-                                                    <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" scrollEnabled="NO" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="dBT-Pj-dse">
-                                                        <rect key="frame" x="0.0" y="0.0" width="345" height="0.0"/>
+                                                    <tableView clipsSubviews="YES" contentMode="scaleToFill" ambiguous="YES" alwaysBounceVertical="YES" scrollEnabled="NO" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="dBT-Pj-dse">
+                                                        <rect key="frame" x="0.0" y="30" width="345" height="70"/>
                                                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                                         <connections>
                                                             <outlet property="dataSource" destination="0z6-GP-MWp" id="IBQ-zj-2Zt"/>
                                                             <outlet property="delegate" destination="0z6-GP-MWp" id="Le0-xa-ApU"/>
                                                         </connections>
                                                     </tableView>
+                                                    <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9oH-4S-DlO">
+                                                        <rect key="frame" x="320" y="0.0" width="25" height="25"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="height" constant="25" id="YZs-4o-vgI"/>
+                                                            <constraint firstAttribute="width" secondItem="9oH-4S-DlO" secondAttribute="height" multiplier="1:1" id="ofB-hb-88k"/>
+                                                        </constraints>
+                                                        <state key="normal" image="cross"/>
+                                                        <connections>
+                                                            <action selector="crossBtn_tapped:" destination="0z6-GP-MWp" eventType="touchUpInside" id="K0V-vW-ttX"/>
+                                                        </connections>
+                                                    </button>
                                                 </subviews>
                                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" id="2Ml-gK-QPc"/>
                                                     <constraint firstAttribute="bottom" secondItem="dBT-Pj-dse" secondAttribute="bottom" id="B7y-rA-xfU"/>
+                                                    <constraint firstAttribute="trailing" secondItem="9oH-4S-DlO" secondAttribute="trailing" id="CoZ-18-xwX"/>
                                                     <constraint firstItem="dBT-Pj-dse" firstAttribute="leading" secondItem="PeD-fc-2eg" secondAttribute="leading" id="Joh-Ca-lsk"/>
+                                                    <constraint firstItem="9oH-4S-DlO" firstAttribute="top" secondItem="PeD-fc-2eg" secondAttribute="top" id="NLh-DH-DOf"/>
                                                     <constraint firstAttribute="trailing" secondItem="dBT-Pj-dse" secondAttribute="trailing" id="OPN-Uy-JJX"/>
-                                                    <constraint firstItem="dBT-Pj-dse" firstAttribute="top" secondItem="PeD-fc-2eg" secondAttribute="top" id="hHm-EA-qAf"/>
+                                                    <constraint firstItem="dBT-Pj-dse" firstAttribute="top" secondItem="PeD-fc-2eg" secondAttribute="top" constant="30" id="zQI-ob-I9g"/>
                                                 </constraints>
                                             </view>
                                             <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="qNm-Nt-T7T">
@@ -530,12 +543,12 @@
                                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                         <constraints>
                                             <constraint firstAttribute="trailing" secondItem="qNm-Nt-T7T" secondAttribute="trailing" constant="10" id="2Jz-Dn-wh4"/>
+                                            <constraint firstItem="PeD-fc-2eg" firstAttribute="top" secondItem="f9e-k0-kdF" secondAttribute="bottom" constant="10" id="8lL-Q5-6oS"/>
                                             <constraint firstItem="nod-Cm-qa1" firstAttribute="top" secondItem="qNm-Nt-T7T" secondAttribute="bottom" constant="15" id="94h-60-mEV"/>
                                             <constraint firstAttribute="trailing" secondItem="nod-Cm-qa1" secondAttribute="trailing" constant="15" id="CsR-6k-4Zu"/>
                                             <constraint firstItem="f9e-k0-kdF" firstAttribute="leading" secondItem="pHq-rE-3c6" secondAttribute="leading" constant="15" id="Ere-3o-plz"/>
                                             <constraint firstItem="Wdd-bZ-GGP" firstAttribute="top" secondItem="pHq-rE-3c6" secondAttribute="top" constant="20" id="Lkq-pt-Zg1"/>
                                             <constraint firstAttribute="trailing" secondItem="Wdd-bZ-GGP" secondAttribute="trailing" constant="15" id="NNQ-ek-Shn"/>
-                                            <constraint firstItem="PeD-fc-2eg" firstAttribute="top" secondItem="f9e-k0-kdF" secondAttribute="bottom" constant="10" id="OrF-dk-qNh"/>
                                             <constraint firstItem="nod-Cm-qa1" firstAttribute="leading" secondItem="pHq-rE-3c6" secondAttribute="leading" constant="15" id="Wv4-y0-wXz"/>
                                             <constraint firstAttribute="height" constant="570" id="Xse-pH-1Hb"/>
                                             <constraint firstItem="f9e-k0-kdF" firstAttribute="top" secondItem="Wdd-bZ-GGP" secondAttribute="bottom" constant="10" id="aRW-RU-usx"/>
@@ -606,6 +619,7 @@
                     <connections>
                         <outlet property="approved_circular_view" destination="HuI-NV-8cf" id="azd-ZV-hWo"/>
                         <outlet property="barChartView" destination="stw-vN-4hV" id="r6m-Ja-Bfk"/>
+                        <outlet property="crossBtn" destination="9oH-4S-DlO" id="1HI-wj-5SR"/>
                         <outlet property="filteredTableView" destination="dBT-Pj-dse" id="yOk-l1-wN6"/>
                         <outlet property="filteredTableviewHeightConstraint" destination="2Ml-gK-QPc" id="SWF-7F-gZW"/>
                         <outlet property="mainView" destination="pHq-rE-3c6" id="Jgs-21-zk3"/>
@@ -684,8 +698,8 @@
                                                         <color key="textColor" red="0.86666666670000003" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Message Subject     " textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0mM-2m-x4B">
-                                                        <rect key="frame" x="25" y="-2" width="106" height="13.5"/>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="*Message Subject     " textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0mM-2m-x4B">
+                                                        <rect key="frame" x="25" y="-2" width="111" height="13.5"/>
                                                         <color key="backgroundColor" red="0.98039215690000003" green="0.98039215690000003" blue="0.98039215690000003" alpha="1" colorSpace="calibratedRGB"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="11"/>
                                                         <nil key="textColor"/>
@@ -746,8 +760,8 @@
                                                             </userDefinedRuntimeAttribute>
                                                         </userDefinedRuntimeAttributes>
                                                     </view>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Message     " textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2VD-zd-Sfa">
-                                                        <rect key="frame" x="25" y="-2" width="63" height="13.5"/>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="*Message     " textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2VD-zd-Sfa">
+                                                        <rect key="frame" x="25" y="-2" width="68" height="13.5"/>
                                                         <color key="backgroundColor" red="0.98039215690000003" green="0.98039215690000003" blue="0.98039215690000003" alpha="1" colorSpace="calibratedRGB"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="11"/>
                                                         <nil key="textColor"/>
@@ -879,6 +893,7 @@
                     <connections>
                         <outlet property="broadcast_btn" destination="Dtk-Dx-g2q" id="xiW-nH-0CD"/>
                         <outlet property="forward_btn" destination="HbY-7n-OIP" id="kg1-97-sHb"/>
+                        <outlet property="group_view" destination="YZz-n7-kTc" id="zK4-XL-56D"/>
                         <outlet property="mainHeading" destination="9Oc-wQ-jg4" id="plP-Zs-NgI"/>
                         <outlet property="mainView" destination="Ksd-1q-ffY" id="cXu-Nc-SSs"/>
                         <outlet property="message_group" destination="EtZ-Wx-79Y" id="kOW-x3-UiP"/>
@@ -2044,6 +2059,7 @@
     <resources>
         <image name="broadcast-new" width="42" height="42"/>
         <image name="cancel-new" width="42" height="42"/>
+        <image name="cross" width="32" height="32"/>
         <image name="drop_down_red" width="128" height="128"/>
         <image name="droparrowG" width="32" height="32"/>
         <image name="forward-new" width="42" height="42"/>

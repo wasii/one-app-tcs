@@ -21,6 +21,7 @@ class NewRequestLeadershipAwazViewController: BaseViewController {
     @IBOutlet weak var subject_wordcounter: UILabel!
     
     
+    @IBOutlet weak var group_view: UIView!
     
     var request_mode:   tbl_RequestModes?
     var ad_group:       tbl_la_ad_group?
@@ -37,7 +38,6 @@ class NewRequestLeadershipAwazViewController: BaseViewController {
     @IBOutlet weak var reject_btn: UIButton!
     @IBOutlet weak var broadcast_btn: UIButton!
     
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.makeTopCornersRounded(roundView: self.mainView)
@@ -47,6 +47,9 @@ class NewRequestLeadershipAwazViewController: BaseViewController {
         message_subject.delegate = self
         message_textview.delegate = self
         message_group.delegate = self
+        
+        message_subject.keyboardType = .asciiCapable
+        message_textview.keyboardType = .asciiCapable
         
         if let _ = ticket_id {
             ticket_request = AppDelegate.sharedInstance.db?.read_tbl_hr_request(ticketId: ticket_id!).first
@@ -58,12 +61,10 @@ class NewRequestLeadershipAwazViewController: BaseViewController {
                         isChairmen = true
                         self.broadcast_btn.isHidden = false
                         self.reject_btn.isHidden = false
-//                        self.title = "Update Request"
                         self.mainHeading.text = "Update Request"
                     } else if tr.TICKET_STATUS == "Approved" || tr.TICKET_STATUS == "Rejected" {
                         self.broadcast_btn.isHidden = true
                         self.reject_btn.isHidden = true
-//                        self.title = "View Request"
                         self.mainHeading.text = "View Request"
                     }
                     
@@ -111,6 +112,11 @@ class NewRequestLeadershipAwazViewController: BaseViewController {
                     let groupName = AppDelegate.sharedInstance.db?.read_tbl_la_ad_group(query: query).first?.AD_GROUP_NAME
                     self.message_group.text = "\(groupName ?? "")"
                 }
+                if let permission = AppDelegate.sharedInstance.db?.read_tbl_UserPermission(permission: PERMISSION_ViewBroadcastMode).count {
+                    if permission <= 0 {
+                        self.group_view.isHidden = true
+                    }
+                }
             }
         }
     }
@@ -121,7 +127,7 @@ class NewRequestLeadershipAwazViewController: BaseViewController {
     
     func setupTextFields() {
         message_group.label.textColor = UIColor.nativeRedColor()
-        message_group.label.text = "Select Group"
+        message_group.label.text = "*Select Group"
         message_group.placeholder = ""
         message_group.setOutlineColor(UIColor.nativeRedColor(), for: .normal)
         message_group.setOutlineColor(UIColor.nativeRedColor(), for: .editing)
@@ -286,38 +292,6 @@ extension NewRequestLeadershipAwazViewController: UITextViewDelegate {
         default:
             return false
         }
-        
-        
-//        switch textView.tag {
-//        case 0:
-//            if let texts = textView.text,
-//               let textRange = Range(range, in: texts) {
-//                let updatedText = texts.replacingCharacters(in: textRange, with: text)
-//                if updatedText.containsEmoji {
-//                    return false
-//                }
-//            }
-//            return true
-//        case 1:
-//            let maxLength = 525
-//            let currentString: NSString = textView.text as! NSString
-//            let newString: NSString =
-//                    currentString.replacingCharacters(in: range, with: text) as NSString
-//            if let texts = textView.text,
-//               let textRange = Range(range, in: texts) {
-//                let updatedText = texts.replacingCharacters(in: textRange, with: text)
-//                if updatedText.containsEmoji {
-//                    return false
-//                }
-//            }
-//            if newString.length <= maxLength {
-//                self.word_counter.text = "\(newString.length)/525"
-//                return true
-//            }
-//            return false
-//        default:
-//            return true
-//        }
         return false
     }
 }

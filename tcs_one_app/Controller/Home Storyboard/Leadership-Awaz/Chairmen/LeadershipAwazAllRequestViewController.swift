@@ -40,6 +40,10 @@ class LeadershipAwazAllRequestViewController: BaseViewController {
     
     var filtered_status = ""
     
+    
+    var ifIsSearch = false
+    var temp_data: [tbl_Hr_Request_Logs]?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = "All Requests"
@@ -48,6 +52,7 @@ class LeadershipAwazAllRequestViewController: BaseViewController {
         self.selected_query = "Weekly"
         self.tableView.register(UINib(nibName: "RequestListingTableCell", bundle: nil), forCellReuseIdentifier: "RequestListingCell")
         self.tableView.rowHeight = 80
+        self.searchtextField.delegate = self
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -87,30 +92,33 @@ class LeadershipAwazAllRequestViewController: BaseViewController {
         NotificationCenter.default.removeObserver(self)
     }
     func setupJSON(numberOfDays: Int, startday: String?, endday: String?) {
-        var query = ""
-        
-        if start_day == nil && end_day == nil {
-            let previousDate = getPreviousDays(days: -numberOfDays)
-            let weekly = previousDate.convertDateToString(date: previousDate)
+        if !ifIsSearch {
+            var query = ""
             
-            query = "SELECT * FROM REQUEST_LOGS WHERE CREATED_DATE >= '\(weekly)' AND CREATED_DATE <= '\(getLocalCurrentDate())' AND MODULE_ID = '\(CONSTANT_MODULE_ID)' AND CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)'"
-        } else {
-             query = "SELECT * FROM REQUEST_LOGS WHERE CREATED_DATE >= '\(startday!)' AND CREATED_DATE <= '\(endday!)' AND MODULE_ID = '\(CONSTANT_MODULE_ID)' AND CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)'"
-        }
-        tbl_request_logs = AppDelegate.sharedInstance.db?.read_tbl_hr_request(query: query)
-        
-        tbl_request_logs = tbl_request_logs?.filter({ (logs) -> Bool in
-            logs.LOGIN_ID != Int(CURRENT_USER_LOGGED_IN_ID)!
-        })
-        
-        if filtered_status == "" {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                self.setupCircularViews()
-                self.tableView.reloadData()
-                self.setupTableViewHeight(isFiltered: false)
+            if start_day == nil && end_day == nil {
+                let previousDate = getPreviousDays(days: -numberOfDays)
+                let weekly = previousDate.convertDateToString(date: previousDate)
+                
+                query = "SELECT * FROM REQUEST_LOGS WHERE CREATED_DATE >= '\(weekly)' AND CREATED_DATE <= '\(getLocalCurrentDate())' AND MODULE_ID = '\(CONSTANT_MODULE_ID)' AND CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)'"
+            } else {
+                 query = "SELECT * FROM REQUEST_LOGS WHERE CREATED_DATE >= '\(startday!)' AND CREATED_DATE <= '\(endday!)' AND MODULE_ID = '\(CONSTANT_MODULE_ID)' AND CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)'"
             }
-        } else {
-            self.filteredData(status: self.filtered_status)
+            tbl_request_logs = AppDelegate.sharedInstance.db?.read_tbl_hr_request(query: query)
+            
+            tbl_request_logs = tbl_request_logs?.filter({ (logs) -> Bool in
+                logs.LOGIN_ID != Int(CURRENT_USER_LOGGED_IN_ID)!
+            })
+            
+            if filtered_status == "" {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                    self.temp_data = self.tbl_request_logs
+                    self.setupCircularViews()
+                    self.tableView.reloadData()
+                    self.setupTableViewHeight(isFiltered: false)
+                }
+            } else {
+                self.filteredData(status: self.filtered_status)
+            }
         }
     }
     func setupTableViewHeight(isFiltered: Bool) {
@@ -202,6 +210,7 @@ class LeadershipAwazAllRequestViewController: BaseViewController {
             logs.TICKET_STATUS?.lowercased() == status.lowercased()
         })
         self.filtered_status = status
+        self.temp_data = self.filtered_data
         self.isFiltered = true
         self.tableView.reloadData()
         self.setupTableViewHeight(isFiltered: true)
@@ -322,23 +331,43 @@ extension LeadershipAwazAllRequestViewController: UITableViewDataSource, UITable
         cell.subHeading.text = data!.REQ_REMARKS!
         cell.date.text = data!.CREATED_DATE?.dateSeperateWithT ?? ""
         
-        switch data!.TICKET_STATUS {
-        case "Pending":
-            cell.status.text = "Pending"
-            cell.status.textColor = UIColor.pendingColor()
+        let query = "SELECT VIEW_COUNT FROM \(db_hr_request) WHERE SERVER_ID_PK = '\(data!.SERVER_ID_PK!)' AND CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)'"
+
+        let string = NSMutableAttributedString(string:"")
+        
+        let showviewattributes = [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 13),
+                                  NSAttributedString.Key.foregroundColor:UIColor.rejectedColor()]
+        
+        
+        if let view_count = AppDelegate.sharedInstance.db?.read_column(query: query) {
+            let viewCount = NSAttributedString.init(string: "Views: \(view_count)\n", attributes: showviewattributes)
+            string.append(viewCount)
+        }
+        
+        switch data!.TICKET_STATUS?.lowercased() {
+        case "pending":
+            let statusAttr = [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 15),
+                                      NSAttributedString.Key.foregroundColor:UIColor.pendingColor()]
+            let status = NSAttributedString.init(string: "Pending", attributes: statusAttr)
+            string.append(status)
             break
-        case "Approved", "approved":
-            cell.status.text = "Approved"
-            cell.status.textColor = UIColor.approvedColor()
+        case "approved":
+            let statusAttr = [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 15),
+                                      NSAttributedString.Key.foregroundColor:UIColor.approvedColor()]
+            let status = NSAttributedString.init(string: "Approved", attributes: statusAttr)
+            string.append(status)
             break
-        case "Rejected", "rejected":
-            cell.status.text = "Rejected"
-            cell.status.textColor = UIColor.rejectedColor()
+        case "rejected":
+            let statusAttr = [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 15),
+                                      NSAttributedString.Key.foregroundColor:UIColor.rejectedColor()]
+            let status = NSAttributedString.init(string: "Rejected", attributes: statusAttr)
+            string.append(status)
             break
         default:
-            print("Wrong Ticket Status")
             break
         }
+        
+        cell.status.attributedText = string
         
         cell.type.text = "Leadership Connect"
         return cell
@@ -361,3 +390,54 @@ extension LeadershipAwazAllRequestViewController: UITableViewDataSource, UITable
     }
 }
 
+
+
+extension LeadershipAwazAllRequestViewController: UITextFieldDelegate {
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        searchQueryTimer?.invalidate()
+        
+        let currentText = textField.text ?? ""
+        print(currentText)
+        
+        if (currentText as NSString).replacingCharacters(in: range, with: string).count == 0 {
+            
+            if isFiltered {
+                self.filtered_data = temp_data
+                self.tableView.reloadData()
+                self.setupTableViewHeight(isFiltered: true)
+            } else {
+                self.tbl_request_logs = temp_data
+                self.tableView.reloadData()
+                self.setupTableViewHeight(isFiltered: false)
+            }
+            
+            
+            
+            self.ifIsSearch = false
+            return true
+        }
+        if (currentText as NSString).replacingCharacters(in: range, with: string).count >= 3 {
+            searchQueryTimer = Timer.scheduledTimer(timeInterval: 0.5, target: self, selector: #selector(performSearch), userInfo: nil, repeats: false)
+        }
+        return true
+    }
+    @objc func performSearch() {
+        if isFiltered {
+            self.filtered_data = self.filtered_data?.filter({ (logs) -> Bool in
+                self.ifIsSearch = true
+                return (logs.REQ_REMARKS?.lowercased().contains(self.searchtextField.text?.lowercased() ?? "")) ?? false ||
+                    (String(logs.SERVER_ID_PK ?? 0).contains(self.searchtextField.text?.lowercased() ?? ""))
+            })
+            self.tableView.reloadData()
+            self.setupTableViewHeight(isFiltered: true)
+        } else {
+            self.tbl_request_logs = self.tbl_request_logs?.filter({ (logs) -> Bool in
+                self.ifIsSearch = true
+                return (logs.REQ_REMARKS?.lowercased().contains(self.searchtextField.text?.lowercased() ?? "")) ?? false ||
+                    (String(logs.SERVER_ID_PK ?? 0).contains(self.searchtextField.text?.lowercased() ?? ""))
+            })
+            self.tableView.reloadData()
+            self.setupTableViewHeight(isFiltered: false)
+        }
+    }
+}

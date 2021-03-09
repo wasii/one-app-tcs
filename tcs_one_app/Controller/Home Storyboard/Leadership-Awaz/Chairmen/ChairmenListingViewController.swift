@@ -30,6 +30,8 @@ class ChairmenListingViewController: BaseViewController {
     var tbl_request_logs: [tbl_Hr_Request_Logs]?
     var filtered_data: [tbl_Hr_Request_Logs]?
     
+    var temp_data: [tbl_Hr_Request_Logs]?
+    
     var indexPath: IndexPath?
     var selected_query: String?
     
@@ -41,6 +43,8 @@ class ChairmenListingViewController: BaseViewController {
     
     var filtered_status = ""
     
+    
+    var ifIsSearch = false
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -49,6 +53,8 @@ class ChairmenListingViewController: BaseViewController {
         self.tableView.register(UINib(nibName: "RequestListingTableCell", bundle: nil), forCellReuseIdentifier: "RequestListingCell")
         self.tableView.rowHeight = 80
         self.title = "Leadership Connect"
+        
+        search_textfield.delegate = self
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -86,31 +92,37 @@ class ChairmenListingViewController: BaseViewController {
     }
     
     func setupJSON(numberOfDays: Int, startday: String?, endday: String?) {
-        var query = ""
-        
-        if start_day == nil && end_day == nil {
-            let previousDate = getPreviousDays(days: -numberOfDays)
-            let weekly = previousDate.convertDateToString(date: previousDate)
+        if !ifIsSearch {
+            var query = ""
             
-            query = "SELECT * FROM REQUEST_LOGS WHERE CREATED_DATE >= '\(weekly)' AND CREATED_DATE <= '\(getLocalCurrentDate())' AND MODULE_ID = '\(CONSTANT_MODULE_ID)' AND CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)'"
-        } else {
-             query = "SELECT * FROM REQUEST_LOGS WHERE CREATED_DATE >= '\(startday!)' AND CREATED_DATE <= '\(endday!)' AND MODULE_ID = '\(CONSTANT_MODULE_ID)' AND CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)'"
-        }
-        tbl_request_logs = AppDelegate.sharedInstance.db?.read_tbl_hr_request(query: query)
-        if let _ = tbl_request_logs {
-            tbl_request_logs = tbl_request_logs?.filter({ (logs) -> Bool in
-                logs.LOGIN_ID == Int(CURRENT_USER_LOGGED_IN_ID)!
-            })
-        }
-        
-        if filtered_status == "" {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                self.setupCircularViews()
-                self.tableView.reloadData()
-                self.setupTableViewHeight(isFiltered: false)
+            if start_day == nil && end_day == nil {
+                let previousDate = getPreviousDays(days: -numberOfDays)
+                let weekly = previousDate.convertDateToString(date: previousDate)
+                
+                query = "SELECT * FROM REQUEST_LOGS WHERE CREATED_DATE >= '\(weekly)' AND CREATED_DATE <= '\(getLocalCurrentDate())' AND MODULE_ID = '\(CONSTANT_MODULE_ID)' AND CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)'"
+            } else {
+                 query = "SELECT * FROM REQUEST_LOGS WHERE CREATED_DATE >= '\(startday!)' AND CREATED_DATE <= '\(endday!)' AND MODULE_ID = '\(CONSTANT_MODULE_ID)' AND CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)'"
             }
-        } else {
-            self.filteredData(status: self.filtered_status)
+            tbl_request_logs = AppDelegate.sharedInstance.db?.read_tbl_hr_request(query: query)
+            if let _ = tbl_request_logs {
+                tbl_request_logs = tbl_request_logs?.filter({ (logs) -> Bool in
+                    logs.LOGIN_ID == Int(CURRENT_USER_LOGGED_IN_ID)!
+                })
+                tbl_request_logs = tbl_request_logs?.sorted(by: { (l1, l2) -> Bool in
+                    l1.CREATED_DATE! > l2.CREATED_DATE!
+                })
+            }
+            
+            if filtered_status == "" {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                    self.temp_data = self.tbl_request_logs
+                    self.setupCircularViews()
+                    self.tableView.reloadData()
+                    self.setupTableViewHeight(isFiltered: false)
+                }
+            } else {
+                self.filteredData(status: self.filtered_status)
+            }
         }
     }
     func setupTableViewHeight(isFiltered: Bool) {
@@ -285,12 +297,42 @@ extension ChairmenListingViewController: UITableViewDataSource, UITableViewDeleg
         
         let query = "SELECT VIEW_COUNT FROM \(db_hr_request) WHERE SERVER_ID_PK = '\(data!.SERVER_ID_PK!)' AND CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)'"
 
+        let string = NSMutableAttributedString(string:"")
+        
+        let showviewattributes = [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 13),
+                                  NSAttributedString.Key.foregroundColor:UIColor.rejectedColor()]
+        
+        
         if let view_count = AppDelegate.sharedInstance.db?.read_column(query: query) {
-            cell.status.text = "Views: \(view_count)"
+            let viewCount = NSAttributedString.init(string: "Views: \(view_count)\n", attributes: showviewattributes)
+            string.append(viewCount)
         }
         
+        switch data!.TICKET_STATUS?.lowercased() {
+        case "pending":
+            let statusAttr = [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 15),
+                                      NSAttributedString.Key.foregroundColor:UIColor.pendingColor()]
+            let status = NSAttributedString.init(string: "Pending", attributes: statusAttr)
+            string.append(status)
+            break
+        case "approved":
+            let statusAttr = [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 15),
+                                      NSAttributedString.Key.foregroundColor:UIColor.approvedColor()]
+            let status = NSAttributedString.init(string: "Approved", attributes: statusAttr)
+            string.append(status)
+            break
+        case "rejected":
+            let statusAttr = [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 15),
+                                      NSAttributedString.Key.foregroundColor:UIColor.rejectedColor()]
+            let status = NSAttributedString.init(string: "Rejected", attributes: statusAttr)
+            string.append(status)
+            break
+        default:
+            break
+        }
         
-        cell.status.textColor = UIColor.rejectedColor()
+        cell.status.attributedText = string
+//        cell.status.textColor = UIColor.rejectedColor()
         cell.type.text = "Leadership Connect"
         return cell
     }
@@ -307,5 +349,42 @@ extension ChairmenListingViewController: UITableViewDataSource, UITableViewDeleg
         controller.ticket_id = data!.SERVER_ID_PK!
         
         self.navigationController?.pushViewController(controller, animated: true)
+    }
+}
+
+
+
+extension ChairmenListingViewController: UITextFieldDelegate {
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        searchQueryTimer?.invalidate()
+        
+        let currentText = textField.text ?? ""
+        print(currentText)
+        
+        if (currentText as NSString).replacingCharacters(in: range, with: string).count == 0 {
+            
+            self.tbl_request_logs = temp_data
+            
+            self.tableView.reloadData()
+            self.setupTableViewHeight(isFiltered: false)
+            self.ifIsSearch = false
+            return true
+        }
+        if (currentText as NSString).replacingCharacters(in: range, with: string).count >= 3 {
+            searchQueryTimer = Timer.scheduledTimer(timeInterval: 0.5, target: self, selector: #selector(performSearch), userInfo: nil, repeats: false)
+        }
+        return true
+    }
+    @objc func performSearch() {
+        
+        self.tbl_request_logs = self.tbl_request_logs?.filter({ (logs) -> Bool in
+            self.ifIsSearch = true
+            return (logs.REQ_REMARKS?.lowercased().contains(self.search_textfield.text?.lowercased() ?? "")) ?? false ||
+                (String(logs.SERVER_ID_PK ?? 0).contains(self.search_textfield.text?.lowercased() ?? ""))
+        })
+        
+        self.tableView.reloadData()
+        self.setupTableViewHeight(isFiltered: false)
+        
     }
 }

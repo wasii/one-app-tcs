@@ -321,43 +321,11 @@ extension NotificationsViewController: UITableViewDelegate, UITableViewDataSourc
         default:
             break
         }
-        
-//        cell.status.text = data.TICKET_STATUS
-//        if data.TICKET_STATUS == "approved" || data.TICKET_STATUS == "Approved" {
-//            cell.status.text = "Completed"
-//        }
-//        if data.TICKET_STATUS == "rejected" {
-//            cell.status.text = "Rejected"
-//        }
-//        switch data.TICKET_STATUS {
-//        case "Pending", "pending", "Submitted", "submitted":
-//            cell.status.textColor = UIColor.pendingColor()
-//            break
-//        case "Approved", "approved", "Completed", "completed":
-//            cell.status.textColor = UIColor.approvedColor()
-//            break
-//        case "Rejected", "rejected", "Closed", "closed":
-//            cell.status.textColor = UIColor.rejectedColor()
-//            break
-//        case "Inprogress-Er", "Inprogress-S", "Responded", "Investigating", "Inprogress-Ceo", "Inprogress-Srhrbp":
-//            cell.status.textColor = UIColor.approvedColor()
-//            cell.status.text = INREVIEW
-//            break
-//        case IMS_Status_Inprogress_As, IMS_Status_Inprogress_Hs, IMS_Status_Inprogress_Ds, IMS_Status_Inprogress_Cs, IMS_Status_Inprogress_Ro, IMS_Status_Inprogress_Ca, IMS_Status_Inprogress_Hr, IMS_Status_Inprogress_Fi, IMS_Status_Inprogress_Rm, IMS_Status_Inprogress_Fs, IMS_Status_Inprogress_Rds, IMS_Status_Inprogress_Hod, IMS_Status_Inprogress_Ins, IMS_Status_Inprogress_Rhod:
-//            cell.status.textColor = UIColor.approvedColor()
-//            cell.status.text = IMS_Status_Inprogress
-//        default:
-//            break
-//        }
         if data.CREATED_DATE == "" {
             cell.date.text = data.CREATED_DATE
         } else {
             cell.date.text = data.CREATED_DATE.dateSeperateWithT
         }
-        
-//        cell.type.text = data.MODULE_DSCRP
-        
-        
         return cell
     }
     

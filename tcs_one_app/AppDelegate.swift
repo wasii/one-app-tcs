@@ -316,7 +316,7 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
         } else if application.applicationState == .inactive {
             state = INACTIVE
         }
-        
+//        NAE HOTA..
         if let body = userInfo.dictionary?["body"]?.string{
             let data = body.data(using: .utf8)!
             do {
@@ -324,6 +324,13 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
                     if let request_log = JSON(jsonArray[_data]).dictionary?[_hr_requests]?.array?.first {
                         let ticket_id = request_log.dictionary?["TICKET_ID"]?.int
                         let tbl_hr_request = db?.read_tbl_hr_request(query: "SELECT * FROM \(db_hr_request) WHERE SERVER_ID_PK = '\(ticket_id!)' AND CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)'").first
+                        
+                        
+                        let query = "SELECT n.*,r.TICKET_STATUS as LOG_TICKET FROM \(db_hr_notifications) n LEFT JOIN \(db_hr_request) r ON n.TICKET_ID = r.SERVER_ID_PK WHERE r.CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)' AND r.SERVER_ID_PK = '\(tbl_hr_request?.SERVER_ID_PK ?? 0)'"
+                        
+                        let tbl_hr_notification = db?.read_tbl_hr_notification_request(query: query)
+                        RECORD_ID = tbl_hr_notification?.first?.RECORD_ID ?? 0
+                        print(RECORD_ID)
                         NotificationCenter.default.post(Notification.init(name: .navigateThroughNotification, object: tbl_hr_request, userInfo: nil))
                         completionHandler()
                         return
@@ -331,6 +338,9 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
                     if let request_log = JSON(jsonArray).dictionary?["data"] {
                         let ticket_id = request_log.array?.first?.dictionary?["TICKET_ID"]?.int ?? -1
                         let tbl_hr_request = db?.read_tbl_hr_request(query: "SELECT * FROM \(db_hr_request) WHERE SERVER_ID_PK = '\(ticket_id)'").first
+                        let tbl_hr_notification = db?.read_tbl_hr_notification_request(query: "SELECT * FROM \(db_hr_notifications) WHERE TICKET_ID = '\(tbl_hr_request?.SERVER_ID_PK ?? 0)'")
+                        RECORD_ID = tbl_hr_notification?.first?.RECORD_ID ?? 0
+                        print(RECORD_ID)
                         NotificationCenter.default.post(Notification.init(name: .navigateThroughNotification, object: tbl_hr_request, userInfo: nil))
                         completionHandler()
                         return
