@@ -38,6 +38,9 @@ class NewRequestLeadershipAwazViewController: BaseViewController {
     @IBOutlet weak var reject_btn: UIButton!
     @IBOutlet weak var broadcast_btn: UIButton!
     
+    @IBOutlet weak var pocView: UIView!
+    @IBOutlet weak var name: UILabel!
+    @IBOutlet weak var designation: UILabel!
     override func viewDidLoad() {
         super.viewDidLoad()
         self.makeTopCornersRounded(roundView: self.mainView)
@@ -57,6 +60,9 @@ class NewRequestLeadershipAwazViewController: BaseViewController {
         if let emp_info = AppDelegate.sharedInstance.db?.read_tbl_UserProfile().first {
             if emp_info.HIGHNESS == "1" {
                 if let tr = ticket_request {
+                    pocView.isHidden = false
+                    name.text = tr.EMP_NAME
+                    designation.text = tr.DESIG_NAME
                     if tr.TICKET_STATUS == "Pending" {
                         isChairmen = true
                         self.broadcast_btn.isHidden = false
@@ -91,6 +97,9 @@ class NewRequestLeadershipAwazViewController: BaseViewController {
             } else {
                 self.forward_btn.isHidden = false
                 if let tr = ticket_request {
+                    pocView.isHidden = false
+                    name.text = tr.EMP_NAME
+                    designation.text = tr.DESIG_NAME
                     self.message_textview.isEditable = false
                     self.message_subject.isEditable = false
                     self.message_group.isUserInteractionEnabled = false

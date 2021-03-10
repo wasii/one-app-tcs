@@ -126,7 +126,7 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
         if let _ = self.module {
             chartViews = [ChartViews]()
             for mod in self.module! {
-                if mod.MODULENAME == "Track" || mod.MODULENAME == "IMS" {
+                if mod.MODULENAME == "Track" || mod.MODULENAME == "IMS" || mod.MODULENAME == "Leadership Connect" {
                     continue
                 }
                 let chart:ChartViews = Bundle.main.loadNibNamed("ChartViews", owner: self, options: nil)?.first as! ChartViews
@@ -160,16 +160,16 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
 //                                                      rejected: "Closed",
 //                                                      tag: mod.SERVER_ID_PK)
 //                    break
-                case "Leadership Connect":
-                    chart.heading.text = "Leadership Connect Dashboard"
-                    chart.pieChart = self.setupGraphs(pieChartView: chart.pieChart,
-                                                      module_id: mod.SERVER_ID_PK,
-                                                      pending: "Pending",
-                                                      approved: "Approved",
-                                                      rejected: "Rejected",
-                                                      tag: mod.SERVER_ID_PK)
-                    self.ModuleCount += 1
-                    break
+//                case "Leadership Connect":
+//                    chart.heading.text = "Leadership Connect Dashboard"
+//                    chart.pieChart = self.setupGraphs(pieChartView: chart.pieChart,
+//                                                      module_id: mod.SERVER_ID_PK,
+//                                                      pending: "Pending",
+//                                                      approved: "Approved",
+//                                                      rejected: "Rejected",
+//                                                      tag: mod.SERVER_ID_PK)
+//                    self.ModuleCount += 1
+//                    break
                 default:
                     break
                 }

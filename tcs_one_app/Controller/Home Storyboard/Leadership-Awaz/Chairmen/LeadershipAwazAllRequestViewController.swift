@@ -354,7 +354,7 @@ extension LeadershipAwazAllRequestViewController: UITableViewDataSource, UITable
         case "approved":
             let statusAttr = [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 15),
                                       NSAttributedString.Key.foregroundColor:UIColor.approvedColor()]
-            let status = NSAttributedString.init(string: "Approved", attributes: statusAttr)
+            let status = NSAttributedString.init(string: "Broadcasted", attributes: statusAttr)
             string.append(status)
             break
         case "rejected":

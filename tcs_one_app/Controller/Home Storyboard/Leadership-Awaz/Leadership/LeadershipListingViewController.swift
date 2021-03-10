@@ -123,10 +123,13 @@ class LeadershipListingViewController: BaseViewController {
             }
             
             tbl_request_logs = AppDelegate.sharedInstance.db?.read_tbl_hr_request(query: query)
+            tbl_request_logs = tbl_request_logs?.filter({ (logs) -> Bool in
+                logs.LOGIN_ID == Int(CURRENT_USER_LOGGED_IN_ID)!
+            })
             if filtered_status == "" {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                    self.setupCircularView()
-                    self.setupStackBarChart()
+//                    self.setupCircularView()
+//                    self.setupStackBarChart()
                     self.tableView.reloadData()
                     self.temp_data = self.tbl_request_logs
                     self.setupTableViewHeight(isFiltered: false)
@@ -168,13 +171,13 @@ class LeadershipListingViewController: BaseViewController {
             previousDate = getPreviousDays(days: -numberOfDays)
             weekly = previousDate.convertDateToString(date: previousDate)
             
-            getDatesQuery = "SELECT strftime('%Y-%m-%d',CREATED_DATE) as date FROM \(db_hr_request) WHERE  CREATED_DATE >= '\(weekly)' AND CREATED_DATE <= '\(getLocalCurrentDate())' AND MODULE_ID = '\(CONSTANT_MODULE_ID)' AND CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)' group by strftime('%Y-%m-%d',CREATED_DATE)"
+            getDatesQuery = "SELECT strftime('%Y-%m-%d',CREATED_DATE) as date FROM \(db_hr_request) WHERE  CREATED_DATE >= '\(weekly)' AND CREATED_DATE <= '\(getLocalCurrentDate())' AND MODULE_ID = '\(CONSTANT_MODULE_ID)' AND CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)' AND LOGIN_ID = '\(CURRENT_USER_LOGGED_IN_ID)' group by strftime('%Y-%m-%d',CREATED_DATE)"
             
-            getTicketsAccordingDates = "SELECT TICKET_STATUS , count(ID) as totalCount, strftime('%Y-%m-%d',CREATED_DATE) as date FROM \(db_hr_request) WHERE  CREATED_DATE >= '\(weekly)' AND CREATED_DATE <= '\(getLocalCurrentDate())' AND MODULE_ID = '\(CONSTANT_MODULE_ID)' AND CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)' group by  ticket_status , date"
+            getTicketsAccordingDates = "SELECT TICKET_STATUS , count(ID) as totalCount, strftime('%Y-%m-%d',CREATED_DATE) as date FROM \(db_hr_request) WHERE  CREATED_DATE >= '\(weekly)' AND CREATED_DATE <= '\(getLocalCurrentDate())' AND MODULE_ID = '\(CONSTANT_MODULE_ID)' AND CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)' AND LOGIN_ID = '\(CURRENT_USER_LOGGED_IN_ID)' group by  ticket_status , date"
         } else {
-            getDatesQuery = "SELECT strftime('%Y-%m-%d',CREATED_DATE) as date FROM \(db_hr_request) WHERE  CREATED_DATE >= '\(self.startday!)' AND CREATED_DATE <= '\(self.endday!)' AND MODULE_ID = '\(CONSTANT_MODULE_ID)' AND CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)' group by strftime('%Y-%m-%d',CREATED_DATE)"
+            getDatesQuery = "SELECT strftime('%Y-%m-%d',CREATED_DATE) as date FROM \(db_hr_request) WHERE  CREATED_DATE >= '\(self.startday!)' AND CREATED_DATE <= '\(self.endday!)' AND MODULE_ID = '\(CONSTANT_MODULE_ID)' AND CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)' AND LOGIN_ID = '\(CURRENT_USER_LOGGED_IN_ID)' group by strftime('%Y-%m-%d',CREATED_DATE)"
             
-            getTicketsAccordingDates = "SELECT TICKET_STATUS , count(ID) as totalCount, strftime('%Y-%m-%d',CREATED_DATE) as date FROM \(db_hr_request) WHERE  CREATED_DATE >= '\(self.startday!)' AND CREATED_DATE <= '\(self.endday!)' AND MODULE_ID = '\(CONSTANT_MODULE_ID)' AND CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)' group by  ticket_status , date"
+            getTicketsAccordingDates = "SELECT TICKET_STATUS , count(ID) as totalCount, strftime('%Y-%m-%d',CREATED_DATE) as date FROM \(db_hr_request) WHERE  CREATED_DATE >= '\(self.startday!)' AND CREATED_DATE <= '\(self.endday!)' AND MODULE_ID = '\(CONSTANT_MODULE_ID)' AND CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)' AND LOGIN_ID = '\(CURRENT_USER_LOGGED_IN_ID)' group by  ticket_status , date"
         }
         
         let dates = AppDelegate.sharedInstance.db?.getDates(query: getDatesQuery).sorted(by: { (date1, date2) -> Bool in
@@ -306,7 +309,7 @@ class LeadershipListingViewController: BaseViewController {
         self.filtered_status = status
         self.isFiltered = true
 //        self.filtered_data = temp_data
-        self.setupStackBarChart()
+//        self.setupStackBarChart()
         self.tableView.reloadData()
         self.setupTableViewHeight(isFiltered: true)
     }
@@ -314,17 +317,17 @@ class LeadershipListingViewController: BaseViewController {
         var height: CGFloat = 0.0
         if isFiltered {
             if isLoadFilteredData {
-                height = CGFloat((filtered_data!.count * 80) + 580)
+                height = CGFloat((filtered_data!.count * 80) + 100)
                 height += self.filteredTableviewHeightConstraint.constant
             } else {
-                height = CGFloat((filtered_data!.count * 80) + 580)
+                height = CGFloat((filtered_data!.count * 80) + 100)
             }
         } else {
             if isLoadFilteredData {
-                height = CGFloat((tbl_request_logs!.count * 80) + 580)
+                height = CGFloat((tbl_request_logs!.count * 80) + 100)
                 height += self.filteredTableviewHeightConstraint.constant
             } else {
-                height = CGFloat((tbl_request_logs!.count * 80) + 580)
+                height = CGFloat((tbl_request_logs!.count * 80) + 100)
             }
         }
         self.mainViewHeightConstraint.constant = 280
@@ -468,7 +471,7 @@ extension LeadershipListingViewController: ChartViewDelegate {
     }
     
     func getDateSpecificWiseRecords(date: String) {
-        let query = "SELECT * FROM REQUEST_LOGS WHERE CREATED_DATE >= '\(date)T00:00:00' AND CREATED_DATE <= '\(date)T23:59:59' AND MODULE_ID = '\(CONSTANT_MODULE_ID)' AND CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)' order by CREATED_DATE DESC"
+        let query = "SELECT * FROM REQUEST_LOGS WHERE CREATED_DATE >= '\(date)T00:00:00' AND CREATED_DATE <= '\(date)T23:59:59' AND MODULE_ID = '\(CONSTANT_MODULE_ID)' AND CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)' AND LOGIN_ID = '\(CURRENT_USER_LOGGED_IN_ID)' order by CREATED_DATE DESC"
         self.date_specific_tbl_request_logs = AppDelegate.sharedInstance.db?.read_tbl_hr_request(query: query).filter({ (logs) -> Bool in
             logs.MODULE_ID! == CONSTANT_MODULE_ID
         })
@@ -481,7 +484,7 @@ extension LeadershipListingViewController: ChartViewDelegate {
         self.filteredTableView.reloadData()
         
         self.filteredTableviewHeightConstraint.constant = 0
-        self.filteredTableviewHeightConstraint.constant = CGFloat(self.date_specific_tbl_request_logs!.count * 80) + 10
+        self.filteredTableviewHeightConstraint.constant = CGFloat(self.date_specific_tbl_request_logs!.count * 80) + 30
         self.mainViewHeightConstraint.constant += self.filteredTableviewHeightConstraint.constant
     }
 }
@@ -545,7 +548,7 @@ extension LeadershipListingViewController: UITableViewDelegate, UITableViewDataS
                 case "approved":
                     let statusAttr = [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 15),
                                               NSAttributedString.Key.foregroundColor:UIColor.approvedColor()]
-                    let status = NSAttributedString.init(string: "Approved", attributes: statusAttr)
+                    let status = NSAttributedString.init(string: "Broadcasted", attributes: statusAttr)
                     string.append(status)
                     break
                 case "rejected":
@@ -601,7 +604,7 @@ extension LeadershipListingViewController: UITableViewDelegate, UITableViewDataS
         case "approved":
             let statusAttr = [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 15),
                                       NSAttributedString.Key.foregroundColor:UIColor.approvedColor()]
-            let status = NSAttributedString.init(string: "Approved", attributes: statusAttr)
+            let status = NSAttributedString.init(string: "Broadcasted", attributes: statusAttr)
             string.append(status)
             break
         case "rejected":

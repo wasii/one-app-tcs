@@ -116,7 +116,7 @@ class ChairmenListingViewController: BaseViewController {
             if filtered_status == "" {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                     self.temp_data = self.tbl_request_logs
-                    self.setupCircularViews()
+//                    self.setupCircularViews()
                     self.tableView.reloadData()
                     self.setupTableViewHeight(isFiltered: false)
                 }
@@ -128,9 +128,9 @@ class ChairmenListingViewController: BaseViewController {
     func setupTableViewHeight(isFiltered: Bool) {
         var height: CGFloat = 0.0
         if isFiltered {
-            height = CGFloat((filtered_data!.count * 80) + 400)
+            height = CGFloat((filtered_data!.count * 80) + 120)
         } else {
-            height = CGFloat((tbl_request_logs!.count * 80) + 400)
+            height = CGFloat((tbl_request_logs!.count * 80) + 120)
         }
         self.mainViewHeightConstraint.constant = 280
         switch UIDevice().type {
@@ -318,7 +318,7 @@ extension ChairmenListingViewController: UITableViewDataSource, UITableViewDeleg
         case "approved":
             let statusAttr = [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 15),
                                       NSAttributedString.Key.foregroundColor:UIColor.approvedColor()]
-            let status = NSAttributedString.init(string: "Approved", attributes: statusAttr)
+            let status = NSAttributedString.init(string: "Broadcasted", attributes: statusAttr)
             string.append(status)
             break
         case "rejected":

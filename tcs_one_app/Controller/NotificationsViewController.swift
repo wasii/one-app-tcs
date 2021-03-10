@@ -309,7 +309,7 @@ extension NotificationsViewController: UITableViewDelegate, UITableViewDataSourc
                     break
                 case "approved":
                     cell.status.textColor = UIColor.approvedColor()
-                    cell.status.text = "Approved"
+                    cell.status.text = "Broadcasted"
                     break
                 case "rejected":
                     cell.status.textColor = UIColor.rejectedColor()
