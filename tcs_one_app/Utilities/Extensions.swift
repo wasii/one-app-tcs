@@ -1,6 +1,7 @@
 import Foundation
 import UIKit
 import NaturalLanguage
+import MapKit
 
 extension UIColor {
     class func nativeRedColor() -> UIColor {
@@ -837,4 +838,12 @@ extension Character {
     var isCombinedIntoEmoji: Bool { unicodeScalars.count > 1 && unicodeScalars.first?.properties.isEmoji ?? false }
 
     var isEmoji: Bool { isSimpleEmoji || isCombinedIntoEmoji }
+}
+
+extension MKMapView {
+  func zoomToLocation(_ location: CLLocation?) {
+    guard let coordinate = location?.coordinate else { return }
+    let region = MKCoordinateRegion(center: coordinate, latitudinalMeters: 10_000, longitudinalMeters: 10_000)
+    setRegion(region, animated: true)
+  }
 }

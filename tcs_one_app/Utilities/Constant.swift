@@ -24,7 +24,7 @@ var RECORD_ID               = 0
 //let UPLOADFILESURL          = "https://oneappapi.tcscourier.com/api/file-upload"
 
 //DEV
-let ENDPOINT                = "https://devapi.tcscourier.com/qacore/api/main"
+let ENDPOINT                = "https://devapi.tcscourier.com/core/api/main"
 let UPLOADFILESURL          = "https://pwaqaapi.tcscourier.com/api/file-upload"
 
 let LOGIN                   = "oneapp.login"
@@ -50,6 +50,9 @@ let IMSUPDATE               = "oneapp.imsupdate"
 //LEADERSHIP AWAZ
 let ADDAWAZTICKET           = "oneapp.addawazticket"
 let UPDATEAWAZTICKET        = "oneapp.updawazticket"
+
+//ATTENDANCE
+let GETLOCATIONS            = "oneapp.getlocation"
 
 //API BACKEND KEYS
 let eAI_MESSAGE             = "eAI_MESSAGE"
@@ -102,6 +105,9 @@ let _control_type           = "control_type"
 let _ad_group               = "ad_group"
 let _login_count            = "login_count"
 
+//Attendance Keys
+let _attn_out               = "attn_out"
+
 //Local Storage (Database) tablename keys
 let db_user_module          = "USER_MODULE"
 let db_user_page            = "USER_PAGE"
@@ -124,7 +130,11 @@ let db_files                = "FILES_TABLE"
 let db_grievance_remarks    = "GRIEVANCE_REMARKS_TABLE"
 
 let db_login_count          = "LOGIN_COUNT"
-let db_la_ad_group             = "LA_AdGROUP"
+let db_la_ad_group          = "LA_AdGROUP"
+
+// Attendance
+let db_att_locations        = "ATT_LOCATIONS"
+let db_att_userAttendance   = "ATT_USER_ATTENDANCE"
 // IMS
 let db_lov_master           = "IMS_LOV_MASTER_TABLE"
 let db_lov_detail           = "IMS_LOV_DETAIL_TABLE"

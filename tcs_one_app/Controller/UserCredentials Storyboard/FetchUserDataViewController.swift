@@ -124,8 +124,11 @@ class FetchUserDataViewController: BaseViewController {
                     self.activityIndicator[2].isHidden = false
                     self.activityIndicator[2].startAnimating()
 
+                    self.getTCSLocations {
+                        self.getHrRequest()
+                    }
                     //MARK: oneapp.gethrrequest
-                    self.getHrRequest()
+//                    self.getHrRequest()
 
                 }
 //                DispatchQueue.main.async {
@@ -570,6 +573,35 @@ class FetchUserDataViewController: BaseViewController {
             })
         }
         handler(true)
+    }
+    
+    func getTCSLocations (_ handler: @escaping()->Void) {
+        let json = [
+            "location_request" : [
+                "access_token" : access_token
+            ]
+        ]
+        let params = self.getAPIParameter(service_name: GETLOCATIONS, request_body: json)
+        NetworkCalls.get_tcs_location(params: params) { (granted, response) in
+            if granted {
+                if let data = JSON(response).array {
+                    AppDelegate.sharedInstance.db?.deleteAll(tableName: db_att_locations, handler: { _ in
+                        for locations in data {
+                            do {
+                                let dictionary = try locations.rawData()
+                                let att_location = try JSONDecoder().decode(AttLocations.self, from: dictionary)
+                                AppDelegate.sharedInstance.db?.insert_tbl_att_locations(att_location: att_location)
+                            } catch let err {
+                                print(err.localizedDescription)
+                            }
+                        }
+                    })
+                }
+            } else {
+                
+            }
+            handler()
+        }
     }
     
     @objc func getHrRequest() {

@@ -28,14 +28,14 @@ class DBHelper {
             let fileManager = FileManager.default
             if fileManager.fileExists(atPath: filePath) {
                 let new_db = UserDefaults.standard.bool(forKey: "NEWDB")
-                if !new_db {
+                if new_db {
                     do {
                         try fileManager.removeItem(at: pathComponent)
                         try fileManager.removeItem(at: url.appendingPathComponent("\(databaseName).db-shm")!)
                         try fileManager.removeItem(at: url.appendingPathComponent("\(databaseName).db-wal")!)
                         UserDefaults.standard.removeObject(forKey: "CurrentUser")
                         UserDefaults.standard.removeObject(forKey: USER_ACCESS_TOKEN)
-                        UserDefaults.standard.set(true, forKey: "NEWDB")
+                        UserDefaults.standard.set(false, forKey: "NEWDB")
                         return self.copy_database(databaseName: databaseName, pathComponent: pathComponent)
 
                     } catch let err {
@@ -45,7 +45,7 @@ class DBHelper {
                 print(pathComponent)
                 return pathComponent
             } else {
-                UserDefaults.standard.set(true, forKey: "NEWDB")
+                UserDefaults.standard.set(false, forKey: "NEWDB")
                 return self.copy_database(databaseName: databaseName, pathComponent: pathComponent)
             }
         } else {
@@ -2540,6 +2540,96 @@ class DBHelper {
         }
         return loginCount
     }
+    
+    func insert_tbl_att_locations(att_location: AttLocations) {
+        let insertStatementString = "INSERT INTO \(db_att_locations)(LOC_CODE, LOC_NAME, LATITUDE, LONGITUDE) VALUES (?,?,?,?);"
+        
+        var insertStatement: OpaquePointer? = nil
+        if sqlite3_prepare_v2(self.db, insertStatementString, -1, &insertStatement, nil) == SQLITE_OK {
+            sqlite3_bind_text(insertStatement, 1, (att_location.locCode as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 2, (att_location.locName as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 3, (att_location.latitude as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 4, (att_location.longitude as NSString).utf8String, -1, nil)
+            if sqlite3_step(insertStatement) == SQLITE_DONE {
+                print("\(db_att_locations): Successfully inserted row.")
+            } else {
+                print("\(db_att_locations): Could not insert row.")
+            }
+        } else {
+            print("\(db_att_locations): INSERT statement could not be prepared.")
+        }
+        sqlite3_finalize(insertStatement)
+    }
+    func read_tbl_att_locations(query: String) -> [tbl_att_locations] {
+        let queryStatementString = query
+        var queryStatement: OpaquePointer? = nil
+        var attLocations: [tbl_att_locations] = []
+        
+        if sqlite3_prepare_v2(db, queryStatementString, -1, &queryStatement, nil) == SQLITE_OK {
+            while sqlite3_step(queryStatement) == SQLITE_ROW {
+                let id = Int(sqlite3_column_int(queryStatement, 0))
+                let locCode = String(describing: String(cString: sqlite3_column_text(queryStatement, 1)))
+                let locName = String(describing: String(cString: sqlite3_column_text(queryStatement, 2)))
+                let latitude = String(describing: String(cString: sqlite3_column_text(queryStatement, 3)))
+                let longitude = String(describing: String(cString: sqlite3_column_text(queryStatement, 4)))
+                
+                attLocations.append(tbl_att_locations(ID: id,
+                                                      LOC_CODE: locCode,
+                                                      LOC_NAME: locName,
+                                                      LATITUDE: latitude,
+                                                      LONGITUDE: longitude))
+            }
+        } else {
+            print("SELECT statement \(db_att_locations) could not be prepared")
+        }
+        return attLocations
+    }
+    func insert_tbl_att_user_attendance(att_location: AttUserAttendance) {
+        let insertStatementString = "INSERT INTO \(db_att_userAttendance)(DATE, TIME_IN, TIME_OUT, DAYS, STATUS) VALUES (?,?,?,?,?);"
+        
+        var insertStatement: OpaquePointer? = nil
+        if sqlite3_prepare_v2(self.db, insertStatementString, -1, &insertStatement, nil) == SQLITE_OK {
+            sqlite3_bind_text(insertStatement, 1, (att_location.date as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 2, ((att_location.timeIn ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 3, ((att_location.timeOut ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 4, (att_location.days as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 5, (att_location.status as NSString).utf8String, -1, nil)
+            if sqlite3_step(insertStatement) == SQLITE_DONE {
+                print("\(db_att_userAttendance): Successfully inserted row.")
+            } else {
+                print("\(db_att_userAttendance): Could not insert row.")
+            }
+        } else {
+            print("\(db_att_userAttendance): INSERT statement could not be prepared.")
+        }
+        sqlite3_finalize(insertStatement)
+    }
+    func read_tbl_att_user_attendance(query: String) -> [tbl_att_user_attendance] {
+        let queryStatementString = query
+        var queryStatement: OpaquePointer? = nil
+        var attUserLocations: [tbl_att_user_attendance] = []
+        
+        if sqlite3_prepare_v2(db, queryStatementString, -1, &queryStatement, nil) == SQLITE_OK {
+            while sqlite3_step(queryStatement) == SQLITE_ROW {
+                let id = Int(sqlite3_column_int(queryStatement, 0))
+                let date = String(describing: String(cString: sqlite3_column_text(queryStatement, 1)))
+                let timeIn = String(describing: String(cString: sqlite3_column_text(queryStatement, 2)))
+                let timeOut = String(describing: String(cString: sqlite3_column_text(queryStatement, 3)))
+                let days = String(describing: String(cString: sqlite3_column_text(queryStatement, 4)))
+                let status = String(describing: String(cString: sqlite3_column_text(queryStatement, 5)))
+                
+                attUserLocations.append(tbl_att_user_attendance(ID: id,
+                                                                DATE: date,
+                                                                TIME_IN: timeIn,
+                                                                TIME_OUT: timeOut,
+                                                                DAYS: days,
+                                                                STATUS: status))
+            }
+        } else {
+            print("SELECT statement \(db_att_userAttendance) could not be prepared")
+        }
+        return attUserLocations
+    }
 }
 
 
@@ -3005,4 +3095,25 @@ struct tbl_login_count {
     var ID: Int = -1
     var APPLICATION: String = ""
     var COUNT: String = ""
+}
+
+
+
+
+//MARK: attendance module
+struct tbl_att_locations {
+    var ID: Int = -1
+    var LOC_CODE: String = ""
+    var LOC_NAME: String = ""
+    var LATITUDE: String = ""
+    var LONGITUDE: String = ""
+}
+
+struct tbl_att_user_attendance {
+    var ID: Int = -1
+    var DATE: String = ""
+    var TIME_IN: String = ""
+    var TIME_OUT: String = ""
+    var DAYS: String = ""
+    var STATUS: String = ""
 }

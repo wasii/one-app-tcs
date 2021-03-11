@@ -579,10 +579,16 @@ extension HomeScreenViewController: UICollectionViewDelegate, UICollectionViewDa
             break
 //        case "IMS":
 //            CONSTANT_MODULE_ID = AppDelegate.sharedInstance.db?.read_tbl_UserModule(query: "SELECT * FROM \(db_user_module) WHERE TAGNAME = '\(MODULE_TAG_IMS)';").first?.SERVER_ID_PK ?? -1
-//            let storyboard = UIStoryboard(name: "IMSStoryboard", bundle: nil)
-//            let controller = storyboard.instantiateViewController(withIdentifier: "IMSDashboardViewController") as! IMSDashboardViewController
+//            let storyboard = UIStoryboard(name: "Attendance", bundle: nil)
+//            let controller = storyboard.instantiateViewController(withIdentifier: "MapViewController") as! MapViewController
 //            self.navigationController?.pushViewController(controller, animated: true)
 //            break
+        case "Attendance":
+            CONSTANT_MODULE_ID = AppDelegate.sharedInstance.db?.read_tbl_UserModule(query: "SELECT * FROM \(db_user_module) WHERE TAGNAME = '\(MODULE_TAG_IMS)';").first?.SERVER_ID_PK ?? -1
+            let storyboard = UIStoryboard(name: "Attendance", bundle: nil)
+            let controller = storyboard.instantiateViewController(withIdentifier: "MapViewController") as! MapViewController
+            self.navigationController?.pushViewController(controller, animated: true)
+            break
             
         default:
             break

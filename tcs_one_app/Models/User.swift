@@ -147,3 +147,30 @@ struct User: Codable {
         case highness = "HIGHNESS"
     }
 }
+
+
+
+struct AttLocations: Codable {
+    let locCode, locName, latitude, longitude: String
+
+    enum CodingKeys: String, CodingKey {
+        case locCode = "LOC_CODE"
+        case locName = "LOC_NAME"
+        case latitude = "LATITUDE"
+        case longitude = "LONGITUDE"
+    }
+}
+
+struct AttUserAttendance: Codable {
+    let date: String
+    let timeIn, timeOut: String?
+    let days, status: String
+
+    enum CodingKeys: String, CodingKey {
+        case date = "DATE"
+        case timeIn = "TIME_IN"
+        case timeOut = "TIME_OUT"
+        case days = "DAYS"
+        case status = "STATUS"
+    }
+}

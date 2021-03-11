@@ -70,10 +70,18 @@
 		1B96C0A325E8D3020059775C /* NewRequestLeadershipAwazViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B96C0A225E8D3020059775C /* NewRequestLeadershipAwazViewController.swift */; };
 		1B9E6C812562779D006529C3 /* GrievanceViewClosedRequestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B9E6C802562779D006529C3 /* GrievanceViewClosedRequestViewController.swift */; };
 		1BBAEA4D259DA1AA00FBDCB4 /* IMSAllRequestsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BBAEA4C259DA1AA00FBDCB4 /* IMSAllRequestsViewController.swift */; };
+		1BC02EFF25FA446800EFAFE9 /* Geotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BC02EFE25FA446800EFAFE9 /* Geotification.swift */; };
 		1BC42B8D257527F7000A63AF /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1BC42B8C257527F7000A63AF /* CloudKit.framework */; };
 		1BF25A4A25E7CA3B008CE34F /* LeadershipAwaz.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1BF25A4925E7CA3B008CE34F /* LeadershipAwaz.storyboard */; };
 		1BF25A4F25E7D4EB008CE34F /* LeadershipListingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BF25A4E25E7D4EB008CE34F /* LeadershipListingViewController.swift */; };
 		1BF25A5325E7D507008CE34F /* ChairmenListingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BF25A5225E7D507008CE34F /* ChairmenListingViewController.swift */; };
+		1BFB374725F9D6E20073CC53 /* Attendance.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1BFB374625F9D6E20073CC53 /* Attendance.storyboard */; };
+		1BFB374D25F9D73B0073CC53 /* AttendanceMarkingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BFB374C25F9D73B0073CC53 /* AttendanceMarkingViewController.swift */; };
+		1BFB375025F9D7710073CC53 /* AttendanceDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BFB374F25F9D7700073CC53 /* AttendanceDetailsViewController.swift */; };
+		1BFB375525F9D7CA0073CC53 /* AttendanceDetailsTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BFB375325F9D7CA0073CC53 /* AttendanceDetailsTableCell.swift */; };
+		1BFB375625F9D7CA0073CC53 /* AttendanceDetailsTableCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1BFB375425F9D7CA0073CC53 /* AttendanceDetailsTableCell.xib */; };
+		1BFB375925F9D8E60073CC53 /* SlideManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BFB375825F9D8E60073CC53 /* SlideManager.swift */; };
+		1BFB375D25F9FB580073CC53 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BFB375C25F9FB580073CC53 /* MapViewController.swift */; };
 		4EDC7C88E5B17C3133E5ABA9 /* Pods_tcs_one_app.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CA51BA4126CEE514AB22E928 /* Pods_tcs_one_app.framework */; };
 		6006955A254994D400EB3865 /* HRHelpDeskRequestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60069559254994D400EB3865 /* HRHelpDeskRequestViewController.swift */; };
 		6010F41025400E3300CF8597 /* CicrularProgressBarCollectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6010F40E25400E3300CF8597 /* CicrularProgressBarCollectionCell.swift */; };
@@ -201,10 +209,18 @@
 		1B96C0A225E8D3020059775C /* NewRequestLeadershipAwazViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewRequestLeadershipAwazViewController.swift; sourceTree = "<group>"; };
 		1B9E6C802562779D006529C3 /* GrievanceViewClosedRequestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GrievanceViewClosedRequestViewController.swift; sourceTree = "<group>"; };
 		1BBAEA4C259DA1AA00FBDCB4 /* IMSAllRequestsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMSAllRequestsViewController.swift; sourceTree = "<group>"; };
+		1BC02EFE25FA446800EFAFE9 /* Geotification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Geotification.swift; sourceTree = "<group>"; };
 		1BC42B8C257527F7000A63AF /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
 		1BF25A4925E7CA3B008CE34F /* LeadershipAwaz.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LeadershipAwaz.storyboard; sourceTree = "<group>"; };
 		1BF25A4E25E7D4EB008CE34F /* LeadershipListingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeadershipListingViewController.swift; sourceTree = "<group>"; };
 		1BF25A5225E7D507008CE34F /* ChairmenListingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChairmenListingViewController.swift; sourceTree = "<group>"; };
+		1BFB374625F9D6E20073CC53 /* Attendance.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Attendance.storyboard; sourceTree = "<group>"; };
+		1BFB374C25F9D73B0073CC53 /* AttendanceMarkingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttendanceMarkingViewController.swift; sourceTree = "<group>"; };
+		1BFB374F25F9D7700073CC53 /* AttendanceDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttendanceDetailsViewController.swift; sourceTree = "<group>"; };
+		1BFB375325F9D7CA0073CC53 /* AttendanceDetailsTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttendanceDetailsTableCell.swift; sourceTree = "<group>"; };
+		1BFB375425F9D7CA0073CC53 /* AttendanceDetailsTableCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AttendanceDetailsTableCell.xib; sourceTree = "<group>"; };
+		1BFB375825F9D8E60073CC53 /* SlideManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SlideManager.swift; sourceTree = "<group>"; };
+		1BFB375C25F9FB580073CC53 /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 		60069559254994D400EB3865 /* HRHelpDeskRequestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HRHelpDeskRequestViewController.swift; sourceTree = "<group>"; };
 		6010F40E25400E3300CF8597 /* CicrularProgressBarCollectionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CicrularProgressBarCollectionCell.swift; sourceTree = "<group>"; };
 		6010F40F25400E3300CF8597 /* CicrularProgressBarCollectionCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CicrularProgressBarCollectionCell.xib; sourceTree = "<group>"; };
@@ -399,6 +415,14 @@
 			path = "IMS Desk";
 			sourceTree = "<group>";
 		};
+		1BC02EFD25FA445500EFAFE9 /* GeoLocation */ = {
+			isa = PBXGroup;
+			children = (
+				1BC02EFE25FA446800EFAFE9 /* Geotification.swift */,
+			);
+			path = GeoLocation;
+			sourceTree = "<group>";
+		};
 		1BF25A4825E7B52C008CE34F /* Leadership-Awaz */ = {
 			isa = PBXGroup;
 			children = (
@@ -424,6 +448,25 @@
 				1B78A6F425EE3434005670BE /* LeadershipAwazAllRequestViewController.swift */,
 			);
 			path = Chairmen;
+			sourceTree = "<group>";
+		};
+		1BFB374925F9D7070073CC53 /* Attendance */ = {
+			isa = PBXGroup;
+			children = (
+				1BFB374C25F9D73B0073CC53 /* AttendanceMarkingViewController.swift */,
+				1BFB374F25F9D7700073CC53 /* AttendanceDetailsViewController.swift */,
+				1BFB375C25F9FB580073CC53 /* MapViewController.swift */,
+			);
+			path = Attendance;
+			sourceTree = "<group>";
+		};
+		1BFB375225F9D79B0073CC53 /* Attendance */ = {
+			isa = PBXGroup;
+			children = (
+				1BFB375325F9D7CA0073CC53 /* AttendanceDetailsTableCell.swift */,
+				1BFB375425F9D7CA0073CC53 /* AttendanceDetailsTableCell.xib */,
+			);
+			path = Attendance;
 			sourceTree = "<group>";
 		};
 		601BA4B025387B17002CFD1F = {
@@ -486,6 +529,7 @@
 		604FD75E2539B762007E9E87 /* TableView */ = {
 			isa = PBXGroup;
 			children = (
+				1BFB375225F9D79B0073CC53 /* Attendance */,
 				1B61B29A25DCEE5700CDAAE2 /* Tracking */,
 				60E99922253D848D00BCDAD1 /* RequestListingTableCell.swift */,
 				60E99923253D848D00BCDAD1 /* RequestListingTableCell.xib */,
@@ -568,6 +612,7 @@
 		609C605825387B670051CF28 /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
+				1BC02EFD25FA445500EFAFE9 /* GeoLocation */,
 				609C606125387C850051CF28 /* Constant.swift */,
 				609C606325387C920051CF28 /* Extensions.swift */,
 				609C606525387CCD0051CF28 /* Helper.swift */,
@@ -581,6 +626,7 @@
 				60F3C7F92546C7FE00FA80B9 /* Protocols.swift */,
 				606D6402254974BC00F67B77 /* ConnectionManager.swift */,
 				1B3202F82578C70B0034803F /* ImagePickerManager.swift */,
+				1BFB375825F9D8E60073CC53 /* SlideManager.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -596,6 +642,7 @@
 				1B6279E12591E54D00C88FEE /* IMSStoryboard.storyboard */,
 				1B4AAD1225DA781E00A26DE7 /* TrackStoryboard.storyboard */,
 				1BF25A4925E7CA3B008CE34F /* LeadershipAwaz.storyboard */,
+				1BFB374625F9D6E20073CC53 /* Attendance.storyboard */,
 			);
 			path = Storyboards;
 			sourceTree = "<group>";
@@ -612,6 +659,7 @@
 		60C34FE1253985D100495944 /* Home Storyboard */ = {
 			isa = PBXGroup;
 			children = (
+				1BFB374925F9D7070073CC53 /* Attendance */,
 				1BF25A4825E7B52C008CE34F /* Leadership-Awaz */,
 				1B4AAD1525DA783300A26DE7 /* Track */,
 				1B6279E42591E5B500C88FEE /* IMS */,
@@ -770,12 +818,14 @@
 				1B1691BB257253C10007B3B0 /* checked-fill-icon.svg in Resources */,
 				1B6279E22591E54D00C88FEE /* IMSStoryboard.storyboard in Resources */,
 				1B614E1C2555138500E50B3A /* GoogleService-Info.plist in Resources */,
+				1BFB374725F9D6E20073CC53 /* Attendance.storyboard in Resources */,
 				1B6B04A4256660CD00CDEF66 /* GrievacneDownloadsTableCell.xib in Resources */,
 				60C34FE02539830E00495944 /* Home.storyboard in Resources */,
 				609C605B25387B900051CF28 /* UserCredentials.storyboard in Resources */,
 				1B47F9A025A5F18300FC74A4 /* IncidentInvestigationTableCell.xib in Resources */,
 				1B0CD7DA25F0C0B500C1C87D /* TCSOneApp.db in Resources */,
 				605CE7712541686E00509434 /* KEYSTORE.der in Resources */,
+				1BFB375625F9D7CA0073CC53 /* AttendanceDetailsTableCell.xib in Resources */,
 				1B5970B1256553CF00FF8CA0 /* AddAttachmentsTableCell.xib in Resources */,
 				601BA4C625387B18002CFD1F /* Assets.xcassets in Resources */,
 				60E99921253D7E1900BCDAD1 /* Popups.storyboard in Resources */,
@@ -856,11 +906,13 @@
 				60978BDD2551D1A6009AA2F3 /* LogoutViewController.swift in Sources */,
 				609C606025387C4B0051CF28 /* BaseViewController.swift in Sources */,
 				1B6279E72591E5E200C88FEE /* IMSNewRequestViewController.swift in Sources */,
+				1BFB374D25F9D73B0073CC53 /* AttendanceMarkingViewController.swift in Sources */,
 				60C34FDA25397D1600495944 /* FetchUserDataViewController.swift in Sources */,
 				1B96C0A325E8D3020059775C /* NewRequestLeadershipAwazViewController.swift in Sources */,
 				1B5EAACD255EB71C00F49D09 /* GrievanceNewRequestViewController.swift in Sources */,
 				1B61B2BC25DD25DD00CDAAE2 /* DManDetailsTableCell.swift in Sources */,
 				1B5EAA83255EA4A600F49D09 /* GrievanceHelpDeskRequestsViewController.swift in Sources */,
+				1BFB375D25F9FB580073CC53 /* MapViewController.swift in Sources */,
 				6010F41025400E3300CF8597 /* CicrularProgressBarCollectionCell.swift in Sources */,
 				60E99928253D9EF900BCDAD1 /* FilterDataPopupViewController.swift in Sources */,
 				602011A12542948100759D2E /* NewRequestListingViewController.swift in Sources */,
@@ -876,10 +928,13 @@
 				1B61B2B225DD20B800CDAAE2 /* RBagDetailsTableCell.swift in Sources */,
 				6010F4172540622500CF8597 /* NetworkCalls.swift in Sources */,
 				60E99911253D4F1300BCDAD1 /* PieChartCollectionCell.swift in Sources */,
+				1BC02EFF25FA446800EFAFE9 /* Geotification.swift in Sources */,
 				1B4AAD1725DA784300A26DE7 /* TrackHomeViewController.swift in Sources */,
 				6006955A254994D400EB3865 /* HRHelpDeskRequestViewController.swift in Sources */,
+				1BFB375025F9D7710073CC53 /* AttendanceDetailsViewController.swift in Sources */,
 				1B7A292425A05E3C005694B6 /* IMSViewUpdateRequestViewController.swift in Sources */,
 				1BF25A4F25E7D4EB008CE34F /* LeadershipListingViewController.swift in Sources */,
+				1BFB375525F9D7CA0073CC53 /* AttendanceDetailsTableCell.swift in Sources */,
 				1B1C4294255738A300F881B6 /* NewChartListingViewController.swift in Sources */,
 				6010F413254048F300CF8597 /* RequestManager.swift in Sources */,
 				609C606A25387E190051CF28 /* IBDesignables.swift in Sources */,
@@ -893,6 +948,7 @@
 				1B590C64255818E300C413AA /* WatchAllRequestsViewController.swift in Sources */,
 				1B61B2A325DCFB3800CDAAE2 /* BookingDetailsTableCell.swift in Sources */,
 				1B71451825AF7E9A0058C36C /* IMSHistoryViewController.swift in Sources */,
+				1BFB375925F9D8E60073CC53 /* SlideManager.swift in Sources */,
 				1B6B04A3256660CD00CDEF66 /* GrievacneDownloadsTableCell.swift in Sources */,
 				1B1C0B692583DBB500AAAAE9 /* NewRequestsListingTableCell.swift in Sources */,
 				1B6B049A256642FF00CDEF66 /* GrievanceRemarksHistoryViewController.swift in Sources */,
