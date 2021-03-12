@@ -78,16 +78,16 @@ class Geotification: NSObject, Codable, MKAnnotation {
   }
 }
 
-//extension Geotification {
-//  public class func allGeotifications() -> [Geotification] {
-//    guard let savedData = UserDefaults.standard.data(forKey: PreferencesKeys.savedItems.rawValue) else { return [] }
-//    let decoder = JSONDecoder()
-//    if let savedGeotifications = try? decoder.decode(Array.self, from: savedData) as [Geotification] {
-//      return savedGeotifications
-//    }
-//    return []
-//  }
-//}
+extension Geotification {
+  public class func allGeotifications() -> [Geotification] {
+    guard let savedData = UserDefaults.standard.data(forKey: PreferencesKeys.savedItems.rawValue) else { return [] }
+    let decoder = JSONDecoder()
+    if let savedGeotifications = try? decoder.decode(Array.self, from: savedData) as [Geotification] {
+      return savedGeotifications
+    }
+    return []
+  }
+}
 
 
 // MARK: - Notification Region
@@ -104,4 +104,9 @@ extension Geotification {
     region.notifyOnExit = !region.notifyOnEntry
     return region
   }
+}
+
+
+enum PreferencesKeys: String {
+  case savedItems
 }

@@ -53,6 +53,7 @@ let UPDATEAWAZTICKET        = "oneapp.updawazticket"
 
 //ATTENDANCE
 let GETLOCATIONS            = "oneapp.getlocation"
+let FETCHATTENDANCE         = "oneapp.fetchattendance"
 
 //API BACKEND KEYS
 let eAI_MESSAGE             = "eAI_MESSAGE"

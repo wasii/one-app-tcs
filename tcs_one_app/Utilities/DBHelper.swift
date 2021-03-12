@@ -2585,7 +2585,7 @@ class DBHelper {
         return attLocations
     }
     func insert_tbl_att_user_attendance(att_location: AttUserAttendance) {
-        let insertStatementString = "INSERT INTO \(db_att_userAttendance)(DATE, TIME_IN, TIME_OUT, DAYS, STATUS) VALUES (?,?,?,?,?);"
+        let insertStatementString = "INSERT INTO \(db_att_userAttendance)(DATE, TIME_IN, TIME_OUT, DAYS, STATUS, CURRENT_USER) VALUES (?,?,?,?,?,?);"
         
         var insertStatement: OpaquePointer? = nil
         if sqlite3_prepare_v2(self.db, insertStatementString, -1, &insertStatement, nil) == SQLITE_OK {
@@ -2594,6 +2594,7 @@ class DBHelper {
             sqlite3_bind_text(insertStatement, 3, ((att_location.timeOut ?? "") as NSString).utf8String, -1, nil)
             sqlite3_bind_text(insertStatement, 4, (att_location.days as NSString).utf8String, -1, nil)
             sqlite3_bind_text(insertStatement, 5, (att_location.status as NSString).utf8String, -1, nil)
+            sqlite3_bind_int(insertStatement, 6, Int32(Int(CURRENT_USER_LOGGED_IN_ID) ?? 0))
             if sqlite3_step(insertStatement) == SQLITE_DONE {
                 print("\(db_att_userAttendance): Successfully inserted row.")
             } else {
@@ -2617,13 +2618,14 @@ class DBHelper {
                 let timeOut = String(describing: String(cString: sqlite3_column_text(queryStatement, 3)))
                 let days = String(describing: String(cString: sqlite3_column_text(queryStatement, 4)))
                 let status = String(describing: String(cString: sqlite3_column_text(queryStatement, 5)))
-                
+                let current_user = Int(sqlite3_column_int(queryStatement, 6))
                 attUserLocations.append(tbl_att_user_attendance(ID: id,
                                                                 DATE: date,
                                                                 TIME_IN: timeIn,
                                                                 TIME_OUT: timeOut,
                                                                 DAYS: days,
-                                                                STATUS: status))
+                                                                STATUS: status,
+                                                                CURRENT_USER: current_user))
             }
         } else {
             print("SELECT statement \(db_att_userAttendance) could not be prepared")
@@ -3116,4 +3118,5 @@ struct tbl_att_user_attendance {
     var TIME_OUT: String = ""
     var DAYS: String = ""
     var STATUS: String = ""
+    var CURRENT_USER: Int = 0
 }

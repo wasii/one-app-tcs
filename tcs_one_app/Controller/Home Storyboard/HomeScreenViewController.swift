@@ -11,12 +11,14 @@ import Floaty
 import SDWebImage
 import Charts
 import MaterialComponents.MaterialTextControls_OutlinedTextAreas
+import CoreLocation
+import MapKit
 
 class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollViewDelegate {
-
     
-//    @IBOutlet weak var scrollViewWidthConstraint: NSLayoutConstraint!
-
+    
+    //    @IBOutlet weak var scrollViewWidthConstraint: NSLayoutConstraint!
+    
     @IBOutlet weak var notification_view: CustomView!
     @IBOutlet weak var notification_label: UILabel!
     @IBOutlet weak var scrollView: UIScrollView!
@@ -75,7 +77,55 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
         
         layoutFAB()
         AppDelegate.sharedInstance.generateTATBreachedNotifications()
+        
+        
+        locationManager.delegate = self
+        locationManager.requestAlwaysAuthorization()
+        loadAllGeotifications()
+        if UserDefaults.standard.data(forKey: PreferencesKeys.savedItems.rawValue) == nil {
+            let query = "select * from \(db_att_locations)"
+            if let locations = AppDelegate.sharedInstance.db?.read_tbl_att_locations(query: query) {
+                for location in locations {
+                    let lat = (location.LATITUDE as NSString).doubleValue
+                    let lon = (location.LONGITUDE as NSString).doubleValue
+                    let crd = CLLocationCoordinate2D(latitude: lat, longitude: lon)
+                    
+                    let radius : CLLocationDistance = 50
+                    let entry = Geotification(coordinate: crd, radius: radius, identifier: NSUUID().uuidString, note: "Welcome to TCS", eventType: .onEntry)
+                    let exit  = Geotification(coordinate: crd, radius: radius, identifier: NSUUID().uuidString, note: "Goodbye from TCS", eventType: .onExit)
+
+                    add(entry)
+                    add(exit)
+                    
+                }
+            }
+        }
     }
+    
+    func loadAllGeotifications() {
+        geotifications.removeAll()
+        let allGeotifications = Geotification.allGeotifications()
+        allGeotifications.forEach { add($0) }
+    }
+    func saveAllGeotifications() {
+        let encoder = JSONEncoder()
+        do {
+            let data = try encoder.encode(geotifications)
+            UserDefaults.standard.set(data, forKey: PreferencesKeys.savedItems.rawValue)
+        } catch {
+            print("error encoding geotifications")
+        }
+    }
+    func add(_ geotification: Geotification) {
+        geotifications.append(geotification)
+        startMonitoring(geotification: geotification)
+        saveAllGeotifications()
+    }
+    func remove(_ geotification: Geotification) {
+        guard let index = geotifications.firstIndex(of: geotification) else { return }
+        geotifications.remove(at: index)
+    }
+    
     
     @objc func refreshedView(notification: Notification) {
         let count = getNotificationCounts()
@@ -88,7 +138,7 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
         }
         chartViews = [ChartViews]()
         chartViews = createChartViews()
-
+        
         viewDidLayoutSubviews()
     }
     
@@ -151,25 +201,25 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
                                                       tag: mod.SERVER_ID_PK)
                     self.ModuleCount += 1
                     break
-//                case "IMS":
-//                    chart.heading.text = "IMS Dashboard"
-//                    chart.pieChart = self.setupGraphs(pieChartView: chart.pieChart,
-//                                                      module_id: mod.SERVER_ID_PK,
-//                                                      pending: "Submitted",
-//                                                      approved: IMS_Status_Inprogress,
-//                                                      rejected: "Closed",
-//                                                      tag: mod.SERVER_ID_PK)
-//                    break
-//                case "Leadership Connect":
-//                    chart.heading.text = "Leadership Connect Dashboard"
-//                    chart.pieChart = self.setupGraphs(pieChartView: chart.pieChart,
-//                                                      module_id: mod.SERVER_ID_PK,
-//                                                      pending: "Pending",
-//                                                      approved: "Approved",
-//                                                      rejected: "Rejected",
-//                                                      tag: mod.SERVER_ID_PK)
-//                    self.ModuleCount += 1
-//                    break
+                //                case "IMS":
+                //                    chart.heading.text = "IMS Dashboard"
+                //                    chart.pieChart = self.setupGraphs(pieChartView: chart.pieChart,
+                //                                                      module_id: mod.SERVER_ID_PK,
+                //                                                      pending: "Submitted",
+                //                                                      approved: IMS_Status_Inprogress,
+                //                                                      rejected: "Closed",
+                //                                                      tag: mod.SERVER_ID_PK)
+                //                    break
+                //                case "Leadership Connect":
+                //                    chart.heading.text = "Leadership Connect Dashboard"
+                //                    chart.pieChart = self.setupGraphs(pieChartView: chart.pieChart,
+                //                                                      module_id: mod.SERVER_ID_PK,
+                //                                                      pending: "Pending",
+                //                                                      approved: "Approved",
+                //                                                      rejected: "Rejected",
+                //                                                      tag: mod.SERVER_ID_PK)
+                //                    self.ModuleCount += 1
+                //                    break
                 default:
                     break
                 }
@@ -206,9 +256,9 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
         scrollView.isScrollEnabled = true
         for i in 0 ..< chartViews.count {
             chartViews[i].frame = CGRect(x: mainChartView.frame.width * CGFloat(i),
-                                     y: 0,
-                                     width: mainChartView.frame.width,
-                                     height: mainChartView.frame.height)
+                                         y: 0,
+                                         width: mainChartView.frame.width,
+                                         height: mainChartView.frame.height)
             scrollView.addSubview(chartViews[i])
         }
     }
@@ -224,7 +274,7 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
         pieChartView.rotationEnabled = false
         pieChartView.delegate = self
         pieChartView.tag = tag
-
+        
         let l = pieChartView.legend
         l.horizontalAlignment = .right
         l.verticalAlignment = .center
@@ -232,11 +282,11 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
         l.xEntrySpace = 0
         l.yEntrySpace = 0
         l.yOffset = 0
-
+        
         var entries = [PieChartDataEntry]()
         var set : PieChartDataSet?
         var colors = [UIColor]()
-
+        
         var pendingCounter :Double = 0
         var approvedCounter :Double = 0
         var rejectedCounter :Double = 0
@@ -268,52 +318,52 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
             for data in chart! {
                 let chartValue = ((data.ticket_total ?? "0") as NSString).doubleValue
                 let key = data.ticket_status ?? ""
-
+                
                 switch tag {
                 case 1, 4:
                     switch key {
-                        case "Pending", "pending":
-                            pendingCounter = chartValue
-                            break
-                        case "Approved", "approved":
-                            approvedCounter = chartValue
-                            break
-                        case "Rejected", "rejected":
-                            rejectedCounter = chartValue
-                            break
-                        default:
-                            break
+                    case "Pending", "pending":
+                        pendingCounter = chartValue
+                        break
+                    case "Approved", "approved":
+                        approvedCounter = chartValue
+                        break
+                    case "Rejected", "rejected":
+                        rejectedCounter = chartValue
+                        break
+                    default:
+                        break
                     }
                     break
                 case 2:
                     switch key {
-                        case "Submitted":
-                            pendingCounter += chartValue
-                            break
-                        case "Inprogress-Er", "Inprogress-S", "Responded", "Investigating":
-                            approvedCounter += chartValue
-                            break
-                        case "Closed":
-                            rejectedCounter += chartValue
-                            break
-                        default:
-                            break
+                    case "Submitted":
+                        pendingCounter += chartValue
+                        break
+                    case "Inprogress-Er", "Inprogress-S", "Responded", "Investigating":
+                        approvedCounter += chartValue
+                        break
+                    case "Closed":
+                        rejectedCounter += chartValue
+                        break
+                    default:
+                        break
                     }
                     break
-//                case 3:
-//                    switch key {
-//                    case IMS_Status_Submitted:
-//                        pendingCounter += chartValue
-//                        break
-//                    case IMS_Status_Inprogress, IMS_Status_Inprogress_Rds, IMS_Status_Inprogress_Ro, IMS_Status_Inprogress_Rm, IMS_Status_Inprogress_Hod, IMS_Status_Inprogress_Cs, IMS_Status_Inprogress_As , IMS_Status_Inprogress_Hs, IMS_Status_Inprogress_Ds, IMS_Status_Inprogress_Fs, IMS_Status_Inprogress_Ins, IMS_Status_Inprogress_Hr, IMS_Status_Inprogress_Fi, IMS_Status_Inprogress_Ca, IMS_Status_Inprogress_Rhod:
-//                        approvedCounter += chartValue
-//                        break
-//                    case IMS_Status_Closed:
-//                        rejectedCounter += chartValue
-//                        break
-//                    default:
-//                        break
-//                    }
+                //                case 3:
+                //                    switch key {
+                //                    case IMS_Status_Submitted:
+                //                        pendingCounter += chartValue
+                //                        break
+                //                    case IMS_Status_Inprogress, IMS_Status_Inprogress_Rds, IMS_Status_Inprogress_Ro, IMS_Status_Inprogress_Rm, IMS_Status_Inprogress_Hod, IMS_Status_Inprogress_Cs, IMS_Status_Inprogress_As , IMS_Status_Inprogress_Hs, IMS_Status_Inprogress_Ds, IMS_Status_Inprogress_Fs, IMS_Status_Inprogress_Ins, IMS_Status_Inprogress_Hr, IMS_Status_Inprogress_Fi, IMS_Status_Inprogress_Ca, IMS_Status_Inprogress_Rhod:
+                //                        approvedCounter += chartValue
+                //                        break
+                //                    case IMS_Status_Closed:
+                //                        rejectedCounter += chartValue
+                //                        break
+                //                    default:
+                //                        break
+                //                    }
                 default:
                     break
                 }
@@ -327,7 +377,7 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
         set = PieChartDataSet(entries: entries, label: "")
         set!.drawIconsEnabled = false
         set!.sliceSpace = 0
-
+        
         for data in entries {
             switch tag {
             case 1, 4:
@@ -341,19 +391,19 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
                 default:
                     break
                 }
-            break
+                break
                 
             case 2, 3:
                 switch data.label {
-                    case "Closed": colors.append(UIColor.rejectedColor())
-                        break
-                    case "Submitted": colors.append(UIColor.pendingColor())
-                        break
-                    case INREVIEW, IMS_Status_Inprogress, IMS_Status_Inprogress_Rds, IMS_Status_Inprogress_Ro, IMS_Status_Inprogress_Rm, IMS_Status_Inprogress_Hod, IMS_Status_Inprogress_Cs, IMS_Status_Inprogress_As , IMS_Status_Inprogress_Hs, IMS_Status_Inprogress_Ds, IMS_Status_Inprogress_Fs, IMS_Status_Inprogress_Ins, IMS_Status_Inprogress_Hr, IMS_Status_Inprogress_Fi, IMS_Status_Inprogress_Ca, IMS_Status_Inprogress_Rhod: colors.append(UIColor.approvedColor())
-                        break
-                    default: break
+                case "Closed": colors.append(UIColor.rejectedColor())
+                    break
+                case "Submitted": colors.append(UIColor.pendingColor())
+                    break
+                case INREVIEW, IMS_Status_Inprogress, IMS_Status_Inprogress_Rds, IMS_Status_Inprogress_Ro, IMS_Status_Inprogress_Rm, IMS_Status_Inprogress_Hod, IMS_Status_Inprogress_Cs, IMS_Status_Inprogress_As , IMS_Status_Inprogress_Hs, IMS_Status_Inprogress_Ds, IMS_Status_Inprogress_Fs, IMS_Status_Inprogress_Ins, IMS_Status_Inprogress_Hr, IMS_Status_Inprogress_Fi, IMS_Status_Inprogress_Ca, IMS_Status_Inprogress_Rhod: colors.append(UIColor.approvedColor())
+                    break
+                default: break
                 }
-            break
+                break
             case -1:
                 switch data.label {
                 case "Web": colors.append(UIColor.pendingColor()); break
@@ -362,7 +412,7 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
                 default: break
                 }
             default:
-            break
+                break
             }
         }
         
@@ -375,10 +425,10 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
         formatter.multiplier = 1.0
         formatter.zeroSymbol = ""
         data.setValueFormatter(DefaultValueFormatter(formatter: formatter))
-
+        
         data.setValueFont(.systemFont(ofSize: 9, weight: .regular))
         data.setValueTextColor(.white)
-
+        
         pieChartView.data = data
         
         return pieChartView
@@ -422,7 +472,7 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
                         CONSTANT_MODULE_ID = AppDelegate.sharedInstance.db?.read_tbl_UserModule(query: "SELECT * FROM \(db_user_module) WHERE TAGNAME = '\(MODULE_TAG_HR)';").first?.SERVER_ID_PK ?? -1
                         let controller = self.storyboard?.instantiateViewController(withIdentifier: "NewRequestViewController") as! NewRequestViewController
                         self.navigationController?.pushViewController(controller, animated: true)
-                      
+                        
                     }
                     break
                 case 2:
@@ -431,7 +481,7 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
                         let storyboard = UIStoryboard(name: "GrievanceStoryboard", bundle: nil)
                         let controller = storyboard.instantiateViewController(withIdentifier: "GrievanceNewRequestViewController") as! GrievanceNewRequestViewController
                         self.navigationController?.pushViewController(controller, animated: true)
-                      
+                        
                     }
                     break
                 case 1:
@@ -439,7 +489,7 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
                         let storyboard = UIStoryboard(name: "TrackStoryboard", bundle: nil)
                         let controller = storyboard.instantiateViewController(withIdentifier: "TrackHomeViewController") as! TrackHomeViewController
                         self.navigationController?.pushViewController(controller, animated: true)
-                      
+                        
                     }
                     break
                 case 0:
@@ -456,27 +506,27 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
                     break
                 }
             }
-//            for (index,d) in modules.enumerated() {
-//                switch d.ID {
-////                case 0:
-////                    floaty.addItem("Add IMS Request", icon: UIImage(named: "helpdesk")) { item in
-////                        CONSTANT_MODULE_ID = AppDelegate.sharedInstance.db?.read_tbl_UserModule(query: "SELECT * FROM \(db_user_module) WHERE TAGNAME = '\(MODULE_TAG_IMS)';").first?.SERVER_ID_PK ?? -1
-////                        let storyboard = UIStoryboard(name: "IMSStoryboard", bundle: nil)
-////                        let controller = storyboard.instantiateViewController(withIdentifier: "IMSNewRequestViewController") as! IMSNewRequestViewController
-////                        self.navigationController?.pushViewController(controller, animated: true)
-////
-////                    }
-////                    break
-//                case 2:
-//
-//                case 1:
-//
-//                case 4:
-//
-//                default:
-//                    break
-//                }
-//            }
+            //            for (index,d) in modules.enumerated() {
+            //                switch d.ID {
+            ////                case 0:
+            ////                    floaty.addItem("Add IMS Request", icon: UIImage(named: "helpdesk")) { item in
+            ////                        CONSTANT_MODULE_ID = AppDelegate.sharedInstance.db?.read_tbl_UserModule(query: "SELECT * FROM \(db_user_module) WHERE TAGNAME = '\(MODULE_TAG_IMS)';").first?.SERVER_ID_PK ?? -1
+            ////                        let storyboard = UIStoryboard(name: "IMSStoryboard", bundle: nil)
+            ////                        let controller = storyboard.instantiateViewController(withIdentifier: "IMSNewRequestViewController") as! IMSNewRequestViewController
+            ////                        self.navigationController?.pushViewController(controller, animated: true)
+            ////
+            ////                    }
+            ////                    break
+            //                case 2:
+            //
+            //                case 1:
+            //
+            //                case 4:
+            //
+            //                default:
+            //                    break
+            //                }
+            //            }
         }
         floaty.paddingX = (UIApplication.shared.keyWindow?.safeAreaInsets.right ?? 0) + 25
         floaty.paddingY = (UIApplication.shared.keyWindow?.safeAreaInsets.bottom ?? 0) + 75
@@ -487,26 +537,26 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
     
     func chartValueSelected(_ chartView: ChartViewBase, entry: ChartDataEntry, highlight: Highlight) {
         switch chartView.tag {
-            case 1:
-                let apppermmission = AppDelegate.sharedInstance.db?.read_tbl_UserPermission(permission: PERMISSION_HR_LISTING_MANAGEMENT_BAR).count
-                if apppermmission! > 0 {
-                    let controller = self.storyboard?.instantiateViewController(withIdentifier: "NewChartListingViewController") as! NewChartListingViewController
-                    CONSTANT_MODULE_ID = 1
-                    controller.title = "All Request"
-                    self.navigationController?.pushViewController(controller, animated: true)
-                }
-                break
-            case 2:
-                let detail_dashboard_permission = AppDelegate.sharedInstance.db!.read_tbl_UserPermission(permission: PERMISSION_GRIEVANCE_GRAPH_DETAIL_DASHBOARD).count
-                if detail_dashboard_permission > 0 {
-                    let controller = self.storyboard?.instantiateViewController(withIdentifier: "NewChartListingViewController") as! NewChartListingViewController
-                    CONSTANT_MODULE_ID = 2
-                    controller.title = "All Request"
-                    self.navigationController?.pushViewController(controller, animated: true)
-                }
-                break
-            default:
-                break
+        case 1:
+            let apppermmission = AppDelegate.sharedInstance.db?.read_tbl_UserPermission(permission: PERMISSION_HR_LISTING_MANAGEMENT_BAR).count
+            if apppermmission! > 0 {
+                let controller = self.storyboard?.instantiateViewController(withIdentifier: "NewChartListingViewController") as! NewChartListingViewController
+                CONSTANT_MODULE_ID = 1
+                controller.title = "All Request"
+                self.navigationController?.pushViewController(controller, animated: true)
+            }
+            break
+        case 2:
+            let detail_dashboard_permission = AppDelegate.sharedInstance.db!.read_tbl_UserPermission(permission: PERMISSION_GRIEVANCE_GRAPH_DETAIL_DASHBOARD).count
+            if detail_dashboard_permission > 0 {
+                let controller = self.storyboard?.instantiateViewController(withIdentifier: "NewChartListingViewController") as! NewChartListingViewController
+                CONSTANT_MODULE_ID = 2
+                controller.title = "All Request"
+                self.navigationController?.pushViewController(controller, animated: true)
+            }
+            break
+        default:
+            break
         }
     }
     
@@ -577,16 +627,16 @@ extension HomeScreenViewController: UICollectionViewDelegate, UICollectionViewDa
                 }
             }
             break
-//        case "IMS":
-//            CONSTANT_MODULE_ID = AppDelegate.sharedInstance.db?.read_tbl_UserModule(query: "SELECT * FROM \(db_user_module) WHERE TAGNAME = '\(MODULE_TAG_IMS)';").first?.SERVER_ID_PK ?? -1
-//            let storyboard = UIStoryboard(name: "Attendance", bundle: nil)
-//            let controller = storyboard.instantiateViewController(withIdentifier: "MapViewController") as! MapViewController
-//            self.navigationController?.pushViewController(controller, animated: true)
-//            break
+        //        case "IMS":
+        //            CONSTANT_MODULE_ID = AppDelegate.sharedInstance.db?.read_tbl_UserModule(query: "SELECT * FROM \(db_user_module) WHERE TAGNAME = '\(MODULE_TAG_IMS)';").first?.SERVER_ID_PK ?? -1
+        //            let storyboard = UIStoryboard(name: "Attendance", bundle: nil)
+        //            let controller = storyboard.instantiateViewController(withIdentifier: "MapViewController") as! MapViewController
+        //            self.navigationController?.pushViewController(controller, animated: true)
+        //            break
         case "Attendance":
             CONSTANT_MODULE_ID = AppDelegate.sharedInstance.db?.read_tbl_UserModule(query: "SELECT * FROM \(db_user_module) WHERE TAGNAME = '\(MODULE_TAG_IMS)';").first?.SERVER_ID_PK ?? -1
             let storyboard = UIStoryboard(name: "Attendance", bundle: nil)
-            let controller = storyboard.instantiateViewController(withIdentifier: "MapViewController") as! MapViewController
+            let controller = storyboard.instantiateViewController(withIdentifier: "AttendanceMarkingViewController") as! AttendanceMarkingViewController
             self.navigationController?.pushViewController(controller, animated: true)
             break
             
@@ -598,18 +648,18 @@ extension HomeScreenViewController: UICollectionViewDelegate, UICollectionViewDa
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
         return UIEdgeInsets.zero
     }
-
+    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
         return 0
     }
-
+    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         return 0
     }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let yourWidth = CGFloat(80)
         let yourHeight = collectionView.bounds.width / 4.0
-
+        
         return CGSize(width: yourWidth, height: yourHeight)
     }
     
@@ -620,6 +670,48 @@ extension HomeScreenViewController: UICollectionViewDelegate, UICollectionViewDa
     }
     
     @objc func handleTap(_ sender: UITapGestureRecognizer) {
-       print("Hello World")
+        print("Hello World")
+    }
+}
+
+
+
+
+
+extension HomeScreenViewController:  CLLocationManagerDelegate {
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        let locValue:CLLocationCoordinate2D = manager.location!.coordinate
+
+        let annotation = MKPointAnnotation()
+        annotation.coordinate = locValue
+    }
+    func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
+        let status = CLLocationManager.authorizationStatus()
+        if status != .authorizedAlways {
+          let message = """
+          Your geotification is saved but will only be activated once you grant
+          Geotify permission to access the device location.
+          """
+          showAlert(withTitle: "Warning", message: message)
+        }
+        switch status {
+        case .authorizedAlways, .authorizedWhenInUse:
+            return
+        case .denied, .restricted:
+            print("location access denied")
+            
+        default:
+            locationManager.requestWhenInUseAuthorization()
+        }
+    }
+    func locationManager(_ manager: CLLocationManager, monitoringDidFailFor region: CLRegion?, withError error: Error) {
+        guard let region = region else {
+          print("Monitoring failed for unknown region")
+          return
+        }
+        print("Monitoring failed for region with identifier: \(region.identifier)")
+    }
+    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+        print("Location Manager failed with the following error: \(error)")
     }
 }

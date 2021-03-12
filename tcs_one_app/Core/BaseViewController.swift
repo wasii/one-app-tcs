@@ -17,7 +17,8 @@ class BaseViewController: UIViewController {
     var dismiss = false
     
     var isNavigate = false
-    
+    var geotifications: [Geotification] = []
+    lazy var locationManager = CLLocationManager()
     override func viewDidLoad() {
         super.viewDidLoad()
         hideKeyboardWhenTappedAround()
@@ -283,6 +284,12 @@ class BaseViewController: UIViewController {
     @objc func logoutUser() {
 //        AppDelegate.sharedInstance.db?.deleteRow(tableName: db_last_sync_status, column: "CURRENT_USER", ref_id: CURRENT_USER_LOGGED_IN_ID, handler: { _ in })
         Messaging.messaging().unsubscribe(fromTopic: BROADCAST_KEY)
+        UserDefaults.standard.removeObject(forKey: PreferencesKeys.savedItems.rawValue)
+        for i in geotifications {
+            stopMonitoring(geotification: i)
+        }
+        geotifications.removeAll()
+        
         AppDelegate.sharedInstance.db?.deleteRow(tableName: db_last_sync_status, column: "SYNC_KEY", ref_id: "oneapp.gethrnotification", handler: { _ in })
         AppDelegate.sharedInstance.db?.deleteAll(tableName: db_hr_notifications, handler: { _ in })
         if isNavigate {
@@ -534,5 +541,35 @@ class BaseViewController: UIViewController {
             }
         }
         return perm
+    }
+    
+    
+    func startMonitoring(geotification: Geotification) {
+        // 1
+        if !CLLocationManager.isMonitoringAvailable(for: CLCircularRegion.self) {
+            showAlert(
+                withTitle: "Error",
+                message: "Geofencing is not supported on this device!")
+            return
+        }
+        // 2
+        let fenceRegion = geotification.region
+        locationManager.startMonitoring(for: fenceRegion)
+    }
+    func stopMonitoring(geotification: Geotification) {
+        for region in locationManager.monitoredRegions {
+            guard
+                let circularRegion = region as? CLCircularRegion,
+                circularRegion.identifier == geotification.identifier
+            else { continue }
+            
+            locationManager.stopMonitoring(for: circularRegion)
+        }
+    }
+    func showAlert(withTitle title: String?, message: String?) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        let action = UIAlertAction(title: "OK", style: .cancel, handler: nil)
+        alert.addAction(action)
+        present(alert, animated: true, completion: nil)
     }
 }
