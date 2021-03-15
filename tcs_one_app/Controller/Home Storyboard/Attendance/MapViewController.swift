@@ -122,22 +122,22 @@ extension MapViewController: CLLocationManagerDelegate {
         mapView.addAnnotation(annotation)
       
     }
-    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
-        if annotation is MKUserLocation {
-            return nil
-        }
-        
-        else {
-            var annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: "annotationView") as? MKPinAnnotationView
-            if annotationView == nil {
-              annotationView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: "annotationView")
-              annotationView?.canShowCallout = true
-            } else {
-              annotationView?.annotation = annotation
-            }
-            return annotationView
-        }
-    }
+//    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+//        if annotation is MKUserLocation {
+//            return nil
+//        }
+//
+//        else {
+//            var annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: "annotationView") as? MKPinAnnotationView
+//            if annotationView == nil {
+//              annotationView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: "annotationView")
+//              annotationView?.canShowCallout = true
+//            } else {
+//              annotationView?.annotation = annotation
+//            }
+//            return annotationView
+//        }
+//    }
     
     func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
         if overlay is MKCircle {

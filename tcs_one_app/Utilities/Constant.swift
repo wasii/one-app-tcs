@@ -24,7 +24,7 @@ var RECORD_ID               = 0
 //let UPLOADFILESURL          = "https://oneappapi.tcscourier.com/api/file-upload"
 
 //DEV
-let ENDPOINT                = "https://devapi.tcscourier.com/core/api/main"
+let ENDPOINT                = "https://devapi.tcscourier.com/qacore/api/main"
 let UPLOADFILESURL          = "https://pwaqaapi.tcscourier.com/api/file-upload"
 
 let LOGIN                   = "oneapp.login"
@@ -54,6 +54,7 @@ let UPDATEAWAZTICKET        = "oneapp.updawazticket"
 //ATTENDANCE
 let GETLOCATIONS            = "oneapp.getlocation"
 let FETCHATTENDANCE         = "oneapp.fetchattendance"
+let MARKATTENDANCE          = "oneapp.markattendance"
 
 //API BACKEND KEYS
 let eAI_MESSAGE             = "eAI_MESSAGE"

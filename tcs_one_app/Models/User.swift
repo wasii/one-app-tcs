@@ -168,8 +168,8 @@ struct AttUserAttendance: Codable {
 
     enum CodingKeys: String, CodingKey {
         case date = "DATE"
-        case timeIn = "TIME_IN"
-        case timeOut = "TIME_OUT"
+        case timeIn = "TIMEIN"
+        case timeOut = "TIMEOUT"
         case days = "DAYS"
         case status = "STATUS"
     }

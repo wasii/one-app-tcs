@@ -13,13 +13,16 @@ import CoreLocation
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     var window: UIWindow?
-    
-    
+    let locationManager = CLLocationManager()
+    var isEnter = false
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
         // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
+        locationManager.delegate = self
+        locationManager.requestAlwaysAuthorization()
         guard let _ = (scene as? UIWindowScene) else { return }
+        
     }
     
     func sceneDidDisconnect(_ scene: UIScene) {
@@ -55,26 +58,25 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 @available(iOS 13.0, *)
 // MARK: - Location Manager Delegate
 extension SceneDelegate: CLLocationManagerDelegate {
-    func locationManager(
-        _ manager: CLLocationManager,
-        didEnterRegion region: CLRegion
-    ) {
+    func locationManager(_ manager: CLLocationManager, didEnterRegion region: CLRegion) {
         if region is CLCircularRegion {
-            handleEvent(for: region)
+            isEnter = true
+            handleEvent(for: region, manager: manager)
         }
     }
     
     func locationManager(_ manager: CLLocationManager, didExitRegion region: CLRegion) {
         if region is CLCircularRegion {
-            handleEvent(for: region)
+            isEnter = false
+            handleEvent(for: region, manager: manager)
         }
     }
     
-    func handleEvent(for region: CLRegion) {
+    func handleEvent(for region: CLRegion, manager coordinates: CLLocationManager) {
         // Show an alert if application is active
         if UIApplication.shared.applicationState == .active {
             guard let message = note(from: region.identifier) else { return }
-//            window?.rootViewController?.showAlert(withTitle: nil, message: message)
+            window?.rootViewController?.showAlert(withTitle: nil, message: message)
             print(message)
         } else {
             // Otherwise present a local notification
@@ -91,9 +93,49 @@ extension SceneDelegate: CLLocationManagerDelegate {
             UNUserNotificationCenter.current().add(request) { error in
                 if let error = error {
                     print("Error: \(error)")
+                    return
                 }
+                guard let access_token = UserDefaults.standard.string(forKey: USER_ACCESS_TOKEN) else {
+                    return
+                }
+                let dateFormatter = DateFormatter()
+                dateFormatter.dateFormat = "dd/MM/yyyy HH:mm:ss"
+                
+                let date = dateFormatter.string(from: Date())
+                let json = [
+                    "attendance_request" : [
+                        "access_token" : access_token,
+                        "latitude": "\(coordinates.location?.coordinate.latitude ?? 0.0)",
+                        "longitude": "\(coordinates.location?.coordinate.longitude ?? 0.0)",
+                        "app_datime" : date
+                    ]
+                ]
+                let params = self.getAPIParameter(service_name: MARKATTENDANCE, request_body: json)
+                NetworkCalls.mark_attendance(params: params) { (_, _) in }
             }
         }
+    }
+    func getAPIParameter(service_name: String, request_body: [String: Any]) -> [String:Any] {
+        let params = [
+            "eAI_MESSAGE": [
+                "eAI_HEADER": [
+                    "serviceName": service_name,
+                    "client": "TCS",
+                    "clientChannel": "MOB",
+                    "referenceNum": "",
+                    "securityInfo": [
+                        "authentication": [
+                            "userId": "",
+                            "password": ""
+                        ]
+                    ]
+                ],
+                "eAI_BODY": [
+                    "eAI_REQUEST": request_body
+                ]
+            ]
+        ]
+        return params as [String: Any]
     }
     
     func note(from identifier: String) -> String? {

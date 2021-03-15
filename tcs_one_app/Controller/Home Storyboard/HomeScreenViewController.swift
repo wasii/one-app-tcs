@@ -90,7 +90,7 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
                     let lon = (location.LONGITUDE as NSString).doubleValue
                     let crd = CLLocationCoordinate2D(latitude: lat, longitude: lon)
                     
-                    let radius : CLLocationDistance = 50
+                    let radius : CLLocationDistance = 90
                     let entry = Geotification(coordinate: crd, radius: radius, identifier: NSUUID().uuidString, note: "Welcome to TCS", eventType: .onEntry)
                     let exit  = Geotification(coordinate: crd, radius: radius, identifier: NSUUID().uuidString, note: "Goodbye from TCS", eventType: .onExit)
 
@@ -692,7 +692,6 @@ extension HomeScreenViewController:  CLLocationManagerDelegate {
           Your geotification is saved but will only be activated once you grant
           Geotify permission to access the device location.
           """
-          showAlert(withTitle: "Warning", message: message)
         }
         switch status {
         case .authorizedAlways, .authorizedWhenInUse:

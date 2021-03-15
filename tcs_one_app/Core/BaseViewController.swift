@@ -547,7 +547,7 @@ class BaseViewController: UIViewController {
     func startMonitoring(geotification: Geotification) {
         // 1
         if !CLLocationManager.isMonitoringAvailable(for: CLCircularRegion.self) {
-            showAlert(
+            self.showAlert(
                 withTitle: "Error",
                 message: "Geofencing is not supported on this device!")
             return
@@ -565,11 +565,5 @@ class BaseViewController: UIViewController {
             
             locationManager.stopMonitoring(for: circularRegion)
         }
-    }
-    func showAlert(withTitle title: String?, message: String?) {
-        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        let action = UIAlertAction(title: "OK", style: .cancel, handler: nil)
-        alert.addAction(action)
-        present(alert, animated: true, completion: nil)
     }
 }

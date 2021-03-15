@@ -1031,6 +1031,39 @@ class NetworkCalls: NSObject {
             }
         }.resume()
     }
+    class func mark_attendance(params: [String:Any], handler: @escaping(_ granted: Bool,_ response: Any) -> Void) {
+        let Url = String(format: ENDPOINT)
+        guard let serviceUrl = URL(string: Url) else { return }
+        var request = URLRequest(url: serviceUrl)
+        request.httpMethod = "POST"
+        request.setValue("Application/json", forHTTPHeaderField: "Content-Type")
+        guard let httpBody = try? JSONSerialization.data(withJSONObject: params, options: []) else {
+            return
+        }
+        request.httpBody = httpBody
+        let session = URLSession.shared
+        session.dataTask(with: request) { (data, response, error) in
+            if let data = data {
+                let json = JSON(data)
+                if let success = json.dictionary?[returnStatus] {
+                    //SUCCESS
+                    if success.dictionary?[_code] == "0200" {
+                        if let attn_out = json.dictionary?[_attn_out]?.array {
+                            handler(true, attn_out)
+                        } else {
+                            handler(false, SOMETHINGWENTWRONG)
+                        }
+                    }
+                    //FAILED
+                    if success.dictionary?[_code] == "0400" || success.dictionary?[_code] == "0403" {
+                        handler(false, REVERTBACK)
+                    }
+                }
+            } else {
+                handler(false, SOMETHINGWENTWRONG)
+            }
+        }.resume()
+    }
 }
 
 

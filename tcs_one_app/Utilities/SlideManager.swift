@@ -111,6 +111,9 @@ import UIKit
     }
     public var labelText: String = "Swipe to open" {
         didSet {
+            textLabel.textColor = UIColor.black
+            sliderTextLabel.textColor = UIColor.black
+            
             textLabel.text = labelText
             sliderTextLabel.text = labelText
         }

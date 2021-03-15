@@ -112,13 +112,12 @@ class NotificationsViewController: BaseViewController {
                 req1.CREATED_DATE > req2.CREATED_DATE
             })
             
+//            hr_notification = hr_notification?.filter({ (logs) -> Bool in
+//                logs.MODULE_ID != 4
+//            })
             if self.broadCastSwitch.isOn {
                 hr_notification = hr_notification?.filter({ (logs) -> Bool in
                     logs.MODULE_ID == 4
-                })
-            } else {
-                hr_notification = hr_notification?.filter({ (logs) -> Bool in
-                    logs.MODULE_ID != 4
                 })
             }
             
