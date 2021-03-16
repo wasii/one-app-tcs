@@ -95,6 +95,11 @@ var ticket_request: tbl_Hr_Request_Logs?
     @IBOutlet weak var recommendations_textview: UITextView!
     @IBOutlet weak var recommendations_word_counter: UILabel!
     
+    @IBOutlet weak var ds_recommendation_view: UIView!
+    @IBOutlet weak var ds_recommendation_textview: UITextView!
+    @IBOutlet weak var ds_recommendations_word_counter: UILabel!
+    
+    
     @IBOutlet weak var email_view: UIView!
     @IBOutlet weak var email_textfield: MDCOutlinedTextField!
     @IBOutlet weak var email_textview: GrowingTextView!
@@ -159,9 +164,9 @@ var ticket_request: tbl_Hr_Request_Logs?
     @IBOutlet weak var type_of_control_view: UIView!
     @IBOutlet weak var type_of_control_textfield: MDCOutlinedTextField!
     
-    @IBOutlet weak var controller_recommendation: UIView!
-    @IBOutlet weak var controller_recommendation_textview: UITextView!
-    @IBOutlet weak var controller_recommendation_word_counter: UILabel!
+    @IBOutlet weak var closure_remarks_view: UIView!
+    @IBOutlet weak var closure_remarks_textview: UITextView!
+    @IBOutlet weak var closure_remarks_word_counter: UILabel!
     
     
     @IBOutlet weak var forwardBtn: CustomButton!
@@ -260,6 +265,7 @@ var ticket_request: tbl_Hr_Request_Logs?
             }
             
             if havePermissionToEdit {
+//                self.title = "Update Request"
                 self.headingLabel.text = "Request Detail"
                 
                 classification_textfield.label.text = "*Classification"
@@ -284,6 +290,7 @@ var ticket_request: tbl_Hr_Request_Logs?
                     attachment_view.isHidden = false
                 }
             } else {
+//                self.title = "View Request"
                 self.headingLabel.text = "View Request"
                 
                 classification_textfield.isUserInteractionEnabled = false
@@ -314,6 +321,7 @@ var ticket_request: tbl_Hr_Request_Logs?
         }
         if IMS_Inprogress_Hod == current_user {
             if havePermissionToEdit {
+//                self.title = "Update Request"
                 self.headingLabel.text = "Request Detail"
                 self.investigation_required_view.isHidden = false
                 self.investigation_required_switch.isUserInteractionEnabled = true
@@ -330,6 +338,7 @@ var ticket_request: tbl_Hr_Request_Logs?
                     attachment_view.isHidden = false
                 }
             } else {
+//                self.title = "View Request"
                 self.headingLabel.text = "View Request"
                 self.investigation_required_view.isHidden = false
                 if self.ticket_request!.IS_INVESTIGATION == 1 {
@@ -357,6 +366,7 @@ var ticket_request: tbl_Hr_Request_Logs?
             self.assigned_to_view.isHidden = false
             
             if havePermissionToEdit {
+//                self.title = "Update Request"
                 self.headingLabel.text = "Request Detail"
                 self.area_textfield.label.text = "*Area "
                 self.assigned_to_textfield.label.text = "*Assigned To "
@@ -381,6 +391,7 @@ var ticket_request: tbl_Hr_Request_Logs?
                 }
                 
             } else {
+//                self.title = "View Request"
                 self.headingLabel.text = "View Request"
                 self.area_textfield.isUserInteractionEnabled = false
                 self.area_textfield.label.text = "Area"
@@ -413,6 +424,7 @@ var ticket_request: tbl_Hr_Request_Logs?
         
         if IMS_Inprogress_As == "\(current_user)" {
             if havePermissionToEdit {
+//                self.title = "Update Request"
                 self.headingLabel.text = "Request Detail"
                 self.remarks_attachment_stackview.isHidden = true
                 self.attachment_view.isHidden = true
@@ -432,6 +444,7 @@ var ticket_request: tbl_Hr_Request_Logs?
                 self.showEnterDetailLabel.text = "Enter Details"
                 
             } else {
+//                self.title = "View Request"
                 self.headingLabel.text = "View Request"
                 self.forwardBtn.isHidden = true
                 self.rejectBtn.isHidden = true
@@ -451,6 +464,7 @@ var ticket_request: tbl_Hr_Request_Logs?
             
             
             if havePermissionToEdit {
+//                self.title = "Update Request"
                 self.headingLabel.text = "Request Detail"
                 self.remarks_attachment_stackview.isHidden = true
                 self.attachment_view.isHidden = true
@@ -472,6 +486,7 @@ var ticket_request: tbl_Hr_Request_Logs?
                 self.recommendations_textview.delegate = self
                 self.executive_summary_textview.delegate = self
             } else {
+//                self.title = "View Request"
                 self.headingLabel.text = "View Request"
                 self.executive_summary_textview.isUserInteractionEnabled = false
                 self.recommendations_textview.isUserInteractionEnabled = false
@@ -492,10 +507,11 @@ var ticket_request: tbl_Hr_Request_Logs?
         if IMS_Inprogress_Ds == "\(current_user)" {
             self.hod_stack_view.isHidden = false
             self.endoresement_view.isHidden = false
-            self.recommendations_view.isHidden = false
+            self.ds_recommendation_view.isHidden = false
             
             self.email_view.isHidden = false
             if havePermissionToEdit {
+//                self.title = "Update Request"
                 self.headingLabel.text = "Request Detail"
                 self.remarks_attachment_stackview.isHidden = true
                 self.attachment_view.isHidden = true
@@ -513,19 +529,20 @@ var ticket_request: tbl_Hr_Request_Logs?
                     attachment_view.isHidden = false
                 }
                 self.endoresement_textview.isUserInteractionEnabled = true
-                self.recommendations_textview.isUserInteractionEnabled = true
-                
+                self.ds_recommendation_textview.isUserInteractionEnabled = true
+//                self.email_textfield.delegate = self
                 self.email_textview.delegate = self
                 self.endoresement_textview.delegate = self
-                self.recommendations_textview.delegate = self
+                self.ds_recommendation_textview.delegate = self
             } else {
+//                self.title = "View Request"
                 self.headingLabel.text = "View Request"
                 self.endoresement_textview.isUserInteractionEnabled = false
-                self.recommendations_textview.isUserInteractionEnabled = false
+                self.ds_recommendation_textview.isUserInteractionEnabled = false
                 self.email_textview.isUserInteractionEnabled = false
                 
                 self.endoresement_textview.text = self.ticket_request?.DIR_SEC_ENDOR ?? ""
-                self.recommendations_textview.text = self.ticket_request?.DIR_SEC_RECOM ?? ""
+                self.ds_recommendation_textview.text = self.ticket_request?.DIR_SEC_RECOM ?? ""
                 self.email_textview.text = self.ticket_request?.DIR_NOTIFY_EMAILS ?? ""
                 self.forwardBtn.isHidden = true
                 
@@ -548,6 +565,7 @@ var ticket_request: tbl_Hr_Request_Logs?
             
             self.claim_reference_number_textfield.text = "\(ticket_request?.INS_CLAIM_REFNO ?? "")"
             if havePermissionToEdit {
+//                self.title = "Update Request"
                 self.headingLabel.text = "Request Detail"
                 self.remarks_attachment_stackview.isHidden = true
                 self.attachment_view.isHidden = true
@@ -569,6 +587,7 @@ var ticket_request: tbl_Hr_Request_Logs?
                 self.claim_reference_number_textfield.delegate = self
                 
             } else {
+//                self.title = "View Request"
                 self.headingLabel.text = "View Request"
                 
                 
@@ -621,6 +640,13 @@ var ticket_request: tbl_Hr_Request_Logs?
             
             
             self.ins_claim_reference_number_view.isHidden = false
+//            if ticket_request?.IS_INS_CLAIM_PROCESS == 1 {
+//
+//            } else {
+//                self.ins_insurance_claimable_switch.isOn = false
+//            }
+            
+//            self.ins_claim_reference_number_textfield.text = "\(self.ticket_request?.INS_CLAIMED_AMOUNT ?? 0.0)"
             if havePermissionToEdit {
                 self.headingLabel.text = "Request Detail"
                 self.remarks_attachment_stackview.isHidden = true
@@ -673,6 +699,7 @@ var ticket_request: tbl_Hr_Request_Logs?
             }
             
             if havePermissionToEdit {
+//                self.title = "Update Request"
                 self.headingLabel.text = "Request Detail"
                 self.hr_reference_number_textfield.isUserInteractionEnabled = true
                 self.hr_status_textfield.isUserInteractionEnabled = true
@@ -696,6 +723,7 @@ var ticket_request: tbl_Hr_Request_Logs?
                     attachment_view.isHidden = false
                 }
             } else {
+//                self.title = "View Request"
                 self.headingLabel.text = "View Request"
                 self.hr_reference_number_textfield.isUserInteractionEnabled = false
                 self.hr_status_textfield.isUserInteractionEnabled = false
@@ -711,7 +739,6 @@ var ticket_request: tbl_Hr_Request_Logs?
         if IMS_Inprogress_Fi == "\(current_user)" {
             hr_reference_number_view.isHidden = false
             hr_status_view.isHidden = false
-            self.hr_reference_number_textfield.label.text = "GL Transaction Number"
             if self.ticket_request?.FINANCE_GL_NO == "" {
                 self.hr_reference_number_textfield.label.text = "GL Transaction Number"
                 self.hr_reference_number_textfield.placeholder = "Enter GL Transaction Number"
@@ -724,6 +751,7 @@ var ticket_request: tbl_Hr_Request_Logs?
                 self.hr_status_textfield.text = self.ticket_request?.HR_STATUS ?? ""
             }
             if havePermissionToEdit {
+//                self.title = "Update Request"
                 self.headingLabel.text = "Request Detail"
                 self.hr_reference_number_textfield.isUserInteractionEnabled = true
                 
@@ -748,6 +776,7 @@ var ticket_request: tbl_Hr_Request_Logs?
                     attachment_view.isHidden = false
                 }
             } else {
+//                self.title = "View Request"
                 self.headingLabel.text = "View Request"
                 self.hr_reference_number_textfield.isUserInteractionEnabled = false
                 self.hr_status_textfield.isUserInteractionEnabled = false
@@ -766,7 +795,7 @@ var ticket_request: tbl_Hr_Request_Logs?
             self.type_of_risk_view.isHidden = false
             self.category_of_control_view.isHidden = false
             self.type_of_control_view.isHidden = false
-            self.controller_recommendation.isHidden = false
+            self.closure_remarks_view.isHidden = false
             self.hr_status_view.isHidden = false
             
             if self.ticket_request!.IS_CONTROL_DEFINED! > 0 {
@@ -778,9 +807,10 @@ var ticket_request: tbl_Hr_Request_Logs?
             
             self.hr_status_textfield.text = self.ticket_request?.HR_STATUS ?? ""
             if havePermissionToEdit {
+//                self.title = "Update Request"
                 self.headingLabel.text = "Request Detail"
                 self.risk_remarks_textview.delegate = self
-                self.controller_recommendation_textview.delegate = self
+                self.closure_remarks_textview.delegate = self
                 self.type_of_risk_textfield.delegate = self
                 self.category_of_control_textfield.delegate = self
                 self.type_of_control_textfield.delegate = self
@@ -802,6 +832,7 @@ var ticket_request: tbl_Hr_Request_Logs?
                     attachment_view.isHidden = false
                 }
             } else {
+//                self.title = "View Request"
                 self.headingLabel.text = "View Request"
                 self.claim_defined_switch.isEnabled = false
                 
@@ -824,16 +855,19 @@ var ticket_request: tbl_Hr_Request_Logs?
                     self.type_of_control_textfield.isUserInteractionEnabled = false
                 }
                 
+                
+                self.closure_remarks_textview.text = self.ticket_request!.HR_REMARKS ?? ""
+                self.closure_remarks_textview.isUserInteractionEnabled = false
+                
                 self.hr_status_textfield.text = self.ticket_request!.HR_STATUS ?? ""
                 self.hr_status_textfield.isUserInteractionEnabled = false
-                
-                
-                self.controller_recommendation.isHidden = false
-                self.controller_recommendation_textview.isEditable = false
-                self.controller_recommendation_textview.text = "\(ticket_request?.HR_REMARKS ?? "")"
-                self.controller_recommendation_word_counter.text = "\(ticket_request?.HR_REMARKS?.count ?? 0)/200"
-                
                 self.forwardBtn.isHidden = true
+                if ticket_request?.TICKET_STATUS == IMS_Status_Closed {
+                    remarks_attachment_stackview.isHidden = false
+                    closure_remarks_views.isHidden = false
+                    closure_remarks_textviews.text = "\(ticket_request?.HR_REMARKS ?? "")"
+                    closure_remarks_wordcounter.text = "\(ticket_request?.HR_REMARKS?.count ?? 0)/200"
+                }
             }
         }
         if IMS_Inprogress_Rds == "\(current_user)" {
@@ -859,10 +893,10 @@ var ticket_request: tbl_Hr_Request_Logs?
         
         incident_detail_employee_detail.text = ticket_request!.REQ_REMARKS!
         
-        incident_detail_word_counter.text = "\(ticket_request!.REQ_REMARKS!.count)/200"
+        incident_detail_word_counter.text = "\(ticket_request!.REQ_REMARKS!.count)/525"
         
         incident_detail_employee_detail_hod.text = ticket_request!.REQ_REMARKS!
-        incident_detail_word_counter_hod.text = "\(ticket_request!.REQ_REMARKS!.count)/200"
+        incident_detail_word_counter_hod.text = "\(ticket_request!.REQ_REMARKS!.count)/525"
         
         
         incident_detail_classification.label.textColor = UIColor.nativeRedColor()
@@ -925,8 +959,7 @@ var ticket_request: tbl_Hr_Request_Logs?
         //before hod
         incident_detail_cityview_textfield.label.textColor = UIColor.nativeRedColor()
         incident_detail_cityview_textfield.label.text = "City"
-        let query = "SELECT * FROM \(db_lov_city) WHERE AREA_CODE = '\(self.ticket_request!.CITY!)'"
-        incident_detail_cityview_textfield.text = "\(AppDelegate.sharedInstance.db?.read_tbl_city(query: query).first!.CITY_NAME ?? "")"
+        incident_detail_cityview_textfield.text = "\(AppDelegate.sharedInstance.db!.read_tbl_area(query: "SELECT * FROM \(db_lov_area) WHERE SERVER_ID_PK = '\(self.ticket_request!.AREA!)'").first!.AREA_NAME)"
         incident_detail_cityview_textfield.setOutlineColor(UIColor.nativeRedColor(), for: .normal)
         
         
@@ -1004,7 +1037,14 @@ var ticket_request: tbl_Hr_Request_Logs?
         
         status_textfield.setOutlineColor(UIColor.nativeRedColor(), for: .normal)
         status_textfield.setOutlineColor(UIColor.nativeRedColor(), for: .editing)
-
+        
+//        email_textfield.label.textColor = UIColor.nativeRedColor()
+//        email_textfield.label.text = "Emails"
+//        email_textfield.placeholder = "Enter Emails  (Semi Colon Seperated)"
+//        email_textfield.setOutlineColor(UIColor.nativeRedColor(), for: .normal)
+//        email_textfield.setOutlineColor(UIColor.nativeRedColor(), for: .editing)
+        
+        
         //FS
         claim_reference_number_textfield.label.textColor = UIColor.nativeRedColor()
         claim_reference_number_textfield.label.text = "Claim Ref. Number"
@@ -1141,6 +1181,12 @@ var ticket_request: tbl_Hr_Request_Logs?
                 self.claim_reference_number_view.isHidden = true
             }
             break
+//        case 3:
+//            if sender.isOn {
+//                self.ins_claim_reference_number_view.isHidden = false
+//            } else {
+//                self.ins_claim_reference_number_view.isHidden = true
+//            }
         default:
             break
         }
@@ -1151,6 +1197,9 @@ var ticket_request: tbl_Hr_Request_Logs?
             if IMS_Submitted == "\(current_user)" || IMS_Inprogress_Ro == "\(current_user)" || IMS_Inprogress_Rhod == "\(current_user)" {
                 UIView.animate(withDuration: 0.2) {
                     self.incident_detail_view.isHidden = false
+                    self.showHideImage.image = UIImage(named: "up_white")
+                    self.showHideLabel.text = "Hide Details"
+                    self.view.layoutIfNeeded()
                     
                     self.showHideImage.image = UIImage(named: "up_white")
                     self.showHideLabel.text = "Hide Details"
@@ -1159,8 +1208,7 @@ var ticket_request: tbl_Hr_Request_Logs?
             } else {
                 UIView.animate(withDuration: 0.2) {
                     self.incident_detail_view_hod.isHidden = false
-                    let query = "SELECT * FROM \(db_lov_city) WHERE AREA_CODE = '\(self.ticket_request!.CITY!)'"
-                    self.incident_detail_city_textfield.text = "\(AppDelegate.sharedInstance.db?.read_tbl_city(query: query).first!.CITY_NAME ?? "")"
+                    self.incident_detail_city_textfield.text = "\(AppDelegate.sharedInstance.db!.read_tbl_area(query: "SELECT * FROM \(db_lov_area) WHERE SERVER_ID_PK = '\(self.ticket_request!.AREA!)'").first!.AREA_NAME)"
                     if self.ticket_request!.CNSGNO != "" {
                         self.incident_detail_consignment_view.isHidden = false
                         self.incident_detail_consignment_textfield.text = "\(self.ticket_request!.CNSGNO!)"
@@ -1180,6 +1228,9 @@ var ticket_request: tbl_Hr_Request_Logs?
             if IMS_Submitted == "\(current_user)" || IMS_Inprogress_Ro == "\(current_user)" || IMS_Inprogress_Rhod == "\(current_user)" {
                 UIView.animate(withDuration: 0.2) {
                     self.incident_detail_view.isHidden = true
+                    self.showHideImage.image = UIImage(named: "drop_down_white")
+                    self.showHideLabel.text = "Show Details"
+                    self.view.layoutIfNeeded()
                     
                     self.showHideImage.image = UIImage(named: "drop_down_white")
                     self.showHideLabel.text = "Show Details"
@@ -1188,6 +1239,18 @@ var ticket_request: tbl_Hr_Request_Logs?
             } else {
                 UIView.animate(withDuration: 0.2) {
                     self.incident_detail_view_hod.isHidden = true
+                    self.incident_detail_city_textfield.text = "\(AppDelegate.sharedInstance.db!.read_tbl_area(query: "SELECT * FROM \(db_lov_area) WHERE SERVER_ID_PK = '\(self.ticket_request!.AREA!)'").first!.AREA_NAME)"
+                    
+                    if self.ticket_request!.CNSGNO != "" {
+                        self.incident_detail_consignment_view.isHidden = false
+                        self.incident_detail_consignment_textfield.text = "\(self.ticket_request!.CNSGNO!)"
+                    }
+                    if self.ticket_request!.IS_FINANCIAL == 1 {
+                        self.incident_detail_view_height_constraint.constant = 640
+                        self.incident_detail_loss_amount_view.isHidden = false
+                        self.incident_detail_loss_amount.text = "\(self.ticket_request!.AMOUNT ?? 0.0)"
+                        self.incident_detail_recovery_type.text = "\(self.ticket_request!.RECOVERY_TYPE!)"
+                    }
                     self.showHideImage.image = UIImage(named: "drop_down_white")
                     self.showHideLabel.text = "Show Details"
                     self.view.layoutIfNeeded()
@@ -1295,9 +1358,9 @@ var ticket_request: tbl_Hr_Request_Logs?
             let is_investigation = self.investigation_required_switch.isOn ? true : false
             
             if is_investigation {
-                controller.heading = "Currently Investigation Required is On.\nAre you sure you want to proceed?"
+                controller.heading = "Submit to Security for Investigation?"
             } else {
-                controller.heading = "Currently Investigation Required is Off.\nAre you sure you want to proceed?"
+                controller.heading = "Submit without investigation ?"
             }
         }
         
@@ -1807,6 +1870,11 @@ extension IMSViewUpdateRequestViewController: UITextFieldDelegate {
             let controller = storyboard.instantiateViewController(withIdentifier: "NewRequestListingViewController") as! NewRequestListingViewController
             
             let query = "SELECT * FROM \(db_lov_hr_status)"
+//            if current_user == IMS_Inprogress_Ca {
+//                query = "SELECT * FROM \(db_lov_hr_status) WHERE NAME = 'Close'"
+//            } else {
+//
+//            }
             controller.hr_status = AppDelegate.sharedInstance.db?.read_tbl_hr_status(query: query)
             controller.heading = "Select Status"
             controller.isIMSUpdate = true
@@ -1925,6 +1993,11 @@ extension IMSViewUpdateRequestViewController: UITextViewDelegate {
                 textView.text = ""
             }
             break
+        case ENTER_DS_RECOMMENDATIONS_TAG:
+            if textView.text == ENTER_RECOMMENDATIONS {
+                textView.text = ""
+            }
+            break
         case ENTER_ENDORESSEMENT_TAG:
             if textView.text == ENTER_ENDORESSEMENT {
                 textView.text = ""
@@ -1935,8 +2008,8 @@ extension IMSViewUpdateRequestViewController: UITextViewDelegate {
                 textView.text = ""
             }
             break
-        case ENTER_CONTROLLER_RECOMMENDATIONS_TAG:
-            if textView.text == ENTER_CONTROLLER_RECOMMENDATION {
+        case ENTER_CLOSURE_REMARKS_TAG:
+            if textView.text == ENTER_CLOSURE_REMARKS {
                 textView.text = ""
             }
             break
@@ -1961,14 +2034,19 @@ extension IMSViewUpdateRequestViewController: UITextViewDelegate {
                 textView.text = ENTER_RECOMMENDATIONS
             }
             break
+        case ENTER_DS_RECOMMENDATIONS_TAG:
+            if textView.text.count <= 0 {
+                textView.text = ENTER_RECOMMENDATIONS
+            }
+            break
         case ENTER_ENDORESSEMENT_TAG:
             if textView.text.count <= 0 {
                 textView.text = ENTER_ENDORESSEMENT
             }
             break
-        case ENTER_CONTROLLER_RECOMMENDATIONS_TAG:
+        case ENTER_CLOSURE_REMARKS_TAG:
             if textView.text.count <= 0 {
-                textView.text = ENTER_CONTROLLER_RECOMMENDATION
+                textView.text = ENTER_CLOSURE_REMARKS
             }
             break
         case ENTER_RISK_REMARKS_TAG:
@@ -1983,8 +2061,12 @@ extension IMSViewUpdateRequestViewController: UITextViewDelegate {
     
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
         var maxLength = 0
-        if textView.tag == 14 {
+        if textView.tag == ENTER_EMAILS_TAG { //email
             maxLength = 20000
+        } else if textView.tag == ENTER_ENDORESSEMENT_TAG || textView.tag == ENTER_DS_RECOMMENDATIONS_TAG { // ds recommendations and
+            maxLength = 1000
+        } else if textView.tag == ENTER_REMARKS_TAG {
+            maxLength = 525
         } else {
             maxLength = 200
         }
@@ -2001,7 +2083,7 @@ extension IMSViewUpdateRequestViewController: UITextViewDelegate {
         if newString.length <= maxLength {
             switch textView.tag {
             case ENTER_REMARKS_TAG:
-                self.remarks_word_counter.text = "\(newString.length)/200"
+                self.remarks_word_counter.text = "\(newString.length)/525"
                 return true
             case ENTER_EXECUTIVE_SUMMARY_TAG:
                 self.executive_summary_word_counter.text = "\(newString.length)/200"
@@ -2010,13 +2092,16 @@ extension IMSViewUpdateRequestViewController: UITextViewDelegate {
                 self.recommendations_word_counter.text = "\(newString.length)/200"
                 return true
             case ENTER_ENDORESSEMENT_TAG:
-                self.endoresement_word_counter.text = "\(newString.length)/200"
+                self.endoresement_word_counter.text = "\(newString.length)/1000"
+                return true
+            case ENTER_DS_RECOMMENDATIONS_TAG:
+                self.ds_recommendations_word_counter.text = "\(newString.length)/1000"
                 return true
             case ENTER_RISK_REMARKS_TAG:
                 self.risk_remarks_word_counter.text = "\(newString.length)/200"
                 return true
-            case ENTER_CONTROLLER_RECOMMENDATIONS_TAG:
-                self.controller_recommendation_word_counter.text = "\(newString.length)/200"
+            case ENTER_CLOSURE_REMARKS_TAG:
+                self.closure_remarks_word_counter.text = "\(newString.length)/200"
                 return true
             case ENTER_EMAILS_TAG:
                 return true
@@ -2163,7 +2248,7 @@ extension IMSViewUpdateRequestViewController {
             self.view.makeToast("Status is mandatory")
             return nil
         }
-        if self.controller_recommendation_textview.text == "" || self.controller_recommendation_textview.text == ENTER_CONTROLLER_RECOMMENDATION {
+        if self.closure_remarks_textview.text == "" || self.closure_remarks_textview.text == ENTER_CLOSURE_REMARKS {
             self.view.makeToast("Recommendations is mandatory")
             return nil
         }
@@ -2193,7 +2278,7 @@ extension IMSViewUpdateRequestViewController {
                     "ticketid": "\(self.ticket_request!.SERVER_ID_PK!)",
                     "status": IMS_Status_Closed,
                     "loginid": "\(CURRENT_USER_LOGGED_IN_ID)",
-                    "closure_remarks" : self.controller_recommendation_textview.text?.replacingOccurrences(of: "'", with: "''") ?? "",
+                    "closure_remarks" : "\(self.closure_remarks_textview.text!)",
                     "is_control_defined": control,
                     "risk_type": self.lov_risk_type!.SERVER_ID_PK,
                     "risk_remarks": self.risk_remarks_textview.text!,
@@ -2425,7 +2510,7 @@ extension IMSViewUpdateRequestViewController {
             self.view.makeToast("Endoresement is mandatory")
             return nil
         }
-        if self.recommendations_textview.text == ENTER_RECOMMENDATIONS || self.recommendations_textview.text == "" {
+        if self.ds_recommendation_textview.text == ENTER_RECOMMENDATIONS || self.ds_recommendation_textview.text == "" {
             self.view.makeToast("Recommendations is mandatory")
             return nil
         }
@@ -2467,7 +2552,7 @@ extension IMSViewUpdateRequestViewController {
         
         if willDBInsert {
             let columns = ["DIR_SEC_ENDOR", "DIR_SEC_RECOM", "DIR_NOTIFY_EMAILS", "TICKET_STATUS"]
-            let values = [self.endoresement_textview.text!, self.recommendations_textview.text!, self.email_textview.text!, ticket_status]
+            let values = [self.endoresement_textview.text?.replacingOccurrences(of: "'", with: "''") ?? "", self.ds_recommendation_textview.text?.replacingOccurrences(of: "'", with: "''") ?? "", self.email_textview.text!, ticket_status]
             AppDelegate.sharedInstance.db?.updateTables(tableName: db_hr_request, columnName: columns, updateValue: values, onCondition: "SERVER_ID_PK = '\(self.ticket_request!.SERVER_ID_PK!)'", { _ in })
         }
         let json = [
@@ -2479,7 +2564,7 @@ extension IMSViewUpdateRequestViewController {
                     "loginid": "\(CURRENT_USER_LOGGED_IN_ID)",
                     "closure_remarks" : "",
                     "dir_sec_endors": "\(self.endoresement_textview.text!)",
-                    "dir_sec_recom": "\(self.recommendations_textview.text!)",
+                    "dir_sec_recom": "\(self.ds_recommendation_textview.text!)",
                     "dir_sec_email": "\(self.email_textview.text!)",
                     "ticket_logs": [
                         [
@@ -3248,6 +3333,8 @@ extension IMSViewUpdateRequestViewController: GrowingTextViewDelegate {
                 let heightToAdd = height - currentHeight
                 self.email_textview_height.constant += heightToAdd
             }
+            
+            
             self.view.layoutIfNeeded()
         }
     }
