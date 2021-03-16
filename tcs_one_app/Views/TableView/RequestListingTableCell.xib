@@ -21,7 +21,7 @@
                         <rect key="frame" x="5" y="5" width="310" height="70"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Attendance &amp; Leaves" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="o9I-KM-lOp">
-                                <rect key="frame" x="15" y="6" width="144.66666666666666" height="18"/>
+                                <rect key="frame" x="15" y="6" width="143" height="18"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                 <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
@@ -49,6 +49,9 @@
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="2020-10-06 11:53:00 AM" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Lg5-Os-b6G">
                                 <rect key="frame" x="173" y="10" width="122" height="12"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="122" id="6OL-JR-cbE"/>
+                                </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="10"/>
                                 <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
@@ -66,6 +69,7 @@
                             <constraint firstAttribute="bottom" secondItem="QGf-la-yTE" secondAttribute="bottom" constant="10" id="oP7-Vc-H46"/>
                             <constraint firstItem="Lg5-Os-b6G" firstAttribute="top" secondItem="VaK-nR-Hef" secondAttribute="top" constant="10" id="qTP-nl-4ju"/>
                             <constraint firstItem="o9I-KM-lOp" firstAttribute="leading" secondItem="VaK-nR-Hef" secondAttribute="leading" constant="15" id="v5p-Fn-2Y5"/>
+                            <constraint firstItem="Lg5-Os-b6G" firstAttribute="leading" secondItem="o9I-KM-lOp" secondAttribute="trailing" constant="15" id="xSh-JA-qyu"/>
                         </constraints>
                         <userDefinedRuntimeAttributes>
                             <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
