@@ -325,6 +325,8 @@ class IMSNewRequestViewController: BaseViewController {
                 self.remarks.isUserInteractionEnabled = false
                 if ticket.TICKET_STATUS == IMS_Status_Closed {
                     ticket_status.text = ticket.TICKET_STATUS!
+                    self.remarks_label_top_constraint.constant -= 20
+                    self.remarks_label.font = UIFont.systemFont(ofSize: 12)
                     self.remarks.text = ticket.HR_REMARKS
                     self.remarks_label.text = "Closure Remarks    "
                     self.remarks_word_counter.text = "\(ticket.HR_REMARKS?.count ?? 0)/200"

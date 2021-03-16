@@ -164,9 +164,9 @@ var ticket_request: tbl_Hr_Request_Logs?
     @IBOutlet weak var type_of_control_view: UIView!
     @IBOutlet weak var type_of_control_textfield: MDCOutlinedTextField!
     
-    @IBOutlet weak var closure_remarks_view: UIView!
-    @IBOutlet weak var closure_remarks_textview: UITextView!
-    @IBOutlet weak var closure_remarks_word_counter: UILabel!
+    @IBOutlet weak var controller_recommendation_view: UIView!
+    @IBOutlet weak var controller_recommendation_textview: UITextView!
+    @IBOutlet weak var controller_recommendation_word_counter: UILabel!
     
     
     @IBOutlet weak var forwardBtn: CustomButton!
@@ -537,11 +537,13 @@ var ticket_request: tbl_Hr_Request_Logs?
             } else {
 //                self.title = "View Request"
                 self.headingLabel.text = "View Request"
-                self.endoresement_textview.isUserInteractionEnabled = false
-                self.ds_recommendation_textview.isUserInteractionEnabled = false
+                self.endoresement_textview.isEditable = false
+                self.ds_recommendation_textview.isEditable = false
                 self.email_textview.isUserInteractionEnabled = false
                 
+                self.endoresement_word_counter.text =  "\(self.ticket_request?.DIR_SEC_ENDOR?.count ?? 0)/1000"
                 self.endoresement_textview.text = self.ticket_request?.DIR_SEC_ENDOR ?? ""
+                self.ds_recommendations_word_counter.text = "\(self.ticket_request?.DIR_SEC_RECOM?.count ?? 0)/1000"
                 self.ds_recommendation_textview.text = self.ticket_request?.DIR_SEC_RECOM ?? ""
                 self.email_textview.text = self.ticket_request?.DIR_NOTIFY_EMAILS ?? ""
                 self.forwardBtn.isHidden = true
@@ -795,7 +797,7 @@ var ticket_request: tbl_Hr_Request_Logs?
             self.type_of_risk_view.isHidden = false
             self.category_of_control_view.isHidden = false
             self.type_of_control_view.isHidden = false
-            self.closure_remarks_view.isHidden = false
+            self.controller_recommendation_view.isHidden = false
             self.hr_status_view.isHidden = false
             
             if self.ticket_request!.IS_CONTROL_DEFINED! > 0 {
@@ -810,7 +812,7 @@ var ticket_request: tbl_Hr_Request_Logs?
 //                self.title = "Update Request"
                 self.headingLabel.text = "Request Detail"
                 self.risk_remarks_textview.delegate = self
-                self.closure_remarks_textview.delegate = self
+                self.controller_recommendation_textview.delegate = self
                 self.type_of_risk_textfield.delegate = self
                 self.category_of_control_textfield.delegate = self
                 self.type_of_control_textfield.delegate = self
@@ -856,17 +858,17 @@ var ticket_request: tbl_Hr_Request_Logs?
                 }
                 
                 
-                self.closure_remarks_textview.text = self.ticket_request!.HR_REMARKS ?? ""
-                self.closure_remarks_textview.isUserInteractionEnabled = false
+                self.controller_recommendation_textview.text = self.ticket_request!.HR_REMARKS ?? ""
+                self.controller_recommendation_textview.isUserInteractionEnabled = false
                 
                 self.hr_status_textfield.text = self.ticket_request!.HR_STATUS ?? ""
                 self.hr_status_textfield.isUserInteractionEnabled = false
                 self.forwardBtn.isHidden = true
                 if ticket_request?.TICKET_STATUS == IMS_Status_Closed {
                     remarks_attachment_stackview.isHidden = false
-                    closure_remarks_views.isHidden = false
-                    closure_remarks_textviews.text = "\(ticket_request?.HR_REMARKS ?? "")"
-                    closure_remarks_wordcounter.text = "\(ticket_request?.HR_REMARKS?.count ?? 0)/200"
+//                    closure_remarks_views.isHidden = false
+//                    closure_remarks_textviews.text = "\(ticket_request?.HR_REMARKS ?? "")"
+//                    closure_remarks_wordcounter.text = "\(ticket_request?.HR_REMARKS?.count ?? 0)/200"
                 }
             }
         }
@@ -1054,7 +1056,7 @@ var ticket_request: tbl_Hr_Request_Logs?
         
         //INS
         ins_claim_reference_number_textfield.label.textColor = UIColor.nativeRedColor()
-        ins_claim_reference_number_textfield.label.text = "Claim Ins. Amount"
+        ins_claim_reference_number_textfield.label.text = "Claim Amount Processed"
         ins_claim_reference_number_textfield.placeholder = "Enter Insurance Claim Amount"
         ins_claim_reference_number_textfield.setOutlineColor(UIColor.nativeRedColor(), for: .normal)
         ins_claim_reference_number_textfield.setOutlineColor(UIColor.nativeRedColor(), for: .editing)
@@ -2008,11 +2010,11 @@ extension IMSViewUpdateRequestViewController: UITextViewDelegate {
                 textView.text = ""
             }
             break
-        case ENTER_CLOSURE_REMARKS_TAG:
-            if textView.text == ENTER_CLOSURE_REMARKS {
-                textView.text = ""
-            }
-            break
+//        case ENTER_CLOSURE_REMARKS_TAG:
+//            if textView.text == ENTER_CLOSURE_REMARKS {
+//                textView.text = ""
+//            }
+//            break
         default:
             break
         }
@@ -2044,11 +2046,11 @@ extension IMSViewUpdateRequestViewController: UITextViewDelegate {
                 textView.text = ENTER_ENDORESSEMENT
             }
             break
-        case ENTER_CLOSURE_REMARKS_TAG:
-            if textView.text.count <= 0 {
-                textView.text = ENTER_CLOSURE_REMARKS
-            }
-            break
+//        case ENTER_CLOSURE_REMARKS_TAG:
+//            if textView.text.count <= 0 {
+//                textView.text = ENTER_CLOSURE_REMARKS
+//            }
+//            break
         case ENTER_RISK_REMARKS_TAG:
             if textView.text.count <= 0 {
                 textView.text = ENTER_RISK_REMARKS
@@ -2100,9 +2102,9 @@ extension IMSViewUpdateRequestViewController: UITextViewDelegate {
             case ENTER_RISK_REMARKS_TAG:
                 self.risk_remarks_word_counter.text = "\(newString.length)/200"
                 return true
-            case ENTER_CLOSURE_REMARKS_TAG:
-                self.closure_remarks_word_counter.text = "\(newString.length)/200"
-                return true
+//            case ENTER_CLOSURE_REMARKS_TAG:
+//                self.closure_remarks_word_counter.text = "\(newString.length)/200"
+//                return true
             case ENTER_EMAILS_TAG:
                 return true
             default:
@@ -2248,10 +2250,10 @@ extension IMSViewUpdateRequestViewController {
             self.view.makeToast("Status is mandatory")
             return nil
         }
-        if self.closure_remarks_textview.text == "" || self.closure_remarks_textview.text == ENTER_CLOSURE_REMARKS {
-            self.view.makeToast("Recommendations is mandatory")
-            return nil
-        }
+//        if self.closure_remarks_textview.text == "" || self.closure_remarks_textview.text == ENTER_CLOSURE_REMARKS {
+//            self.view.makeToast("Recommendations is mandatory")
+//            return nil
+//        }
         
         if !self.remarks_view.isHidden {
             if remarks_textview.text == "" || remarks_textview.text == ENTER_REMARKS {
@@ -2278,7 +2280,7 @@ extension IMSViewUpdateRequestViewController {
                     "ticketid": "\(self.ticket_request!.SERVER_ID_PK!)",
                     "status": IMS_Status_Closed,
                     "loginid": "\(CURRENT_USER_LOGGED_IN_ID)",
-                    "closure_remarks" : "\(self.closure_remarks_textview.text!)",
+                    "closure_remarks" : "\(self.controller_recommendation_textview.text!)",
                     "is_control_defined": control,
                     "risk_type": self.lov_risk_type!.SERVER_ID_PK,
                     "risk_remarks": self.risk_remarks_textview.text!,

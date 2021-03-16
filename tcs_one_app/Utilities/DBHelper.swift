@@ -904,7 +904,7 @@ class DBHelper {
             
             sqlite3_bind_text(insertStatement, 21, ((hrrequests.remTatStatus ?? "") as NSString).utf8String, -1, nil)
             sqlite3_bind_text(insertStatement, 22, ((hrrequests.remTatStatusTime ?? "") as NSString).utf8String, -1, nil)
-            sqlite3_bind_text(insertStatement, 23, ((hrrequests.assignedTo ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_int(insertStatement, 23, Int32(hrrequests.assignedTo ?? -1))
             sqlite3_bind_text(insertStatement, 24, ((hrrequests.refID ?? "") as NSString).utf8String, -1, nil)
             sqlite3_bind_text(insertStatement, 25, ((hrrequests.areaCode ?? "") as NSString).utf8String, -1, nil)
             sqlite3_bind_text(insertStatement, 26, ((hrrequests.stationCode ?? "") as NSString).utf8String, -1, nil)
@@ -1035,7 +1035,7 @@ class DBHelper {
                 
                 let rem_tat_status = String(describing: String(cString: sqlite3_column_text(queryStatement, 21)))
                 let rem_tat_status_time = String(describing: String(cString: sqlite3_column_text(queryStatement, 22)))
-                let assigne_to = String(describing: String(cString: sqlite3_column_text(queryStatement, 23)))
+                let assigne_to = Int(sqlite3_column_int(queryStatement, 23))
                 let ref_id = String(describing: String(cString: sqlite3_column_text(queryStatement, 24)))
                 let area_code = String(describing: String(cString: sqlite3_column_text(queryStatement, 25)))
                 let station_code = String(describing: String(cString: sqlite3_column_text(queryStatement, 26)))
@@ -1165,7 +1165,7 @@ class DBHelper {
                 
                 let rem_tat_status = String(describing: String(cString: sqlite3_column_text(queryStatement, 21)))
                 let rem_tat_status_time = String(describing: String(cString: sqlite3_column_text(queryStatement, 22)))
-                let assigne_to = String(describing: String(cString: sqlite3_column_text(queryStatement, 23)))
+                let assigne_to = Int(sqlite3_column_int(queryStatement, 23))
                 let ref_id = String(describing: String(cString: sqlite3_column_text(queryStatement, 24)))
                 let area_code = String(describing: String(cString: sqlite3_column_text(queryStatement, 25)))
                 let station_code = String(describing: String(cString: sqlite3_column_text(queryStatement, 26)))
@@ -1549,7 +1549,7 @@ class DBHelper {
             
             sqlite3_bind_text(insertStatement, 21, ((hrrequests.REM_TAT_STATUS ?? "") as NSString).utf8String, -1, nil)
             sqlite3_bind_text(insertStatement, 22, ((hrrequests.REM_TAT_STATUS_TIME ?? "") as NSString).utf8String, -1, nil)
-            sqlite3_bind_text(insertStatement, 23, ((hrrequests.ASSIGNED_TO ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_int(insertStatement, 23, Int32(hrrequests.TAT_DAYS ?? -1))
             sqlite3_bind_text(insertStatement, 24, ((hrrequests.REF_ID ?? "") as NSString).utf8String, -1, nil)
             sqlite3_bind_text(insertStatement, 25, ((hrrequests.AREA_CODE ?? "") as NSString).utf8String, -1, nil)
             sqlite3_bind_text(insertStatement, 26, ((hrrequests.STATION_CODE ?? "") as NSString).utf8String, -1, nil)
@@ -2576,7 +2576,7 @@ struct tbl_Hr_Request_Logs: Encodable, Decodable {
     var TAT_DAYS: Int? // = -1
     var REM_TAT_STATUS: String? // = ""
     var REM_TAT_STATUS_TIME: String? // = ""
-    var ASSIGNED_TO: String? // = ""
+    var ASSIGNED_TO: Int? // = ""
     var REF_ID: String? // = ""
     var AREA_CODE: String? // = ""
     var STATION_CODE: String? // = ""
