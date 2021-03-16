@@ -64,7 +64,9 @@ class MapViewController: UIViewController, MKMapViewDelegate {
 //
 //        mapView.addOverlay(polyline)
     }
-    
+    func addRadiusOverlay(forGeotification geotification: Geotification) {
+        mapView.addOverlay(MKCircle(center: geotification.coordinate, radius: 50.0))
+    }
     func addPolygon() {
         var locations = places.map { $0.coordinate }
         let polygon = MKPolygon(coordinates: &locations, count: locations.count)
@@ -111,7 +113,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
 extension MapViewController: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         let locValue:CLLocationCoordinate2D = manager.location!.coordinate
-
+        print("Lat: \(locValue.latitude) Lon: \(locValue.longitude)")
         mapView.mapType = MKMapType.standard
 
 

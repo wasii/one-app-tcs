@@ -254,13 +254,18 @@
                                             <action selector="historyBtnTapped:" destination="ZkB-bg-KBp" eventType="touchUpInside" id="v9s-UF-x7P"/>
                                         </connections>
                                     </button>
+                                    <mapView hidden="YES" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="iYX-hY-WtM">
+                                        <rect key="frame" x="15" y="254" width="345" height="197"/>
+                                    </mapView>
                                 </subviews>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <constraints>
                                     <constraint firstItem="DIP-Nf-naZ" firstAttribute="leading" secondItem="Fd9-OV-39D" secondAttribute="leading" constant="15" id="35q-0F-OST"/>
                                     <constraint firstItem="DIP-Nf-naZ" firstAttribute="centerY" secondItem="Obv-kd-MjB" secondAttribute="centerY" id="BRA-3I-hDj"/>
                                     <constraint firstAttribute="trailing" secondItem="HKE-Jk-2db" secondAttribute="trailing" constant="35" id="Dy1-aC-wdq"/>
+                                    <constraint firstAttribute="trailing" secondItem="iYX-hY-WtM" secondAttribute="trailing" constant="15" id="FHQ-Ma-FHq"/>
                                     <constraint firstItem="2gw-bB-dnI" firstAttribute="centerY" secondItem="1jW-LK-S3y" secondAttribute="centerY" id="GaA-KP-AuM"/>
+                                    <constraint firstItem="qGL-IL-RuB" firstAttribute="top" secondItem="iYX-hY-WtM" secondAttribute="bottom" constant="10" id="KUQ-HT-ZVz"/>
                                     <constraint firstAttribute="bottom" secondItem="qGL-IL-RuB" secondAttribute="bottom" constant="50" id="PRu-gL-176"/>
                                     <constraint firstItem="Sso-G7-LEO" firstAttribute="top" secondItem="Fd9-OV-39D" secondAttribute="top" constant="20" id="Pm8-1P-IzG"/>
                                     <constraint firstAttribute="trailing" secondItem="Obv-kd-MjB" secondAttribute="trailing" constant="15" id="Qqs-Hf-zzB"/>
@@ -272,6 +277,8 @@
                                     <constraint firstAttribute="trailing" secondItem="1jW-LK-S3y" secondAttribute="trailing" constant="15" id="iGe-dk-FIG"/>
                                     <constraint firstItem="Sso-G7-LEO" firstAttribute="centerX" secondItem="Fd9-OV-39D" secondAttribute="centerX" id="jD1-PO-5Ch"/>
                                     <constraint firstItem="Obv-kd-MjB" firstAttribute="top" secondItem="Sso-G7-LEO" secondAttribute="bottom" constant="25" id="oJ6-gh-1uP"/>
+                                    <constraint firstItem="iYX-hY-WtM" firstAttribute="leading" secondItem="Fd9-OV-39D" secondAttribute="leading" constant="15" id="rBb-wb-0Ch"/>
+                                    <constraint firstItem="iYX-hY-WtM" firstAttribute="top" secondItem="HKE-Jk-2db" secondAttribute="bottom" constant="10" id="w4F-6L-mtq"/>
                                     <constraint firstItem="HKE-Jk-2db" firstAttribute="top" secondItem="1jW-LK-S3y" secondAttribute="bottom" constant="15" id="znw-Ha-ttY"/>
                                 </constraints>
                             </view>
@@ -290,12 +297,13 @@
                         <outlet property="checkInTime" destination="6iy-US-0pT" id="y5B-fR-XwS"/>
                         <outlet property="checkOutTime" destination="i77-yw-qXI" id="zjO-6c-49b"/>
                         <outlet property="mainView" destination="Fd9-OV-39D" id="ayg-qM-H5J"/>
+                        <outlet property="mapView" destination="iYX-hY-WtM" id="l14-Xq-b5V"/>
                         <outlet property="slideView" destination="qGL-IL-RuB" id="RpS-q8-Fhl"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="GhX-VN-b91" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="280.37383177570092" y="713.390928725702"/>
+            <point key="canvasLocation" x="279.19999999999999" y="712.89355322338838"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="Pk5-Cx-SAk">

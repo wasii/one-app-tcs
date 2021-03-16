@@ -22,7 +22,8 @@ class AttendanceMarkingViewController: BaseViewController, MKMapViewDelegate {
     @IBOutlet weak var checkOutTime: UILabel!
     @IBOutlet weak var checkOutBtn: UIButton!
     
-    var mapView: MKMapView?
+    @IBOutlet weak var mapView: MKMapView!
+    //    var mapView: MKMapView?
     let places = Place.getPlaces()
     var isUserInsideFence = false
     var slideText = ""
@@ -152,7 +153,6 @@ class AttendanceMarkingViewController: BaseViewController, MKMapViewDelegate {
     
     
     func setupMapView() {
-        mapView = MKMapView()
         mapView?.delegate = self
         locationManager.delegate = self
         // 2
