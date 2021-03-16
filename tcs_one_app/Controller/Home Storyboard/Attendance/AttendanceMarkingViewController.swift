@@ -30,9 +30,9 @@ class AttendanceMarkingViewController: BaseViewController, MKMapViewDelegate {
     var lon: String = "0.0"
     
     lazy var slideToLock: MTSlideToOpenView = {
-        let slide = MTSlideToOpenView(frame: CGRect(x: 5, y: 4, width: 240, height: 32))
+        let slide = MTSlideToOpenView(frame: CGRect(x: 5, y: 4, width: 270, height: 52))
         slide.sliderViewTopDistance = 0
-        slide.sliderCornerRadius = 10
+        slide.sliderCornerRadius = 26
         slide.thumnailImageView.backgroundColor = UIColor.nativeRedColor()
         slide.draggedView.backgroundColor = UIColor.nativeRedColor()
         slide.delegate = self
@@ -40,7 +40,7 @@ class AttendanceMarkingViewController: BaseViewController, MKMapViewDelegate {
         slide.thumbnailViewStartingDistance = 10
         slide.sliderBackgroundColor = UIColor.clear
         slide.labelText = slideText
-        slide.textLabelLeadingDistance = 10
+        slide.textLabelLeadingDistance = 20
         slide.thumnailImageView.image = #imageLiteral(resourceName: "slide").imageFlippedForRightToLeftLayoutDirection()
         return slide
     }()
@@ -316,14 +316,16 @@ extension AttendanceMarkingViewController: MTSlideToOpenDelegate {
                 self.view.makeToast("Out of Fence.")
             }
         } else {
-            markAttendance {
-                DispatchQueue.main.async {
-                    sender.resetStateWithAnimation(false)
+            if self.isUserInsideFence {
+                markAttendance {
+                    DispatchQueue.main.async {
+                        sender.resetStateWithAnimation(false)
+                    }
                 }
-                
+            } else {
+                self.view.makeToast("Out of Fence.")
             }
         }
-        
     }
 }
 
@@ -339,6 +341,11 @@ extension AttendanceMarkingViewController: CLLocationManagerDelegate {
 //        print(lon)
         mapView?.mapType = MKMapType.standard
         self.isUserInsideFence = self.userInsidePolygon(userlocation: locValue)
+        if self.isUserInsideFence {
+            self.slideView.isUserInteractionEnabled = true
+        } else {
+            self.slideView.isUserInteractionEnabled = false
+        }
         print("UserInside Fence: \(self.isUserInsideFence)")
     }
     

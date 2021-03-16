@@ -216,15 +216,15 @@
                                         </userDefinedRuntimeAttributes>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qGL-IL-RuB" userLabel="SlideView" customClass="CustomView" customModule="One_App" customModuleProvider="target">
-                                        <rect key="frame" x="25" y="204" width="250" height="40"/>
+                                        <rect key="frame" x="47.5" y="461" width="280" height="60"/>
                                         <color key="backgroundColor" red="0.94901960780000005" green="0.95294117649999999" blue="0.95686274510000002" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                         <constraints>
-                                            <constraint firstAttribute="width" constant="250" id="Cf0-l1-BsS"/>
-                                            <constraint firstAttribute="height" constant="40" id="tJD-Wb-GbZ"/>
+                                            <constraint firstAttribute="width" constant="280" id="Cf0-l1-BsS"/>
+                                            <constraint firstAttribute="height" constant="60" id="tJD-Wb-GbZ"/>
                                         </constraints>
                                         <userDefinedRuntimeAttributes>
                                             <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                                <real key="value" value="5"/>
+                                                <real key="value" value="25"/>
                                             </userDefinedRuntimeAttribute>
                                             <userDefinedRuntimeAttribute type="color" keyPath="bgColor">
                                                 <color key="value" red="0.98039215690000003" green="0.98039215690000003" blue="0.98039215690000003" alpha="1" colorSpace="calibratedRGB"/>
@@ -244,7 +244,7 @@
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HKE-Jk-2db">
-                                        <rect key="frame" x="290" y="199" width="50" height="50"/>
+                                        <rect key="frame" x="290" y="194" width="50" height="50"/>
                                         <constraints>
                                             <constraint firstAttribute="width" secondItem="HKE-Jk-2db" secondAttribute="height" id="EeB-sl-S4m"/>
                                             <constraint firstAttribute="height" constant="50" id="PVZ-MQ-PC6"/>
@@ -260,19 +260,19 @@
                                     <constraint firstItem="DIP-Nf-naZ" firstAttribute="leading" secondItem="Fd9-OV-39D" secondAttribute="leading" constant="15" id="35q-0F-OST"/>
                                     <constraint firstItem="DIP-Nf-naZ" firstAttribute="centerY" secondItem="Obv-kd-MjB" secondAttribute="centerY" id="BRA-3I-hDj"/>
                                     <constraint firstAttribute="trailing" secondItem="HKE-Jk-2db" secondAttribute="trailing" constant="35" id="Dy1-aC-wdq"/>
-                                    <constraint firstItem="HKE-Jk-2db" firstAttribute="centerY" secondItem="qGL-IL-RuB" secondAttribute="centerY" id="ESi-M2-aiT"/>
                                     <constraint firstItem="2gw-bB-dnI" firstAttribute="centerY" secondItem="1jW-LK-S3y" secondAttribute="centerY" id="GaA-KP-AuM"/>
+                                    <constraint firstAttribute="bottom" secondItem="qGL-IL-RuB" secondAttribute="bottom" constant="50" id="PRu-gL-176"/>
                                     <constraint firstItem="Sso-G7-LEO" firstAttribute="top" secondItem="Fd9-OV-39D" secondAttribute="top" constant="20" id="Pm8-1P-IzG"/>
                                     <constraint firstAttribute="trailing" secondItem="Obv-kd-MjB" secondAttribute="trailing" constant="15" id="Qqs-Hf-zzB"/>
+                                    <constraint firstItem="qGL-IL-RuB" firstAttribute="centerX" secondItem="Fd9-OV-39D" secondAttribute="centerX" id="dSo-yu-0Kb"/>
                                     <constraint firstItem="1jW-LK-S3y" firstAttribute="width" secondItem="Fd9-OV-39D" secondAttribute="width" multiplier="0.58" id="eG3-ff-3Pj"/>
                                     <constraint firstItem="1jW-LK-S3y" firstAttribute="top" secondItem="Obv-kd-MjB" secondAttribute="bottom" constant="25" id="ee1-n0-u6K"/>
                                     <constraint firstItem="Obv-kd-MjB" firstAttribute="width" secondItem="Fd9-OV-39D" secondAttribute="width" multiplier="0.58" id="gAe-2c-y27"/>
                                     <constraint firstItem="2gw-bB-dnI" firstAttribute="leading" secondItem="Fd9-OV-39D" secondAttribute="leading" constant="15" id="gO7-TE-Jac"/>
-                                    <constraint firstItem="qGL-IL-RuB" firstAttribute="leading" secondItem="Fd9-OV-39D" secondAttribute="leading" constant="25" id="gaa-lp-cPU"/>
                                     <constraint firstAttribute="trailing" secondItem="1jW-LK-S3y" secondAttribute="trailing" constant="15" id="iGe-dk-FIG"/>
                                     <constraint firstItem="Sso-G7-LEO" firstAttribute="centerX" secondItem="Fd9-OV-39D" secondAttribute="centerX" id="jD1-PO-5Ch"/>
                                     <constraint firstItem="Obv-kd-MjB" firstAttribute="top" secondItem="Sso-G7-LEO" secondAttribute="bottom" constant="25" id="oJ6-gh-1uP"/>
-                                    <constraint firstItem="qGL-IL-RuB" firstAttribute="top" secondItem="1jW-LK-S3y" secondAttribute="bottom" constant="25" id="tjK-G7-TOB"/>
+                                    <constraint firstItem="HKE-Jk-2db" firstAttribute="top" secondItem="1jW-LK-S3y" secondAttribute="bottom" constant="15" id="znw-Ha-ttY"/>
                                 </constraints>
                             </view>
                         </subviews>
