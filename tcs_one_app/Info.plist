@@ -33,6 +33,10 @@
 	</dict>
 	<key>NSCameraUsageDescription</key>
 	<string>This app requires access to the camera.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>OneApp requires constant access to your phone’s location to notify you when you enter or leave a geofence.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>OneApp requires constant access to your phone’s location to notify you when you enter or leave a geofence.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>This app requires access to the photo library.</string>
 	<key>UIApplicationSceneManifest</key>
@@ -86,10 +90,5 @@
 	<string>Light</string>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-    
-    <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-    <string>OneApp requires constant access to your phone’s location to notify you when you enter or leave a geofence.</string>
-    <key>NSLocationWhenInUseUsageDescription</key>
-    <string>OneApp requires constant access to your phone’s location to notify you when you enter or leave a geofence.</string>
 </dict>
 </plist>

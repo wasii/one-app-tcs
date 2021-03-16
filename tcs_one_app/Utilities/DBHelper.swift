@@ -2542,7 +2542,7 @@ class DBHelper {
     }
     
     func insert_tbl_att_locations(att_location: AttLocations) {
-        let insertStatementString = "INSERT INTO \(db_att_locations)(LOC_CODE, LOC_NAME, LATITUDE, LONGITUDE) VALUES (?,?,?,?);"
+        let insertStatementString = "INSERT INTO \(db_att_locations)(LOC_CODE, LOC_NAME, LATITUDE, LONGITUDE, RADIUS) VALUES (?,?,?,?,?);"
         
         var insertStatement: OpaquePointer? = nil
         if sqlite3_prepare_v2(self.db, insertStatementString, -1, &insertStatement, nil) == SQLITE_OK {
@@ -2550,6 +2550,7 @@ class DBHelper {
             sqlite3_bind_text(insertStatement, 2, (att_location.locName as NSString).utf8String, -1, nil)
             sqlite3_bind_text(insertStatement, 3, (att_location.latitude as NSString).utf8String, -1, nil)
             sqlite3_bind_text(insertStatement, 4, (att_location.longitude as NSString).utf8String, -1, nil)
+            sqlite3_bind_int(insertStatement, 5, Int32(att_location.radius))
             if sqlite3_step(insertStatement) == SQLITE_DONE {
                 print("\(db_att_locations): Successfully inserted row.")
             } else {
@@ -2572,12 +2573,13 @@ class DBHelper {
                 let locName = String(describing: String(cString: sqlite3_column_text(queryStatement, 2)))
                 let latitude = String(describing: String(cString: sqlite3_column_text(queryStatement, 3)))
                 let longitude = String(describing: String(cString: sqlite3_column_text(queryStatement, 4)))
-                
+                let radius = Int(sqlite3_column_int(queryStatement, 5))
                 attLocations.append(tbl_att_locations(ID: id,
                                                       LOC_CODE: locCode,
                                                       LOC_NAME: locName,
                                                       LATITUDE: latitude,
-                                                      LONGITUDE: longitude))
+                                                      LONGITUDE: longitude,
+                                                      RADIUS: radius))
             }
         } else {
             print("SELECT statement \(db_att_locations) could not be prepared")
@@ -3109,6 +3111,7 @@ struct tbl_att_locations {
     var LOC_NAME: String = ""
     var LATITUDE: String = ""
     var LONGITUDE: String = ""
+    var RADIUS: Int = -1
 }
 
 struct tbl_att_user_attendance {

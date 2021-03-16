@@ -122,8 +122,17 @@ class AttendanceMarkingViewController: BaseViewController, MKMapViewDelegate {
             }
             if user_attendace?.status == "1" {
                 DispatchQueue.main.async {
-                    self.checkInTime.text = user_attendace?.timeIn ?? "Awaited"
-                    self.checkOutTime.text = user_attendace?.timeOut ?? "Awaited"
+                    if user_attendace?.timeIn == "00:00" {
+                        self.checkInTime.text =  "Awaited"
+                    } else {
+                        self.checkInTime.text =  "\(user_attendace?.date ?? "") - \(user_attendace?.timeIn ?? "")"
+                    }
+                    if user_attendace?.timeOut == "00:00" {
+                        self.checkOutTime.text = "Awaited"
+                    } else {
+                        self.checkOutTime.text = "\(user_attendace?.date ?? "") - \(user_attendace?.timeOut ?? "")"
+                    }
+                    
                     
                     if self.checkInTime.text == "Awaited" {
                         self.slideText = "Slide to Check In"

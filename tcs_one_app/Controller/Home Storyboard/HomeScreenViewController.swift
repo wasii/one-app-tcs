@@ -90,7 +90,7 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
                     let lon = (location.LONGITUDE as NSString).doubleValue
                     let crd = CLLocationCoordinate2D(latitude: lat, longitude: lon)
                     
-                    let radius : CLLocationDistance = 90
+                    let radius : CLLocationDistance = Double(location.RADIUS)
                     let entry = Geotification(coordinate: crd, radius: radius, identifier: NSUUID().uuidString, note: "Welcome to TCS", eventType: .onEntry)
                     let exit  = Geotification(coordinate: crd, radius: radius, identifier: NSUUID().uuidString, note: "Goodbye from TCS", eventType: .onExit)
 
@@ -176,7 +176,7 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
         if let _ = self.module {
             chartViews = [ChartViews]()
             for mod in self.module! {
-                if mod.MODULENAME == "Track" || mod.MODULENAME == "IMS" || mod.MODULENAME == "Leadership Connect" {
+                if mod.MODULENAME == "Track" || mod.MODULENAME == "IMS" || mod.MODULENAME == "Leadership Connect" || mod.MODULENAME == "Attendance" {
                     continue
                 }
                 let chart:ChartViews = Bundle.main.loadNibNamed("ChartViews", owner: self, options: nil)?.first as! ChartViews

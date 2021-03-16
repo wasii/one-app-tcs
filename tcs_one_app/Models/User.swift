@@ -152,12 +152,14 @@ struct User: Codable {
 
 struct AttLocations: Codable {
     let locCode, locName, latitude, longitude: String
+    let radius: Int
 
     enum CodingKeys: String, CodingKey {
         case locCode = "LOC_CODE"
         case locName = "LOC_NAME"
         case latitude = "LATITUDE"
         case longitude = "LONGITUDE"
+        case radius = "RADIUS"
     }
 }
 
