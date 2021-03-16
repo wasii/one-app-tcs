@@ -291,8 +291,8 @@ extension ChairmenListingViewController: UITableViewDataSource, UITableViewDeleg
             data = self.tbl_request_logs![indexPath.row]
         }
         
-        cell.mainHeading.text = "Ticket Id: \(data!.SERVER_ID_PK!)"
-        cell.subHeading.text =  data!.REQ_REMARKS!
+        cell.mainHeading.text = data!.REQ_REMARKS!
+        cell.subHeading.text =  ""
         cell.date.text = data!.CREATED_DATE?.dateSeperateWithT ?? ""
         
         let query = "SELECT VIEW_COUNT FROM \(db_hr_request) WHERE SERVER_ID_PK = '\(data!.SERVER_ID_PK!)' AND CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)'"
