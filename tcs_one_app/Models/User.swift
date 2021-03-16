@@ -165,7 +165,7 @@ struct AttLocations: Codable {
 
 struct AttUserAttendance: Codable {
     let date: String
-    let timeIn, timeOut: String?
+    let timeIn, timeOut: String
     let days, status: String
 
     enum CodingKeys: String, CodingKey {

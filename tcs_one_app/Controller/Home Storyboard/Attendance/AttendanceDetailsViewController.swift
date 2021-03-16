@@ -40,9 +40,29 @@ extension AttendanceDetailsViewController: UITableViewDataSource, UITableViewDel
         let data = self.user_attendance![indexPath.row]
         
         cell.dayName.text = "\(data.DAYS.replacingOccurrences(of: " ", with: ""))    "
-        cell.timeIn.text = data.TIME_IN
-        cell.timeOut.text = data.TIME_OUT
-        cell.date.text = data.DATE.dateOnly
+        if data.STATUS == "1" {
+            if data.TIME_IN == "00:00" {
+                cell.timeIn.text = "Awaited"
+                cell.timeOut.text = "Awaited"
+            } else {
+                cell.timeIn.text = data.TIME_IN
+                cell.timeOut.text = data.TIME_OUT
+            }
+        } else {
+            cell.timeIn.text = data.TIME_IN
+            cell.timeOut.text = data.TIME_OUT
+        }
+        
+        
+//        cell.date.text = data.DATE.dateOnly
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "dd/MM/yyyy"
+        let date = dateFormatter.date(from: data.DATE.dateOnly)
+        dateFormatter.dateFormat = "dd MMMM yyyy"
+        let strDate = dateFormatter.string(from: date!)
+        
+        cell.date.text = strDate
         return cell
     }
 }

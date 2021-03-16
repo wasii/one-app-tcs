@@ -40,6 +40,7 @@ class AttendanceMarkingViewController: BaseViewController, MKMapViewDelegate {
         slide.thumbnailViewStartingDistance = 10
         slide.sliderBackgroundColor = UIColor.clear
         slide.labelText = slideText
+        slide.textLabelLeadingDistance = 10
         slide.thumnailImageView.image = #imageLiteral(resourceName: "slide").imageFlippedForRightToLeftLayoutDirection()
         return slide
     }()
@@ -125,12 +126,12 @@ class AttendanceMarkingViewController: BaseViewController, MKMapViewDelegate {
                     if user_attendace?.timeIn == "00:00" {
                         self.checkInTime.text =  "Awaited"
                     } else {
-                        self.checkInTime.text =  "\(user_attendace?.date ?? "") - \(user_attendace?.timeIn ?? "")"
+                        self.checkInTime.text =  "\(user_attendace?.date.dateOnly ?? "") - \(user_attendace?.timeIn ?? "")"
                     }
                     if user_attendace?.timeOut == "00:00" {
                         self.checkOutTime.text = "Awaited"
                     } else {
-                        self.checkOutTime.text = "\(user_attendace?.date ?? "") - \(user_attendace?.timeOut ?? "")"
+                        self.checkOutTime.text = "\(user_attendace?.date.dateOnly ?? "") - \(user_attendace?.timeOut ?? "")"
                     }
                     
                     

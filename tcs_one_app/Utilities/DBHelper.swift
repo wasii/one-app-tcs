@@ -2592,8 +2592,8 @@ class DBHelper {
         var insertStatement: OpaquePointer? = nil
         if sqlite3_prepare_v2(self.db, insertStatementString, -1, &insertStatement, nil) == SQLITE_OK {
             sqlite3_bind_text(insertStatement, 1, (att_location.date as NSString).utf8String, -1, nil)
-            sqlite3_bind_text(insertStatement, 2, ((att_location.timeIn ?? "Awaited") as NSString).utf8String, -1, nil)
-            sqlite3_bind_text(insertStatement, 3, ((att_location.timeOut ?? "Awaited") as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 2, (att_location.timeIn as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 3, (att_location.timeOut as NSString).utf8String, -1, nil)
             sqlite3_bind_text(insertStatement, 4, (att_location.days as NSString).utf8String, -1, nil)
             sqlite3_bind_text(insertStatement, 5, (att_location.status as NSString).utf8String, -1, nil)
             sqlite3_bind_int(insertStatement, 6, Int32(Int(CURRENT_USER_LOGGED_IN_ID) ?? 0))
