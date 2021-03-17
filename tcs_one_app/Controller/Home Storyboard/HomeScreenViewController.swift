@@ -85,6 +85,11 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
         locationManager.requestWhenInUseAuthorization()
         locationManager.requestAlwaysAuthorization()
         locationManager.startUpdatingLocation()
+        locationManager.distanceFilter = 0.1
+        
+        locationManager.startMonitoringSignificantLocationChanges()
+        locationManager.pausesLocationUpdatesAutomatically = false
+        locationManager.allowsBackgroundLocationUpdates = true
         
         loadAllGeotifications()
         if UserDefaults.standard.data(forKey: PreferencesKeys.savedItems.rawValue) == nil {
@@ -94,8 +99,8 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
                     let lat = (location.LATITUDE as NSString).doubleValue
                     let lon = (location.LONGITUDE as NSString).doubleValue
                     let crd = CLLocationCoordinate2D(latitude: lat, longitude: lon)
-                    let r = location.RADIUS + 10
-                    let radius : CLLocationDistance = Double(r)
+                    
+                    let radius : CLLocationDistance = 75
                     let entry = Geotification(coordinate: crd, radius: radius, identifier: NSUUID().uuidString, note: "Welcome to TCS", eventType: .onEntry)
                     let exit  = Geotification(coordinate: crd, radius: radius, identifier: NSUUID().uuidString, note: "Goodbye from TCS", eventType: .onExit)
 
@@ -103,6 +108,7 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
                     add(exit)
                     
                 }
+                UserDefaults.standard.set(true, forKey: "GeofenceAdd")
             }
         }
     }
@@ -123,8 +129,11 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
     }
     func add(_ geotification: Geotification) {
         geotifications.append(geotification)
-        startMonitoring(geotification: geotification)
-        saveAllGeotifications()
+        
+        if !UserDefaults.standard.bool(forKey: "GeofenceAdd") {
+            startMonitoring(geotification: geotification)
+            saveAllGeotifications()
+        }
     }
     func remove(_ geotification: Geotification) {
         guard let index = geotifications.firstIndex(of: geotification) else { return }
@@ -511,27 +520,6 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
                     break
                 }
             }
-            //            for (index,d) in modules.enumerated() {
-            //                switch d.ID {
-            ////                case 0:
-            ////                    floaty.addItem("Add IMS Request", icon: UIImage(named: "helpdesk")) { item in
-            ////                        CONSTANT_MODULE_ID = AppDelegate.sharedInstance.db?.read_tbl_UserModule(query: "SELECT * FROM \(db_user_module) WHERE TAGNAME = '\(MODULE_TAG_IMS)';").first?.SERVER_ID_PK ?? -1
-            ////                        let storyboard = UIStoryboard(name: "IMSStoryboard", bundle: nil)
-            ////                        let controller = storyboard.instantiateViewController(withIdentifier: "IMSNewRequestViewController") as! IMSNewRequestViewController
-            ////                        self.navigationController?.pushViewController(controller, animated: true)
-            ////
-            ////                    }
-            ////                    break
-            //                case 2:
-            //
-            //                case 1:
-            //
-            //                case 4:
-            //
-            //                default:
-            //                    break
-            //                }
-            //            }
         }
         floaty.paddingX = (UIApplication.shared.keyWindow?.safeAreaInsets.right ?? 0) + 25
         floaty.paddingY = (UIApplication.shared.keyWindow?.safeAreaInsets.bottom ?? 0) + 75
@@ -692,12 +680,7 @@ extension HomeScreenViewController:  CLLocationManagerDelegate {
     }
     func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
         let status = CLLocationManager.authorizationStatus()
-        if status != .authorizedAlways {
-          let message = """
-          Your geotification is saved but will only be activated once you grant
-          Geotify permission to access the device location.
-          """
-        }
+        
         switch status {
         case .authorizedAlways, .authorizedWhenInUse:
             return
@@ -705,7 +688,7 @@ extension HomeScreenViewController:  CLLocationManagerDelegate {
             print("location access denied")
             
         default:
-            locationManager.requestWhenInUseAuthorization()
+            locationManager.requestAlwaysAuthorization()
         }
     }
     func locationManager(_ manager: CLLocationManager, monitoringDidFailFor region: CLRegion?, withError error: Error) {

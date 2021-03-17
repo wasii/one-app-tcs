@@ -13,6 +13,8 @@ import MapKit
 
 class AttendanceMarkingViewController: BaseViewController, MKMapViewDelegate {
 
+    @IBOutlet weak var timeInImage: UIImageView!
+    @IBOutlet weak var timeOutImage: UIImageView!
     @IBOutlet weak var mainView: UIView!
     @IBOutlet weak var slideView: CustomView!
     
@@ -30,22 +32,8 @@ class AttendanceMarkingViewController: BaseViewController, MKMapViewDelegate {
     var lat: String = "0.0"
     var lon: String = "0.0"
     
-    lazy var slideToLock: MTSlideToOpenView = {
-        let slide = MTSlideToOpenView(frame: CGRect(x: 5, y: 4, width: 270, height: 52))
-        slide.sliderViewTopDistance = 0
-        slide.sliderCornerRadius = 26
-        slide.thumnailImageView.backgroundColor = UIColor.nativeRedColor()
-        slide.draggedView.backgroundColor = UIColor.nativeRedColor()
-        slide.delegate = self
-        slide.thumnailImageView.backgroundColor = UIColor.clear
-        slide.thumbnailViewStartingDistance = 10
-        slide.sliderBackgroundColor = UIColor.clear
-        slide.labelText = slideText
-        slide.textLabelLeadingDistance = 20
-        slide.textLabel.textColor = UIColor.nativeRedColor()
-        slide.thumnailImageView.image = #imageLiteral(resourceName: "slide").imageFlippedForRightToLeftLayoutDirection()
-        return slide
-    }()
+    var isLocationOff = false
+    
     let datePicker = DatePickerDialog(
         textColor: .nativeRedColor(),
         buttonColor: .nativeRedColor(),
@@ -62,6 +50,23 @@ class AttendanceMarkingViewController: BaseViewController, MKMapViewDelegate {
         setupMapView()
         fetchAttendance()
         
+    }
+    func slideToLock() -> MTSlideToOpenView {
+        let slide = MTSlideToOpenView(frame: CGRect(x: 5, y: 4, width: 270, height: 52))
+        slide.tag = 1000
+        slide.sliderViewTopDistance = 0
+        slide.sliderCornerRadius = 26
+        slide.thumnailImageView.backgroundColor = UIColor.nativeRedColor()
+        slide.draggedView.backgroundColor = UIColor.nativeRedColor()
+        slide.delegate = self
+        slide.thumnailImageView.backgroundColor = UIColor.clear
+        slide.thumbnailViewStartingDistance = 10
+        slide.sliderBackgroundColor = UIColor.clear
+        slide.labelText = slideText
+        slide.textLabelLeadingDistance = 20
+        slide.textLabel.textColor = UIColor.nativeRedColor()
+        slide.thumnailImageView.image = #imageLiteral(resourceName: "slide").imageFlippedForRightToLeftLayoutDirection()
+        return slide
     }
     
     func fetchAttendance() {
@@ -81,7 +86,7 @@ class AttendanceMarkingViewController: BaseViewController, MKMapViewDelegate {
                 if let attendance = JSON(response).array {
                     self.updateLocalDatabase(attendance: attendance) {
                         DispatchQueue.main.async {
-                            self.slideView.addSubview(self.slideToLock)
+                            self.slideView.addSubview(self.slideToLock())
                         }
                     }
                 } else {
@@ -129,11 +134,43 @@ class AttendanceMarkingViewController: BaseViewController, MKMapViewDelegate {
                         self.checkInTime.text =  "Awaited"
                     } else {
                         self.checkInTime.text =  "\(user_attendace?.date.dateOnly ?? "") - \(user_attendace?.timeIn ?? "")"
+                        
+                        let dateFormatter = DateFormatter()
+                        dateFormatter.dateFormat = "h:mm a"
+                        let timeInDate = dateFormatter.date(from: user_attendace!.timeIn)
+                        let fixedTime = dateFormatter.date(from: "09:15 AM")
+                        
+                        let calendar = Calendar.current
+                        let dateComponents = calendar.dateComponents([Calendar.Component.minute], from: fixedTime!, to: timeInDate!)
+                        
+                        if dateComponents.minute ?? 0 >= 15 {
+                            self.timeInImage.image = UIImage(named: "in-arrow-red")
+                        } else {
+                            self.timeInImage.image = UIImage(named: "in-arrow")
+                        }
                     }
+                    
                     if user_attendace?.timeOut == "00:00" {
                         self.checkOutTime.text = "Awaited"
                     } else {
                         self.checkOutTime.text = "\(user_attendace?.date.dateOnly ?? "") - \(user_attendace?.timeOut ?? "")"
+                        
+                        let dateFormatter = DateFormatter()
+                        dateFormatter.dateFormat = "h:mm a"
+                        
+                        let timeInDate = dateFormatter.date(from: user_attendace!.timeIn)
+                        let timeOutDate = dateFormatter.date(from: user_attendace!.timeOut)
+                        
+                        let calendar = Calendar.current
+                        let dateComponents = calendar.dateComponents([Calendar.Component.hour, Calendar.Component.minute], from: timeInDate!, to: timeOutDate!)
+                        
+                        let hours = dateComponents.hour ?? 0
+                        
+                        if hours >= 9 {
+                            self.timeOutImage.image = UIImage(named: "out-array-green")
+                        } else {
+                            self.timeOutImage.image = UIImage(named: "out-array")
+                        }
                     }
                     
                     
@@ -163,7 +200,7 @@ class AttendanceMarkingViewController: BaseViewController, MKMapViewDelegate {
         locationManager.startUpdatingLocation()
         
         
-        requestLocationAccess()
+        
         addAnnotations()
         addPolygon()
     }
@@ -179,27 +216,6 @@ class AttendanceMarkingViewController: BaseViewController, MKMapViewDelegate {
                 formatter.dateFormat = "dd-MM-yyyy HH:mm:ss"
                 handler(true, formatter.string(from: dt))
             }
-        }
-    }
-    func requestLocationAccess() {
-        let status = CLLocationManager.authorizationStatus()
-        
-        switch status {
-        case .authorizedAlways, .authorizedWhenInUse:
-            let regions = CLCircularRegion(center: CLLocationCoordinate2D(latitude: places.first?.coordinate.latitude ?? 0.0,
-                                                                          longitude: places.first?.coordinate.longitude ?? 0.0),
-                                           radius: Double(places.first?.radius ?? 0),
-                                           identifier: UUID().uuidString)
-            regions.notifyOnExit = true
-            regions.notifyOnEntry = true
-            locationManager.startMonitoring(for: regions)
-            return
-            
-        case .denied, .restricted:
-            print("location access denied")
-            
-        default:
-            locationManager.requestWhenInUseAuthorization()
         }
     }
     
@@ -293,8 +309,8 @@ class AttendanceMarkingViewController: BaseViewController, MKMapViewDelegate {
                 if let attendance = JSON(response).array {
                     self.updateLocalDatabase(attendance: attendance) {
                         DispatchQueue.main.async {
-                            self.slideToLock.removeFromSuperview()
-                            self.slideView.addSubview(self.slideToLock)
+                            self.slideView.viewWithTag(1000)?.removeFromSuperview()
+                            self.slideView.addSubview(self.slideToLock())
                         }
                         handler()
                     }
@@ -321,7 +337,13 @@ extension AttendanceMarkingViewController: MTSlideToOpenDelegate {
                     }
                 }
             } else {
-                self.view.makeToast("Out of Fence.")
+                if self.isLocationOff {
+                    self.view.makeToast("Out of Fence")
+                } else {
+                    alert()
+                }
+                
+                sender.resetStateWithAnimation(false)
             }
         } else {
             if self.isUserInsideFence {
@@ -331,16 +353,54 @@ extension AttendanceMarkingViewController: MTSlideToOpenDelegate {
                     }
                 }
             } else {
-                self.view.makeToast("Out of Fence.")
+                if self.isLocationOff {
+                    self.view.makeToast("Out of Fence")
+                } else {
+                    alert()
+                }
+                
+                sender.resetStateWithAnimation(false)
             }
         }
+    }
+    
+    func alert() {
+        let alert = UIAlertController(title: "Alert!", message: "Turn on your location to mark you attendnace", preferredStyle: .alert)
+        let okAction = UIAlertAction(title: "Open Settings", style: .default) { _ in
+            UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!, options: [:], completionHandler: nil)
+        }
+        let cancelAction = UIAlertAction(title: "Cancel", style: .destructive, handler: nil)
+        
+        alert.addAction(cancelAction)
+        alert.addAction(okAction)
+        
+        
+        self.present(alert, animated: true, completion: nil)
     }
 }
 
 
 extension AttendanceMarkingViewController: CLLocationManagerDelegate {
+    func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
+        let status = CLLocationManager.authorizationStatus()
+        switch status {
+        case .authorizedAlways, .authorizedWhenInUse:
+            self.isLocationOff = true
+            locationManager.startUpdatingLocation()
+            return
+        case .denied, .restricted, .notDetermined:
+            self.isLocationOff = false
+            self.isUserInsideFence = false
+            print("location access denied")
+            break
+        default:
+            locationManager.requestWhenInUseAuthorization()
+        }
+    }
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        let locValue:CLLocationCoordinate2D = manager.location!.coordinate
+        guard let locValue:CLLocationCoordinate2D = manager.location?.coordinate else {
+            return
+        }
 
         self.lat = "\(locValue.latitude)"
         self.lon = "\(locValue.longitude)"
@@ -352,7 +412,7 @@ extension AttendanceMarkingViewController: CLLocationManagerDelegate {
         let officeLocation = CLLocation.init(latitude: places.first?.coordinate.latitude ?? 0.0,
                                              longitude: places.first?.coordinate.longitude ?? 0.0)
 
-        let circle = MKCircle(center: officeLocation.coordinate, radius: Double(70) as CLLocationDistance)
+        let circle = MKCircle(center: officeLocation.coordinate, radius: Double(90) as CLLocationDistance)
         
         
         

@@ -1113,7 +1113,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "tcs_one_app/One App.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.0.1;
+				CURRENT_PROJECT_VERSION = 1.0;
 				DEVELOPMENT_TEAM = R33FJ93Y8M;
 				INFOPLIST_FILE = tcs_one_app/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
@@ -1121,7 +1121,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.5;
+				MARKETING_VERSION = 3.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.tcs.tcsoneapp;
 				PRODUCT_NAME = "One App";
 				SWIFT_VERSION = 4.2;
@@ -1136,7 +1136,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "tcs_one_app/One App.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.0.1;
+				CURRENT_PROJECT_VERSION = 1.0;
 				DEVELOPMENT_TEAM = R33FJ93Y8M;
 				INFOPLIST_FILE = tcs_one_app/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
@@ -1144,7 +1144,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.5;
+				MARKETING_VERSION = 3.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.tcs.tcsoneapp;
 				PRODUCT_NAME = "One App";
 				SWIFT_VERSION = 4.2;
