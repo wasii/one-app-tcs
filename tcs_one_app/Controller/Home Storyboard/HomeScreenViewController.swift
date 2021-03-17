@@ -79,8 +79,13 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
         AppDelegate.sharedInstance.generateTATBreachedNotifications()
         
         
+        
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest
         locationManager.delegate = self
+        locationManager.requestWhenInUseAuthorization()
         locationManager.requestAlwaysAuthorization()
+        locationManager.startUpdatingLocation()
+        
         loadAllGeotifications()
         if UserDefaults.standard.data(forKey: PreferencesKeys.savedItems.rawValue) == nil {
             let query = "select * from \(db_att_locations)"

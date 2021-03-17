@@ -179,9 +179,10 @@ extension MapViewController: CLLocationManagerDelegate {
 
 @objc class Place: NSObject {
     var coordinate: CLLocationCoordinate2D
-    
-    init(coordinate: CLLocationCoordinate2D) {
+    var radius: Int
+    init(coordinate: CLLocationCoordinate2D, radius: Int) {
         self.coordinate = coordinate
+        self.radius = radius
     }
     
     static func getPlaces() -> [Place] {
@@ -191,9 +192,11 @@ extension MapViewController: CLLocationManagerDelegate {
             for location in locations {
                 let latitude = (location.LATITUDE as NSString).doubleValue
                 let longitude = (location.LONGITUDE as NSString).doubleValue
+                let radius = location.RADIUS
                 
                 let place = Place(coordinate: CLLocationCoordinate2D(latitude: latitude,
-                                                                     longitude: longitude))
+                                                                     longitude: longitude),
+                                  radius: radius)
                 
                 places.append(place)
             }

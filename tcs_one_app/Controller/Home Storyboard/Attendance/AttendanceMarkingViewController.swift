@@ -42,6 +42,7 @@ class AttendanceMarkingViewController: BaseViewController, MKMapViewDelegate {
         slide.sliderBackgroundColor = UIColor.clear
         slide.labelText = slideText
         slide.textLabelLeadingDistance = 20
+        slide.textLabel.textColor = UIColor.nativeRedColor()
         slide.thumnailImageView.image = #imageLiteral(resourceName: "slide").imageFlippedForRightToLeftLayoutDirection()
         return slide
     }()
@@ -185,6 +186,13 @@ class AttendanceMarkingViewController: BaseViewController, MKMapViewDelegate {
         
         switch status {
         case .authorizedAlways, .authorizedWhenInUse:
+            let regions = CLCircularRegion(center: CLLocationCoordinate2D(latitude: places.first?.coordinate.latitude ?? 0.0,
+                                                                          longitude: places.first?.coordinate.longitude ?? 0.0),
+                                           radius: Double(places.first?.radius ?? 0),
+                                           identifier: UUID().uuidString)
+            regions.notifyOnExit = true
+            regions.notifyOnEntry = true
+            locationManager.startMonitoring(for: regions)
             return
             
         case .denied, .restricted:
@@ -340,7 +348,22 @@ extension AttendanceMarkingViewController: CLLocationManagerDelegate {
         print("Lat: \(lat) Lon: \(lon)")
 //        print(lon)
         mapView?.mapType = MKMapType.standard
-        self.isUserInsideFence = self.userInsidePolygon(userlocation: locValue)
+        
+        let officeLocation = CLLocation.init(latitude: places.first?.coordinate.latitude ?? 0.0,
+                                             longitude: places.first?.coordinate.longitude ?? 0.0)
+
+        let circle = MKCircle(center: officeLocation.coordinate, radius: Double(70) as CLLocationDistance)
+        
+        
+        
+        if locations.first!.distance(from: officeLocation) > circle.radius {
+            self.isUserInsideFence = false
+        }
+        else{
+            self.isUserInsideFence = true
+        }
+        
+        
         if self.isUserInsideFence {
             self.slideView.isUserInteractionEnabled = true
         } else {
@@ -356,5 +379,12 @@ extension AttendanceMarkingViewController: CLLocationManagerDelegate {
         renderer.strokeColor = UIColor.orange
         renderer.lineWidth = 2
         return renderer
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didExitRegion region: CLRegion) {
+        self.isUserInsideFence = false
+    }
+    func locationManager(_ manager: CLLocationManager, didEnterRegion region: CLRegion) {
+        self.isUserInsideFence = true
     }
 }
