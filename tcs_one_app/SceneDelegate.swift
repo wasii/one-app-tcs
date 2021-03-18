@@ -75,12 +75,32 @@ extension SceneDelegate: CLLocationManagerDelegate {
     func handleEvent(for region: CLRegion, manager coordinates: CLLocationManager) {
         // Show an alert if application is active
         if UIApplication.shared.applicationState == .active {
-            guard let message = note(from: region.identifier) else { return }
-            window?.rootViewController?.showAlert(withTitle: nil, message: message)
-            print(message)
+//            guard let message = note(from: region.identifier) else { return }
+//            window?.rootViewController?.showAlert(withTitle: nil, message: message)
+//            print(message)
         } else {
             // Otherwise present a local notification
             guard let body = note(from: region.identifier) else { return }
+            guard let access_token = UserDefaults.standard.string(forKey: USER_ACCESS_TOKEN) else {
+                return
+            }
+            
+            let query = "SELECT * FROM \(db_att_userAttendance)"
+            if let attendance = AppDelegate.sharedInstance.db?.read_tbl_att_user_attendance_for_notification(query: query) {
+                let current_day = attendance.filter { (att) -> Bool in
+                    att.STATUS == "1"
+                }.first
+                if current_day?.TIME_IN == "00:00" {
+                    hitApi(access_token: access_token, coordinates: coordinates)
+                    hitApi(access_token: access_token, coordinates: coordinates)
+                } else {
+                    hitApi(access_token: access_token, coordinates: coordinates)
+                }
+            } else {
+                hitApi(access_token: access_token, coordinates: coordinates)
+                hitApi(access_token: access_token, coordinates: coordinates)
+            }
+            
             let notificationContent = UNMutableNotificationContent()
             notificationContent.body = body
             notificationContent.sound = .default
@@ -95,25 +115,28 @@ extension SceneDelegate: CLLocationManagerDelegate {
                     print("Error: \(error)")
                     return
                 }
-                guard let access_token = UserDefaults.standard.string(forKey: USER_ACCESS_TOKEN) else {
-                    return
-                }
-                let dateFormatter = DateFormatter()
-                dateFormatter.dateFormat = "dd/MM/yyyy HH:mm:ss"
-                
-                let date = dateFormatter.string(from: Date())
-                let json = [
-                    "attendance_request" : [
-                        "access_token" : access_token,
-                        "latitude": "\(coordinates.location?.coordinate.latitude ?? 0.0)",
-                        "longitude": "\(coordinates.location?.coordinate.longitude ?? 0.0)",
-                        "app_datime" : date
-                    ]
-                ]
-                let params = self.getAPIParameter(service_name: MARKATTENDANCE, request_body: json)
-                NetworkCalls.mark_attendance(params: params) { (_, _) in }
             }
         }
+    }
+    
+    func hitApi(access_token: String, coordinates: CLLocationManager) {
+        guard let access_token = UserDefaults.standard.string(forKey: USER_ACCESS_TOKEN) else {
+            return
+        }
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "dd/MM/yyyy HH:mm:ss"
+        
+        let date = dateFormatter.string(from: Date())
+        let json = [
+            "attendance_request" : [
+                "access_token" : access_token,
+                "latitude": "\(coordinates.location?.coordinate.latitude ?? 0.0)",
+                "longitude": "\(coordinates.location?.coordinate.longitude ?? 0.0)",
+                "app_datime" : date
+            ]
+        ]
+        let params = self.getAPIParameter(service_name: MARKATTENDANCE, request_body: json)
+        NetworkCalls.mark_attendance(params: params) { (_, _) in }
     }
     func getAPIParameter(service_name: String, request_body: [String: Any]) -> [String:Any] {
         let params = [
