@@ -9,6 +9,7 @@
 import UIKit
 import Photos
 import SwiftyJSON
+import FirebaseMessaging
 
 class BaseViewController: UIViewController {
 
@@ -16,7 +17,8 @@ class BaseViewController: UIViewController {
     var dismiss = false
     
     var isNavigate = false
-    
+    var geotifications: [Geotification] = []
+    lazy var locationManager = CLLocationManager()
     override func viewDidLoad() {
         super.viewDidLoad()
         hideKeyboardWhenTappedAround()
@@ -280,7 +282,10 @@ class BaseViewController: UIViewController {
     }
     
     @objc func logoutUser() {
-        AppDelegate.sharedInstance.db?.deleteRow(tableName: db_last_sync_status, column: "CURRENT_USER", ref_id: CURRENT_USER_LOGGED_IN_ID, handler: { _ in })
+//        AppDelegate.sharedInstance.db?.deleteRow(tableName: db_last_sync_status, column: "CURRENT_USER", ref_id: CURRENT_USER_LOGGED_IN_ID, handler: { _ in })
+        Messaging.messaging().unsubscribe(fromTopic: BROADCAST_KEY)
+        AppDelegate.sharedInstance.db?.deleteRow(tableName: db_last_sync_status, column: "SYNC_KEY", ref_id: "oneapp.gethrnotification", handler: { _ in })
+        AppDelegate.sharedInstance.db?.deleteAll(tableName: db_hr_notifications, handler: { _ in })
         if isNavigate {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                 self.navigationController?.popViewController(animated: true)
@@ -296,6 +301,33 @@ class BaseViewController: UIViewController {
         NotificationCenter.default.removeObserver(self)
         if let hr_request = notification.object as? tbl_Hr_Request_Logs {
             if let module_id = hr_request.MODULE_ID {
+                let columns = ["READ_STATUS_DTTM"]
+                let values  = ["1"]
+                
+                if RECORD_ID != 0 {
+                    AppDelegate.sharedInstance.db?.updateTables(tableName: db_hr_notifications, columnName: columns, updateValue: values, onCondition: "RECORD_ID = '\(RECORD_ID)'", { (success) in
+                        if success {
+                            DispatchQueue.main.async {
+                                let read_notification = [
+                                    "hr_request": [
+                                        "access_token": UserDefaults.standard.string(forKey: USER_ACCESS_TOKEN)!,
+                                        "notificationid" :"\(RECORD_ID)"
+                                    ]
+                                ]
+                                let params = self.getAPIParameter(service_name: READ_NOTIFICATION, request_body: read_notification)
+                                NetworkCalls.read_notification(params: params) { (success, response) in
+                                    if success {
+                                        RECORD_ID = 0
+                                        print("NOTIFICATION READ FROM POPUP.")
+                                    } else {
+                                        print("NOTIFICATION NOT READ FROM POPUP.")
+                                    }
+                                }
+                            }
+                        }
+                    })
+                }
+                
                 switch module_id {
                 case 1:
                     let storyboard = UIStoryboard(name: "Home", bundle: nil)
@@ -336,6 +368,13 @@ class BaseViewController: UIViewController {
                             print("NOT CONTAINS")
                         }
                     }
+                    break
+                case 4:
+                    let storyboard = UIStoryboard(name: "LeadershipAwaz", bundle: nil)
+                    let controller = storyboard.instantiateViewController(withIdentifier: "NewRequestLeadershipAwazViewController") as! NewRequestLeadershipAwazViewController
+                    controller.ticket_id = hr_request.SERVER_ID_PK
+                    controller.hidesBottomBarWhenPushed = true
+                    self.navigationController?.pushViewController(controller, animated: true)
                     break
                 default:
                     break
@@ -496,5 +535,29 @@ class BaseViewController: UIViewController {
             }
         }
         return perm
+    }
+    
+    
+    func startMonitoring(geotification: Geotification) {
+        // 1
+        if !CLLocationManager.isMonitoringAvailable(for: CLCircularRegion.self) {
+            self.showAlert(
+                withTitle: "Error",
+                message: "Geofencing is not supported on this device!")
+            return
+        }
+        // 2
+        let fenceRegion = geotification.region
+        locationManager.startMonitoring(for: fenceRegion)
+    }
+    func stopMonitoring(geotification: Geotification) {
+        for region in locationManager.monitoredRegions {
+            guard
+                let circularRegion = region as? CLCircularRegion,
+                circularRegion.identifier == geotification.identifier
+            else { continue }
+            
+            locationManager.stopMonitoring(for: circularRegion)
+        }
     }
 }

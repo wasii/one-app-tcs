@@ -56,6 +56,12 @@ protocol IMSUpdateRequestDelegate {
 }
 
 
+protocol LeadershipAwazDelegate {
+    func updateRequestMode(requestmode: tbl_RequestModes)
+    func updateMessageSubject(messagesubject: tbl_la_ad_group)
+}
+
+
 
 protocol ConfirmationProtocol {
     func confirmationProtocol()

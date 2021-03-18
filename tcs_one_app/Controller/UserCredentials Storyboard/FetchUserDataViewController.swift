@@ -8,8 +8,14 @@
 
 import UIKit
 import SwiftyJSON
+import FirebaseMessaging
 
 class FetchUserDataViewController: BaseViewController {
+    
+    @IBOutlet weak var hrSetupData_Label: UILabel!
+    @IBOutlet weak var imsSetupData_Label: UILabel!
+    @IBOutlet weak var logRequest_Label: UILabel!
+    @IBOutlet weak var hrNotification_Label: UILabel!
 
     @IBOutlet weak var mainView: UIView!
 
@@ -41,7 +47,7 @@ class FetchUserDataViewController: BaseViewController {
     var isPresented = false
     
     
-
+    var isTotalCounter = 0
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationItem.hidesBackButton = true
@@ -108,6 +114,7 @@ class FetchUserDataViewController: BaseViewController {
         NetworkCalls.setup(params: params) { (success, response) in
             if success {
                 DispatchQueue.main.async {
+                    self.hrSetupData_Label.text = "Successfully Synced HR"
                     //show success for view 1
                     self.loaderViews[0].backgroundColor = UIColor.nativeRedColor()
                     self.activityIndicator[0].stopAnimating()
@@ -117,8 +124,11 @@ class FetchUserDataViewController: BaseViewController {
                     self.activityIndicator[2].isHidden = false
                     self.activityIndicator[2].startAnimating()
 
+                    self.getTCSLocations {
+                        self.getHrRequest()
+                    }
                     //MARK: oneapp.gethrrequest
-                    self.getHrRequest()
+//                    self.getHrRequest()
 
                 }
 //                DispatchQueue.main.async {
@@ -565,6 +575,35 @@ class FetchUserDataViewController: BaseViewController {
         handler(true)
     }
     
+    func getTCSLocations (_ handler: @escaping()->Void) {
+        let json = [
+            "location_request" : [
+                "access_token" : access_token
+            ]
+        ]
+        let params = self.getAPIParameter(service_name: GETLOCATIONS, request_body: json)
+        NetworkCalls.get_tcs_location(params: params) { (granted, response) in
+            if granted {
+                if let data = JSON(response).array {
+                    AppDelegate.sharedInstance.db?.deleteAll(tableName: db_att_locations, handler: { _ in
+                        for locations in data {
+                            do {
+                                let dictionary = try locations.rawData()
+                                let att_location = try JSONDecoder().decode(AttLocations.self, from: dictionary)
+                                AppDelegate.sharedInstance.db?.insert_tbl_att_locations(att_location: att_location)
+                            } catch let err {
+                                print(err.localizedDescription)
+                            }
+                        }
+                    })
+                }
+            } else {
+                
+            }
+            handler()
+        }
+    }
+    
     @objc func getHrRequest() {
         var hr_request = [String: [String:Any]]()
         let lastSyncStatus = AppDelegate.sharedInstance.db?.readLastSyncStatus(tableName: db_last_sync_status,
@@ -600,43 +639,48 @@ class FetchUserDataViewController: BaseViewController {
                 if let hr_response = JSON(response).dictionary?[_hr_requests]?.array {
                     let sync_date = JSON(response).dictionary?[_sync_date]?.string ?? ""
                     do {
-                        for json in hr_response {
-                            let dictionary = try json.rawData()
-                            self.HR_Request.append(try JSONDecoder().decode(HrRequest.self, from: dictionary))
+                        
+                        DispatchQueue.main.async {
+                            self.counter.isHidden = false
+                            self.counter.text = "\(self.isTotalCounter)/\(self.count)"
                         }
                         
-                        if self.count == self.HR_Request.count {
+                        for json in hr_response {
+                            self.isTotalCounter += 1
+//                            print("ASSIGNED_TO: \(json.dictionary?["ASSIGNED_TO"]?.int ?? -111)")
+                            print("VIEW_COUNT: \(json.dictionary?["VIEW_COUNT"]?.int ?? -111)")
+                            let dictionary = try json.rawData()
+                            let hrRequest: HrRequest = try JSONDecoder().decode(HrRequest.self, from: dictionary)
+                            AppDelegate.sharedInstance.db?.deleteRowWithMultipleConditions(tbl: db_hr_request, conditions: "SERVER_ID_PK = '\(hrRequest.ticketID!)' AND CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)'", { _ in
+                                AppDelegate.sharedInstance.db?.insert_tbl_hr_request(hrrequests: hrRequest, { _ in
+                                    DispatchQueue.main.async {
+                                        self.counter.text = "\(self.isTotalCounter)/\(self.count)"
+                                    }
+                                })
+                            })
+                        }
+                        
+                        
+                        
+                        if self.count == self.isTotalCounter {
+                            
                             DispatchQueue.main.async {
-                                var totalCounter = 0
-                                self.counter.isHidden = false
-                                self.counter.text = "0/\(self.HR_Request.count)"
-
-                                for hrl in self.HR_Request {
-                                    AppDelegate.sharedInstance.db?.deleteRow(tableName: db_hr_request, column: "SERVER_ID_PK", ref_id: "\(hrl.ticketID!)", handler: { _ in
-                                        AppDelegate.sharedInstance.db?.insert_tbl_hr_request(hrrequests: hrl, { success in
-                                            if success {
-                                                totalCounter += 1
-                                                print("\(totalCounter)/\(self.HR_Request.count)")
-                                                self.counter.text = "\(totalCounter)/\(self.HR_Request.count)"
-                                                if (totalCounter == self.HR_Request.count - 1) || self.HR_Request.count == 1 {
-                                                    Helper.updateLastSyncStatus(APIName: GET_HR_REQUEST,
-                                                                              date: sync_date,
-                                                                              skip: self.skip,
-                                                                              take: 80,
-                                                                              total_records: self.count)
-                                                    self.count = 0
-                                                    self.skip = 0
-                                                    self.setup_HRLogs_HRFILES(response: response)
-                                                }
-                                            }
-                                        })
-                                    })
+                                Helper.updateLastSyncStatus(APIName: GET_HR_REQUEST,
+                                                          date: sync_date,
+                                                          skip: self.skip,
+                                                          take: 80,
+                                                          total_records: self.count)
+                                self.count = 0
+                                self.skip = 0
+                                self.setup_HRLogs_HRFILES(response: response)
+                                DispatchQueue.main.async {
+                                    self.logRequest_Label.text = "Synced HR Log Requests"
                                 }
                             }
                         } else {
                             DispatchQueue.main.async {
                                 self.counter.isHidden = false
-                                self.counter.text = "\(self.HR_Request.count)/\(self.HR_Request.count)"
+                                self.counter.text = "\(self.isTotalCounter)/\(self.count)"
                             }
                             self.skip += 80
                             self.getHrRequest()
@@ -656,9 +700,19 @@ class FetchUserDataViewController: BaseViewController {
                         print("error: ", error)
                     }
                 } else {
+                    DispatchQueue.main.async {
+                        self.logRequest_Label.text = "Synced HR Log Requests"
+                    }
                     self.count = 0
                     self.skip = 0
                     self.getHrNotifications()
+                }
+            } else {
+                DispatchQueue.main.async {
+                    self.view.makeToast(SOMETHINGWENTWRONG)
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                        self.navigationController?.popViewController(animated: true)
+                    }
                 }
             }
         }
@@ -693,6 +747,8 @@ class FetchUserDataViewController: BaseViewController {
                 })
             }
         }
+        self.count = 0
+        self.isTotalCounter = 0
         self.getHrNotifications()
     }
 }
@@ -742,33 +798,40 @@ extension FetchUserDataViewController {
                     if let notification_requests = JSON(response).dictionary?[_notification_requests]?.array {
                         let sync_date = JSON(response).dictionary?[_sync_date]?.string ?? ""
                         do {
-                            for json in notification_requests {
-                                let dictionary = try json.rawData()
-                                self.HR_Notification_Request.append(try JSONDecoder().decode(HRNotificationRequest.self, from: dictionary))
+                            DispatchQueue.main.async {
+                                self.notification_counter.isHidden = false
+                                self.notification_counter.text = "\(self.isTotalCounter)/\(self.count)"
                             }
-                            if self.count == self.HR_Notification_Request.count {
-                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                                    self.notification_counter.isHidden = false
-                                    self.notification_counter.text = "0/\(self.HR_Notification_Request.count)"
-                                    
-                                    var totalCounter = 0
-                                    for hnr in self.HR_Notification_Request {
-                                        AppDelegate.sharedInstance.db?.deleteRow(tableName: db_hr_notifications, column: "TICKET_ID", ref_id: "\(hnr.ticketID!)", handler: { _ in
-                                            totalCounter += 1
-                                            AppDelegate.sharedInstance.db?.insert_tbl_HR_Notification_Request(hnr: hnr, { _ in
-                                                
-                                                self.notification_counter.text = "\(totalCounter)/\(self.HR_Notification_Request.count)"
-                                            })
-                                        })
-                                    }
+                            
+                            for json in notification_requests {
+                                self.isTotalCounter += 1
+                                let dictionary = try json.rawData()
+                                let hrNotification: HRNotificationRequest = try JSONDecoder().decode(HRNotificationRequest.self, from: dictionary)
+                                AppDelegate.sharedInstance.db?.deleteRow(tableName: db_hr_notifications, column: "TICKET_ID", ref_id: "\(hrNotification.ticketID!)", handler: { _ in
+                                    AppDelegate.sharedInstance.db?.insert_tbl_HR_Notification_Request(hnr: hrNotification, { _ in
+                                        DispatchQueue.main.async {
+                                            self.notification_counter.text = "\(self.isTotalCounter)/\(self.count)"
+                                        }
+                                    })
+                                })
+                            }
+                            if self.isTotalCounter  >= self.count {
+                                DispatchQueue.main.async {
                                     Helper.updateLastSyncStatus(APIName: GET_HR_NOTIFICATION,
                                                               date: sync_date,
                                                               skip: self.skip,
                                                               take: 80,
                                                               total_records: self.count)
+                                    DispatchQueue.main.async {
+                                        self.hrNotification_Label.text = "Synced HR Notifications Logs"
+                                    }
                                     self.navigateHomeScreen()
                                 }
                             } else {
+                                DispatchQueue.main.async {
+                                    self.notification_counter.isHidden = false
+                                    self.notification_counter.text = "\(self.isTotalCounter)/\(self.count)"
+                                }
                                 self.skip += 80
                                 self.getHrNotifications()
                             }
@@ -776,6 +839,9 @@ extension FetchUserDataViewController {
                             print(err.localizedDescription)
                         }
                     } else {
+                        DispatchQueue.main.async {
+                            self.hrNotification_Label.text = "Synced HR Notifications Logs"
+                        }
                         self.navigateHomeScreen()
                     }
 
@@ -815,6 +881,13 @@ extension FetchUserDataViewController {
             
             Helper.topMostController().present(controller, animated: true, completion: nil)
             self.navigationController?.popViewController(animated: true)
+        }
+        Messaging.messaging().subscribe(toTopic: BROADCAST_KEY) { error in
+            guard let err = error else {
+                print("user subscribed")
+                return
+            }
+            print(err.localizedDescription)
         }
     }
 }

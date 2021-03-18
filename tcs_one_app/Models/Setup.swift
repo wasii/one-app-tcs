@@ -296,3 +296,33 @@ struct ControlType: Codable {
     }
 }
 
+
+
+// MARK: - AdGroup
+struct LeadershipAwazAdGroup: Codable {
+    let adMastID: Int
+    let adGroupName, adGroupEmailID, status, createdDate: String?
+    let createdBy, updatedDate, updatedBy: String?
+
+    enum CodingKeys: String, CodingKey {
+        case adMastID = "AD_MAST_ID"
+        case adGroupName = "AD_GROUP_NAME"
+        case adGroupEmailID = "AD_GROUP_EMAIL_ID"
+        case status = "STATUS"
+        case createdDate = "CREATED_DATE"
+        case createdBy = "CREATED_BY"
+        case updatedDate = "UPDATED_DATE"
+        case updatedBy = "UPDATED_BY"
+    }
+}
+
+// MARK: - LoginCount
+struct LoginCount: Codable {
+    let application: String
+    let countXEmpno: Int
+
+    enum CodingKeys: String, CodingKey {
+        case application = "APPLICATION"
+        case countXEmpno = "EMP_COUNT"
+    }
+}

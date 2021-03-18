@@ -203,19 +203,22 @@ class NetworkCalls: NSObject {
                         var querymatrix = [QueryMatrix]()
                         if let data = json.dictionary?[_query_matrix] {
                             do {
-                                for json in data.array! {
-                                    let dictionary = try json.rawData()
-                                    querymatrix.append(try JSONDecoder().decode(QueryMatrix.self, from: dictionary))
-                                }
-                                DispatchQueue.main.async {
-                                    AppDelegate.sharedInstance.db?.deleteAll(tableName: db_query_matrix) { success in
-                                        if success {
-                                            for qm in querymatrix {
-                                                AppDelegate.sharedInstance.db?.insert_tbl_queryMatrix(querymatrix: qm)
+                                if let _ = data.array {
+                                    for json in data.array! {
+                                        let dictionary = try json.rawData()
+                                        querymatrix.append(try JSONDecoder().decode(QueryMatrix.self, from: dictionary))
+                                    }
+                                    DispatchQueue.main.async {
+                                        AppDelegate.sharedInstance.db?.deleteAll(tableName: db_query_matrix) { success in
+                                            if success {
+                                                for qm in querymatrix {
+                                                    AppDelegate.sharedInstance.db?.insert_tbl_queryMatrix(querymatrix: qm)
+                                                }
                                             }
                                         }
                                     }
                                 }
+                                
                                 
                             } catch let err {
                                 print(err.localizedDescription)
@@ -223,86 +226,152 @@ class NetworkCalls: NSObject {
                         }
                         var masterquery = [MasterQuery]()
                         if let data = json.dictionary?[_master_query] {
-                            do {
-                                for json in data.array! {
-                                    let dictionary = try json.rawData()
-                                    masterquery.append(try JSONDecoder().decode(MasterQuery.self, from: dictionary))
-                                }
-                                DispatchQueue.main.async {
-                                    AppDelegate.sharedInstance.db?.deleteAll(tableName: db_master_query) { success in
-                                        if success {
-                                            for mq in masterquery {
-                                                AppDelegate.sharedInstance.db?.insert_tbl_masterQuery(masterquery: mq)
+                            if let _ = data.array {
+                                do {
+                                    for json in data.array! {
+                                        let dictionary = try json.rawData()
+                                        masterquery.append(try JSONDecoder().decode(MasterQuery.self, from: dictionary))
+                                    }
+                                    DispatchQueue.main.async {
+                                        AppDelegate.sharedInstance.db?.deleteAll(tableName: db_master_query) { success in
+                                            if success {
+                                                for mq in masterquery {
+                                                    AppDelegate.sharedInstance.db?.insert_tbl_masterQuery(masterquery: mq)
+                                                }
                                             }
                                         }
                                     }
+                                    
+                                } catch let err {
+                                    print(err.localizedDescription)
                                 }
-                                
-                            } catch let err {
-                                print(err.localizedDescription)
                             }
                         }
                         var detailquery = [DetailQuery]()
                         if let data = json.dictionary?[_detail_query] {
-                            do {
-                                for json in data.array! {
-                                    let dictionary = try json.rawData()
-                                    detailquery.append(try JSONDecoder().decode(DetailQuery.self, from: dictionary))
-                                }
-                                DispatchQueue.main.async {
-                                    AppDelegate.sharedInstance.db?.deleteAll(tableName: db_detail_query) { success in
-                                        if success {
-                                            for dq in detailquery {
-                                                AppDelegate.sharedInstance.db?.insert_tbl_detailQuery(detailquery: dq)
+                            if let _ = data.array {
+                                do {
+                                    for json in data.array! {
+                                        let dictionary = try json.rawData()
+                                        detailquery.append(try JSONDecoder().decode(DetailQuery.self, from: dictionary))
+                                    }
+                                    DispatchQueue.main.async {
+                                        AppDelegate.sharedInstance.db?.deleteAll(tableName: db_detail_query) { success in
+                                            if success {
+                                                for dq in detailquery {
+                                                    AppDelegate.sharedInstance.db?.insert_tbl_detailQuery(detailquery: dq)
+                                                }
                                             }
                                         }
                                     }
+                                    
+                                } catch let err {
+                                    print(err.localizedDescription)
                                 }
-                                
-                            } catch let err {
-                                print(err.localizedDescription)
                             }
                         }
                         var searchkeywords = [SearchKeyword]()
                         if let data = json.dictionary?[_search_keyword] {
-                            do {
-                                for json in data.array! {
-                                    let dictionary = try json.rawData()
-                                    searchkeywords.append(try JSONDecoder().decode(SearchKeyword.self, from: dictionary))
-                                }
-                                DispatchQueue.main.async {
-                                    AppDelegate.sharedInstance.db?.deleteAll(tableName: db_search_keywords) { success in
-                                        if success {
-                                            for sk in searchkeywords {
-                                                AppDelegate.sharedInstance.db?.insert_tbl_serachKeywords(searchkeywords: sk)
+                            if let _ = data.array {
+                                do {
+                                    for json in data.array! {
+                                        let dictionary = try json.rawData()
+                                        searchkeywords.append(try JSONDecoder().decode(SearchKeyword.self, from: dictionary))
+                                    }
+                                    DispatchQueue.main.async {
+                                        AppDelegate.sharedInstance.db?.deleteAll(tableName: db_search_keywords) { success in
+                                            if success {
+                                                for sk in searchkeywords {
+                                                    AppDelegate.sharedInstance.db?.insert_tbl_serachKeywords(searchkeywords: sk)
+                                                }
                                             }
                                         }
                                     }
+                                    
+                                } catch let err {
+                                    print(err.localizedDescription)
                                 }
-                                
-                            } catch let err {
-                                print(err.localizedDescription)
                             }
                         }
                         var apprequestmode = [AppRequestMode]()
                         if let data = json.dictionary?[_app_request_mode] {
-                            do {
-                                for json in data.array! {
-                                    let dictionary = try json.rawData()
-                                    apprequestmode.append(try JSONDecoder().decode(AppRequestMode.self, from: dictionary))
-                                }
-                                DispatchQueue.main.async {
-                                    AppDelegate.sharedInstance.db?.deleteAll(tableName: db_request_modes) { success in
-                                        if success {
-                                            for arm in apprequestmode {
-                                                AppDelegate.sharedInstance.db?.insert_tbl_requestModes(apprequestmode: arm)
+                            if let _ = data.array {
+                                do {
+                                    for json in data.array! {
+                                        let dictionary = try json.rawData()
+                                        apprequestmode.append(try JSONDecoder().decode(AppRequestMode.self, from: dictionary))
+                                    }
+                                    DispatchQueue.main.async {
+                                        AppDelegate.sharedInstance.db?.deleteAll(tableName: db_request_modes) { success in
+                                            if success {
+                                                for arm in apprequestmode {
+                                                    AppDelegate.sharedInstance.db?.insert_tbl_requestModes(apprequestmode: arm)
+                                                }
                                             }
                                         }
                                     }
+                                    
+                                } catch let err {
+                                    print(err.localizedDescription)
                                 }
-                                
-                            } catch let err {
-                                print(err.localizedDescription)
+                            }
+                        }
+                        var login_count = [LoginCount]()
+                        if let data = json.dictionary?[_login_count] {
+                            do {
+                                if let array = data.array {
+                                    for json in array {
+                                        let dictionary = try json.rawData()
+                                        login_count.append(try JSONDecoder().decode(LoginCount.self, from: dictionary))
+                                    }
+                                    AppDelegate.sharedInstance.db?.deleteAll(tableName: db_login_count, handler: { _ in
+                                        for count in login_count {
+                                            AppDelegate.sharedInstance.db?.insert_tbl_login_count(login_count: count)
+                                        }
+                                    })
+                                }
+                            }catch let DecodingError.dataCorrupted(context) {
+                                print(context)
+                            } catch let DecodingError.keyNotFound(key, context) {
+                                print("Key '\(key)' not found:", context.debugDescription)
+                                print("codingPath:", context.codingPath)
+                            } catch let DecodingError.valueNotFound(value, context) {
+                                print("Value '\(value)' not found:", context.debugDescription)
+                                print("codingPath:", context.codingPath)
+                            } catch let DecodingError.typeMismatch(type, context)  {
+                                print("Type '\(type)' mismatch:", context.debugDescription)
+                                print("codingPath:", context.codingPath)
+                            } catch {
+                                print("error: ", error)
+                            }
+                        }
+                        var ad_group = [LeadershipAwazAdGroup]()
+                        if let data = json.dictionary?[_ad_group] {
+                            do {
+                                if let array = data.array {
+                                    for json in array {
+                                        let dictionary = try json.rawData()
+                                        ad_group.append(try JSONDecoder().decode(LeadershipAwazAdGroup.self, from: dictionary))
+                                    }
+                                    AppDelegate.sharedInstance.db?.deleteAll(tableName: db_la_ad_group) { _ in
+                                        for la_adGroup in ad_group {
+                                            AppDelegate.sharedInstance.db?.insert_tbl_la_ad_group(la_adGroup: la_adGroup)
+                                        }
+                                    }
+                                }
+                            }catch let DecodingError.dataCorrupted(context) {
+                                print(context)
+                            } catch let DecodingError.keyNotFound(key, context) {
+                                print("Key '\(key)' not found:", context.debugDescription)
+                                print("codingPath:", context.codingPath)
+                            } catch let DecodingError.valueNotFound(value, context) {
+                                print("Value '\(value)' not found:", context.debugDescription)
+                                print("codingPath:", context.codingPath)
+                            } catch let DecodingError.typeMismatch(type, context)  {
+                                print("Type '\(type)' mismatch:", context.debugDescription)
+                                print("codingPath:", context.codingPath)
+                            } catch {
+                                print("error: ", error)
                             }
                         }
                         handler(true, "SUCCESS")
@@ -801,6 +870,194 @@ class NetworkCalls: NSObject {
                     }
                 } else {
                     handler(false, SOMETHINGWENTWRONG)
+                }
+            } else {
+                handler(false, SOMETHINGWENTWRONG)
+            }
+        }.resume()
+    }
+    
+    //Leadership Awaz
+    class func addawazrequest(params: [String:Any], handler: @escaping(_ granted: Bool,_ response: Any) -> Void) {
+        let Url = String(format: ENDPOINT)
+        guard let serviceUrl = URL(string: Url) else { return }
+        var request = URLRequest(url: serviceUrl)
+        request.httpMethod = "POST"
+        request.setValue("Application/json", forHTTPHeaderField: "Content-Type")
+        guard let httpBody = try? JSONSerialization.data(withJSONObject: params, options: []) else {
+            return
+        }
+        request.httpBody = httpBody
+        
+        let session = URLSession.shared
+        session.dataTask(with: request) { (data, response, error) in
+            if let data = data {
+                let json = JSON(data)
+                if let success = json.dictionary?[returnStatus] {
+                    //SUCCESS
+                    if success.dictionary?[_code] == "0200" {
+                        if let _ = json.dictionary {
+                            handler(true, json.dictionary)
+                            return
+                        }
+                        handler(true, data)
+                    }
+                    //FAILED
+                    if success.dictionary?[_code] == "0400" {
+                        handler(false, SOMETHINGWENTWRONG)
+                    }
+                    
+                    if success.dictionary?[_code] == "0403" {
+                        handler(false, SOMETHINGWENTWRONG)
+                    }
+                    if success.dictionary?[_code] == "0404" {
+                        handler(false, SOMETHINGWENTWRONG)
+                    }
+                }
+            } else {
+                handler(false, SOMETHINGWENTWRONG)
+            }
+        }.resume()
+    }
+    class func updateawazrequest(params: [String:Any], handler: @escaping(_ granted: Bool,_ response: Any) -> Void) {
+        let Url = String(format: ENDPOINT)
+        guard let serviceUrl = URL(string: Url) else { return }
+        var request = URLRequest(url: serviceUrl)
+        request.httpMethod = "POST"
+        request.setValue("Application/json", forHTTPHeaderField: "Content-Type")
+        guard let httpBody = try? JSONSerialization.data(withJSONObject: params, options: []) else {
+            return
+        }
+        request.httpBody = httpBody
+        
+        let session = URLSession.shared
+        session.dataTask(with: request) { (data, response, error) in
+            if let data = data {
+                let json = JSON(data)
+                if let success = json.dictionary?[returnStatus] {
+                    //SUCCESS
+                    if success.dictionary?[_code] == "0200" {
+                        if let _ = json.dictionary {
+                            handler(true, json.dictionary)
+                            return
+                        }
+                        handler(true, data)
+                    }
+                    //FAILED
+                    if success.dictionary?[_code] == "0400" {
+                        handler(false, SOMETHINGWENTWRONG)
+                    }
+                    
+                    if success.dictionary?[_code] == "0403" {
+                        handler(false, SOMETHINGWENTWRONG)
+                    }
+                    if success.dictionary?[_code] == "0404" {
+                        handler(false, SOMETHINGWENTWRONG)
+                    }
+                    if success.dictionary?[_code] == "0208" {
+                        handler(false, "Already Reported.")
+                    }
+                }
+            } else {
+                handler(false, SOMETHINGWENTWRONG)
+            }
+        }.resume()
+    }
+    
+    //MARK: Attendance
+    class func get_tcs_location(params: [String:Any], handler: @escaping(_ granted: Bool,_ response: Any) -> Void) {
+        let Url = String(format: ENDPOINT)
+        guard let serviceUrl = URL(string: Url) else { return }
+        var request = URLRequest(url: serviceUrl)
+        request.httpMethod = "POST"
+        request.setValue("Application/json", forHTTPHeaderField: "Content-Type")
+        guard let httpBody = try? JSONSerialization.data(withJSONObject: params, options: []) else {
+            return
+        }
+        request.httpBody = httpBody
+        let session = URLSession.shared
+        session.dataTask(with: request) { (data, response, error) in
+            if let data = data {
+                let json = JSON(data)
+                if let success = json.dictionary?[returnStatus] {
+                    //SUCCESS
+                    if success.dictionary?[_code] == "0200" {
+                        if let attn_out = json.dictionary?[_attn_out]?.array {
+                            handler(true, attn_out)
+                        } else {
+                            handler(false, SOMETHINGWENTWRONG)
+                        }
+                    }
+                    //FAILED
+                    if success.dictionary?[_code] == "0400" || success.dictionary?[_code] == "0403" {
+                        handler(false, REVERTBACK)
+                    }
+                }
+            } else {
+                handler(false, SOMETHINGWENTWRONG)
+            }
+        }.resume()
+    }
+    class func fetch_attendance(params: [String:Any], handler: @escaping(_ granted: Bool,_ response: Any) -> Void) {
+        let Url = String(format: ENDPOINT)
+        guard let serviceUrl = URL(string: Url) else { return }
+        var request = URLRequest(url: serviceUrl)
+        request.httpMethod = "POST"
+        request.setValue("Application/json", forHTTPHeaderField: "Content-Type")
+        guard let httpBody = try? JSONSerialization.data(withJSONObject: params, options: []) else {
+            return
+        }
+        request.httpBody = httpBody
+        let session = URLSession.shared
+        session.dataTask(with: request) { (data, response, error) in
+            if let data = data {
+                let json = JSON(data)
+                if let success = json.dictionary?[returnStatus] {
+                    //SUCCESS
+                    if success.dictionary?[_code] == "0200" {
+                        if let attn_out = json.dictionary?[_attn_out]?.array {
+                            handler(true, attn_out)
+                        } else {
+                            handler(false, SOMETHINGWENTWRONG)
+                        }
+                    }
+                    //FAILED
+                    if success.dictionary?[_code] == "0400" || success.dictionary?[_code] == "0403" {
+                        handler(false, REVERTBACK)
+                    }
+                }
+            } else {
+                handler(false, SOMETHINGWENTWRONG)
+            }
+        }.resume()
+    }
+    class func mark_attendance(params: [String:Any], handler: @escaping(_ granted: Bool,_ response: Any) -> Void) {
+        let Url = String(format: ENDPOINT)
+        guard let serviceUrl = URL(string: Url) else { return }
+        var request = URLRequest(url: serviceUrl)
+        request.httpMethod = "POST"
+        request.setValue("Application/json", forHTTPHeaderField: "Content-Type")
+        guard let httpBody = try? JSONSerialization.data(withJSONObject: params, options: []) else {
+            return
+        }
+        request.httpBody = httpBody
+        let session = URLSession.shared
+        session.dataTask(with: request) { (data, response, error) in
+            if let data = data {
+                let json = JSON(data)
+                if let success = json.dictionary?[returnStatus] {
+                    //SUCCESS
+                    if success.dictionary?[_code] == "0200" {
+                        if let attn_out = json.dictionary?[_attn_out]?.array {
+                            handler(true, attn_out)
+                        } else {
+                            handler(false, SOMETHINGWENTWRONG)
+                        }
+                    }
+                    //FAILED
+                    if success.dictionary?[_code] == "0400" || success.dictionary?[_code] == "0403" {
+                        handler(false, REVERTBACK)
+                    }
                 }
             } else {
                 handler(false, SOMETHINGWENTWRONG)

@@ -4,6 +4,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17505"/>
+        <capability name="Image references" minToolsVersion="12.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -2490,23 +2491,24 @@
                                     <constraint firstItem="VN5-l8-fox" firstAttribute="top" secondItem="tR4-Zs-lbh" secondAttribute="top" id="tcS-zY-8vu"/>
                                 </constraints>
                             </scrollView>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ovc-ac-kdx" customClass="CustomButton" customModule="One_App" customModuleProvider="target">
-                                <rect key="frame" x="353" y="817" width="50" height="50"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ovc-ac-kdx" customClass="CustomButton" customModule="One_App" customModuleProvider="target">
+                                <rect key="frame" x="343" y="807" width="60" height="60"/>
                                 <color key="backgroundColor" red="0.70196078429999997" green="0.13725490196078433" blue="0.12156862745098039" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="50" id="JBv-mU-opX"/>
+                                    <constraint firstAttribute="height" constant="60" id="JBv-mU-opX"/>
                                     <constraint firstAttribute="width" secondItem="Ovc-ac-kdx" secondAttribute="height" id="kDH-qR-3aX"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" type="system" weight="light" pointSize="40"/>
-                                <state key="normal" title="+">
+                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <state key="normal">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <imageReference key="image" image="plus" catalog="system" symbolScale="large"/>
                                 </state>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="color" keyPath="bgColor">
                                         <color key="value" red="0.86666666670000003" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                     </userDefinedRuntimeAttribute>
                                     <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                        <real key="value" value="25"/>
+                                        <real key="value" value="30"/>
                                     </userDefinedRuntimeAttribute>
                                     <userDefinedRuntimeAttribute type="size" keyPath="shadowOffSet">
                                         <size key="value" width="0.0" height="1"/>
@@ -3758,7 +3760,7 @@
             <size key="intrinsicContentSize" width="30" height="34"/>
         </designable>
         <designable name="Ovc-ac-kdx">
-            <size key="intrinsicContentSize" width="30" height="60"/>
+            <size key="intrinsicContentSize" width="21.666666666666668" height="22"/>
         </designable>
         <designable name="WC8-wo-b4L">
             <size key="intrinsicContentSize" width="42.666666666666664" height="42.666666666666664"/>
@@ -3783,6 +3785,7 @@
         <image name="filter" width="28" height="28"/>
         <image name="magnifyingglass" catalog="system" width="128" height="115"/>
         <image name="notification" width="28" height="28"/>
+        <image name="plus" catalog="system" width="128" height="113"/>
         <systemColor name="labelColor">
             <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

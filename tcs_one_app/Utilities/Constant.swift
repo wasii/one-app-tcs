@@ -12,8 +12,14 @@ let BACKGROUND              = "BACKGROUND"
 let INACTIVE                = "INACTIVE"
 let API_KEY                 = "5E4D0F6D8E12D8EC5EA3BBB11B63B2F88E39A7561F25EC67CCB440F782FD0360"
 
+//let BROADCAST_KEY           = "broadcastiosdev"
+let BROADCAST_KEY           = "broadcastiosqa"
+//let BROADCAST_KEY           = "broadcastios"
+
+let IS_NEW_DATABASE: Bool   = true
 var NOTIFICATION_COUNT      = 0
 
+var RECORD_ID               = 0
 //API ENDPOINTS
 
 //PRODUCTION
@@ -43,6 +49,15 @@ let IMSSETUP                = "oneapp.imssetup"
 let PROCCONSIGNMENTVALIDATE = "oneapp.procconsignmentvalidate"
 let ADDREQUESTIMS           = "oneapp.addrequestims"
 let IMSUPDATE               = "oneapp.imsupdate"
+
+//LEADERSHIP AWAZ
+let ADDAWAZTICKET           = "oneapp.addawazticket"
+let UPDATEAWAZTICKET        = "oneapp.updawazticket"
+
+//ATTENDANCE
+let GETLOCATIONS            = "oneapp.getlocation"
+let FETCHATTENDANCE         = "oneapp.fetchattendance"
+let MARKATTENDANCE          = "oneapp.markattendance"
 
 //API BACKEND KEYS
 let eAI_MESSAGE             = "eAI_MESSAGE"
@@ -91,6 +106,12 @@ let _control_category       = "control_category"
 let _risk_type              = "risk_type"
 let _control_type           = "control_type"
 
+//Leadership Awaz Keys
+let _ad_group               = "ad_group"
+let _login_count            = "login_count"
+
+//Attendance Keys
+let _attn_out               = "attn_out"
 
 //Local Storage (Database) tablename keys
 let db_user_module          = "USER_MODULE"
@@ -113,6 +134,12 @@ let db_last_sync_status     = "LAST_SYNC_STATUS"
 let db_files                = "FILES_TABLE"
 let db_grievance_remarks    = "GRIEVANCE_REMARKS_TABLE"
 
+let db_login_count          = "LOGIN_COUNT"
+let db_la_ad_group          = "LA_AdGROUP"
+
+// Attendance
+let db_att_locations        = "ATT_LOCATIONS"
+let db_att_userAttendance   = "ATT_USER_ATTENDANCE"
 // IMS
 let db_lov_master           = "IMS_LOV_MASTER_TABLE"
 let db_lov_detail           = "IMS_LOV_DETAIL_TABLE"
@@ -284,6 +311,7 @@ let TAG_NOTIFICATION_LISTING = "notification-listing";
 let MODULE_TAG_HR = "hr-help-desk";
 let MODULE_TAG_GRIEVANCE = "Grievance";
 let MODULE_TAG_IMS = "IMS"
+let MODULE_TAG_LEADERSHIPAWAZ = "AWAZ"
 
 
 let DOC = "application/msword";
@@ -606,6 +634,11 @@ let ENTER_RISK_REMARKS = "Enter Risk Remarks"
 
 let ENTER_CLOSURE_REMARKS_TAG = 13
 let ENTER_CLOSURE_REMARKS = "Enter Recommendations"
+
+
+
+//MARK: LEADERSHIP AWAZ
+let PERMISSION_ViewBroadcastMode = "View Broadcast Mode"
 
 let FILTERDATA = [
     "Weekly",

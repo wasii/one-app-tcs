@@ -54,6 +54,8 @@ struct User: Codable {
     let productPdt, projectPrjCode, projectPrj, userid: String?
     let userPass, areaCode, stationCode, hubCode: String?
     let region: String?
+    let highness: String?
+    
 
     enum CodingKeys: String, CodingKey {
         case empid = "EMPID"
@@ -142,5 +144,35 @@ struct User: Codable {
         case stationCode = "STATION_CODE"
         case hubCode = "HUB_CODE"
         case region = "REGION"
+        case highness = "HIGHNESS"
+    }
+}
+
+
+
+struct AttLocations: Codable {
+    let locCode, locName, latitude, longitude: String
+    let radius: Int
+
+    enum CodingKeys: String, CodingKey {
+        case locCode = "LOC_CODE"
+        case locName = "LOC_NAME"
+        case latitude = "LATITUDE"
+        case longitude = "LONGITUDE"
+        case radius = "RADIUS"
+    }
+}
+
+struct AttUserAttendance: Codable {
+    let date: String
+    let timeIn, timeOut: String
+    let days, status: String
+
+    enum CodingKeys: String, CodingKey {
+        case date = "DATE"
+        case timeIn = "TIMEIN"
+        case timeOut = "TIMEOUT"
+        case days = "DAYS"
+        case status = "STATUS"
     }
 }

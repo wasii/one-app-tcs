@@ -33,6 +33,10 @@
 	</dict>
 	<key>NSCameraUsageDescription</key>
 	<string>This app requires access to the camera.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>OneApp requires constant access to your phone’s location to mark your attendance when you enter or leave a TCS.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>OneApp requires constant access to your phone’s location to mark your attendance when you enter or leave a TCS.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>This app requires access to the photo library.</string>
 	<key>UIApplicationSceneManifest</key>
@@ -57,6 +61,7 @@
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>
+		<string>location</string>
 		<string>remote-notification</string>
 	</array>
 	<key>UIFileSharingEnabled</key>

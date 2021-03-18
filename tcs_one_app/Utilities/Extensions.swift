@@ -1,6 +1,7 @@
 import Foundation
 import UIKit
 import NaturalLanguage
+import MapKit
 
 extension UIColor {
     class func nativeRedColor() -> UIColor {
@@ -278,6 +279,12 @@ extension UINavigationBar {
 
 
 extension UIViewController {
+    func showAlert(withTitle title: String?, message: String?) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        let action = UIAlertAction(title: "OK", style: .cancel, handler: nil)
+        alert.addAction(action)
+        present(alert, animated: true, completion: nil)
+    }
     func isValidEmail(_ email: String) -> Bool {
         let emailRegEx = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}"
 
@@ -375,6 +382,15 @@ extension UIViewController {
         
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
+        
+        let date = dateFormatter.string(from: Date())
+        
+        return date
+    }
+    func getAttendanceMarkingTime() -> String {
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "dd/MM/yyyy HH:mm:ss"
         
         let date = dateFormatter.string(from: Date())
         
@@ -837,4 +853,12 @@ extension Character {
     var isCombinedIntoEmoji: Bool { unicodeScalars.count > 1 && unicodeScalars.first?.properties.isEmoji ?? false }
 
     var isEmoji: Bool { isSimpleEmoji || isCombinedIntoEmoji }
+}
+
+extension MKMapView {
+  func zoomToLocation(_ location: CLLocation?) {
+    guard let coordinate = location?.coordinate else { return }
+    let region = MKCoordinateRegion(center: coordinate, latitudinalMeters: 10_000, longitudinalMeters: 10_000)
+    setRegion(region, animated: true)
+  }
 }

@@ -114,8 +114,24 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         print("Received data message: \(remoteMessage.appData)")
     }
     
-    func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
-        print(userInfo)
+    func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any],
+                     fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
+      // If you are receiving a notification message while your app is in the background,
+      // this callback will not be fired till the user taps on the notification launching the application.
+      // TODO: Handle data of notification
+
+      // With swizzling disabled you must let Messaging know about the message, for Analytics
+      // Messaging.messaging().appDidReceiveMessage(userInfo)
+
+      // Print message ID.
+      if let messageID = userInfo[gcmMessageIDKey] {
+        print("Message ID: \(messageID)")
+      }
+
+      // Print full message.
+      print(userInfo)
+
+      completionHandler(UIBackgroundFetchResult.newData)
     }
     
     
@@ -300,14 +316,21 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
         } else if application.applicationState == .inactive {
             state = INACTIVE
         }
-        
+//        NAE HOTA..
         if let body = userInfo.dictionary?["body"]?.string{
             let data = body.data(using: .utf8)!
             do {
                 if let jsonArray = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as? [String: Any] {
                     if let request_log = JSON(jsonArray[_data]).dictionary?[_hr_requests]?.array?.first {
                         let ticket_id = request_log.dictionary?["TICKET_ID"]?.int
-                        let tbl_hr_request = db?.read_tbl_hr_request(query: "SELECT * FROM \(db_hr_request) WHERE SERVER_ID_PK = '\(ticket_id!)'").first
+                        let tbl_hr_request = db?.read_tbl_hr_request(query: "SELECT * FROM \(db_hr_request) WHERE SERVER_ID_PK = '\(ticket_id!)' AND CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)'").first
+                        
+                        
+                        let query = "SELECT n.*,r.TICKET_STATUS as LOG_TICKET FROM \(db_hr_notifications) n LEFT JOIN \(db_hr_request) r ON n.TICKET_ID = r.SERVER_ID_PK WHERE r.CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)' AND r.SERVER_ID_PK = '\(tbl_hr_request?.SERVER_ID_PK ?? 0)'"
+                        
+                        let tbl_hr_notification = db?.read_tbl_hr_notification_request(query: query)
+                        RECORD_ID = tbl_hr_notification?.first?.RECORD_ID ?? 0
+                        print(RECORD_ID)
                         NotificationCenter.default.post(Notification.init(name: .navigateThroughNotification, object: tbl_hr_request, userInfo: nil))
                         completionHandler()
                         return
@@ -315,6 +338,9 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
                     if let request_log = JSON(jsonArray).dictionary?["data"] {
                         let ticket_id = request_log.array?.first?.dictionary?["TICKET_ID"]?.int ?? -1
                         let tbl_hr_request = db?.read_tbl_hr_request(query: "SELECT * FROM \(db_hr_request) WHERE SERVER_ID_PK = '\(ticket_id)'").first
+                        let tbl_hr_notification = db?.read_tbl_hr_notification_request(query: "SELECT * FROM \(db_hr_notifications) WHERE TICKET_ID = '\(tbl_hr_request?.SERVER_ID_PK ?? 0)'")
+                        RECORD_ID = tbl_hr_notification?.first?.RECORD_ID ?? 0
+                        print(RECORD_ID)
                         NotificationCenter.default.post(Notification.init(name: .navigateThroughNotification, object: tbl_hr_request, userInfo: nil))
                         completionHandler()
                         return

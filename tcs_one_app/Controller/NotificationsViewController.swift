@@ -16,8 +16,12 @@ class NotificationsViewController: BaseViewController {
     
     @IBOutlet weak var tableViewTopConstraint: NSLayoutConstraint!
 
+    @IBOutlet weak var highAlertView: UIView!
     @IBOutlet weak var hightAlertSwitch: UISwitch!
-    @IBOutlet weak var highAlertLabel: UILabel!
+    
+    @IBOutlet weak var broadcastView: UIView!
+    @IBOutlet weak var broadCastSwitch: UISwitch!
+    
     var ticket_id: Int?
     var hr_notification: [tbl_HR_Notification_Request]?
     var indexPath: IndexPath?
@@ -29,6 +33,7 @@ class NotificationsViewController: BaseViewController {
         }
         NotificationCenter.default.addObserver(self, selector: #selector(refreshedView(notification:)), name: .refreshedViews, object: nil)
         hightAlertSwitch.addTarget(self, action: #selector(switchChanged(mySwitch:)), for: .valueChanged)
+        broadCastSwitch.addTarget(self, action: #selector(broadCastSwitchChanged(mySwitch:)), for: .valueChanged)
         if isSwitchOn {
             self.getBreachedTickets()
         } else {
@@ -42,7 +47,7 @@ class NotificationsViewController: BaseViewController {
         
     }
     @objc func switchChanged(mySwitch: UISwitch) {
-//        let value = mySwitch.isOn
+        self.broadCastSwitch.isOn = false
         if mySwitch.isOn {
             print("ON")
             self.isSwitchOn = true
@@ -52,7 +57,7 @@ class NotificationsViewController: BaseViewController {
             setup_hr_notification { (success, count) in
                 if success {
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
-                        let height = (80 * count) + 50
+                        let height = (80 * count) + 70
                         if CGFloat(height) > UIScreen.main.bounds.height {
                             self.mainViewHeightConstraint.constant = CGFloat(height)
                         } else {
@@ -64,6 +69,24 @@ class NotificationsViewController: BaseViewController {
                 }
             }
             print("OFF")
+        }
+    }
+    
+    @objc func broadCastSwitchChanged(mySwitch: UISwitch) {
+        self.hightAlertSwitch.isOn = false
+        setup_hr_notification { (success, count) in
+            if success {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
+                    let height = (80 * count) + 70
+                    if CGFloat(height) > UIScreen.main.bounds.height {
+                        self.mainViewHeightConstraint.constant = CGFloat(height)
+                    } else {
+                        self.mainViewHeightConstraint.constant = UIScreen.main.bounds.height
+                    }
+                    self.mainView.layoutIfNeeded()
+                    self.tableView.reloadData()
+                }
+            }
         }
     }
     
@@ -85,13 +108,18 @@ class NotificationsViewController: BaseViewController {
         hr_notification = AppDelegate.sharedInstance.db?.read_tbl_hr_notification_request(query: query)
         
         if hr_notification!.count > 0 {
-//            hr_notification = hr_notification?.filter({ (not1) -> Bool in
-//                not1.MODULE_ID == 1 || not1.MODULE_ID == 2
-//            })
-            
             hr_notification = hr_notification?.sorted(by: { (req1, req2) -> Bool in
                 req1.CREATED_DATE > req2.CREATED_DATE
             })
+            
+//            hr_notification = hr_notification?.filter({ (logs) -> Bool in
+//                logs.MODULE_ID != 4
+//            })
+            if self.broadCastSwitch.isOn {
+                hr_notification = hr_notification?.filter({ (logs) -> Bool in
+                    logs.MODULE_ID == 4
+                })
+            }
             
             handler(true, hr_notification!.count)
         }
@@ -101,7 +129,7 @@ class NotificationsViewController: BaseViewController {
         setup_hr_notification { (success, count) in
             if success {
                 DispatchQueue.main.async {
-                    let height = (80 * count) + 50
+                    let height = (80 * count) + 70
                     if CGFloat(height) > UIScreen.main.bounds.height {
                         self.mainViewHeightConstraint.constant = CGFloat(height)
                     } else {
@@ -121,15 +149,13 @@ class NotificationsViewController: BaseViewController {
         }
         if let management_bar = AppDelegate.sharedInstance.db?.read_tbl_UserPermission(permission: PERMISSION_HR_LISTING_MANAGEMENT_BAR).count {
             if management_bar > 0 {
-                highAlertLabel.isHidden = false
-                hightAlertSwitch.isHidden = false
+                highAlertView.isHidden = false
                 tableViewTopConstraint.constant = 50
             }
         }
         if let management_bar = AppDelegate.sharedInstance.db?.read_tbl_UserPermission(permission: PERMISSION_GRIEVENCE_LISTING_MANAGEMENT_BAR).count {
             if management_bar > 0 {
-                highAlertLabel.isHidden = false
-                hightAlertSwitch.isHidden = false
+                highAlertView.isHidden = false
                 tableViewTopConstraint.constant = 50
             }
         }
@@ -182,7 +208,7 @@ class NotificationsViewController: BaseViewController {
         })
         self.hr_notification = tat
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
-            let height = (80 * tat.count) + 50
+            let height = (80 * tat.count) + 70
             if CGFloat(height) > UIScreen.main.bounds.height {
                 self.mainViewHeightConstraint.constant = CGFloat(height)
             } else {
@@ -239,7 +265,7 @@ extension NotificationsViewController: UITableViewDelegate, UITableViewDataSourc
             break
         case 2:
             cell.status.text = data.TICKET_STATUS
-            cell.type.text = "Grievance"
+            cell.type.text = "Awaz"
             switch data.TICKET_STATUS.lowercased() {
             case "submitted":
                 cell.status.textColor = UIColor.pendingColor()
@@ -273,46 +299,32 @@ extension NotificationsViewController: UITableViewDelegate, UITableViewDataSourc
                 break
             }
             break
+        case 4:
+            cell.status.text = data.TICKET_STATUS
+            cell.type.text = "Leadership Connect"
+            switch data.TICKET_STATUS.lowercased() {
+                case "pending":
+                    cell.status.textColor = UIColor.pendingColor()
+                    break
+                case "approved":
+                    cell.status.textColor = UIColor.approvedColor()
+                    cell.status.text = "Broadcasted"
+                    break
+                case "rejected":
+                    cell.status.textColor = UIColor.rejectedColor()
+                    break
+            default:
+                break
+            }
+            break
         default:
             break
         }
-        
-//        cell.status.text = data.TICKET_STATUS
-//        if data.TICKET_STATUS == "approved" || data.TICKET_STATUS == "Approved" {
-//            cell.status.text = "Completed"
-//        }
-//        if data.TICKET_STATUS == "rejected" {
-//            cell.status.text = "Rejected"
-//        }
-//        switch data.TICKET_STATUS {
-//        case "Pending", "pending", "Submitted", "submitted":
-//            cell.status.textColor = UIColor.pendingColor()
-//            break
-//        case "Approved", "approved", "Completed", "completed":
-//            cell.status.textColor = UIColor.approvedColor()
-//            break
-//        case "Rejected", "rejected", "Closed", "closed":
-//            cell.status.textColor = UIColor.rejectedColor()
-//            break
-//        case "Inprogress-Er", "Inprogress-S", "Responded", "Investigating", "Inprogress-Ceo", "Inprogress-Srhrbp":
-//            cell.status.textColor = UIColor.approvedColor()
-//            cell.status.text = INREVIEW
-//            break
-//        case IMS_Status_Inprogress_As, IMS_Status_Inprogress_Hs, IMS_Status_Inprogress_Ds, IMS_Status_Inprogress_Cs, IMS_Status_Inprogress_Ro, IMS_Status_Inprogress_Ca, IMS_Status_Inprogress_Hr, IMS_Status_Inprogress_Fi, IMS_Status_Inprogress_Rm, IMS_Status_Inprogress_Fs, IMS_Status_Inprogress_Rds, IMS_Status_Inprogress_Hod, IMS_Status_Inprogress_Ins, IMS_Status_Inprogress_Rhod:
-//            cell.status.textColor = UIColor.approvedColor()
-//            cell.status.text = IMS_Status_Inprogress
-//        default:
-//            break
-//        }
         if data.CREATED_DATE == "" {
             cell.date.text = data.CREATED_DATE
         } else {
             cell.date.text = data.CREATED_DATE.dateSeperateWithT
         }
-        
-//        cell.type.text = data.MODULE_DSCRP
-        
-        
         return cell
     }
     
@@ -402,7 +414,13 @@ extension NotificationsViewController: UITableViewDelegate, UITableViewDataSourc
             }
             break
         case 3:
+            break
+        case 4:
+            let storyboard = UIStoryboard(name: "LeadershipAwaz", bundle: nil)
+            let controller = storyboard.instantiateViewController(withIdentifier: "NewRequestLeadershipAwazViewController") as! NewRequestLeadershipAwazViewController
             
+            controller.ticket_id = self.hr_notification![indexPath.row].TICKET_ID
+            self.navigationController?.pushViewController(controller, animated: true)
             break
         default:
             break

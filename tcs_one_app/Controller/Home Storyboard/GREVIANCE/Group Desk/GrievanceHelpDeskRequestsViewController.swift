@@ -355,7 +355,7 @@ extension GrievanceHelpDeskRequestsViewController: UITableViewDataSource, UITabl
             cell.status.textColor = UIColor.rejectedColor()
         }
         
-        cell.type.text = "HR"
+        cell.type.text = "Awaz"
         return cell
     }
     
