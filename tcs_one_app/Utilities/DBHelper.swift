@@ -2634,6 +2634,38 @@ class DBHelper {
         }
         return attUserLocations
     }
+    func read_tbl_att_user_attendance_for_notification(query: String) -> [tbl_att_user_attendance]? {
+        let queryStatementString = query
+        var queryStatement: OpaquePointer? = nil
+        var attUserLocations: [tbl_att_user_attendance] = []
+        
+        if sqlite3_prepare_v2(db, queryStatementString, -1, &queryStatement, nil) == SQLITE_OK {
+            while sqlite3_step(queryStatement) == SQLITE_ROW {
+                let id = Int(sqlite3_column_int(queryStatement, 0))
+                let date = String(describing: String(cString: sqlite3_column_text(queryStatement, 1)))
+                let timeIn = String(describing: String(cString: sqlite3_column_text(queryStatement, 2)))
+                let timeOut = String(describing: String(cString: sqlite3_column_text(queryStatement, 3)))
+                let days = String(describing: String(cString: sqlite3_column_text(queryStatement, 4)))
+                let status = String(describing: String(cString: sqlite3_column_text(queryStatement, 5)))
+                let current_user = Int(sqlite3_column_int(queryStatement, 6))
+                attUserLocations.append(tbl_att_user_attendance(ID: id,
+                                                                DATE: date,
+                                                                TIME_IN: timeIn,
+                                                                TIME_OUT: timeOut,
+                                                                DAYS: days,
+                                                                STATUS: status,
+                                                                CURRENT_USER: current_user))
+            }
+        } else {
+            print("SELECT statement \(db_att_userAttendance) could not be prepared")
+        }
+        
+        if attUserLocations.count > 0 {
+            return attUserLocations
+        } else {
+            return nil
+        }
+    }
 }
 
 
