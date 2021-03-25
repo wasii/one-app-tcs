@@ -190,7 +190,8 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
         if let _ = self.module {
             chartViews = [ChartViews]()
             for mod in self.module! {
-                if mod.MODULENAME == "Track" || mod.MODULENAME == "IMS" || mod.MODULENAME == "Leadership Connect" || mod.MODULENAME == "Attendance" {
+                if mod.MODULENAME == "Track" || mod.MODULENAME == "IMS" || mod.MODULENAME == "Leadership Connect" || mod.MODULENAME == "Attendance" || mod.MODULENAME == "Fulfilment" || mod.MODULENAME == "CLS" {
+                    print(mod.MODULENAME)
                     continue
                 }
                 let chart:ChartViews = Bundle.main.loadNibNamed("ChartViews", owner: self, options: nil)?.first as! ChartViews
@@ -254,6 +255,20 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
                     self.ModuleCount += 1
                     chartViews.append(chart)
                 }
+            }
+        }
+        if let fulfilment_perssion = AppDelegate.sharedInstance.db?.read_tbl_UserPermission(permission: PERMISSION_FulfilmentModule).count {
+            if fulfilment_perssion > 0 {
+                let chart:ChartViews = Bundle.main.loadNibNamed("ChartViews", owner: self, options: nil)?.first as! ChartViews
+                chart.heading.text = "Fulfilment Dashboard"
+                chart.pieChart = self.setupGraphs(pieChartView: chart.pieChart,
+                                                  module_id: -2,
+                                                  pending: "Pending",
+                                                  approved: "In Process",
+                                                  rejected: "Ready to Delivery",
+                                                  tag: -2)
+                self.ModuleCount += 1
+                chartViews.append(chart)
             }
         }
         
@@ -324,6 +339,37 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
                     }
                 }
             }
+        } else if tag == -2 {
+            let orderIdQuery = "SELECT DISTINCT ORDER_ID FROM FULFILMENT_ORDERS WHERE CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)'"
+            if let ids = AppDelegate.sharedInstance.db?.read_tbl_fulfilment_orderId(query: orderIdQuery) {
+                for id in ids {
+                    let query = "SELECT * FROM \(db_fulfilment_orders) WHERE ORDER_ID = '\(id)'"
+                    let orders = AppDelegate.sharedInstance.db?.read_tbl_fulfilment_orders(query: query)
+                    
+                    var p = 0
+                    var r = 0
+                    let count = orders?.count
+                    for order in orders! {
+                        switch order.ITEM_STATUS {
+                        case "Pending":
+                            p += 1
+                        case "Received":
+                            r += 1
+                            break
+                        default:
+                            break
+                        }
+                    }
+                    if p == count {
+                        pendingCounter += 1
+                    } else if r == count {
+                        rejectedCounter += 1
+                    } else {
+                        approvedCounter += 1
+                    }
+                }
+            }
+            
         } else {
             let query = "select TICKET_STATUS, count(ID) as ticketTotal, TICKET_DATE from \(db_hr_request) WHERE module_id = '\(module_id)' AND CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)' AND REQUEST_LOGS_SYNC_STATUS != '\(0)' GROUP BY TICKET_STATUS;"
             let chart = AppDelegate.sharedInstance.db?.getCounts(query: query)
@@ -423,6 +469,13 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
                 case "Web": colors.append(UIColor.pendingColor()); break
                 case "Android": colors.append(UIColor.approvedColor()); break
                 case "iOS": colors.append(UIColor.rejectedColor()); break
+                default: break
+                }
+            case -2:
+                switch data.label {
+                case "Pending": colors.append(UIColor.pendingColor()); break
+                case "In Process": colors.append(UIColor.inprocessColor()); break
+                case "Ready to Delivery": colors.append(UIColor.approvedColor()); break
                 default: break
                 }
             default:

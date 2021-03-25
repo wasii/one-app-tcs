@@ -2666,6 +2666,168 @@ class DBHelper {
             return nil
         }
     }
+    
+    //MARK: FULFILMENT METHODS
+    func insert_tbl_scan_prefix(scan_prefix: ScanPrefix) {
+        let insertStatementString = "INSERT INTO \(db_scan_prefix)(PREFIX_ID, PREFIX_DESC, MODULE_ID, PAGE_ID, CREATED, PREFIX_CODE, SERVICE_NO) VALUES (?,?,?,?,?,?,?);"
+        
+        var insertStatement: OpaquePointer? = nil
+        if sqlite3_prepare_v2(self.db, insertStatementString, -1, &insertStatement, nil) == SQLITE_OK {
+            sqlite3_bind_int(insertStatement, 1, Int32(scan_prefix.prefixID))
+            sqlite3_bind_text(insertStatement, 2, (scan_prefix.prefixDesc as NSString).utf8String, -1, nil)
+            sqlite3_bind_int(insertStatement, 3, Int32(scan_prefix.moduleID))
+            sqlite3_bind_int(insertStatement, 4, Int32(scan_prefix.pageID ?? 0))
+            sqlite3_bind_text(insertStatement, 5, (scan_prefix.created as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 6, (scan_prefix.prefixCode as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 7, (scan_prefix.serviceNo as NSString).utf8String, -1, nil)
+            if sqlite3_step(insertStatement) == SQLITE_DONE {
+                print("\(db_scan_prefix): Successfully inserted row.")
+            } else {
+                print("\(db_scan_prefix): Could not insert row.")
+            }
+        } else {
+            print("\(db_scan_prefix): INSERT statement could not be prepared.")
+        }
+        sqlite3_finalize(insertStatement)
+    }
+    func read_tbl_scan_prefix(query: String) -> [tbl_scan_prefix] {
+        let queryStatementString = query
+        var queryStatement: OpaquePointer? = nil
+        var scan_prefix: [tbl_scan_prefix] = []
+        
+        if sqlite3_prepare_v2(db, queryStatementString, -1, &queryStatement, nil) == SQLITE_OK {
+            while sqlite3_step(queryStatement) == SQLITE_ROW {
+                let id = Int(sqlite3_column_int(queryStatement, 0))
+                let prefixId = Int(sqlite3_column_int(queryStatement, 1))
+                let prefixDesc = String(describing: String(cString: sqlite3_column_text(queryStatement, 2)))
+                let moduleId = Int(sqlite3_column_int(queryStatement, 3))
+                let pageId = Int(sqlite3_column_int(queryStatement, 4))
+                let created = String(describing: String(cString: sqlite3_column_text(queryStatement, 5)))
+                let prefixCode = String(describing: String(cString: sqlite3_column_text(queryStatement, 6)))
+                let serviceNo = String(describing: String(cString: sqlite3_column_text(queryStatement, 7)))
+                
+                scan_prefix.append(tbl_scan_prefix(ID: id,
+                                                   PREFIX_ID: prefixId,
+                                                   PREFIX_DESC: prefixDesc,
+                                                   MODULE_ID: moduleId,
+                                                   PAGE_ID: pageId,
+                                                   CREATED: created,
+                                                   PREFIX_CODE: prefixCode,
+                                                   SERVICE_NO: serviceNo))
+            }
+        } else {
+            print("SELECT statement \(db_scan_prefix) could not be prepared")
+        }
+        return scan_prefix
+    }
+    
+    func insert_tbl_fulfilment_orders(fulfilment_orders: FulfilmentOrders, handler: @escaping(_ success: Bool) -> Void) {
+        let insertStatementString = "INSERT INTO \(db_fulfilment_orders)(POWERAPP_ORDER_ID, CNSG_NO, BASKET_BARCODE, SKU, QUNATITY, ISQC, ORDER_ID, CREATE_AT, SERVICE_NO, UPDATED_AT, UPDATE_BY, ORDER_STATUS, ITEM_STATUS, ORIGIN, DESTINATION, ORGN, DSTN, CONSIGNEE_ADDRESS, SR_NO, CURRENT_USER) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);"
+
+        var insertStatement: OpaquePointer? = nil
+        if sqlite3_prepare_v2(self.db, insertStatementString, -1, &insertStatement, nil) == SQLITE_OK {
+            sqlite3_bind_int(insertStatement, 1, Int32(fulfilment_orders.powerappOrderID))
+            sqlite3_bind_text(insertStatement, 2, (fulfilment_orders.cnsgNo as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 3, ((fulfilment_orders.basketBarcode ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 4, (fulfilment_orders.sku as NSString).utf8String, -1, nil)
+            sqlite3_bind_int(insertStatement, 5, Int32(fulfilment_orders.qunatity))
+            sqlite3_bind_text(insertStatement, 6, ((fulfilment_orders.isqc ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 7, (fulfilment_orders.orderID as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 8, (fulfilment_orders.createAt as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 9, (fulfilment_orders.serviceNo as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 10, ((fulfilment_orders.updatedAt ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 11, ((fulfilment_orders.updateBy ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 12, (fulfilment_orders.orderStatus as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 13, (fulfilment_orders.itemStatus as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 14, (fulfilment_orders.origin as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 15, (fulfilment_orders.destination as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 16, (fulfilment_orders.orgn as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 17, (fulfilment_orders.dstn as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 18, ((fulfilment_orders.consigneeAddress ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_int(insertStatement, 19, Int32(fulfilment_orders.srNo))
+            sqlite3_bind_int(insertStatement, 20, Int32(Int(CURRENT_USER_LOGGED_IN_ID) ?? 0))
+            if sqlite3_step(insertStatement) == SQLITE_DONE {
+                handler(true)
+            } else {
+                print("\(db_fulfilment_orders): Could not insert row.")
+                handler(false)
+            }
+        } else {
+            handler(false)
+            print("\(db_fulfilment_orders): INSERT statement could not be prepared.")
+        }
+        sqlite3_finalize(insertStatement)
+    }
+    func read_tbl_fulfilment_orders(query: String) -> [tbl_fulfilments_order] {
+        let queryStatementString = query
+        var queryStatement: OpaquePointer? = nil
+        var fulfilment_orders: [tbl_fulfilments_order] = []
+
+        if sqlite3_prepare_v2(db, queryStatementString, -1, &queryStatement, nil) == SQLITE_OK {
+            while sqlite3_step(queryStatement) == SQLITE_ROW {
+                let ID = Int(sqlite3_column_int(queryStatement, 0))
+                let POWERAPP_ORDER_ID = Int(sqlite3_column_int(queryStatement, 1))
+                let CNSG_NO = String(describing: String(cString: sqlite3_column_text(queryStatement, 2)))
+                let BASKET_BARCODE = String(describing: String(cString: sqlite3_column_text(queryStatement, 3)))
+                let SKU = String(describing: String(cString: sqlite3_column_text(queryStatement, 4)))
+                let QUNATITY = Int(sqlite3_column_int(queryStatement, 5))
+                let ISQC = String(describing: String(cString: sqlite3_column_text(queryStatement, 6)))
+                let ORDER_ID = String(describing: String(cString: sqlite3_column_text(queryStatement, 7)))
+                let CREATE_AT = String(describing: String(cString: sqlite3_column_text(queryStatement, 8)))
+                let SERVICE_NO = String(describing: String(cString: sqlite3_column_text(queryStatement, 9)))
+                let UPDATED_AT = String(describing: String(cString: sqlite3_column_text(queryStatement, 10)))
+                let UPDATE_BY = String(describing: String(cString: sqlite3_column_text(queryStatement, 11)))
+                let ORDER_STATUS = String(describing: String(cString: sqlite3_column_text(queryStatement, 12)))
+                let ITEM_STATUS = String(describing: String(cString: sqlite3_column_text(queryStatement, 13)))
+                let ORIGIN = String(describing: String(cString: sqlite3_column_text(queryStatement, 14)))
+                let DESTINATION = String(describing: String(cString: sqlite3_column_text(queryStatement, 15)))
+                let ORGN = String(describing: String(cString: sqlite3_column_text(queryStatement, 16)))
+                let DSTN = String(describing: String(cString: sqlite3_column_text(queryStatement, 17)))
+                let CONSIGNEE_ADDRESS = String(describing: String(cString: sqlite3_column_text(queryStatement, 18)))
+                let SR_NO = Int(sqlite3_column_int(queryStatement, 19))
+
+                fulfilment_orders.append(tbl_fulfilments_order(ID: ID,
+                                                               POWERAPP_ORDER_ID: POWERAPP_ORDER_ID,
+                                                               CNSG_NO: CNSG_NO,
+                                                               BASKET_BARCODE: BASKET_BARCODE,
+                                                               SKU: SKU,
+                                                               QUNATITY: QUNATITY,
+                                                               ISQC: ISQC,
+                                                               ORDER_ID: ORDER_ID,
+                                                               CREATE_AT: CREATE_AT,
+                                                               SERVICE_NO: SERVICE_NO,
+                                                               UPDATED_AT: UPDATED_AT,
+                                                               UPDATE_BY: UPDATE_BY,
+                                                               ORDER_STATUS: ORDER_STATUS,
+                                                               ITEM_STATUS: ITEM_STATUS,
+                                                               ORIGIN: ORIGIN,
+                                                               DESTINATION: DESTINATION,
+                                                               ORGN: ORGN,
+                                                               DSTN: DSTN,
+                                                               CONSIGNEE_ADDRESS: CONSIGNEE_ADDRESS,
+                                                               SR_NO: SR_NO))
+            }
+        } else {
+            print("SELECT statement \(db_fulfilment_orders) could not be prepared")
+        }
+        return fulfilment_orders
+    }
+    func read_tbl_fulfilment_orderId(query: String) -> [String]? {
+        let queryStatementString = query
+        var queryStatement: OpaquePointer? = nil
+        var fulfilment_orders: [String]?
+
+        if sqlite3_prepare_v2(db, queryStatementString, -1, &queryStatement, nil) == SQLITE_OK {
+            fulfilment_orders = [String]()
+            while sqlite3_step(queryStatement) == SQLITE_ROW {
+                let orderId = String(describing: String(cString: sqlite3_column_text(queryStatement, 0)))
+                fulfilment_orders?.append(orderId)
+            }
+        } else {
+            print("SELECT statement \(db_fulfilment_orders) could not be prepared")
+        }
+        return fulfilment_orders
+    }
 }
 
 
@@ -3154,4 +3316,39 @@ struct tbl_att_user_attendance {
     var DAYS: String = ""
     var STATUS: String = ""
     var CURRENT_USER: Int = 0
+}
+
+//MARK: FULFILMENT
+struct tbl_scan_prefix {
+    var ID: Int = -1
+    var PREFIX_ID: Int = -1
+    var PREFIX_DESC: String = ""
+    var MODULE_ID: Int = -1 //105,
+    var PAGE_ID: Int = -1 //null,
+    var CREATED: String = "" //"2021-03-24T14:39:44",
+    var PREFIX_CODE: String = ""// "BSKT",
+    var SERVICE_NO: String = ""// "O"
+}
+
+struct tbl_fulfilments_order {
+    var ID: Int = -1
+    var POWERAPP_ORDER_ID: Int = -1
+    var CNSG_NO: String  = ""
+    var BASKET_BARCODE: String = ""
+    var SKU: String = ""
+    var QUNATITY: Int = -1
+    var ISQC: String = ""
+    var ORDER_ID: String = ""
+    var CREATE_AT: String = ""
+    var SERVICE_NO: String = ""
+    var UPDATED_AT: String = ""
+    var UPDATE_BY: String = ""
+    var ORDER_STATUS: String = ""
+    var ITEM_STATUS: String = ""
+    var ORIGIN: String = ""
+    var DESTINATION: String = ""
+    var ORGN: String = ""
+    var DSTN: String = ""
+    var CONSIGNEE_ADDRESS: String = ""
+    var SR_NO: Int = -1
 }

@@ -374,6 +374,35 @@ class NetworkCalls: NSObject {
                                 print("error: ", error)
                             }
                         }
+                        var scan_prefix = [ScanPrefix]()
+                        if let data = json.dictionary?[_scan_prefix] {
+                            do {
+                                if let array = data.array {
+                                    for json in array {
+                                        let dictionary = try json.rawData()
+                                        scan_prefix.append(try JSONDecoder().decode(ScanPrefix.self, from: dictionary))
+                                    }
+                                    AppDelegate.sharedInstance.db?.deleteAll(tableName: db_scan_prefix) { _ in
+                                        for prefix in scan_prefix {
+//                                            AppDelegate.sharedInstance.db?.insert_tbl_la_ad_group(la_adGroup: la_adGroup)
+                                        }
+                                    }
+                                }
+                            }catch let DecodingError.dataCorrupted(context) {
+                                print(context)
+                            } catch let DecodingError.keyNotFound(key, context) {
+                                print("Key '\(key)' not found:", context.debugDescription)
+                                print("codingPath:", context.codingPath)
+                            } catch let DecodingError.valueNotFound(value, context) {
+                                print("Value '\(value)' not found:", context.debugDescription)
+                                print("codingPath:", context.codingPath)
+                            } catch let DecodingError.typeMismatch(type, context)  {
+                                print("Type '\(type)' mismatch:", context.debugDescription)
+                                print("codingPath:", context.codingPath)
+                            } catch {
+                                print("error: ", error)
+                            }
+                        }
                         handler(true, "SUCCESS")
                     } else {
                         //Session Expired
@@ -1053,6 +1082,41 @@ class NetworkCalls: NSObject {
                         } else {
                             handler(false, SOMETHINGWENTWRONG)
                         }
+                    }
+                    //FAILED
+                    if success.dictionary?[_code] == "0400" || success.dictionary?[_code] == "0403" {
+                        handler(false, REVERTBACK)
+                    }
+                }
+            } else {
+                handler(false, SOMETHINGWENTWRONG)
+            }
+        }.resume()
+    }
+    
+    //MARK: FULFILMENT
+    class func getorderfulfilment(params: [String:Any], handler: @escaping(_ granted: Bool,_ response: Any) -> Void) {
+        let Url = String(format: ENDPOINT)
+        guard let serviceUrl = URL(string: Url) else { return }
+        var request = URLRequest(url: serviceUrl)
+        request.httpMethod = "POST"
+        request.setValue("Application/json", forHTTPHeaderField: "Content-Type")
+        guard let httpBody = try? JSONSerialization.data(withJSONObject: params, options: []) else {
+            return
+        }
+        request.httpBody = httpBody
+        let session = URLSession.shared
+        session.dataTask(with: request) { (data, response, error) in
+            if let data = data {
+                let json = JSON(data)
+                if let success = json.dictionary?[returnStatus] {
+                    //SUCCESS
+                    if success.dictionary?[_code] == "0200" {
+                        if let data = json.dictionary?[_orders] {
+                            handler(true, [_orders: data, _count: json.dictionary?[_count], _sync_date: json.dictionary?[_sync_date]])
+                            return
+                        }
+                        handler(true, data)
                     }
                     //FAILED
                     if success.dictionary?[_code] == "0400" || success.dictionary?[_code] == "0403" {

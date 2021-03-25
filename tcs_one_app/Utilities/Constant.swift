@@ -12,9 +12,9 @@ let BACKGROUND              = "BACKGROUND"
 let INACTIVE                = "INACTIVE"
 let API_KEY                 = "5E4D0F6D8E12D8EC5EA3BBB11B63B2F88E39A7561F25EC67CCB440F782FD0360"
 
-//let BROADCAST_KEY           = "broadcastiosdev"
+let BROADCAST_KEY           = "broadcastiosdev"
 //let BROADCAST_KEY           = "broadcastiosqa"
-let BROADCAST_KEY           = "broadcastios"
+//let BROADCAST_KEY           = "broadcastios"
 
 let IS_NEW_DATABASE: Bool   = true
 var NOTIFICATION_COUNT      = 0
@@ -23,12 +23,12 @@ var RECORD_ID               = 0
 //API ENDPOINTS
 
 //PRODUCTION
-let ENDPOINT                = "https://prodapi.tcscourier.com/core/api/main/"
-let UPLOADFILESURL          = "https://oneappapi.tcscourier.com/api/file-upload"
+//let ENDPOINT                = "https://prodapi.tcscourier.com/core/api/main/"
+//let UPLOADFILESURL          = "https://oneappapi.tcscourier.com/api/file-upload"
 
 //DEV
-//let ENDPOINT                = "https://devapi.tcscourier.com/qacore/api/main"
-//let UPLOADFILESURL          = "https://pwaqaapi.tcscourier.com/api/file-upload"
+let ENDPOINT                = "https://devapi.tcscourier.com/core/api/main"
+let UPLOADFILESURL          = "https://pwaqaapi.tcscourier.com/api/file-upload"
 
 let LOGIN                   = "oneapp.login"
 let PIN_VALIDATE            = "oneapp.pinvalidate"
@@ -58,6 +58,9 @@ let UPDATEAWAZTICKET        = "oneapp.updawazticket"
 let GETLOCATIONS            = "oneapp.getlocation"
 let FETCHATTENDANCE         = "oneapp.fetchattendance"
 let MARKATTENDANCE          = "oneapp.markattendance"
+
+//FULFILMENT
+let GETORDERFULFILMET       = "oneapp.getorderfullfilment"
 
 //API BACKEND KEYS
 let eAI_MESSAGE             = "eAI_MESSAGE"
@@ -113,6 +116,10 @@ let _login_count            = "login_count"
 //Attendance Keys
 let _attn_out               = "attn_out"
 
+//Fulfilment Keys
+let _scan_prefix            = "scan_prefix"
+let _orders                 = "orders"
+
 //Local Storage (Database) tablename keys
 let db_user_module          = "USER_MODULE"
 let db_user_page            = "USER_PAGE"
@@ -140,6 +147,11 @@ let db_la_ad_group          = "LA_AdGROUP"
 // Attendance
 let db_att_locations        = "ATT_LOCATIONS"
 let db_att_userAttendance   = "ATT_USER_ATTENDANCE"
+
+//Fulfilment
+let db_scan_prefix          = "SCAN_PREFIX"
+let db_fulfilment_orders    = "FULFILMENT_ORDERS"
+
 // IMS
 let db_lov_master           = "IMS_LOV_MASTER_TABLE"
 let db_lov_detail           = "IMS_LOV_DETAIL_TABLE"
@@ -639,6 +651,9 @@ let ENTER_CLOSURE_REMARKS = "Enter Recommendations"
 
 //MARK: LEADERSHIP AWAZ
 let PERMISSION_ViewBroadcastMode = "View Broadcast Mode"
+
+//MARK: FULFILMENT
+let PERMISSION_FulfilmentModule = "Fulfilment Module"
 
 let FILTERDATA = [
     "Weekly",
