@@ -324,6 +324,7 @@ let MODULE_TAG_HR = "hr-help-desk";
 let MODULE_TAG_GRIEVANCE = "Grievance";
 let MODULE_TAG_IMS = "IMS"
 let MODULE_TAG_LEADERSHIPAWAZ = "AWAZ"
+let MODULE_TAG_FULFILMENT = "FULFILMENT"
 
 
 let DOC = "application/msword";

@@ -673,6 +673,13 @@ extension HomeScreenViewController: UICollectionViewDelegate, UICollectionViewDa
                 }
             }
             break
+        case "Fulfilment":
+            CONSTANT_MODULE_ID = AppDelegate.sharedInstance.db?.read_tbl_UserModule(query: "SELECT * FROM \(db_user_module) WHERE TAGNAME = '\(MODULE_TAG_FULFILMENT)';").first?.SERVER_ID_PK ?? -1
+            let storyboard = UIStoryboard(name: "Fullfillment", bundle: nil)
+            let controller = storyboard.instantiateViewController(withIdentifier: "FulfilmentDashboardViewController") as! FulfilmentDashboardViewController
+            
+            self.navigationController?.pushViewController(controller, animated: true)
+            break
         //        case "IMS":
         //            CONSTANT_MODULE_ID = AppDelegate.sharedInstance.db?.read_tbl_UserModule(query: "SELECT * FROM \(db_user_module) WHERE TAGNAME = '\(MODULE_TAG_IMS)';").first?.SERVER_ID_PK ?? -1
         //            let storyboard = UIStoryboard(name: "Attendance", bundle: nil)

@@ -941,6 +941,7 @@ extension FetchUserDataViewController {
                             
                             self.getTCSLocations {
                                 DispatchQueue.main.async {
+                                    
                                     self.loaderViews[4].backgroundColor = UIColor.nativeRedColor()
                                     self.activityIndicator[4].stopAnimating()
                                     self.activityIndicator[4].isHidden = true

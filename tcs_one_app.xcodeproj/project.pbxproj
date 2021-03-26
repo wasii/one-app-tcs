@@ -76,6 +76,8 @@
 		1B7A292425A05E3C005694B6 /* IMSViewUpdateRequestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B7A292325A05E3C005694B6 /* IMSViewUpdateRequestViewController.swift */; };
 		1B96C0A325E8D3020059775C /* NewRequestLeadershipAwazViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B96C0A225E8D3020059775C /* NewRequestLeadershipAwazViewController.swift */; };
 		1B9E6C812562779D006529C3 /* GrievanceViewClosedRequestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B9E6C802562779D006529C3 /* GrievanceViewClosedRequestViewController.swift */; };
+		1BA7BAC2260DF3FD002D9FA9 /* FulfilmentOrderDetailTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BA7BAC0260DF3FD002D9FA9 /* FulfilmentOrderDetailTableCell.swift */; };
+		1BA7BAC3260DF3FD002D9FA9 /* FulfilmentOrderDetailTableCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1BA7BAC1260DF3FD002D9FA9 /* FulfilmentOrderDetailTableCell.xib */; };
 		1BBAEA4D259DA1AA00FBDCB4 /* IMSAllRequestsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BBAEA4C259DA1AA00FBDCB4 /* IMSAllRequestsViewController.swift */; };
 		1BC02EFF25FA446800EFAFE9 /* Geotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BC02EFE25FA446800EFAFE9 /* Geotification.swift */; };
 		1BC42B8D257527F7000A63AF /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1BC42B8C257527F7000A63AF /* CloudKit.framework */; };
@@ -222,6 +224,8 @@
 		1B7A292325A05E3C005694B6 /* IMSViewUpdateRequestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMSViewUpdateRequestViewController.swift; sourceTree = "<group>"; };
 		1B96C0A225E8D3020059775C /* NewRequestLeadershipAwazViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewRequestLeadershipAwazViewController.swift; sourceTree = "<group>"; };
 		1B9E6C802562779D006529C3 /* GrievanceViewClosedRequestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GrievanceViewClosedRequestViewController.swift; sourceTree = "<group>"; };
+		1BA7BAC0260DF3FD002D9FA9 /* FulfilmentOrderDetailTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FulfilmentOrderDetailTableCell.swift; sourceTree = "<group>"; };
+		1BA7BAC1260DF3FD002D9FA9 /* FulfilmentOrderDetailTableCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FulfilmentOrderDetailTableCell.xib; sourceTree = "<group>"; };
 		1BBAEA4C259DA1AA00FBDCB4 /* IMSAllRequestsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMSAllRequestsViewController.swift; sourceTree = "<group>"; };
 		1BC02EFE25FA446800EFAFE9 /* Geotification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Geotification.swift; sourceTree = "<group>"; };
 		1BC42B8C257527F7000A63AF /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
@@ -361,6 +365,8 @@
 			children = (
 				1B3EDCA0260C620100A97984 /* FulfilmentListingTableCell.swift */,
 				1B3EDCA1260C620100A97984 /* FulfilmentListingTableCell.xib */,
+				1BA7BAC0260DF3FD002D9FA9 /* FulfilmentOrderDetailTableCell.swift */,
+				1BA7BAC1260DF3FD002D9FA9 /* FulfilmentOrderDetailTableCell.xib */,
 			);
 			path = Fulfilment;
 			sourceTree = "<group>";
@@ -857,6 +863,7 @@
 				1B1691BB257253C10007B3B0 /* checked-fill-icon.svg in Resources */,
 				1B6279E22591E54D00C88FEE /* IMSStoryboard.storyboard in Resources */,
 				1B614E1C2555138500E50B3A /* GoogleService-Info.plist in Resources */,
+				1BA7BAC3260DF3FD002D9FA9 /* FulfilmentOrderDetailTableCell.xib in Resources */,
 				1BFB374725F9D6E20073CC53 /* Attendance.storyboard in Resources */,
 				1B6B04A4256660CD00CDEF66 /* GrievacneDownloadsTableCell.xib in Resources */,
 				60C34FE02539830E00495944 /* Home.storyboard in Resources */,
@@ -952,6 +959,7 @@
 				1B61B2BC25DD25DD00CDAAE2 /* DManDetailsTableCell.swift in Sources */,
 				1B3EDCA2260C620100A97984 /* FulfilmentListingTableCell.swift in Sources */,
 				1B5EAA83255EA4A600F49D09 /* GrievanceHelpDeskRequestsViewController.swift in Sources */,
+				1BA7BAC2260DF3FD002D9FA9 /* FulfilmentOrderDetailTableCell.swift in Sources */,
 				1BFB375D25F9FB580073CC53 /* MapViewController.swift in Sources */,
 				6010F41025400E3300CF8597 /* CicrularProgressBarCollectionCell.swift in Sources */,
 				60E99928253D9EF900BCDAD1 /* FilterDataPopupViewController.swift in Sources */,
