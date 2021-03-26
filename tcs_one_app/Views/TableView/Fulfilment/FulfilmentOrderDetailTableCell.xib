@@ -22,13 +22,13 @@
                         <rect key="frame" x="5" y="5" width="449" height="55"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Q0X-tQ-5Na">
-                                <rect key="frame" x="15" y="10" width="43.5" height="20.5"/>
+                                <rect key="frame" x="15" y="12" width="43.5" height="20.5"/>
                                 <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Bucket Barcode" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="99f-e4-iBw">
-                                <rect key="frame" x="15" y="35.5" width="105" height="17"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="99f-e4-iBw">
+                                <rect key="frame" x="15" y="37.5" width="0.0" height="0.0"/>
                                 <fontDescription key="fontDescription" type="system" weight="medium" pointSize="14"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
@@ -44,8 +44,8 @@
                         <constraints>
                             <constraint firstItem="ji1-8a-gl7" firstAttribute="centerY" secondItem="iha-Xg-iOT" secondAttribute="centerY" id="2ay-Yn-McF"/>
                             <constraint firstItem="Q0X-tQ-5Na" firstAttribute="leading" secondItem="iha-Xg-iOT" secondAttribute="leading" constant="15" id="3LI-Ri-P9T"/>
-                            <constraint firstItem="99f-e4-iBw" firstAttribute="top" secondItem="Q0X-tQ-5Na" secondAttribute="bottom" constant="5" id="BaX-ZJ-hm6"/>
-                            <constraint firstItem="Q0X-tQ-5Na" firstAttribute="top" secondItem="iha-Xg-iOT" secondAttribute="top" constant="10" id="Ev6-7H-G03"/>
+                            <constraint firstItem="99f-e4-iBw" firstAttribute="top" secondItem="Q0X-tQ-5Na" secondAttribute="bottom" constant="5" id="9sR-vX-m0A"/>
+                            <constraint firstItem="99f-e4-iBw" firstAttribute="centerY" secondItem="iha-Xg-iOT" secondAttribute="centerY" constant="10" id="G8w-ZW-yst"/>
                             <constraint firstItem="99f-e4-iBw" firstAttribute="leading" secondItem="iha-Xg-iOT" secondAttribute="leading" constant="15" id="P1F-Ya-y30"/>
                             <constraint firstAttribute="trailing" secondItem="ji1-8a-gl7" secondAttribute="trailing" constant="15" id="yfj-LV-pyC"/>
                         </constraints>
@@ -61,7 +61,7 @@
                             </userDefinedRuntimeAttribute>
                         </userDefinedRuntimeAttributes>
                     </view>
-                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6Ks-b6-WGH">
+                    <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6Ks-b6-WGH">
                         <rect key="frame" x="459" y="10" width="45" height="45"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="45" id="O04-8E-h3i"/>

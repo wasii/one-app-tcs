@@ -8,6 +8,7 @@
 
 import UIKit
 import MaterialComponents.MaterialTextControls_OutlinedTextFields
+import BarcodeScanner
 
 class FulfilmentOrderDetailViewController: BaseViewController {
 
@@ -24,6 +25,12 @@ class FulfilmentOrderDetailViewController: BaseViewController {
     @IBOutlet weak var scanned: UILabel!
     
     @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var tableViewHeightConstraint: NSLayoutConstraint!
+    
+    @IBOutlet weak var received: UILabel!
+    @IBOutlet weak var truckBtn: UIButton!
+    @IBOutlet weak var checkBtn: UIButton!
+    
     var orderId: String?
     var fulfilment_orders: [tbl_fulfilments_order]?
     override func viewDidLoad() {
@@ -34,9 +41,10 @@ class FulfilmentOrderDetailViewController: BaseViewController {
         
         tableView.register(UINib(nibName: "FulfilmentOrderDetailTableCell", bundle: nil), forCellReuseIdentifier: "FulfilmentOrderDetailCell")
         tableView.rowHeight = 65
+        self.makeTopCornersRounded(roundView: self.mainView)
     }
     
-    func setupTextField() {
+    private func setupTextField() {
         orderID.label.textColor = UIColor.nativeRedColor()
         orderID.label.text = "Order ID"
         orderID.placeholder = ""
@@ -64,16 +72,51 @@ class FulfilmentOrderDetailViewController: BaseViewController {
                 
                 orderID.text = fulfilment_order.first?.ORDER_ID ?? ""
                 city.text = fulfilment_order.first?.DESTINATION ?? ""
-                address.text = fulfilment_order.first?.CONSIGNEE_ADDRESS ?? ""
-                shipment.text = fulfilment_order.first?.CNSG_NO ?? ""
+                if fulfilment_order.first?.CONSIGNEE_ADDRESS == "" {
+                    address.text = "No Address Found"
+                } else {
+                    address.text = fulfilment_order.first?.CONSIGNEE_ADDRESS ?? ""
+                }
+                
+                getCounts()
                 setupTableViewHeight()
             }
         }
     }
-    func setupTableViewHeight() {
+    private func getCounts() {
+        if let _ = self.fulfilment_orders {
+            let sCount = self.fulfilment_orders?.filter { (logs) -> Bool in
+                logs.ITEM_STATUS == "Scanned"
+            }.count ?? 00
+            let usCount = self.fulfilment_orders?.filter { (logs) -> Bool in
+                logs.ITEM_STATUS == "Pending"
+            }.count ?? 00
+            
+            self.scanned.text = "Scanned: \(sCount)"
+            self.unscanned.text = "Unscanned: \(usCount)"
+            
+            if sCount == self.fulfilment_orders?.count {
+                truckBtn.isHidden = false
+            } else {
+                checkBtn.isHidden = false
+            }
+        }
+    }
+    
+    private func scannedBarCode(code: String) {
+        let index = fulfilment_orders?.firstIndex(where: { (logs) -> Bool in
+            logs.CNSG_NO == code
+        })
+        
+        
+        
+    }
+    
+    private func setupTableViewHeight() {
         var height: CGFloat = 0.0
         if let count = self.fulfilment_orders?.count {
-            height = CGFloat((count * 65) + 30)
+            height = CGFloat((count * 65) + 10)
+            self.tableViewHeightConstraint.constant = height
         }
         self.mainViewHeightConstraint.constant = 337
         switch UIDevice().type {
@@ -127,6 +170,14 @@ class FulfilmentOrderDetailViewController: BaseViewController {
             break
         }
     }
+    @IBAction func scanBarCod(_ sender: Any) {
+        let viewController = BarcodeScannerViewController()
+        viewController.codeDelegate = self
+        viewController.errorDelegate = self
+        viewController.dismissalDelegate = self
+
+        present(viewController, animated: true, completion: nil)
+    }
 }
 
 
@@ -139,7 +190,47 @@ extension FulfilmentOrderDetailViewController: UITableViewDataSource, UITableVie
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "FulfilmentOrderDetailCell") as! FulfilmentOrderDetailTableCell
+        let data = self.fulfilment_orders![indexPath.row]
         
+        cell.orderID.text = "CN # \(data.CNSG_NO)"
+        cell.bucketBarcode.text = "Bucket # \(data.BASKET_BARCODE)"
+        
+        cell.status.text = data.ITEM_STATUS
+        
+        switch data.ITEM_STATUS {
+        case "Pending":
+            cell.status.textColor = UIColor.pendingColor()
+            cell.resetBtn.isEnabled = false
+            break
+        case "Received":
+            cell.status.textColor = UIColor.approvedColor()
+            cell.resetBtn.isEnabled = false
+        case "Scanned":
+            cell.status.textColor = UIColor.approvedColor()
+            cell.resetBtn.isEnabled = true
+            break
+        default:
+            break
+        }
         return cell
+    }
+}
+
+
+extension FulfilmentOrderDetailViewController: BarcodeScannerCodeDelegate {
+    func scanner(_ controller: BarcodeScannerViewController, didCaptureCode code: String, type: String) {
+        dismiss(animated: true) {
+            self.scannedBarCode(code: code)
+        }
+    }
+}
+extension FulfilmentOrderDetailViewController: BarcodeScannerErrorDelegate {
+    func scanner(_ controller: BarcodeScannerViewController, didReceiveError error: Error) {
+        
+    }
+}
+extension FulfilmentOrderDetailViewController: BarcodeScannerDismissalDelegate {
+    func scannerDidDismiss(_ controller: BarcodeScannerViewController) {
+        dismiss(animated: true, completion: nil)
     }
 }

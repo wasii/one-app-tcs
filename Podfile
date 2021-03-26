@@ -41,4 +41,5 @@ pod 'Firebase/Messaging'
 
 pod 'ExpandableCell'
 pod 'ExpyTableView'
+pod 'BarcodeScanner'
 end
