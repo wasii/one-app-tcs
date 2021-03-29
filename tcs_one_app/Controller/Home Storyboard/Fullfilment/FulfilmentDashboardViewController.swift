@@ -32,7 +32,7 @@ class FulfilmentDashboardViewController: BaseViewController {
     var fulfilment_orders: [tbl_fulfilments_order]?
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "Fulfilment"
+        title = "Fulfillment"
         addDoubleNavigationButtons()
         self.makeTopCornersRounded(roundView: self.mainView)
     }

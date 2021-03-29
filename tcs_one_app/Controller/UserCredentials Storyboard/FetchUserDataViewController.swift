@@ -790,7 +790,7 @@ extension FetchUserDataViewController {
                 "hr_request":[
                     "access_token": access_token,
                     "skip" :skip,
-                    "take" : 80,
+                    "take" : "80",
                     "sync_date": ""
                 ]
             ]
@@ -799,7 +799,7 @@ extension FetchUserDataViewController {
                 "hr_request":[
                     "access_token": access_token,
                     "skip" :0,
-                    "take" : 80,
+                    "take" : "80",
                     "sync_date": lastSyncStatus!.DATE
                 ]
             ]

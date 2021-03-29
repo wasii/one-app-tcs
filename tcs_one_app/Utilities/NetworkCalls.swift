@@ -384,7 +384,7 @@ class NetworkCalls: NSObject {
                                     }
                                     AppDelegate.sharedInstance.db?.deleteAll(tableName: db_scan_prefix) { _ in
                                         for prefix in scan_prefix {
-//                                            AppDelegate.sharedInstance.db?.insert_tbl_la_ad_group(la_adGroup: la_adGroup)
+                                            AppDelegate.sharedInstance.db?.insert_tbl_scan_prefix(scan_prefix: prefix)
                                         }
                                     }
                                 }

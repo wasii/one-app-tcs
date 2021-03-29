@@ -118,7 +118,7 @@ class FulfilmentListingViewController: BaseViewController {
     func setupTableViewHeight() {
         var height: CGFloat = 0.0
         if let count = self.fulfilment_orders?.count {
-            height = CGFloat((count * 85) + 30)
+            height = CGFloat((count * 85) + 150)
         }
         self.mainViewHeightConstraint.constant = 280
         switch UIDevice().type {

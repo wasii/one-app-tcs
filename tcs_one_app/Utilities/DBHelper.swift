@@ -2828,6 +2828,20 @@ class DBHelper {
         }
         return fulfilment_orders
     }
+    func read_tbl_fulfilment_orderId(orderId: String) -> Int {
+        let queryStatementString = "SELECT count(*) as count FROM FULFILMENT_ORDERS WHERE ORDER_ID = '\(orderId)' AND SERVICE_NO = 'OLE'"
+        var queryStatement: OpaquePointer? = nil
+        var count = 0
+
+        if sqlite3_prepare_v2(db, queryStatementString, -1, &queryStatement, nil) == SQLITE_OK {
+            while sqlite3_step(queryStatement) == SQLITE_ROW {
+                count = Int(sqlite3_column_int(queryStatement, 0))
+            }
+        } else {
+            print("SELECT statement \(db_fulfilment_orders) could not be prepared")
+        }
+        return count
+    }
 }
 
 
