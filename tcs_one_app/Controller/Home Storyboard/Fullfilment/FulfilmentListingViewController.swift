@@ -29,7 +29,7 @@ class FulfilmentListingViewController: BaseViewController {
     var fulfilment_orders: [tbl_fulfilments_order]?
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "Fulfilment"
+        title = "Fulfillment"
         addDoubleNavigationButtons()
         self.makeTopCornersRounded(roundView: self.mainView)
         tableView.register(UINib(nibName: "FulfilmentListingTableCell", bundle: nil), forCellReuseIdentifier: "FulfilmentListingCell")

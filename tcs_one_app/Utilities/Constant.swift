@@ -61,6 +61,7 @@ let MARKATTENDANCE          = "oneapp.markattendance"
 
 //FULFILMENT
 let GETORDERFULFILMET       = "oneapp.getorderfullfilment"
+let UPDATEORDERFULFILMENT   = "oneapp.updateorderfullfilment"
 
 //API BACKEND KEYS
 let eAI_MESSAGE             = "eAI_MESSAGE"

@@ -19,6 +19,7 @@ public final class HeaderViewController: UIViewController {
   /// Left bar button item of the navigation bar.
   public private(set) lazy var closeButton: UIButton = self.makeCloseButton()
 
+    public lazy var titleText: String = ""
   // MARK: - View lifecycle
 
   public override func viewDidLoad() {
@@ -75,7 +76,7 @@ private extension HeaderViewController {
 
   func makeTitleLabel() -> UILabel {
     let label = UILabel()
-    label.text = localizedString("SCAN_BARCODE_TITLE")
+    label.text = self.titleText//localizedString("SCAN_BARCODE_TITLE")
     label.font = UIFont.boldSystemFont(ofSize: 17)
     label.textColor = .black
     label.numberOfLines = 1

@@ -1096,7 +1096,7 @@ extension FetchUserDataViewController {
                 controller.modalPresentationStyle = .overFullScreen
                 
             }
-            
+            controller.modalTransitionStyle = .crossDissolve
             Helper.topMostController().present(controller, animated: true, completion: nil)
             self.navigationController?.popViewController(animated: true)
         }
