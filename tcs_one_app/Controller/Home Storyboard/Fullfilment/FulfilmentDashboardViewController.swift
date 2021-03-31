@@ -106,40 +106,35 @@ class FulfilmentDashboardViewController: BaseViewController {
         }
     }
     private func setupStackBarChart() {
-        var previousDate = Date()
-        var weekly = String()
-        var getDatesQuery = ""
         var getTicketsAccordingDates = ""
-        
-        let orderIdQuery = "SELECT DISTINCT ORDER_ID FROM FULFILMENT_ORDERS WHERE CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)'"
-        if let ids = AppDelegate.sharedInstance.db?.read_tbl_fulfilment_orderId(query: orderIdQuery) {
-            var xAxisDates = [String]()
-            var pendingCounter :Double = 0
-            var inProcessCounter :Double = 0
-            var readyToSubmitCounter :Double = 0
-            var barChartEntries = [BarChartDataEntry]()
-            let xAxis = barChart.xAxis
-            var set = BarChartDataSet()
+        var query = ""
+        var orderIdQuery = ""
+        if start_day == "" && end_day == "" {
+            let previousDate = getPreviousDays(days: -Int(number_of_days)!)
+            let weekly = previousDate.convertDateToString(date: previousDate)
+            query = "SELECT strftime('%Y-%m-%d',CREATE_AT) as date FROM \(db_fulfilment_orders) WHERE CREATE_AT >= '\(weekly)' AND CREATE_AT <= '\(getLocalCurrentDate())' AND CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)' group by strftime('%Y-%m-%d',CREATE_AT)"
             
-            for id in ids {
-                if start_day == "" && end_day == "" {
-                    let previousDate = getPreviousDays(days: -Int(number_of_days)!)
-                    let weekly = previousDate.convertDateToString(date: previousDate)
-                    
-                    getDatesQuery = "SELECT strftime('%Y-%m-%d',CREATE_AT) as date FROM \(db_fulfilment_orders) WHERE  CREATE_AT >= '\(weekly)' AND CREATE_AT <= '\(getLocalCurrentDate())' AND CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)' group by strftime('%Y-%m-%d',CREATE_AT)"
-                    
-                    getTicketsAccordingDates = "SELECT * FROM \(db_fulfilment_orders) WHERE CREATE_AT >= '\(weekly)' AND CREATE_AT <= '\(getLocalCurrentDate())' AND ORDER_ID = '\(id)' AND CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)'"
-                } else {
-                    getDatesQuery = "SELECT strftime('%Y-%m-%d',CREATE_AT) as date FROM \(db_fulfilment_orders) WHERE  CREATE_AT >= '\(start_day)' AND CREATE_AT <= '\(end_day))' AND CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)' group by strftime('%Y-%m-%d',CREATE_AT)"
-                    
-                    getTicketsAccordingDates = "SELECT * FROM \(db_fulfilment_orders) WHERE CREATE_AT >= '\(start_day)' AND CREATE_AT <= '\(end_day)' AND ORDER_ID = '\(id)' AND CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)'"
-                }
-                let dates = AppDelegate.sharedInstance.db?.getDates(query: getDatesQuery).sorted(by: { (date1, date2) -> Bool in
-                    date1 < date2
-                })
-                let tickets = AppDelegate.sharedInstance.db?.read_tbl_fulfilment_orders(query: getTicketsAccordingDates).sorted(by: { (l1, l2) -> Bool in
-                    l1.CREATE_AT < l2.CREATE_AT
-                })
+            orderIdQuery = "SELECT DISTINCT ORDER_ID FROM \(db_fulfilment_orders) WHERE CREATE_AT >= '\(weekly)' AND CREATE_AT <= '\(getLocalCurrentDate())' AND CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)'"
+        } else {
+            query = "SELECT strftime('%Y-%m-%d',CREATE_AT) as date FROM \(db_fulfilment_orders) WHERE CREATE_AT >= '\(start_day)' AND CREATE_AT <= '\(end_day))' AND CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)' group by strftime('%Y-%m-%d',CREATE_AT)"
+            
+            orderIdQuery = "SELECT DISTINCT ORDER_ID FROM \(db_fulfilment_orders) WHERE CREATE_AT >= '\(start_day)' AND CREATE_AT <= '\(end_day))' AND CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)'"
+        }
+        
+        if var ticket_dates = AppDelegate.sharedInstance.db?.getDates(query: query) {
+            ticket_dates = ticket_dates.sorted(by: { (d1, d2) -> Bool in
+                d1 < d2
+            })
+            
+            if let ids = AppDelegate.sharedInstance.db?.read_tbl_fulfilment_orderId(query: orderIdQuery) {
+                var xAxisDates = [String]()
+                var pendingCounter :Double = 0
+                var inProcessCounter :Double = 0
+                var readyToSubmitCounter :Double = 0
+                var barChartEntries = [BarChartDataEntry]()
+                let xAxis = barChart.xAxis
+                var set = BarChartDataSet()
+                
                 barChart.drawBarShadowEnabled = false
                 barChart.drawValueAboveBarEnabled = false
                 barChart.highlightFullBarEnabled = false
@@ -157,49 +152,36 @@ class FulfilmentDashboardViewController: BaseViewController {
                 xAxis.labelFont = UIFont.init(name: "Helvetica", size: 10)!
                 barChart.legend.form = .empty
                 
-                for (index,date) in dates!.enumerated() {
-                    let ticket = tickets?.filter({ (logs) -> Bool in
-                        let currentDateString = logs.CREATE_AT
-                        let dateFormatter = DateFormatter()
-                        dateFormatter.dateFormat = "yyyy-MM-dd'T'hh:mm:ss"
-                        let currentDate = dateFormatter.date(from: currentDateString)
-                        dateFormatter.dateFormat = "yyyy-MM-dd"
-                        let string = dateFormatter.string(from: currentDate ?? Date())
+                for (index,date) in ticket_dates.enumerated() {
+                    for id in ids {
+                        var p = 0
+                        var r = 0
                         
-                        return string == date
-                    })
-                    if let a = ticket {
-                        if a.count > 0 {
-                            var p = 0
-                            var r = 0
-                            let count = ticket?.count
-                            for t in ticket! {
-                                switch t.ITEM_STATUS {
-                                case "Pending":
-                                    p += 1
-                                case "Received":
-                                    r += 1
-                                    break
-                                default:
-                                    break
+                        getTicketsAccordingDates = "SELECT * FROM \(db_fulfilment_orders) WHERE strftime('%Y-%m-%d',CREATE_AT) = '\(date)' AND  ORDER_ID = '\(id)' AND CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)'"
+                        if let orders = AppDelegate.sharedInstance.db?.read_tbl_fulfilment_orders(query: getTicketsAccordingDates) {
+                            if orders.count > 0 {
+                                let count = orders.count
+                                for o in orders {
+                                    switch o.ITEM_STATUS {
+                                    case "Pending":
+                                        p += 1
+                                    case "Received":
+                                        r += 1
+                                        break
+                                    default:
+                                        break
+                                    }
+                                }
+                                if p == count {
+                                    pendingCounter += 1
+                                } else if r == count {
+                                    readyToSubmitCounter += 1
+                                } else {
+                                    inProcessCounter += 1
                                 }
                             }
-                            if p == count {
-                                pendingCounter = Double(p)
-                            } else if r == count {
-                                readyToSubmitCounter = Double(r)
-                            } else {
-                                inProcessCounter += 1
-                            }
-                        } else {
-                            continue
                         }
                     }
-                    let dateFormatter = DateFormatter()
-                    dateFormatter.dateFormat = "yyyy-MM-dd"
-                    let tDate = dateFormatter.date(from: date)!.monthAsStringAndDay()
-                    xAxisDates.append(tDate)
-                    
                     let yVal : [Double] = [Double(pendingCounter), Double(inProcessCounter), Double(readyToSubmitCounter)]
                     
                     let barchart = BarChartDataEntry(x: Double(index), yValues: yVal, data: date)
@@ -207,27 +189,32 @@ class FulfilmentDashboardViewController: BaseViewController {
                     pendingCounter = 0
                     readyToSubmitCounter = 0
                     inProcessCounter = 0
+                    
+                    let dateFormatter = DateFormatter()
+                    dateFormatter.dateFormat = "yyyy-MM-dd"
+                    let tDate = dateFormatter.date(from: date)!.monthAsStringAndDay()
+                    xAxisDates.append(tDate)
                 }
+                let formatt = CustomFormatter()
+                formatt.labels = xAxisDates
+                xAxis.valueFormatter = formatt
+                set = BarChartDataSet(entries: barChartEntries, label: "")
+                set.drawIconsEnabled = false
+                set.colors = [UIColor.pendingColor(), UIColor.inprocessColor(), UIColor.approvedColor()]
+                
+                let data = BarChartData(dataSet: set)
+                let formatter = NumberFormatter()
+                formatter.numberStyle = .none
+                formatter.maximumFractionDigits = 0
+                formatter.multiplier = 1.0
+                formatter.zeroSymbol = ""
+                data.setValueFont(.systemFont(ofSize: 1, weight: .light))
+                data.setValueTextColor(.white)
+                
+                data.setValueFormatter(DefaultValueFormatter(formatter: formatter))
+                barChart.fitBars = true
+                barChart.data = data
             }
-            let formatt = CustomFormatter()
-            formatt.labels = xAxisDates
-            xAxis.valueFormatter = formatt
-            set = BarChartDataSet(entries: barChartEntries, label: "")
-            set.drawIconsEnabled = false
-            set.colors = [UIColor.pendingColor(), UIColor.inprocessColor(), UIColor.approvedColor()]
-            
-            let data = BarChartData(dataSet: set)
-            let formatter = NumberFormatter()
-            formatter.numberStyle = .none
-            formatter.maximumFractionDigits = 0
-            formatter.multiplier = 1.0
-            formatter.zeroSymbol = ""
-            data.setValueFont(.systemFont(ofSize: 1, weight: .light))
-            data.setValueTextColor(.white)
-            
-            data.setValueFormatter(DefaultValueFormatter(formatter: formatter))
-            barChart.fitBars = true
-            barChart.data = data
         }
     }
     
