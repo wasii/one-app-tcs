@@ -132,6 +132,28 @@ class FulfilmentOrderDetailViewController: BaseViewController {
                     address.text = fulfilment_order.first?.CONSIGNEE_ADDRESS ?? ""
                 }
                 
+                let query = "SELECT * FROM \(db_fulfilment_orders_temp) WHERE ORDER_ID = '\(orderId!)'"
+                if let temp_order = AppDelegate.sharedInstance.db?.read_tbl_fulfilment_orders_temp(query: query) {
+                    let scanned_item = temp_order.filter { (log) -> Bool in
+                        log.STATUS == "Scanned"
+                    }
+                    for (i,o) in self.fulfilment_orders!.enumerated() {
+                        for si in scanned_item {
+                            if o.CNSG_NO == si.CN_NUMBER {
+                                if si.BASKET_NO == "" {
+                                    self.fulfilment_orders![i].ITEM_STATUS = si.STATUS
+                                } else {
+                                    self.fulfilment_orders![i].ITEM_STATUS = si.STATUS
+                                    self.fulfilment_orders![i].BASKET_BARCODE = si.BASKET_NO
+                                    self.createSubmissionArray(orderId: orderId!, cn_number: si.CN_NUMBER, basket_no: si.BASKET_NO)
+                                    self.isBasketScanned = true
+                                }
+                                break
+                            }
+                        }
+                    }
+                }
+                
                 getCounts()
                 setupTableViewHeight()
             }
@@ -159,6 +181,10 @@ class FulfilmentOrderDetailViewController: BaseViewController {
             if usCount == self.fulfilment_orders?.count {
                 self.truckBtn.isHidden = true
                 self.checkBtn.isHidden = true
+                return
+            }
+            if (sCount + rCount) == self.fulfilment_orders?.count {
+                self.truckBtn.isHidden = false
                 return
             }
             
@@ -341,18 +367,14 @@ class FulfilmentOrderDetailViewController: BaseViewController {
             break
         }
     }
+    
+    //MARK: IBACTIONS
     @IBAction func scanBarCod(_ sender: Any) {
-        
-//        barcodeViewController.headerViewController.titleText = "Scan Shipment"
-//        barcodeViewController.codeDelegate = self
-//        barcodeViewController.errorDelegate = self
-//        barcodeViewController.dismissalDelegate = self
-////        barcodeViewController.isOneTimeSearch = false
-//        present(barcodeViewController, animated: true, completion: nil)
         
         let controller = self.storyboard?.instantiateViewController(withIdentifier: "scanNavController") as! UINavigationController
         (controller.children.first as! ScanFulfillmentViewController).fulfilment_orders = self.fulfilment_orders
         (controller.children.first as! ScanFulfillmentViewController).orderId = self.orderId
+        (controller.children.first as! ScanFulfillmentViewController).delegate = self
         present(controller, animated: true, completion: nil)
     }
     @IBAction func checkBtnTapped(_ sender: Any) {
@@ -371,6 +393,19 @@ class FulfilmentOrderDetailViewController: BaseViewController {
         Helper.topMostController().present(controller, animated: true, completion: nil)
     }
     @IBAction func deliverBtnTapped(_ sender: Any) {
+        let generator = UINotificationFeedbackGenerator()
+        generator.notificationOccurred(.warning)
+        
+        
+        truckBtn.isEnabled = false
+        let popup = UIStoryboard(name: "Popups", bundle: nil)
+        let controller = popup.instantiateViewController(withIdentifier: "ConfirmationPopViewController") as! ConfirmationPopViewController
+        if #available(iOS 13.0, *) {
+            controller.modalPresentationStyle = .overFullScreen
+        }
+        controller.modalTransitionStyle = .crossDissolve
+        controller.delegate = self
+        Helper.topMostController().present(controller, animated: true, completion: nil)
     }
 }
 
@@ -412,6 +447,7 @@ extension FulfilmentOrderDetailViewController: UITableViewDataSource, UITableVie
     
     @objc func revertStatus(sender: UIButton) {
         self.fulfilment_orders![sender.tag].ITEM_STATUS = "Pending"
+        AppDelegate.sharedInstance.db?.deleteRow(tableName: db_fulfilment_orders_temp, column: "CN_NUMBER", ref_id: "\(self.fulfilment_orders![sender.tag].CNSG_NO)", handler: { _ in })
         let count = self.fulfilment_orders?.count
         let pFilter = self.fulfilment_orders?.filter({ (log) -> Bool in
             log.ITEM_STATUS == "Pending"
@@ -438,9 +474,6 @@ extension FulfilmentOrderDetailViewController: UITableViewDataSource, UITableVie
 
 extension FulfilmentOrderDetailViewController: BarcodeScannerCodeDelegate {
     func scanner(_ controller: BarcodeScannerViewController, didCaptureCode code: String, type: String) {
-//        dismiss(animated: true) {
-//
-//        }
         for (i,o) in self.fulfilment_orders!.enumerated() {
             if o.CNSG_NO == code {
                 self.currentCNSGIndex = i
@@ -576,7 +609,7 @@ extension FulfilmentOrderDetailViewController: ConfirmationProtocol {
         if let submit_order = self.submit_orders {
             var dictionary = [NSMutableDictionary]()
             for o in submit_order {
-                var temp = NSMutableDictionary()
+                let temp = NSMutableDictionary()
                 temp.setValue(o.ORDER_ID, forKey: "order_id")
                 temp.setValue(o.STATUS, forKey: "status")
                 temp.setValue(o.CN_NUMBER, forKey: "cn_number")
@@ -602,7 +635,7 @@ extension FulfilmentOrderDetailViewController: ConfirmationProtocol {
                         }
                         controller.delegate = self
                         controller.modalTransitionStyle = .crossDissolve
-                        self.present(controller, animated: true, completion: nil)
+                        Helper.topMostController().present(controller, animated: true, completion: nil)
                     }
                 } else {
                     DispatchQueue.main.async {
@@ -627,7 +660,40 @@ extension FulfilmentOrderDetailViewController: ConfirmationProtocol {
 
 extension FulfilmentOrderDetailViewController: FulFillmentPopup {
     func donePressed() {
+        let condition = "ORDER_ID = \(orderId!) AND CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)'"
+        AppDelegate.sharedInstance.db?.deleteRowWithMultipleConditions(tbl: db_fulfilment_orders_temp, conditions: condition, { _ in })
         self.navigationController?.popViewController(animated: true)
+    }
+}
+
+extension FulfilmentOrderDetailViewController: ScanFulfillmentProtocol {
+    func didScanCode(code: String, isBucket: Bool, CN: String) {
+        self.scannedBarCode(code: code)
+        var colum = [String]()
+        var value = [String]()
+        var condition = ""
+        
+        let query = "SELECT * FROM \(db_fulfilment_orders_temp) WHERE CN_NUMBER = '\(CN)'"
+        if let _ = AppDelegate.sharedInstance.db?.read_tbl_fulfilment_orders_temp(query: query)?.first {
+            if isBucket {
+                colum = ["BASKET_NO"]
+                value = [code]
+                condition = "CN_NUMBER = '\(CN)' AND CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)'"
+            } else {
+                colum = ["STATUS"]
+                value = ["Scanned"]
+                condition = "CN_NUMBER = '\(CN)' AND CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)'"
+            }
+            
+            AppDelegate.sharedInstance.db?.updateTables(tableName: db_fulfilment_orders_temp,
+                                                        columnName: colum,
+                                                        updateValue: value,
+                                                        onCondition: condition, { _ in })
+        } else {
+            let temp_order = SubmitOrder(ORDER_ID: orderId!, STATUS: "Scanned", CN_NUMBER: CN, BASKET_NO: "")
+            AppDelegate.sharedInstance.db?.insert_tbl_fulfilment_orders_temp(orders: temp_order, handler: { _ in })
+        }
+        
     }
 }
 

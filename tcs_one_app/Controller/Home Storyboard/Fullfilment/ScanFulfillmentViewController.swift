@@ -9,7 +9,11 @@
 import UIKit
 import AVFoundation
 
-class ScanFulfillmentViewController: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
+protocol ScanFulfillmentProtocol {
+    func didScanCode(code: String, isBucket: Bool, CN: String)
+}
+
+class ScanFulfillmentViewController: BaseViewController, AVCaptureMetadataOutputObjectsDelegate {
     
     @IBOutlet weak var messageLabel: UILabel!
     @IBOutlet weak var conditionView: UIView!
@@ -52,6 +56,7 @@ class ScanFulfillmentViewController: UIViewController, AVCaptureMetadataOutputOb
     var orderId: String?
     
     var submit_orders: [SubmitOrder]?
+    var delegate: ScanFulfillmentProtocol?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -91,6 +96,26 @@ class ScanFulfillmentViewController: UIViewController, AVCaptureMetadataOutputOb
                     self.receivedOrderBasket = temp.BASKET_BARCODE
                 }
                 self.fulfilment_orders = fulfilment_order
+                let query = "SELECT * FROM \(db_fulfilment_orders_temp) WHERE ORDER_ID = '\(orderId!)'"
+                if let temp_order = AppDelegate.sharedInstance.db?.read_tbl_fulfilment_orders_temp(query: query) {
+                    let scanned_item = temp_order.filter { (log) -> Bool in
+                        log.STATUS == "Scanned"
+                    }
+                    for (i,o) in self.fulfilment_orders!.enumerated() {
+                        for si in scanned_item {
+                            if o.CNSG_NO == si.CN_NUMBER {
+                                if si.BASKET_NO == "" {
+                                    self.fulfilment_orders![i].ITEM_STATUS = si.STATUS
+                                } else {
+                                    self.fulfilment_orders![i].ITEM_STATUS = si.STATUS
+                                    self.fulfilment_orders![i].BASKET_BARCODE = si.BASKET_NO
+                                    self.isBasketScanned = true
+                                }
+                                break
+                            }
+                        }
+                    }
+                }
             }
         }
     }
@@ -179,7 +204,6 @@ class ScanFulfillmentViewController: UIViewController, AVCaptureMetadataOutputOb
         
         if metadataObjects.count == 0 {
             qrCodeFrameView?.frame = CGRect.zero
-//            messageLabel.text = "No Barcode is detected"
             return
         }
         
@@ -230,6 +254,9 @@ class ScanFulfillmentViewController: UIViewController, AVCaptureMetadataOutputOb
                         
                         self.title = "Scan Shipment"
                         self.receivedOrderBasket = code
+                        
+                        self.delegate?.didScanCode(code: code, isBucket: true, CN: self.currentCNSG)
+                        self.dismissScanner()
                     }
                 } else if prefix == DGroupPrefix {
                     for (i,_) in self.fulfilment_orders!.enumerated() {
@@ -245,6 +272,9 @@ class ScanFulfillmentViewController: UIViewController, AVCaptureMetadataOutputOb
                         self.isBasketScanned = true
                         
                         self.title = "Scan Shipment"
+                        
+                        self.delegate?.didScanCode(code: code, isBucket: true, CN: self.currentCNSG)
+                        self.dismissScanner()
                     }
                 } else {
                     self.conditionView.backgroundColor = UIColor.nativeRedColor()
@@ -253,6 +283,9 @@ class ScanFulfillmentViewController: UIViewController, AVCaptureMetadataOutputOb
             } else {
                 if self.receivedOrderBasket == code {
                     DispatchQueue.main.async {
+                        for (i,_) in self.fulfilment_orders!.enumerated() {
+                            self.fulfilment_orders![i].BASKET_BARCODE = code
+                        }
                         let _ = self.fulfilment_orders?.filter({ (log) -> Bool in
                             log.CNSG_NO == self.currentCNSG
                         }).first
@@ -263,6 +296,9 @@ class ScanFulfillmentViewController: UIViewController, AVCaptureMetadataOutputOb
                         
                         self.title = "Scan Shipment"
                         self.receivedOrderBasket = code
+                        
+                        self.delegate?.didScanCode(code: code, isBucket: true, CN: self.currentCNSG)
+                        self.dismissScanner()
                     }
                 } else {
                     self.conditionView.backgroundColor = UIColor.nativeRedColor()
@@ -280,6 +316,11 @@ class ScanFulfillmentViewController: UIViewController, AVCaptureMetadataOutputOb
                         self.conditionView.backgroundColor = UIColor.pendingColor()
                         self.messageLabel.text = "CN # \(code) already scanned."
                         return
+                    } else if self.fulfilment_orders![index].ITEM_STATUS == "Received" {
+                        self.isBasketScanned = false
+                        self.conditionView.backgroundColor = UIColor.pendingColor()
+                        self.messageLabel.text = "CN # \(code) already received."
+                        return
                     } else {
                         self.fulfilment_orders![index].ITEM_STATUS = "Scanned"
                     }
@@ -292,6 +333,7 @@ class ScanFulfillmentViewController: UIViewController, AVCaptureMetadataOutputOb
                         self.isCNScanned = true
                         self.title = "Scan Bucket"
                     }
+                    self.delegate?.didScanCode(code: code, isBucket: false, CN: self.fulfilment_orders![index].CNSG_NO)
                     break
                 }
             }
@@ -304,6 +346,25 @@ class ScanFulfillmentViewController: UIViewController, AVCaptureMetadataOutputOb
                 self.conditionView.backgroundColor = UIColor.nativeRedColor()
                 self.messageLabel.text = "CN # \(code) not valid"
             }
+        }
+    }
+    
+    @IBAction func closeBtnTapped(_ sender: Any) {
+        dismiss(animated: true) {}
+    }
+}
+
+
+extension ScanFulfillmentViewController {
+    func dismissScanner() {
+        let count = self.fulfilment_orders!.filter ({ (logs) -> Bool in
+            logs.BASKET_BARCODE != "" && (logs.ITEM_STATUS == "Scanned" || logs.ITEM_STATUS == "Received")
+        }).count
+        
+        print("count: \(count) total count: \(self.fulfilment_orders?.count)")
+        
+        if count == self.fulfilment_orders?.count {
+            dismiss(animated: true) {}
         }
     }
 }

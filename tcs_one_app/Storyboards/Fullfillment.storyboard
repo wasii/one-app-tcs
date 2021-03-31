@@ -580,13 +580,16 @@
                     </view>
                     <navigationItem key="navigationItem" id="Vz2-F2-GBp">
                         <barButtonItem key="leftBarButtonItem" style="plain" id="jsI-Y5-4zJ">
-                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" id="vD2-FC-H0d">
+                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" id="vD2-FC-H0d">
                                 <rect key="frame" x="16" y="6" width="83" height="32"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="16"/>
+                                <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="15"/>
                                 <state key="normal" title="Close">
                                     <color key="titleColor" red="0.94901960780000005" green="0.95294117649999999" blue="0.95686274510000002" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 </state>
+                                <connections>
+                                    <action selector="closeBtnTapped:" destination="JFR-vq-DDL" eventType="touchUpInside" id="EfD-qD-EVe"/>
+                                </connections>
                             </button>
                         </barButtonItem>
                     </navigationItem>

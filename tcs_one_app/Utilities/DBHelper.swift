@@ -2842,6 +2842,49 @@ class DBHelper {
         }
         return count
     }
+    func read_tbl_fulfilment_orders_temp(query: String) -> [tbl_fulfillment_orders_temp]? {
+        let queryStatementString = query
+        var queryStatement: OpaquePointer? = nil
+        var fulfilment_orders = [tbl_fulfillment_orders_temp]()
+
+        if sqlite3_prepare_v2(db, queryStatementString, -1, &queryStatement, nil) == SQLITE_OK {
+            while sqlite3_step(queryStatement) == SQLITE_ROW {
+                let ID = Int(sqlite3_column_int(queryStatement, 0))
+                let ORDER_ID = String(describing: String(cString: sqlite3_column_text(queryStatement, 1)))
+                let STATUS = String(describing: String(cString: sqlite3_column_text(queryStatement, 2)))
+                let CN_NUMBER = String(describing: String(cString: sqlite3_column_text(queryStatement, 3)))
+                let BASKET_NO = String(describing: String(cString: sqlite3_column_text(queryStatement, 4)))
+                let CURRENT_USER = String(describing: String(cString: sqlite3_column_text(queryStatement, 5)))
+                fulfilment_orders.append(tbl_fulfillment_orders_temp(ID: ID, ORDER_ID: ORDER_ID, STATUS: STATUS, CN_NUMBER: CN_NUMBER, BASKET_NO: BASKET_NO, CURRENT_USER: CURRENT_USER))
+            }
+        } else {
+            print("SELECT statement \(db_fulfilment_orders) could not be prepared")
+        }
+        return fulfilment_orders.count > 0 ? fulfilment_orders : nil
+    }
+    func insert_tbl_fulfilment_orders_temp(orders: SubmitOrder, handler: @escaping(_ success: Bool) -> Void) {
+        let insertStatementString = "INSERT INTO \(db_fulfilment_orders_temp)(ORDER_ID, STATUS, CN_NUMBER, BASKET_NO, CURRENT_USER) VALUES (?,?,?,?,?);"
+
+        var insertStatement: OpaquePointer? = nil
+        if sqlite3_prepare_v2(self.db, insertStatementString, -1, &insertStatement, nil) == SQLITE_OK {
+            
+            sqlite3_bind_text(insertStatement, 1, (orders.ORDER_ID as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 2, (orders.STATUS as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 3, (orders.CN_NUMBER as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 4, (orders.BASKET_NO as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 5, (CURRENT_USER_LOGGED_IN_ID as NSString).utf8String, -1, nil)
+            if sqlite3_step(insertStatement) == SQLITE_DONE {
+                handler(true)
+            } else {
+                print("\(db_fulfilment_orders): Could not insert row.")
+                handler(false)
+            }
+        } else {
+            handler(false)
+            print("\(db_fulfilment_orders): INSERT statement could not be prepared.")
+        }
+        sqlite3_finalize(insertStatement)
+    }
 }
 
 
@@ -3365,4 +3408,13 @@ struct tbl_fulfilments_order {
     var DSTN: String = ""
     var CONSIGNEE_ADDRESS: String = ""
     var SR_NO: Int = -1
+}
+
+struct tbl_fulfillment_orders_temp {
+    var ID: Int = -1
+    var ORDER_ID: String = ""
+    var STATUS: String = ""
+    var CN_NUMBER: String = ""
+    var BASKET_NO: String = ""
+    var CURRENT_USER: String = ""
 }

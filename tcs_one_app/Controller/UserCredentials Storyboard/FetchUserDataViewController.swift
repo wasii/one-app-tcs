@@ -58,7 +58,7 @@ class FetchUserDataViewController: BaseViewController {
         self.title = "Fetching Data"
 
         self.makeTopCornersRounded(roundView: self.mainView)
-        
+//        AppDelegate.sharedInstance.db?.deleteAll(tableName: db_fulfilment_orders_temp, handler: { _ in })
         version.text = "Version: " + Bundle.main.releaseVersionNumber!
         build.text = "Build: " + Bundle.main.buildVersionNumber!
         notification_counter.isHidden = true

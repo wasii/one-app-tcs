@@ -113,6 +113,14 @@ class FulfilmentDashboardViewController: BaseViewController {
         
         let orderIdQuery = "SELECT DISTINCT ORDER_ID FROM FULFILMENT_ORDERS WHERE CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)'"
         if let ids = AppDelegate.sharedInstance.db?.read_tbl_fulfilment_orderId(query: orderIdQuery) {
+            var xAxisDates = [String]()
+            var pendingCounter :Double = 0
+            var inProcessCounter :Double = 0
+            var readyToSubmitCounter :Double = 0
+            var barChartEntries = [BarChartDataEntry]()
+            let xAxis = barChart.xAxis
+            var set = BarChartDataSet()
+            
             for id in ids {
                 if start_day == "" && end_day == "" {
                     let previousDate = getPreviousDays(days: -Int(number_of_days)!)
@@ -120,76 +128,86 @@ class FulfilmentDashboardViewController: BaseViewController {
                     
                     getDatesQuery = "SELECT strftime('%Y-%m-%d',CREATE_AT) as date FROM \(db_fulfilment_orders) WHERE  CREATE_AT >= '\(weekly)' AND CREATE_AT <= '\(getLocalCurrentDate())' AND CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)' group by strftime('%Y-%m-%d',CREATE_AT)"
                     
-                    getTicketsAccordingDates = "SELECT ITEM_STATUS , count(ID) as totalCount, strftime('%Y-%m-%d',CREATE_AT) as date FROM \(db_fulfilment_orders) WHERE CREATE_AT >= '\(weekly)' AND CREATE_AT <= '\(getLocalCurrentDate())' AND CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)' group by  ITEM_STATUS , date"
+                    getTicketsAccordingDates = "SELECT * FROM \(db_fulfilment_orders) WHERE CREATE_AT >= '\(weekly)' AND CREATE_AT <= '\(getLocalCurrentDate())' AND ORDER_ID = '\(id)' AND CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)'"
                 } else {
+                    getDatesQuery = "SELECT strftime('%Y-%m-%d',CREATE_AT) as date FROM \(db_fulfilment_orders) WHERE  CREATE_AT >= '\(start_day)' AND CREATE_AT <= '\(end_day))' AND CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)' group by strftime('%Y-%m-%d',CREATE_AT)"
                     
+                    getTicketsAccordingDates = "SELECT * FROM \(db_fulfilment_orders) WHERE CREATE_AT >= '\(start_day)' AND CREATE_AT <= '\(end_day)' AND ORDER_ID = '\(id)' AND CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)'"
                 }
-            }
-            
-            let dates = AppDelegate.sharedInstance.db?.getDates(query: getDatesQuery).sorted(by: { (date1, date2) -> Bool in
-                date1 < date2
-            })
-            let tickets = AppDelegate.sharedInstance.db?.getBarGraphCounts(query: getTicketsAccordingDates).sorted(by: { (g1, g2) -> Bool in
-                g1.ticket_date! < g2.ticket_date!
-            })
-            barChart.drawBarShadowEnabled = false
-            barChart.drawValueAboveBarEnabled = false
-            barChart.highlightFullBarEnabled = false
-            barChart.pinchZoomEnabled = false
-            barChart.doubleTapToZoomEnabled = false
-            
-            let leftAxis = barChart.leftAxis
-            leftAxis.axisMinimum = 0
-            
-            barChart.rightAxis.enabled = false
-            
-            let xAxis = barChart.xAxis
-            
-            xAxis.labelPosition = .top
-            xAxis.granularity = 1.0
-            
-            xAxis.labelFont = UIFont.init(name: "Helvetica", size: 10)!
-            barChart.legend.form = .empty
-            var set = BarChartDataSet()
-
-            var xAxisDates = [String]()
-            
-            
-            var pCounter = 0
-            var iCounter = 0
-            var rCounter = 0
-            var barChartEntries = [BarChartDataEntry]()
-            for (index,date) in dates!.enumerated() {
-                let ticket = tickets?.filter({ (GraphTotalCount) -> Bool in
-                    GraphTotalCount.ticket_date == date
+                let dates = AppDelegate.sharedInstance.db?.getDates(query: getDatesQuery).sorted(by: { (date1, date2) -> Bool in
+                    date1 < date2
                 })
+                let tickets = AppDelegate.sharedInstance.db?.read_tbl_fulfilment_orders(query: getTicketsAccordingDates).sorted(by: { (l1, l2) -> Bool in
+                    l1.CREATE_AT < l2.CREATE_AT
+                })
+                barChart.drawBarShadowEnabled = false
+                barChart.drawValueAboveBarEnabled = false
+                barChart.highlightFullBarEnabled = false
+                barChart.pinchZoomEnabled = false
+                barChart.doubleTapToZoomEnabled = false
                 
-                for t in ticket! {
-                    switch t.ticket_status {
-                    case "Pending", "pending":
-                        pCounter += Int(t.ticket_total!)!
-                        break
-                    case "Received", "received":
-                        iCounter += Int(t.ticket_total!)!
-                        break
-                    default:
-                        rCounter += Int(t.ticket_total!)!
-                        break
+                let leftAxis = barChart.leftAxis
+                leftAxis.axisMinimum = 0
+                
+                barChart.rightAxis.enabled = false
+                
+                xAxis.labelPosition = .top
+                xAxis.granularity = 1.0
+                
+                xAxis.labelFont = UIFont.init(name: "Helvetica", size: 10)!
+                barChart.legend.form = .empty
+                
+                for (index,date) in dates!.enumerated() {
+                    let ticket = tickets?.filter({ (logs) -> Bool in
+                        let currentDateString = logs.CREATE_AT
+                        let dateFormatter = DateFormatter()
+                        dateFormatter.dateFormat = "yyyy-MM-dd'T'hh:mm:ss"
+                        let currentDate = dateFormatter.date(from: currentDateString)
+                        dateFormatter.dateFormat = "yyyy-MM-dd"
+                        let string = dateFormatter.string(from: currentDate ?? Date())
+                        
+                        return string == date
+                    })
+                    if let a = ticket {
+                        if a.count > 0 {
+                            var p = 0
+                            var r = 0
+                            let count = ticket?.count
+                            for t in ticket! {
+                                switch t.ITEM_STATUS {
+                                case "Pending":
+                                    p += 1
+                                case "Received":
+                                    r += 1
+                                    break
+                                default:
+                                    break
+                                }
+                            }
+                            if p == count {
+                                pendingCounter = Double(p)
+                            } else if r == count {
+                                readyToSubmitCounter = Double(r)
+                            } else {
+                                inProcessCounter += 1
+                            }
+                        } else {
+                            continue
+                        }
                     }
+                    let dateFormatter = DateFormatter()
+                    dateFormatter.dateFormat = "yyyy-MM-dd"
+                    let tDate = dateFormatter.date(from: date)!.monthAsStringAndDay()
+                    xAxisDates.append(tDate)
+                    
+                    let yVal : [Double] = [Double(pendingCounter), Double(inProcessCounter), Double(readyToSubmitCounter)]
+                    
+                    let barchart = BarChartDataEntry(x: Double(index), yValues: yVal, data: date)
+                    barChartEntries.append(barchart)
+                    pendingCounter = 0
+                    readyToSubmitCounter = 0
+                    inProcessCounter = 0
                 }
-                
-                let dateFormatter = DateFormatter()
-                dateFormatter.dateFormat = "yyyy-MM-dd"
-                let tDate = dateFormatter.date(from: date)!.monthAsStringAndDay()
-                xAxisDates.append(tDate)
-                
-                let yVal : [Double] = [Double(pCounter), Double(iCounter), Double(rCounter)]
-                
-                let barchart = BarChartDataEntry(x: Double(index), yValues: yVal, data: date)
-                barChartEntries.append(barchart)
-                pCounter = 0
-                iCounter = 0
-                rCounter = 0
             }
             let formatt = CustomFormatter()
             formatt.labels = xAxisDates

@@ -152,6 +152,7 @@ let db_att_userAttendance   = "ATT_USER_ATTENDANCE"
 //Fulfilment
 let db_scan_prefix          = "SCAN_PREFIX"
 let db_fulfilment_orders    = "FULFILMENT_ORDERS"
+let db_fulfilment_orders_temp = "FULFILLMENT_ORDERS_TEMP"
 
 // IMS
 let db_lov_master           = "IMS_LOV_MASTER_TABLE"
