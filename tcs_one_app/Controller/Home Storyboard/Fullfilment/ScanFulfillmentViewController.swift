@@ -25,6 +25,11 @@ class ScanFulfillmentViewController: BaseViewController, AVCaptureMetadataOutput
     var captureDevice:AVCaptureDevice?
     var lastCapturedCode:String?
     
+    
+    var numberOfDays: String = ""
+    var start_day: String = ""
+    var end_day: String = ""
+    
     public var barcodeScanned:((String) -> ())?
     
     private var allowedTypes = [AVMetadataObject.ObjectType.upce,
@@ -231,120 +236,136 @@ class ScanFulfillmentViewController: BaseViewController, AVCaptureMetadataOutput
     
     
     func scanBarCode(code: String) {
-        if self.isCNScanned {
-            if self.receivedOrderBasket == "" {
-                let prefix = code[0..<self.OLEPrefix.count]
-                print(prefix)
-                if prefix == self.OLEPrefix {
-                    for (i,_) in self.fulfilment_orders!.enumerated() {
-                        self.fulfilment_orders![i].BASKET_BARCODE = code
-                    }
-                    DispatchQueue.main.async {
-                        let _ = self.fulfilment_orders?.filter({ (log) -> Bool in
-                            log.CNSG_NO == self.currentCNSG
-                        }).first
-                        
-                        self.conditionView.backgroundColor = UIColor.approvedColor()
-                        self.messageLabel.text = "Bucket # \(code) valid"
-                        
-                        self.isCNScanned = false
-                        self.isBasketScanned = true
-                        
-                        self.isAllASKT = true
-                        
-                        self.title = "Scan Shipment"
-                        self.receivedOrderBasket = code
-                        
-                        self.delegate?.didScanCode(code: code, isBucket: true, CN: self.currentCNSG)
-                        self.dismissScanner()
-                    }
-                } else if prefix == DGroupPrefix {
-                    for (i,_) in self.fulfilment_orders!.enumerated() {
-                        self.fulfilment_orders![i].BASKET_BARCODE = code
-                    }
-                    DispatchQueue.main.async {
-                        let _ = self.fulfilment_orders?.filter({ (log) -> Bool in
-                            log.CNSG_NO == self.currentCNSG
-                        }).first
-                        self.conditionView.backgroundColor = UIColor.approvedColor()
-                        self.messageLabel.text = "Bucket # \(code) valid"
-                        self.isCNScanned = false
-                        self.isBasketScanned = true
-                        
-                        self.title = "Scan Shipment"
-                        
-                        self.delegate?.didScanCode(code: code, isBucket: true, CN: self.currentCNSG)
-                        self.dismissScanner()
-                    }
-                } else {
-                    self.conditionView.backgroundColor = UIColor.nativeRedColor()
-                    self.messageLabel.text = "Bucket # \(code) not valid"
-                }
-            } else {
-                if self.receivedOrderBasket == code {
-                    DispatchQueue.main.async {
+        if let _ = orderId {
+            if self.isCNScanned {
+                if self.receivedOrderBasket == "" {
+                    let prefix = code[0..<self.OLEPrefix.count]
+                    print(prefix)
+                    if prefix == self.OLEPrefix {
                         for (i,_) in self.fulfilment_orders!.enumerated() {
                             self.fulfilment_orders![i].BASKET_BARCODE = code
                         }
-                        let _ = self.fulfilment_orders?.filter({ (log) -> Bool in
-                            log.CNSG_NO == self.currentCNSG
-                        }).first
-                        self.conditionView.backgroundColor = UIColor.approvedColor()
-                        self.messageLabel.text = "Bucket # \(code) valid"
-                        self.isCNScanned = false
-                        self.isBasketScanned = true
-                        
-                        self.title = "Scan Shipment"
-                        self.receivedOrderBasket = code
-                        
-                        self.delegate?.didScanCode(code: code, isBucket: true, CN: self.currentCNSG)
-                        self.dismissScanner()
+                        DispatchQueue.main.async {
+                            let _ = self.fulfilment_orders?.filter({ (log) -> Bool in
+                                log.CNSG_NO == self.currentCNSG
+                            }).first
+                            
+                            self.conditionView.backgroundColor = UIColor.approvedColor()
+                            self.messageLabel.text = "Bucket # \(code) valid"
+                            
+                            self.isCNScanned = false
+                            self.isBasketScanned = true
+                            
+                            self.isAllASKT = true
+                            
+                            self.title = "Scan Shipment"
+                            self.receivedOrderBasket = code
+                            
+                            self.delegate?.didScanCode(code: code, isBucket: true, CN: self.currentCNSG)
+                            self.dismissScanner()
+                        }
+                    } else if prefix == DGroupPrefix {
+                        for (i,_) in self.fulfilment_orders!.enumerated() {
+                            self.fulfilment_orders![i].BASKET_BARCODE = code
+                        }
+                        DispatchQueue.main.async {
+                            let _ = self.fulfilment_orders?.filter({ (log) -> Bool in
+                                log.CNSG_NO == self.currentCNSG
+                            }).first
+                            self.conditionView.backgroundColor = UIColor.approvedColor()
+                            self.messageLabel.text = "Bucket # \(code) valid"
+                            self.isCNScanned = false
+                            self.isBasketScanned = true
+                            
+                            self.title = "Scan Shipment"
+                            
+                            self.delegate?.didScanCode(code: code, isBucket: true, CN: self.currentCNSG)
+                            self.dismissScanner()
+                        }
+                    } else {
+                        self.conditionView.backgroundColor = UIColor.nativeRedColor()
+                        self.messageLabel.text = "Bucket # \(code) not valid"
                     }
                 } else {
+                    if self.receivedOrderBasket == code {
+                        DispatchQueue.main.async {
+                            for (i,_) in self.fulfilment_orders!.enumerated() {
+                                self.fulfilment_orders![i].BASKET_BARCODE = code
+                            }
+                            let _ = self.fulfilment_orders?.filter({ (log) -> Bool in
+                                log.CNSG_NO == self.currentCNSG
+                            }).first
+                            self.conditionView.backgroundColor = UIColor.approvedColor()
+                            self.messageLabel.text = "Bucket # \(code) valid"
+                            self.isCNScanned = false
+                            self.isBasketScanned = true
+                            
+                            self.title = "Scan Shipment"
+                            self.receivedOrderBasket = code
+                            
+                            self.delegate?.didScanCode(code: code, isBucket: true, CN: self.currentCNSG)
+                            self.dismissScanner()
+                        }
+                    } else {
+                        self.conditionView.backgroundColor = UIColor.nativeRedColor()
+                        self.messageLabel.text = "Bucket # \(code) not valid"
+                        
+                    }
+                }
+            } else {
+                var isFound = false
+                for (index, order) in self.fulfilment_orders!.enumerated() {
+                    if order.CNSG_NO == code {
+                        isFound = true
+                        if self.fulfilment_orders![index].ITEM_STATUS == "Scanned" {
+                            self.isBasketScanned = false
+                            self.conditionView.backgroundColor = UIColor.pendingColor()
+                            self.messageLabel.text = "CN # \(code) already scanned."
+                            return
+                        } else if self.fulfilment_orders![index].ITEM_STATUS == "Received" {
+                            self.isBasketScanned = false
+                            self.conditionView.backgroundColor = UIColor.pendingColor()
+                            self.messageLabel.text = "CN # \(code) already received."
+                            return
+                        } else {
+                            self.fulfilment_orders![index].ITEM_STATUS = "Scanned"
+                        }
+                        self.isBasketScanned = false
+                        self.currentCNSG = order.CNSG_NO
+                        
+                        if isAllASKT {
+                            self.isCNScanned = false
+                        } else {
+                            self.isCNScanned = true
+                            self.title = "Scan Bucket"
+                        }
+                        self.delegate?.didScanCode(code: code, isBucket: false, CN: self.fulfilment_orders![index].CNSG_NO)
+                        if self.fulfilment_orders?.count == 1 {
+                            self.dismiss(animated: true, completion: nil)
+                        }
+                        break
+                    }
+                }
+                if isFound {
+                    self.isBasketScanned = false
+                    self.conditionView.backgroundColor = UIColor.approvedColor()
+                    self.messageLabel.text = "CN # \(code) valid"
+                } else {
+                    self.isBasketScanned = false
                     self.conditionView.backgroundColor = UIColor.nativeRedColor()
-                    self.messageLabel.text = "Bucket # \(code) not valid"
-                    
+                    self.messageLabel.text = "CN # \(code) not valid"
                 }
             }
         } else {
-            var isFound = false
-            for (index, order) in self.fulfilment_orders!.enumerated() {
-                if order.CNSG_NO == code {
-                    isFound = true
-                    if self.fulfilment_orders![index].ITEM_STATUS == "Scanned" {
-                        self.isBasketScanned = false
-                        self.conditionView.backgroundColor = UIColor.pendingColor()
-                        self.messageLabel.text = "CN # \(code) already scanned."
-                        return
-                    } else if self.fulfilment_orders![index].ITEM_STATUS == "Received" {
-                        self.isBasketScanned = false
-                        self.conditionView.backgroundColor = UIColor.pendingColor()
-                        self.messageLabel.text = "CN # \(code) already received."
-                        return
-                    } else {
-                        self.fulfilment_orders![index].ITEM_STATUS = "Scanned"
-                    }
-                    self.isBasketScanned = false
-                    self.currentCNSG = order.CNSG_NO
-                    
-                    if isAllASKT {
-                        self.isCNScanned = false
-                    } else {
-                        self.isCNScanned = true
-                        self.title = "Scan Bucket"
-                    }
-                    self.delegate?.didScanCode(code: code, isBucket: false, CN: self.fulfilment_orders![index].CNSG_NO)
-                    break
+            if let orders = AppDelegate.sharedInstance.db?.read_tbl_fulfilment_orders(query: "SELECT * FROM \(db_fulfilment_orders) WHERE CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)'") {
+                let order = orders.filter { (logs) -> Bool in
+                    logs.CNSG_NO == code
                 }
-            }
-            if isFound {
-                self.isBasketScanned = false
-                self.conditionView.backgroundColor = UIColor.approvedColor()
-                self.messageLabel.text = "CN # \(code) valid"
-            } else {
-                self.isBasketScanned = false
-                self.conditionView.backgroundColor = UIColor.nativeRedColor()
-                self.messageLabel.text = "CN # \(code) not valid"
+                if order.count > 0 {
+                    self.dismiss(animated: true) {
+                        self.delegate?.didScanCode(code: order.first?.ORDER_ID ?? "", isBucket: false, CN: code)
+                    }
+                }
             }
         }
     }

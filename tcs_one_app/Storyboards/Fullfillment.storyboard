@@ -472,6 +472,9 @@
                                                 <real key="value" value="0.5"/>
                                             </userDefinedRuntimeAttribute>
                                         </userDefinedRuntimeAttributes>
+                                        <connections>
+                                            <action selector="scanBarCodeTapped:" destination="L3v-Y3-0VA" eventType="touchUpInside" id="QT2-sS-VjV"/>
+                                        </connections>
                                     </button>
                                 </subviews>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -1089,6 +1092,7 @@
                         <outlet property="mainViewHeightConstraint" destination="qxP-Na-Hjw" id="gMj-5F-cqa"/>
                         <outlet property="orderID" destination="Q4M-8Z-8XQ" id="fqc-hB-pkl"/>
                         <outlet property="received" destination="fzN-85-MSn" id="h8B-W4-yx2"/>
+                        <outlet property="scanBtn" destination="FKv-IF-H6y" id="0Pp-8n-mXh"/>
                         <outlet property="scan_shipment_label" destination="0a0-h7-oCl" id="6Jf-Wn-Wx4"/>
                         <outlet property="scanned" destination="77B-zy-kcC" id="r3y-T0-A3R"/>
                         <outlet property="shipment" destination="Do2-Dj-cYP" id="GwX-Yf-utU"/>

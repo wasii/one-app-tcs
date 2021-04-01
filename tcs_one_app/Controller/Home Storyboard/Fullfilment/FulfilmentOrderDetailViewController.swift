@@ -22,6 +22,7 @@ class FulfilmentOrderDetailViewController: BaseViewController {
     @IBOutlet weak var scan_shipment_label: UILabel!
     
     @IBOutlet weak var shipment: MDCOutlinedTextField!
+    @IBOutlet weak var scanBtn: UIButton!
     @IBOutlet weak var unscanned: UILabel!
     @IBOutlet weak var scanned: UILabel!
     
@@ -115,9 +116,9 @@ class FulfilmentOrderDetailViewController: BaseViewController {
                     }
                 }
                 
-                if let temp = fulfilment_order.filter { (logs) -> Bool in
+                if let temp = fulfilment_order.filter ({ (logs) -> Bool in
                     logs.ITEM_STATUS == "Received" && logs.ORDER_ID == orderId!
-                }.first {
+                }).first {
                     self.isOrderReceived = true
                     self.receivedOrderBasket = temp.BASKET_BARCODE
                 }
@@ -153,6 +154,26 @@ class FulfilmentOrderDetailViewController: BaseViewController {
                         }
                     }
                 }
+                if self.fulfilment_orders?.count == 1 {
+                    if self.fulfilment_orders![0].ITEM_STATUS != "Received" {
+                        self.fulfilment_orders![0].ITEM_STATUS = "Scanned"
+                        self.fulfilment_orders![0].BASKET_BARCODE = "0"
+                        
+                        AppDelegate.sharedInstance.db?.deleteRow(tableName: db_fulfilment_orders_temp, column: "CN_Number", ref_id: "\(self.fulfilment_orders![0].CNSG_NO)", handler: { _ in
+                            let temp_order = SubmitOrder(ORDER_ID: self.fulfilment_orders![0].ORDER_ID,
+                                                         STATUS: "Scanned",
+                                                         CN_NUMBER: self.fulfilment_orders![0].CNSG_NO,
+                                                         BASKET_NO: "0")
+                            AppDelegate.sharedInstance.db?.insert_tbl_fulfilment_orders_temp(orders: temp_order, handler: { _ in })
+                            AppDelegate.sharedInstance.db?.updateTables(tableName: db_fulfilment_orders, columnName: ["ITEM_STATUS"], updateValue: ["Scanned"], onCondition: "CNSG_NO = '\(self.fulfilment_orders![0].CNSG_NO)'", { _ in })
+                        })
+                        
+                        
+                        self.createSubmissionArray(orderId: self.fulfilment_orders![0].ORDER_ID,
+                                                   cn_number: self.fulfilment_orders![0].CNSG_NO,
+                                                   basket_no: "0")
+                    }
+                }
                 
                 getCounts()
                 setupTableViewHeight()
@@ -180,6 +201,8 @@ class FulfilmentOrderDetailViewController: BaseViewController {
             if rCount == self.fulfilment_orders?.count {
                 self.truckBtn.isHidden = true
                 self.checkBtn.isHidden = true
+                self.shipment.isEnabled = false
+                self.scanBtn.isEnabled = false
                 return
             }
             if usCount == self.fulfilment_orders?.count {
@@ -457,6 +480,7 @@ extension FulfilmentOrderDetailViewController: UITableViewDataSource, UITableVie
     
     @objc func revertStatus(sender: UIButton) {
         self.fulfilment_orders![sender.tag].ITEM_STATUS = "Pending"
+        AppDelegate.sharedInstance.db?.updateTables(tableName: db_fulfilment_orders, columnName: ["ITEM_STATUS"], updateValue: ["Pending"], onCondition: "CNSG_NO = '\(self.fulfilment_orders![sender.tag].CNSG_NO)'", { _ in })
         AppDelegate.sharedInstance.db?.deleteRow(tableName: db_fulfilment_orders_temp, column: "CN_NUMBER", ref_id: "\(self.fulfilment_orders![sender.tag].CNSG_NO)", handler: { _ in })
         let count = self.fulfilment_orders?.count
         let pFilter = self.fulfilment_orders?.filter({ (log) -> Bool in
@@ -690,9 +714,16 @@ extension FulfilmentOrderDetailViewController: ScanFulfillmentProtocol {
                 value = [code]
                 condition = "CN_NUMBER = '\(CN)' AND CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)'"
             } else {
-                colum = ["STATUS"]
-                value = ["Scanned"]
-                condition = "CN_NUMBER = '\(CN)' AND CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)'"
+                if fulfilment_orders?.count == 1 {
+                    colum = ["STATUS", "BASKET_NO"]
+                    value = ["Scanned", "0"]
+                    condition = "CN_NUMBER = '\(CN)' AND CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)'"
+                } else {
+                    colum = ["STATUS"]
+                    value = ["Scanned"]
+                    condition = "CN_NUMBER = '\(CN)' AND CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)'"
+                }
+                
             }
             
             AppDelegate.sharedInstance.db?.updateTables(tableName: db_fulfilment_orders_temp,
@@ -700,11 +731,18 @@ extension FulfilmentOrderDetailViewController: ScanFulfillmentProtocol {
                                                         updateValue: value,
                                                         onCondition: condition, { _ in })
         } else {
-            let temp_order = SubmitOrder(ORDER_ID: orderId!, STATUS: "Scanned", CN_NUMBER: CN, BASKET_NO: "")
-            AppDelegate.sharedInstance.db?.insert_tbl_fulfilment_orders_temp(orders: temp_order, handler: { _ in })
+            var temp_order = SubmitOrder()
+            if fulfilment_orders?.count == 1 {
+                temp_order = SubmitOrder(ORDER_ID: orderId!, STATUS: "Scanned", CN_NUMBER: CN, BASKET_NO: "0")
+                AppDelegate.sharedInstance.db?.insert_tbl_fulfilment_orders_temp(orders: temp_order, handler: { _ in })
+            } else {
+                temp_order = SubmitOrder(ORDER_ID: orderId!, STATUS: "Scanned", CN_NUMBER: CN, BASKET_NO: "")
+                AppDelegate.sharedInstance.db?.insert_tbl_fulfilment_orders_temp(orders: temp_order, handler: { _ in })
+            }
         }
         
     }
+    func didScanConsignment(fulfillment_orders: [tbl_fulfilments_order]) {}
 }
 
 

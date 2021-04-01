@@ -264,7 +264,21 @@ class FulfilmentDashboardViewController: BaseViewController {
         }
     }
     
-    
+    @IBAction func scanBarCodeTapped(_ sender: UIButton) {
+        let controller = self.storyboard?.instantiateViewController(withIdentifier: "scanNavController") as! UINavigationController
+        (controller.children.first as! ScanFulfillmentViewController).fulfilment_orders = self.fulfilment_orders
+
+        (controller.children.first as! ScanFulfillmentViewController).delegate = self
+        (controller.children.first as! ScanFulfillmentViewController).start_day = start_day
+        (controller.children.first as! ScanFulfillmentViewController).end_day = end_day
+        (controller.children.first as! ScanFulfillmentViewController).numberOfDays = number_of_days
+        
+        controller.modalTransitionStyle = .crossDissolve
+        if #available(iOS 13.0, *) {
+            controller.modalPresentationStyle = .overFullScreen
+        }
+        present(controller, animated: true, completion: nil)
+    }
     @IBAction func openListing(_ sender: UIButton) {
         let controller = self.storyboard?.instantiateViewController(withIdentifier: "FulfilmentListingViewController") as! FulfilmentListingViewController
         controller.numberOfDays = self.number_of_days
@@ -365,4 +379,16 @@ extension FulfilmentDashboardViewController: DateSelectionDelegate {
     }
     
     func requestModeSelected(selected_query: String) {}
+}
+
+
+
+
+extension FulfilmentDashboardViewController: ScanFulfillmentProtocol {
+    func didScanCode(code: String, isBucket: Bool, CN: String) {
+        let controller = self.storyboard?.instantiateViewController(withIdentifier: "FulfilmentOrderDetailViewController") as! FulfilmentOrderDetailViewController
+        
+        controller.orderId = code
+        self.navigationController?.pushViewController(controller, animated: true)
+    }
 }

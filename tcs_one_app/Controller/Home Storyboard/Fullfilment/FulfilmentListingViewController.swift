@@ -182,6 +182,7 @@ class FulfilmentListingViewController: BaseViewController {
                 }
             }
             self.fulfilment_orders = temp_data
+            self.temp_data = temp_data
         } else {
             self.fulfilment_orders = nil
         }
