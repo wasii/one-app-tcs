@@ -670,3 +670,9 @@ let REQUESTFILTERDATA = [
     "Self",
     "Others"
 ]
+
+let FULFILLMENTFILTERDATA = [
+    "Pending",
+    "In Process",
+    "Ready to Deliver"
+]

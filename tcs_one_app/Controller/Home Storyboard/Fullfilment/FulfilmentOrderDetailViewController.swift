@@ -177,7 +177,11 @@ class FulfilmentOrderDetailViewController: BaseViewController {
                 self.received.text = "Received: \(rCount)"
             }
             
-            
+            if rCount == self.fulfilment_orders?.count {
+                self.truckBtn.isHidden = true
+                self.checkBtn.isHidden = true
+                return
+            }
             if usCount == self.fulfilment_orders?.count {
                 self.truckBtn.isHidden = true
                 self.checkBtn.isHidden = true
@@ -375,6 +379,11 @@ class FulfilmentOrderDetailViewController: BaseViewController {
         (controller.children.first as! ScanFulfillmentViewController).fulfilment_orders = self.fulfilment_orders
         (controller.children.first as! ScanFulfillmentViewController).orderId = self.orderId
         (controller.children.first as! ScanFulfillmentViewController).delegate = self
+        
+        controller.modalTransitionStyle = .crossDissolve
+        if #available(iOS 13.0, *) {
+            controller.modalPresentationStyle = .overFullScreen
+        }
         present(controller, animated: true, completion: nil)
     }
     @IBAction func checkBtnTapped(_ sender: Any) {
@@ -435,8 +444,9 @@ extension FulfilmentOrderDetailViewController: UITableViewDataSource, UITableVie
         case "Received":
             cell.status.textColor = UIColor.approvedColor()
             cell.resetBtn.isEnabled = false
+            break
         case "Scanned":
-            cell.status.textColor = UIColor.approvedColor()
+            cell.status.textColor = UIColor.inprocessColor()
             cell.resetBtn.isEnabled = true
             break
         default:

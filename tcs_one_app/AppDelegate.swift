@@ -398,52 +398,80 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
                     } else {
                         if let grievance_log = JSON(jsonArray[_data]).dictionary?[_hr_requests]?.first?.1 {
                             do {
-                                let rawData = try grievance_log.rawData()
-                                let grievance_request = try JSONDecoder().decode(HrRequest.self, from: rawData)
-                                let hr_request = grievance_log.dictionary!
-                                created_date = hr_request["CREATED_DATE"]?.stringValue ?? ""
-                                print("HRBP_EXISTS::: \(hr_request["HRBP_EXISTS"]?.int ?? -1)")
-                                let ref_id = grievance_log.dictionary?["REF_ID"]?.string
-                                AppDelegate.sharedInstance.db?.deleteRow(tableName: db_hr_request, column: "REF_ID", ref_id: "\(ref_id ?? "")", handler: { (granted) in
-                                    if granted {
-                                        AppDelegate.sharedInstance.db?.insert_tbl_hr_request(hrrequests: grievance_request, { success in
-                                            if success {
-                                                if let hr_logs = grievance_log.dictionary?[_hr_logs]?.array {
-                                                    var hrlog : HrLog?
-                                                    
-                                                    for data in hr_logs {
-                                                        hrlog = HrLog(emplNo: data.dictionary?["EMPL_NO"]?.int ?? -1,
-                                                                      created: data.dictionary?["CREATED"]?.string ?? "",
-                                                                      refID: ref_id ?? "",
-                                                                      gremID: data.dictionary?["GREM_ID"]?.int ?? -1,
-                                                                      ticketID: data.dictionary?["TICKET_ID"]?.int ?? -1,
-                                                                      ticketStatus: data.dictionary?["TICKET_STATUS"]?.string ?? "",
-                                                                      remarks: data.dictionary?["REMARKS"]?.string ?? "",
-                                                                      remarksInput: data.dictionary?["REMARKS_INPUT"]?.string ?? "")
-                                                        AppDelegate.sharedInstance.db?.deleteRow(tableName: db_grievance_remarks, column: "SERVER_ID_PK", ref_id: "\(hrlog?.gremID ?? -1)", handler: { _ in
-                                                            AppDelegate.sharedInstance.db?.insert_tbl_hr_grievance(hr_log: hrlog!)
-                                                            if let files = data.dictionary?[_hr_files]?.array {
-                                                                for file in files {
-                                                                    do {
-                                                                        let hrFileRawData = try file.rawData()
-                                                                        let f = try JSONDecoder().decode(HrFiles.self, from: hrFileRawData)
-                                                                        AppDelegate.sharedInstance.db?.deleteAllWithCondition(tableName: db_files, columnName: "SERVER_ID_PK", value: "\(file.dictionary?["GIMG_ID"]?.int ?? -1)", handler: { _ in
-                                                                            AppDelegate.sharedInstance.db?.insert_tbl_hr_files(hrfile: f)
-                                                                        })
-                                                                    } catch let hrFileErr {
-                                                                        print(hrFileErr.localizedDescription)
-                                                                    }
-                                                                }
-                                                            }
-                                                        })
-                                                    }
+                                if let order_id = grievance_log.dictionary?["ORDER_ID"]?.string {
+                                    if let fulfillment_logs = JSON(jsonArray[_data]).dictionary?[_hr_requests]?.array {
+                                        AppDelegate.sharedInstance.db?.deleteRow(tableName: db_fulfilment_orders, column: "ORDER_ID", ref_id: order_id, handler: { _ in
+                                            for logs in fulfillment_logs {
+                                                do {
+                                                    let rawData = try logs.rawData()
+                                                    let fulfillment_order = try JSONDecoder().decode(FulfilmentOrders.self, from: rawData)
+                                                    AppDelegate.sharedInstance.db?.insert_tbl_fulfilment_orders(fulfilment_orders: fulfillment_order, handler: { _ in })
+                                                }catch let DecodingError.dataCorrupted(context) {
+                                                    print(context)
+                                                } catch let DecodingError.keyNotFound(key, context) {
+                                                    print("Key '\(key)' not found:", context.debugDescription)
+                                                    print("codingPath:", context.codingPath)
+                                                } catch let DecodingError.valueNotFound(value, context) {
+                                                    print("Value '\(value)' not found:", context.debugDescription)
+                                                    print("codingPath:", context.codingPath)
+                                                } catch let DecodingError.typeMismatch(type, context)  {
+                                                    print("Type '\(type)' mismatch:", context.debugDescription)
+                                                    print("codingPath:", context.codingPath)
+                                                } catch {
+                                                    print("error: ", error)
                                                 }
-                                                self.generateTATBreachedNotifications()
-                                                print("HR Request Inserted via Notification")
                                             }
                                         })
                                     }
-                                })
+                                } else {
+                                    let rawData = try grievance_log.rawData()
+                                    let grievance_request = try JSONDecoder().decode(HrRequest.self, from: rawData)
+                                    let hr_request = grievance_log.dictionary!
+                                    created_date = hr_request["CREATED_DATE"]?.stringValue ?? ""
+                                    print("HRBP_EXISTS::: \(hr_request["HRBP_EXISTS"]?.int ?? -1)")
+                                    let ref_id = grievance_log.dictionary?["REF_ID"]?.string
+                                    AppDelegate.sharedInstance.db?.deleteRow(tableName: db_hr_request, column: "REF_ID", ref_id: "\(ref_id ?? "")", handler: { (granted) in
+                                        if granted {
+                                            AppDelegate.sharedInstance.db?.insert_tbl_hr_request(hrrequests: grievance_request, { success in
+                                                if success {
+                                                    if let hr_logs = grievance_log.dictionary?[_hr_logs]?.array {
+                                                        var hrlog : HrLog?
+                                                        
+                                                        for data in hr_logs {
+                                                            hrlog = HrLog(emplNo: data.dictionary?["EMPL_NO"]?.int ?? -1,
+                                                                          created: data.dictionary?["CREATED"]?.string ?? "",
+                                                                          refID: ref_id ?? "",
+                                                                          gremID: data.dictionary?["GREM_ID"]?.int ?? -1,
+                                                                          ticketID: data.dictionary?["TICKET_ID"]?.int ?? -1,
+                                                                          ticketStatus: data.dictionary?["TICKET_STATUS"]?.string ?? "",
+                                                                          remarks: data.dictionary?["REMARKS"]?.string ?? "",
+                                                                          remarksInput: data.dictionary?["REMARKS_INPUT"]?.string ?? "")
+                                                            AppDelegate.sharedInstance.db?.deleteRow(tableName: db_grievance_remarks, column: "SERVER_ID_PK", ref_id: "\(hrlog?.gremID ?? -1)", handler: { _ in
+                                                                AppDelegate.sharedInstance.db?.insert_tbl_hr_grievance(hr_log: hrlog!)
+                                                                if let files = data.dictionary?[_hr_files]?.array {
+                                                                    for file in files {
+                                                                        do {
+                                                                            let hrFileRawData = try file.rawData()
+                                                                            let f = try JSONDecoder().decode(HrFiles.self, from: hrFileRawData)
+                                                                            AppDelegate.sharedInstance.db?.deleteAllWithCondition(tableName: db_files, columnName: "SERVER_ID_PK", value: "\(file.dictionary?["GIMG_ID"]?.int ?? -1)", handler: { _ in
+                                                                                AppDelegate.sharedInstance.db?.insert_tbl_hr_files(hrfile: f)
+                                                                            })
+                                                                        } catch let hrFileErr {
+                                                                            print(hrFileErr.localizedDescription)
+                                                                        }
+                                                                    }
+                                                                }
+                                                            })
+                                                        }
+                                                    }
+                                                    self.generateTATBreachedNotifications()
+                                                    print("HR Request Inserted via Notification")
+                                                }
+                                            })
+                                        }
+                                    })
+                                }
+                                
                             }catch let DecodingError.dataCorrupted(context) {
                                 print(context)
                             } catch let DecodingError.keyNotFound(key, context) {

@@ -29,16 +29,55 @@ class FulfilmentDashboardViewController: BaseViewController {
     var start_day: String = ""
     var end_day: String = ""
     
+    
+    var conditions = ""
+    var selected_query: String?
+    
+    var DateLabels: [String] = []
+    
     var fulfilment_orders: [tbl_fulfilments_order]?
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Fulfillment"
         addDoubleNavigationButtons()
         self.makeTopCornersRounded(roundView: self.mainView)
+        self.selected_query = "Weekly"
     }
     override func viewDidAppear(_ animated: Bool) {
+        NotificationCenter.default.addObserver(self, selector: #selector(refreshedView(notification:)), name: .refreshedViews, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(navigateThroughtNotify(notification:)), name: .navigateThroughNotification, object: nil)
+        self.navigationItem.rightBarButtonItems = nil
+        addDoubleNavigationButtons()
+        
+        if let btn = self.navigationItem.rightBarButtonItems?.first {
+            let count = getNotificationCounts()
+            if count > 0 {
+                btn.addBadge(num: count)
+            } else {
+                btn.removeBadge()
+            }
+        }
         setupJSON()
     }
+    @objc func refreshedView(notification: Notification) {
+        self.navigationItem.rightBarButtonItems = nil
+        addDoubleNavigationButtons()
+        
+        
+        if let btn = self.navigationItem.rightBarButtonItems?.first {
+            let count = getNotificationCounts()
+            if count > 0 {
+                btn.addBadge(num: count)
+            } else {
+                btn.removeBadge()
+            }
+        }
+        self.setupJSON()
+    }
+    override func viewDidDisappear(_ animated: Bool) {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
     func setupJSON() {
         var query = ""
         
@@ -46,7 +85,14 @@ class FulfilmentDashboardViewController: BaseViewController {
         var inProcessCounter :Double = 0
         var readyToSubmitCounter :Double = 0
         var numberOfOrders = 0
-        let orderIdQuery = "SELECT DISTINCT ORDER_ID FROM FULFILMENT_ORDERS WHERE CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)'"
+        var orderIdQuery = ""
+        if start_day == "" && end_day == "" {
+            let previousDate = getPreviousDays(days: -Int(number_of_days)!)
+            let weekly = previousDate.convertDateToString(date: previousDate)
+            orderIdQuery = "SELECT DISTINCT ORDER_ID FROM \(db_fulfilment_orders) WHERE CREATE_AT >= '\(weekly)' AND CREATE_AT <= '\(getLocalCurrentDate())' AND CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)'"
+        } else {
+            orderIdQuery = "SELECT DISTINCT ORDER_ID FROM \(db_fulfilment_orders) WHERE CREATE_AT >= '\(start_day)' AND CREATE_AT <= '\(end_day)' AND CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)'"
+        }
         if let idCount = AppDelegate.sharedInstance.db?.read_tbl_fulfilment_orderId(query: orderIdQuery)?.count {
             numberOfOrders = idCount
         }
@@ -223,7 +269,25 @@ class FulfilmentDashboardViewController: BaseViewController {
         let controller = self.storyboard?.instantiateViewController(withIdentifier: "FulfilmentListingViewController") as! FulfilmentListingViewController
         controller.numberOfDays = self.number_of_days
         if self.number_of_days == "7" {
+            
+        }
+        switch self.number_of_days {
+        case "7":
             controller.numberOfDaysSorting = "This Week"
+            break
+        case "15":
+            controller.numberOfDaysSorting = "15 Days"
+            break
+        case "30":
+            controller.numberOfDaysSorting = "Monthly"
+            break
+        case "0":
+            controller.numberOfDaysSorting = "Custom Selection"
+            controller.start_day = self.start_day
+            controller.end_day = self.end_day
+            break
+        default:
+            break
         }
         
         switch sender.tag {
@@ -245,4 +309,60 @@ class FulfilmentDashboardViewController: BaseViewController {
         
         self.navigationController?.pushViewController(controller, animated: true)
     }
+    
+    @IBAction func this_weekTapped(_ sender: Any) {
+        let storyboard = UIStoryboard(name: "Popups", bundle: nil)
+        let controller = storyboard.instantiateViewController(withIdentifier: "FilterDataPopupViewController") as! FilterDataPopupViewController
+        
+        if self.selected_query == "Custom Selection" {
+            controller.fromdate = self.start_day
+            controller.todate   = self.end_day
+        }
+        controller.selected_query = self.selected_query
+        controller.delegate = self
+        controller.modalTransitionStyle = .crossDissolve
+        if #available(iOS 13.0, *) {
+            controller.modalPresentationStyle = .overFullScreen
+        }
+        Helper.topMostController().present(controller, animated: true, completion: nil)
+    }
+}
+
+
+//MARK: DateSelection Delegate
+extension FulfilmentDashboardViewController: DateSelectionDelegate {
+    func dateSelection(numberOfDays: Int, selected_query: String) {
+        self.selected_query = selected_query
+        self.this_week.setTitle(selected_query, for: .normal)
+        
+        self.start_day = ""
+        self.end_day = ""
+        
+        self.number_of_days = "\(numberOfDays)"
+        self.setupJSON()
+    }
+    
+    func dateSelection(startDate: String, endDate: String, selected_query: String) {
+        self.selected_query = selected_query
+        
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd'T'hh:mm:ss"
+        let sDate = dateFormatter.date(from: startDate)
+        let eDate = dateFormatter.date(from: endDate)
+        
+        dateFormatter.dateFormat = "dd-MMM-yyyy"
+        let sDateS = dateFormatter.string(from: sDate ?? Date())
+        let eDateS = dateFormatter.string(from: eDate ?? Date())
+        
+        self.this_week.setTitle("\(sDateS) TO \(eDateS)", for: .normal)
+        
+        self.start_day = startDate
+        self.end_day   = endDate
+        
+        self.number_of_days = "0"
+        self.setupJSON()
+    }
+    
+    func requestModeSelected(selected_query: String) {}
 }
