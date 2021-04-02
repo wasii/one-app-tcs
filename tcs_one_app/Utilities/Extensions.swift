@@ -866,3 +866,23 @@ extension MKMapView {
     setRegion(region, animated: true)
   }
 }
+
+
+extension tbl_HR_Notification_Request: Equatable {
+  static func ==(lhs: tbl_HR_Notification_Request, rhs: tbl_HR_Notification_Request) -> Bool {
+    return lhs.TICKET_ID == rhs.TICKET_ID && lhs.TICKET_ID == rhs.TICKET_ID
+  }
+}
+extension Array where Element: Equatable {
+  func uniqueElements() -> [Element] {
+    var out = [Element]()
+
+    for element in self {
+      if !out.contains(element) {
+        out.append(element)
+      }
+    }
+
+    return out
+  }
+}

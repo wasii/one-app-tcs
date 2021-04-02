@@ -1386,11 +1386,12 @@ class DBHelper {
                 let ticket_id = Int(sqlite3_column_int(queryStatement, 14))
                 let sr_no = Int(sqlite3_column_int(queryStatement, 15))
                 
-//                let ticket_status = String(describing: String(cString: sqlite3_column_text(queryStatement, 28)))
-                
                 let sync_status = Int(sqlite3_column_int(queryStatement, 17))
                 let record_id = Int(sqlite3_column_int(queryStatement, 18))
-    let ticket_status = String(describing: String(cString: sqlite3_column_text(queryStatement, 19)))
+                var ticket_status = ""
+                if let _ = sqlite3_column_text(queryStatement, 19) {
+                    ticket_status = String(describing: String(cString: sqlite3_column_text(queryStatement, 19)))
+                }
                 let request_log = self.read_tbl_hr_request(query: "SELECT * FROM \(db_hr_request) WHERE CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)' AND SERVER_ID_PK = '\(server_id_pk)'")
                 
                 tbl_hrnotificationrequest.append(tbl_HR_Notification_Request(ID: id,

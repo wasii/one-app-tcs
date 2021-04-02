@@ -18,6 +18,9 @@ class ScanFulfillmentViewController: BaseViewController, AVCaptureMetadataOutput
     @IBOutlet weak var messageLabel: UILabel!
     @IBOutlet weak var conditionView: UIView!
     @IBOutlet weak var videoView: UIView!
+    @IBOutlet weak var headerView: UIView!
+    @IBOutlet weak var headerViewMessage: UILabel!
+    @IBOutlet weak var headerViewImage: UIImageView!
     
     var captureSession:AVCaptureSession?
     var videoPreviewLayer:AVCaptureVideoPreviewLayer?
@@ -67,7 +70,11 @@ class ScanFulfillmentViewController: BaseViewController, AVCaptureMetadataOutput
         super.viewDidLoad()
         setupConditions()
         setupCameraView()
-        title = "Scan Shipment"
+        title = "Fulfillment"
+        if let v = view.viewWithTag(10) {
+            self.videoView.bringSubviewToFront(v)
+        }
+        
     }
     private func setupConditions() {
         if let o = orderId {
@@ -81,7 +88,7 @@ class ScanFulfillmentViewController: BaseViewController, AVCaptureMetadataOutput
                         if OLEExist > 0 {
                             let query = "SELECT * FROM \(db_scan_prefix) WHERE SERVICE_NO = 'OLE'"
                             if let scan_prefix = AppDelegate.sharedInstance.db?.read_tbl_scan_prefix(query: query).first {
-                                self.DGroupPrefix = scan_prefix.PREFIX_CODE
+                                self.OLEPrefix = scan_prefix.PREFIX_CODE
                                 self.isOLEExist = true
                             }
                         } else {
@@ -118,6 +125,21 @@ class ScanFulfillmentViewController: BaseViewController, AVCaptureMetadataOutput
                                 }
                                 break
                             }
+                        }
+                    }
+                }
+                if isCNScanned {
+                    self.headerViewImage.image = UIImage(named: "basket")
+                    if self.OLEPrefix == "OLEP" {
+                        self.headerViewMessage.text = "Scan Bucket"
+                    } else {
+                        self.headerViewMessage.text = "Scan Area"
+                    }
+                    self.headerView.backgroundColor = UIColor.inprocessColor()
+                    for (index, order) in self.fulfilment_orders!.enumerated() {
+                        if order.CNSG_NO == self.currentCNSG {
+                            self.fulfilment_orders![index].ITEM_STATUS = "Scanned"
+                            break
                         }
                     }
                 }
@@ -253,12 +275,15 @@ class ScanFulfillmentViewController: BaseViewController, AVCaptureMetadataOutput
                             self.conditionView.backgroundColor = UIColor.approvedColor()
                             self.messageLabel.text = "Bucket # \(code) valid"
                             
+                            self.headerViewImage.image = UIImage(named: "box")
+                            self.headerViewMessage.text = "Scan CN Number"
+                            self.headerView.backgroundColor = UIColor.pendingColor()
+                            
                             self.isCNScanned = false
                             self.isBasketScanned = true
                             
                             self.isAllASKT = true
                             
-                            self.title = "Scan Shipment"
                             self.receivedOrderBasket = code
                             
                             self.delegate?.didScanCode(code: code, isBucket: true, CN: self.currentCNSG)
@@ -277,7 +302,9 @@ class ScanFulfillmentViewController: BaseViewController, AVCaptureMetadataOutput
                             self.isCNScanned = false
                             self.isBasketScanned = true
                             
-                            self.title = "Scan Shipment"
+                            self.headerViewImage.image = UIImage(named: "box")
+                            self.headerViewMessage.text = "Scan CN Number"
+                            self.headerView.backgroundColor = UIColor.pendingColor()
                             
                             self.delegate?.didScanCode(code: code, isBucket: true, CN: self.currentCNSG)
                             self.dismissScanner()
@@ -300,7 +327,10 @@ class ScanFulfillmentViewController: BaseViewController, AVCaptureMetadataOutput
                             self.isCNScanned = false
                             self.isBasketScanned = true
                             
-                            self.title = "Scan Shipment"
+                            self.headerViewImage.image = UIImage(named: "box")
+                            self.headerViewMessage.text = "Scan CN Number"
+                            self.headerView.backgroundColor = UIColor.pendingColor()
+                            
                             self.receivedOrderBasket = code
                             
                             self.delegate?.didScanCode(code: code, isBucket: true, CN: self.currentCNSG)
@@ -330,6 +360,15 @@ class ScanFulfillmentViewController: BaseViewController, AVCaptureMetadataOutput
                         } else {
                             self.fulfilment_orders![index].ITEM_STATUS = "Scanned"
                         }
+                        
+                        self.headerViewImage.image = UIImage(named: "basket")
+                        if self.OLEPrefix == "OLEP" {
+                            self.headerViewMessage.text = "Scan Bucket"
+                        } else {
+                            self.headerViewMessage.text = "Scan Area"
+                        }
+                        self.headerView.backgroundColor = UIColor.inprocessColor()
+                        
                         self.isBasketScanned = false
                         self.currentCNSG = order.CNSG_NO
                         
@@ -337,7 +376,6 @@ class ScanFulfillmentViewController: BaseViewController, AVCaptureMetadataOutput
                             self.isCNScanned = false
                         } else {
                             self.isCNScanned = true
-                            self.title = "Scan Bucket"
                         }
                         self.delegate?.didScanCode(code: code, isBucket: false, CN: self.fulfilment_orders![index].CNSG_NO)
                         if self.fulfilment_orders?.count == 1 {

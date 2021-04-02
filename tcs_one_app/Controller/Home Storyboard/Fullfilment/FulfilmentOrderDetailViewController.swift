@@ -55,6 +55,8 @@ class FulfilmentOrderDetailViewController: BaseViewController {
     
     var submit_orders: [SubmitOrder]?
     
+    var isNavigateFromDashboard = false
+    var cnsg_no: String?
     let barcodeViewController = BarcodeScannerViewController()
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -121,6 +123,22 @@ class FulfilmentOrderDetailViewController: BaseViewController {
                 }).first {
                     self.isOrderReceived = true
                     self.receivedOrderBasket = temp.BASKET_BARCODE
+                } else {
+                    if let OLEExist = AppDelegate.sharedInstance.db?.read_tbl_fulfilment_orderId(orderId: orderId!) {
+                        if OLEExist > 0 {
+                            let query = "SELECT * FROM \(db_scan_prefix) WHERE SERVICE_NO = 'OLE'"
+                            if let scan_prefix = AppDelegate.sharedInstance.db?.read_tbl_scan_prefix(query: query).first {
+                                self.DGroupPrefix = scan_prefix.PREFIX_CODE
+                                self.isOLEExist = true
+                            }
+                        } else {
+                            let query = "SELECT * FROM \(db_scan_prefix) WHERE SERVICE_NO = 'D'"
+                            if let scan_prefix = AppDelegate.sharedInstance.db?.read_tbl_scan_prefix(query: query).first {
+                                self.DGroupPrefix = scan_prefix.PREFIX_CODE
+                                self.isOLEExist = false
+                            }
+                        }
+                    }
                 }
                 
                 self.fulfilment_orders = fulfilment_order
@@ -173,6 +191,23 @@ class FulfilmentOrderDetailViewController: BaseViewController {
                                                    cn_number: self.fulfilment_orders![0].CNSG_NO,
                                                    basket_no: "0")
                     }
+                } else if isNavigateFromDashboard {
+                    for (index,order) in self.fulfilment_orders!.enumerated() {
+                        if order.CNSG_NO == cnsg_no {
+                            self.fulfilment_orders![index].ITEM_STATUS = "Scanned"
+                            AppDelegate.sharedInstance.db?.deleteRow(tableName: db_fulfilment_orders_temp, column: "CN_Number", ref_id: "\(self.fulfilment_orders![index].CNSG_NO)", handler: { _ in
+//                                let temp_order = SubmitOrder(ORDER_ID: self.fulfilment_orders![index].ORDER_ID,
+//                                                             STATUS: "Scanned",
+//                                                             CN_NUMBER: self.fulfilment_orders![index].CNSG_NO,
+//                                                             BASKET_NO: "")
+//                                AppDelegate.sharedInstance.db?.insert_tbl_fulfilment_orders_temp(orders: temp_order, handler: { _ in })
+//                                AppDelegate.sharedInstance.db?.updateTables(tableName: db_fulfilment_orders, columnName: ["ITEM_STATUS"], updateValue: ["Scanned"], onCondition: "CNSG_NO = '\(self.fulfilment_orders![index].CNSG_NO)'", { _ in })
+                            })
+                            break
+                        }
+                    }
+                    openBarCodeScanner(is_cn_scanned: true)
+                    
                 }
                 
                 getCounts()
@@ -395,19 +430,24 @@ class FulfilmentOrderDetailViewController: BaseViewController {
         }
     }
     
-    //MARK: IBACTIONS
-    @IBAction func scanBarCod(_ sender: Any) {
-        
+    func openBarCodeScanner(is_cn_scanned: Bool) {
         let controller = self.storyboard?.instantiateViewController(withIdentifier: "scanNavController") as! UINavigationController
         (controller.children.first as! ScanFulfillmentViewController).fulfilment_orders = self.fulfilment_orders
         (controller.children.first as! ScanFulfillmentViewController).orderId = self.orderId
         (controller.children.first as! ScanFulfillmentViewController).delegate = self
-        
+        if is_cn_scanned {
+            (controller.children.first as! ScanFulfillmentViewController).isCNScanned = is_cn_scanned
+            (controller.children.first as! ScanFulfillmentViewController).currentCNSG = cnsg_no ?? ""
+        }
         controller.modalTransitionStyle = .crossDissolve
         if #available(iOS 13.0, *) {
             controller.modalPresentationStyle = .overFullScreen
         }
         present(controller, animated: true, completion: nil)
+    }
+    //MARK: IBACTIONS
+    @IBAction func scanBarCod(_ sender: Any) {
+        openBarCodeScanner(is_cn_scanned: false)
     }
     @IBAction func checkBtnTapped(_ sender: Any) {
         let generator = UINotificationFeedbackGenerator()
@@ -713,15 +753,29 @@ extension FulfilmentOrderDetailViewController: ScanFulfillmentProtocol {
                 colum = ["BASKET_NO"]
                 value = [code]
                 condition = "CN_NUMBER = '\(CN)' AND CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)'"
+                
+                AppDelegate.sharedInstance.db?.updateTables(tableName: db_fulfilment_orders,
+                                                            columnName: ["BASKET_BARCODE"],
+                                                            updateValue: [code],
+                                                            onCondition: condition, { _ in })
             } else {
                 if fulfilment_orders?.count == 1 {
                     colum = ["STATUS", "BASKET_NO"]
                     value = ["Scanned", "0"]
                     condition = "CN_NUMBER = '\(CN)' AND CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)'"
+                    
+                    AppDelegate.sharedInstance.db?.updateTables(tableName: db_fulfilment_orders,
+                                                                columnName: ["ITEM_STATUS", "BASKET_BARCODE"],
+                                                                updateValue: ["Scanned", "0"],
+                                                                onCondition: condition, { _ in })
                 } else {
                     colum = ["STATUS"]
                     value = ["Scanned"]
                     condition = "CN_NUMBER = '\(CN)' AND CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)'"
+                    AppDelegate.sharedInstance.db?.updateTables(tableName: db_fulfilment_orders,
+                                                                columnName: ["ITEM_STATUS"],
+                                                                updateValue: ["Scanned"],
+                                                                onCondition: condition, { _ in })
                 }
                 
             }
@@ -736,9 +790,13 @@ extension FulfilmentOrderDetailViewController: ScanFulfillmentProtocol {
                 temp_order = SubmitOrder(ORDER_ID: orderId!, STATUS: "Scanned", CN_NUMBER: CN, BASKET_NO: "0")
                 AppDelegate.sharedInstance.db?.insert_tbl_fulfilment_orders_temp(orders: temp_order, handler: { _ in })
             } else {
-                temp_order = SubmitOrder(ORDER_ID: orderId!, STATUS: "Scanned", CN_NUMBER: CN, BASKET_NO: "")
+                temp_order = SubmitOrder(ORDER_ID: orderId!, STATUS: "Scanned", CN_NUMBER: CN, BASKET_NO: code)
                 AppDelegate.sharedInstance.db?.insert_tbl_fulfilment_orders_temp(orders: temp_order, handler: { _ in })
             }
+            AppDelegate.sharedInstance.db?.updateTables(tableName: db_fulfilment_orders,
+                                                        columnName: ["ITEM_STATUS", "BASKET_BARCODE"],
+                                                        updateValue: ["Scanned", code],
+                                                        onCondition: condition, { _ in })
         }
         
     }

@@ -413,9 +413,9 @@ class BaseViewController: UIViewController {
     }
     
     func getNotificationCounts() -> Int{
-        let query = "SELECT n.*,r.TICKET_STATUS as LOG_TICKET FROM \(db_hr_notifications) n LEFT JOIN \(db_hr_request) r ON n.TICKET_ID = r.SERVER_ID_PK WHERE r.CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)' and n.READ_STATUS_DTTM = 'a' ORDER BY n.CREATED_DATE desc"
-        return AppDelegate.sharedInstance.db?.read_tbl_hr_notification_request(query: query).count ?? 0
-        
+        let query = "select n.*,r.TICKET_STATUS as LOG_TICKET from NOTIFICATION_LOGS n LEFT JOIN FULFILMENT_ORDERS f ON n.TICKET_ID = f.ORDER_ID LEFT JOIN REQUEST_LOGS r ON n.TICKET_ID = r.SERVER_ID_PK where n.READ_STATUS_DTTM = 'a' ORDER BY n.CREATED_DATE desc"
+        let notifications_count = AppDelegate.sharedInstance.db?.read_tbl_hr_notification_request(query: query).uniqueElements().count
+        return notifications_count ?? 0
     }
     
     

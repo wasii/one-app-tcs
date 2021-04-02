@@ -388,7 +388,10 @@ extension FulfilmentDashboardViewController: ScanFulfillmentProtocol {
     func didScanCode(code: String, isBucket: Bool, CN: String) {
         let controller = self.storyboard?.instantiateViewController(withIdentifier: "FulfilmentOrderDetailViewController") as! FulfilmentOrderDetailViewController
         
+        
         controller.orderId = code
+        controller.isNavigateFromDashboard = true
+        controller.cnsg_no = CN
         self.navigationController?.pushViewController(controller, animated: true)
     }
 }

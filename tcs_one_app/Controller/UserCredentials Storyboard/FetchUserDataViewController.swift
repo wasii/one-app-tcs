@@ -183,6 +183,12 @@ class FetchUserDataViewController: BaseViewController {
                     DispatchQueue.main.async {
                         self.view.makeToast("Session Expired.")
                         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                            Messaging.messaging().unsubscribe(fromTopic: BROADCAST_KEY)
+                            AppDelegate.sharedInstance.db?.deleteRow(tableName: db_last_sync_status, column: "SYNC_KEY", ref_id: GET_HR_NOTIFICATION, handler: { _ in })
+                            AppDelegate.sharedInstance.db?.deleteRow(tableName: db_last_sync_status, column: "SYNC_KEY", ref_id: GETORDERFULFILMET, handler: { _ in })
+                            
+                            AppDelegate.sharedInstance.db?.deleteAll(tableName: db_hr_notifications, handler: { _ in })
+                            AppDelegate.sharedInstance.db?.deleteAll(tableName: db_fulfilment_orders, handler: { _ in })
                             UserDefaults.standard.removeObject(forKey: USER_ACCESS_TOKEN)
                             UserDefaults.standard.removeObject(forKey: "CurrentUser")
                             if self.isPresented {

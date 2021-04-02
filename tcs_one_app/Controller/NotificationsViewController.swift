@@ -104,14 +104,14 @@ class NotificationsViewController: BaseViewController {
     
     
     func setup_hr_notification(_ handler: @escaping(_ success: Bool, _ count: Int) -> Void) {
-        let query = "SELECT n.*,r.TICKET_STATUS as LOG_TICKET FROM \(db_hr_notifications) n LEFT JOIN \(db_hr_request) r ON n.TICKET_ID = r.SERVER_ID_PK WHERE r.CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)' ORDER BY n.CREATED_DATE desc"
+        let query = "select n.*,r.TICKET_STATUS as LOG_TICKET from NOTIFICATION_LOGS n LEFT JOIN FULFILMENT_ORDERS f ON n.TICKET_ID = f.ORDER_ID LEFT JOIN REQUEST_LOGS r ON n.TICKET_ID = r.SERVER_ID_PK  ORDER BY n.CREATED_DATE desc"
         hr_notification = AppDelegate.sharedInstance.db?.read_tbl_hr_notification_request(query: query)
         
         if hr_notification!.count > 0 {
             hr_notification = hr_notification?.sorted(by: { (req1, req2) -> Bool in
                 req1.CREATED_DATE > req2.CREATED_DATE
             })
-            
+            hr_notification = hr_notification?.uniqueElements()
 //            hr_notification = hr_notification?.filter({ (logs) -> Bool in
 //                logs.MODULE_ID != 4
 //            })
@@ -317,6 +317,37 @@ extension NotificationsViewController: UITableViewDelegate, UITableViewDataSourc
                 break
             }
             break
+        case 105:
+            cell.status.text = data.TICKET_STATUS
+            cell.type.text = "Fulfillment"
+            let query = "SELECT * FROM \(db_fulfilment_orders) WHERE ORDER_ID = '\(data.TICKET_ID)'"
+            if let orders = AppDelegate.sharedInstance.db?.read_tbl_fulfilment_orders(query: query) {
+                var p = 0
+                var r = 0
+                let count = orders.count
+                for order in orders {
+                    switch order.ITEM_STATUS {
+                    case "Pending":
+                        p += 1
+                    case "Received":
+                        r += 1
+                        break
+                    default:
+                        break
+                    }
+                }
+                if p == count {
+                    cell.status.text = "Pending"
+                    cell.status.textColor = UIColor.pendingColor()
+                } else if r == count {
+                    cell.status.text = "Ready to Deliver"
+                    cell.status.textColor = UIColor.approvedColor()
+                } else {
+                    cell.status.text = "In Process"
+                    cell.status.textColor = UIColor.inprocessColor()
+                }
+            }
+            break
         default:
             break
         }
@@ -421,6 +452,31 @@ extension NotificationsViewController: UITableViewDelegate, UITableViewDataSourc
             
             controller.ticket_id = self.hr_notification![indexPath.row].TICKET_ID
             self.navigationController?.pushViewController(controller, animated: true)
+            break
+        case 105:
+            let query = "SELECT * FROM \(db_fulfilment_orders) WHERE ORDER_ID = '\(ticket_id)'"
+            if let orders = AppDelegate.sharedInstance.db?.read_tbl_fulfilment_orders(query: query) {
+                var p = 0
+                var r = 0
+                let count = orders.count
+                for order in orders {
+                    switch order.ITEM_STATUS {
+                    case "Pending":
+                        p += 1
+                    case "Received":
+                        r += 1
+                        break
+                    default:
+                        break
+                    }
+                }
+                if p != count {
+                    let storyboard = UIStoryboard(name: "Fullfillment", bundle: nil)
+                    let controller = storyboard.instantiateViewController(withIdentifier: "FulfilmentOrderDetailViewController") as! FulfilmentOrderDetailViewController
+                    controller.orderId = "\(ticket_id)"
+                    self.navigationController?.pushViewController(controller, animated: true)
+                }
+            }
             break
         default:
             break
