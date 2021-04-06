@@ -213,6 +213,20 @@ class FulfilmentOrderDetailViewController: BaseViewController {
                 getCounts()
                 setupTableViewHeight()
             }
+        } else if let orders = self.fulfilment_orders {
+            orderID.text = orders.first?.ORDER_ID ?? ""
+            city.text = orders.first?.DESTINATION ?? ""
+            if orders.first?.CONSIGNEE_ADDRESS == "" {
+                address.text = "No Address Found"
+            } else {
+                address.text = orders.first?.CONSIGNEE_ADDRESS ?? ""
+            }
+            orders.forEach { (logs) in
+                self.createSubmissionArray(orderId: logs.ORDER_ID, cn_number: logs.CNSG_NO, basket_no: logs.BASKET_BARCODE)
+                orderId = logs.ORDER_ID
+            }
+            getCounts()
+            setupTableViewHeight()
         }
     }
     private func getCounts() {
@@ -495,8 +509,8 @@ extension FulfilmentOrderDetailViewController: UITableViewDataSource, UITableVie
         
         cell.orderID.text = "CN # \(data.CNSG_NO)"
         cell.bucketBarcode.text = "Bucket # \(data.BASKET_BARCODE)"
-        cell.resetBtn.tag = indexPath.row
-        cell.resetBtn.addTarget(self, action: #selector(revertStatus(sender:)), for: .touchUpInside)
+//        cell.resetBtn.tag = indexPath.row
+//        cell.resetBtn.addTarget(self, action: #selector(revertStatus(sender:)), for: .touchUpInside)
         cell.status.text = data.ITEM_STATUS
         
         switch data.ITEM_STATUS {
@@ -681,6 +695,9 @@ extension FulfilmentOrderDetailViewController: ConfirmationProtocol {
             return
         }
         if let submit_order = self.submit_orders {
+            self.view.makeToastActivity(.center)
+            self.freezeScreen()
+            
             var dictionary = [NSMutableDictionary]()
             for o in submit_order {
                 let temp = NSMutableDictionary()
@@ -709,7 +726,7 @@ extension FulfilmentOrderDetailViewController: ConfirmationProtocol {
                         }
                         controller.delegate = self
                         controller.modalTransitionStyle = .crossDissolve
-                        Helper.topMostController().present(controller, animated: true, completion: nil)
+                        self.present(controller, animated: true, completion: nil)
                     }
                 } else {
                     DispatchQueue.main.async {
@@ -800,7 +817,7 @@ extension FulfilmentOrderDetailViewController: ScanFulfillmentProtocol {
         }
         
     }
-    func didScanConsignment(fulfillment_orders: [tbl_fulfilments_order]) {}
+    func didScanOrder(orders: [tbl_fulfilments_order]) {}
 }
 
 

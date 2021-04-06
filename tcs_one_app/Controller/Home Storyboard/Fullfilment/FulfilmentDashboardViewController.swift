@@ -394,4 +394,10 @@ extension FulfilmentDashboardViewController: ScanFulfillmentProtocol {
         controller.cnsg_no = CN
         self.navigationController?.pushViewController(controller, animated: true)
     }
+    func didScanOrder(orders: [tbl_fulfilments_order]) {
+        let controller = self.storyboard?.instantiateViewController(withIdentifier: "FulfilmentOrderDetailViewController") as! FulfilmentOrderDetailViewController
+        controller.fulfilment_orders = orders
+        controller.isNavigateFromDashboard = true
+        self.navigationController?.pushViewController(controller, animated: true)
+    }
 }

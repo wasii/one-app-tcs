@@ -56,7 +56,7 @@ class FetchUserDataViewController: BaseViewController {
         super.viewDidLoad()
         self.navigationItem.hidesBackButton = true
         self.title = "Fetching Data"
-
+        self.hrSetupData_Label.text = "Syncing HR"
         self.makeTopCornersRounded(roundView: self.mainView)
 //        AppDelegate.sharedInstance.db?.deleteAll(tableName: db_fulfilment_orders_temp, handler: { _ in })
         version.text = "Version: " + Bundle.main.releaseVersionNumber!

@@ -19,7 +19,7 @@
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="iha-Xg-iOT" customClass="CustomView" customModule="One_App" customModuleProvider="target">
-                        <rect key="frame" x="5" y="5" width="449" height="55"/>
+                        <rect key="frame" x="5" y="5" width="502" height="55"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Q0X-tQ-5Na">
                                 <rect key="frame" x="15" y="12" width="43.5" height="20.5"/>
@@ -34,7 +34,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Pending" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ji1-8a-gl7">
-                                <rect key="frame" x="384.5" y="19.5" width="49.5" height="16"/>
+                                <rect key="frame" x="437.5" y="19.5" width="49.5" height="16"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                 <color key="textColor" red="0.94901960780000005" green="0.59607843140000005" blue="0.1176470588" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
@@ -74,10 +74,16 @@
                     <constraint firstItem="6Ks-b6-WGH" firstAttribute="leading" secondItem="iha-Xg-iOT" secondAttribute="trailing" constant="5" id="7cf-TI-YVL"/>
                     <constraint firstAttribute="trailing" secondItem="6Ks-b6-WGH" secondAttribute="trailing" constant="8" id="Csu-pA-mkq"/>
                     <constraint firstAttribute="bottom" secondItem="iha-Xg-iOT" secondAttribute="bottom" constant="5" id="O2T-zL-Rpn"/>
+                    <constraint firstAttribute="trailing" secondItem="iha-Xg-iOT" secondAttribute="trailing" constant="5" id="OtU-EX-0qG"/>
                     <constraint firstItem="6Ks-b6-WGH" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="ZZ6-NG-EHh"/>
                     <constraint firstItem="iha-Xg-iOT" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="5" id="rhg-W0-Zgu"/>
                     <constraint firstItem="iha-Xg-iOT" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="5" id="vVy-DS-3dt"/>
                 </constraints>
+                <variation key="default">
+                    <mask key="subviews">
+                        <exclude reference="6Ks-b6-WGH"/>
+                    </mask>
+                </variation>
             </tableViewCellContentView>
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

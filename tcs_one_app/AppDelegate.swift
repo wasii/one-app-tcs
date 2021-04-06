@@ -322,6 +322,11 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
             do {
                 if let jsonArray = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as? [String: Any] {
                     if let request_log = JSON(jsonArray[_data]).dictionary?[_hr_requests]?.array?.first {
+                        if request_log.dictionary?["ORDER_ID"]?.string != nil {
+//                            NotificationCenter.default.post(Notification.init(name: .navigateThroughNotification, object: tbl_hr_request, userInfo: nil))
+                            completionHandler()
+                            return
+                        }
                         let ticket_id = request_log.dictionary?["TICKET_ID"]?.int
                         let tbl_hr_request = db?.read_tbl_hr_request(query: "SELECT * FROM \(db_hr_request) WHERE SERVER_ID_PK = '\(ticket_id!)' AND CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)'").first
                         

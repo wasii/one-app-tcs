@@ -8,9 +8,12 @@
 
 import UIKit
 import AVFoundation
+import SwiftyJSON
+import AVKit
 
 protocol ScanFulfillmentProtocol {
     func didScanCode(code: String, isBucket: Bool, CN: String)
+    func didScanOrder(orders: [tbl_fulfilments_order])
 }
 
 class ScanFulfillmentViewController: BaseViewController, AVCaptureMetadataOutputObjectsDelegate {
@@ -66,6 +69,7 @@ class ScanFulfillmentViewController: BaseViewController, AVCaptureMetadataOutput
     var submit_orders: [SubmitOrder]?
     var delegate: ScanFulfillmentProtocol?
     
+    var avPlayer: AVAudioPlayer?
     override func viewDidLoad() {
         super.viewDidLoad()
         setupConditions()
@@ -74,7 +78,22 @@ class ScanFulfillmentViewController: BaseViewController, AVCaptureMetadataOutput
         if let v = view.viewWithTag(10) {
             self.videoView.bringSubviewToFront(v)
         }
-        
+        avPlayer = AVAudioPlayer()
+    }
+    private func playSound(soundName: String) {
+//        let url = Bundle.main.
+        let url = Bundle.main.url(forResource: soundName, withExtension: "mp3")
+
+        do {
+            avPlayer = try AVAudioPlayer(contentsOf: url!)
+            guard let player = avPlayer else { return }
+
+            player.prepareToPlay()
+            player.play()
+
+        } catch let error as NSError {
+            print(error.description)
+        }
     }
     private func setupConditions() {
         if let o = orderId {
@@ -271,7 +290,7 @@ class ScanFulfillmentViewController: BaseViewController, AVCaptureMetadataOutput
                             let _ = self.fulfilment_orders?.filter({ (log) -> Bool in
                                 log.CNSG_NO == self.currentCNSG
                             }).first
-                            
+                            self.playSound(soundName: "beep")
                             self.conditionView.backgroundColor = UIColor.approvedColor()
                             self.messageLabel.text = "Bucket # \(code) valid"
                             
@@ -297,6 +316,7 @@ class ScanFulfillmentViewController: BaseViewController, AVCaptureMetadataOutput
                             let _ = self.fulfilment_orders?.filter({ (log) -> Bool in
                                 log.CNSG_NO == self.currentCNSG
                             }).first
+                            self.playSound(soundName: "beep")
                             self.conditionView.backgroundColor = UIColor.approvedColor()
                             self.messageLabel.text = "Bucket # \(code) valid"
                             self.isCNScanned = false
@@ -310,6 +330,7 @@ class ScanFulfillmentViewController: BaseViewController, AVCaptureMetadataOutput
                             self.dismissScanner()
                         }
                     } else {
+                        self.playSound(soundName: "buzzer")
                         self.conditionView.backgroundColor = UIColor.nativeRedColor()
                         self.messageLabel.text = "Bucket # \(code) not valid"
                     }
@@ -322,6 +343,7 @@ class ScanFulfillmentViewController: BaseViewController, AVCaptureMetadataOutput
                             let _ = self.fulfilment_orders?.filter({ (log) -> Bool in
                                 log.CNSG_NO == self.currentCNSG
                             }).first
+                            self.playSound(soundName: "beep")
                             self.conditionView.backgroundColor = UIColor.approvedColor()
                             self.messageLabel.text = "Bucket # \(code) valid"
                             self.isCNScanned = false
@@ -337,6 +359,7 @@ class ScanFulfillmentViewController: BaseViewController, AVCaptureMetadataOutput
                             self.dismissScanner()
                         }
                     } else {
+                        self.playSound(soundName: "buzzer")
                         self.conditionView.backgroundColor = UIColor.nativeRedColor()
                         self.messageLabel.text = "Bucket # \(code) not valid"
                         
@@ -351,7 +374,18 @@ class ScanFulfillmentViewController: BaseViewController, AVCaptureMetadataOutput
                             self.isBasketScanned = false
                             self.conditionView.backgroundColor = UIColor.pendingColor()
                             self.messageLabel.text = "CN # \(code) already scanned."
-                            return
+                            if order.BASKET_BARCODE == "" {
+                                self.headerViewImage.image = UIImage(named: "basket")
+                                if self.OLEPrefix == "OLEP" {
+                                    self.headerViewMessage.text = "Scan Bucket"
+                                } else {
+                                    self.headerViewMessage.text = "Scan Area"
+                                }
+                                self.headerView.backgroundColor = UIColor.inprocessColor()
+                                self.isCNScanned = true
+                            } else {
+                                return
+                            }
                         } else if self.fulfilment_orders![index].ITEM_STATUS == "Received" {
                             self.isBasketScanned = false
                             self.conditionView.backgroundColor = UIColor.pendingColor()
@@ -377,6 +411,7 @@ class ScanFulfillmentViewController: BaseViewController, AVCaptureMetadataOutput
                         } else {
                             self.isCNScanned = true
                         }
+                        
                         self.delegate?.didScanCode(code: code, isBucket: false, CN: self.fulfilment_orders![index].CNSG_NO)
                         if self.fulfilment_orders?.count == 1 {
                             self.dismiss(animated: true, completion: nil)
@@ -385,23 +420,216 @@ class ScanFulfillmentViewController: BaseViewController, AVCaptureMetadataOutput
                     }
                 }
                 if isFound {
+                    self.playSound(soundName: "beep")
                     self.isBasketScanned = false
                     self.conditionView.backgroundColor = UIColor.approvedColor()
                     self.messageLabel.text = "CN # \(code) valid"
                 } else {
+                    self.playSound(soundName: "buzzer")
                     self.isBasketScanned = false
                     self.conditionView.backgroundColor = UIColor.nativeRedColor()
                     self.messageLabel.text = "CN # \(code) not valid"
                 }
             }
         } else {
-            if let orders = AppDelegate.sharedInstance.db?.read_tbl_fulfilment_orders(query: "SELECT * FROM \(db_fulfilment_orders) WHERE CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)'") {
-                let order = orders.filter { (logs) -> Bool in
-                    logs.CNSG_NO == code
-                }
-                if order.count > 0 {
-                    self.dismiss(animated: true) {
-                        self.delegate?.didScanCode(code: order.first?.ORDER_ID ?? "", isBucket: false, CN: code)
+            if let _ = fulfilment_orders {
+                if isCNScanned {
+                    for order in self.fulfilment_orders! {
+                        if order.CNSG_NO == currentCNSG {
+                            if var ordersAgainstId = AppDelegate.sharedInstance.db?.read_tbl_fulfilment_orders(query: "SELECT * FROM \(db_fulfilment_orders) WHERE ORDER_ID = '\(order.ORDER_ID)'") {
+                                
+                                if ordersAgainstId.filter({ (logs) -> Bool in
+                                    logs.BASKET_BARCODE == ""
+                                }).count == ordersAgainstId.count {
+                                    let query = "select * from \(db_fulfilment_orders) where BASKET_BARCODE = '\(code)'"
+                                    let t = AppDelegate.sharedInstance.db!.read_tbl_fulfilment_orders(query: query)
+                                    
+                                    if t.count > 0 {
+                                        for tt in t {
+                                            if tt.ITEM_STATUS == "Pending" {
+                                                self.playSound(soundName: "buzzer")
+                                                self.conditionView.backgroundColor = UIColor.rejectedColor()
+                                                self.messageLabel.text = "Bucket # \(code) already is in used."
+                                                return
+                                            }
+                                        }
+                                    }
+                                    let prefix = code[0..<self.OLEPrefix.count]
+                                    print(prefix)
+                                    if prefix == self.OLEPrefix {
+                                        for (i,_) in ordersAgainstId.enumerated() {
+                                            ordersAgainstId[i].BASKET_BARCODE = code
+                                            AppDelegate.sharedInstance.db?.updateTables(tableName: db_fulfilment_orders, columnName: ["BASKET_BARCODE"], updateValue: [code], onCondition: "CNSG_NO = \(ordersAgainstId[i].CNSG_NO)", { _ in })
+                                        }
+                                        DispatchQueue.main.async {
+                                            self.playSound(soundName: "beep")
+                                            let o = ordersAgainstId.filter({ (log) -> Bool in
+                                                log.CNSG_NO == self.currentCNSG
+                                            }).first
+                                            
+                                            self.conditionView.backgroundColor = UIColor.approvedColor()
+                                            self.messageLabel.text = "Bucket # \(code) valid"
+                                            
+                                            self.headerViewImage.image = UIImage(named: "box")
+                                            self.headerViewMessage.text = "Scan CN Number"
+                                            self.headerView.backgroundColor = UIColor.pendingColor()
+                                            
+                                            self.isCNScanned = false
+                                            self.isBasketScanned = true
+                                            
+                                            self.isAllASKT = true
+
+                                            self.isCNScanned = false
+                                            self.HIT_API(order: o!)
+                                        }
+                                    } else if prefix == DGroupPrefix {
+                                        for (i,_) in ordersAgainstId.enumerated() {
+                                            ordersAgainstId[i].BASKET_BARCODE = code
+                                            AppDelegate.sharedInstance.db?.updateTables(tableName: db_fulfilment_orders, columnName: ["BASKET_BARCODE"], updateValue: [code], onCondition: "CNSG_NO = \(ordersAgainstId[i].CNSG_NO)", { _ in })
+                                        }
+                                        DispatchQueue.main.async {
+                                            self.playSound(soundName: "beep")
+                                            let o = ordersAgainstId.filter({ (log) -> Bool in
+                                                log.CNSG_NO == self.currentCNSG
+                                            }).first
+                                            self.conditionView.backgroundColor = UIColor.approvedColor()
+                                            self.messageLabel.text = "Bucket # \(code) valid"
+                                            self.isCNScanned = false
+                                            self.isBasketScanned = true
+                                            
+                                            self.headerViewImage.image = UIImage(named: "box")
+                                            self.headerViewMessage.text = "Scan CN Number"
+                                            self.headerView.backgroundColor = UIColor.pendingColor()
+                                            self.isCNScanned = false
+                                            self.HIT_API(order: o!)
+                                        }
+                                    } else {
+                                        self.conditionView.backgroundColor = UIColor.nativeRedColor()
+                                        self.messageLabel.text = "Bucket # \(code) not valid"
+                                    }
+                                } else {
+                                    let bucket = ordersAgainstId.filter { (logs) -> Bool in
+                                        logs.BASKET_BARCODE != ""
+                                    }.first
+                                    
+                                    if bucket?.BASKET_BARCODE == code {
+                                        DispatchQueue.main.async {
+                                            for (i,_) in ordersAgainstId.enumerated() {
+                                                ordersAgainstId[i].BASKET_BARCODE = code
+                                                AppDelegate.sharedInstance.db?.updateTables(tableName: db_fulfilment_orders, columnName: ["BASKET_BARCODE"], updateValue: [code], onCondition: "CNSG_NO = \(ordersAgainstId[i].CNSG_NO)", { _ in })
+                                            }
+                                            let o = ordersAgainstId.filter({ (log) -> Bool in
+                                                log.CNSG_NO == self.currentCNSG
+                                            }).first
+                                            self.playSound(soundName: "beep")
+                                            self.conditionView.backgroundColor = UIColor.approvedColor()
+                                            self.messageLabel.text = "Bucket # \(code) valid"
+                                            self.isCNScanned = false
+                                            self.isBasketScanned = true
+                                            
+                                            self.headerViewImage.image = UIImage(named: "box")
+                                            self.headerViewMessage.text = "Scan CN Number"
+                                            self.headerView.backgroundColor = UIColor.pendingColor()
+                                            
+                                            self.receivedOrderBasket = code
+                                            self.isCNScanned = false
+                                            self.HIT_API(order: o!)
+                                        }
+                                    } else {
+                                        self.playSound(soundName: "buzzer")
+                                        self.conditionView.backgroundColor = UIColor.nativeRedColor()
+                                        self.messageLabel.text = "Bucket # \(code) not valid"
+                                    }
+                                }
+                            }
+                            break
+                        }
+                    }
+                } else {
+                    for (index,order) in self.fulfilment_orders!.enumerated() {
+                        if order.CNSG_NO == code {
+                            SETUP_PERMISSION(order: order)
+                            currentCNSG = order.CNSG_NO
+                            
+                            if order.ITEM_STATUS.lowercased() == "scanned" {
+                                self.isBasketScanned = false
+                                self.conditionView.backgroundColor = UIColor.pendingColor()
+                                self.messageLabel.text = "CN # \(code) already scanned."
+                                self.playSound(soundName: "beep")
+                                if order.BASKET_BARCODE == "" {
+                                    self.headerViewImage.image = UIImage(named: "basket")
+                                    if self.OLEPrefix == "OLEP" {
+                                        self.headerViewMessage.text = "Scan Bucket"
+                                    } else {
+                                        self.headerViewMessage.text = "Scan Area"
+                                    }
+                                    self.headerView.backgroundColor = UIColor.inprocessColor()
+                                    self.isCNScanned = true
+                                } else {
+                                    return
+                                }
+                            } else if order.ITEM_STATUS.lowercased() == "received" {
+                                self.isBasketScanned = false
+                                self.conditionView.backgroundColor = UIColor.pendingColor()
+                                self.messageLabel.text = "CN # \(code) already received."
+                                self.playSound(soundName: "buzzer")
+                                return
+                                
+                            } else {
+                                isCNScanned = true
+                                self.conditionView.backgroundColor = UIColor.approvedColor()
+                                self.messageLabel.text = "CN # \(code) scanned."
+                                self.fulfilment_orders![index].ITEM_STATUS = "Scanned"
+                                
+                                
+                                AppDelegate.sharedInstance.db?.updateTables(tableName: db_fulfilment_orders,
+                                                                            columnName: ["ITEM_STATUS"],
+                                                                            updateValue: ["Scanned"],
+                                                                            onCondition: "CNSG_NO = '\(order.CNSG_NO)'", { _ in })
+                                
+                                if let orderAgainstId = AppDelegate.sharedInstance.db?.read_tbl_fulfilment_orders(query: "SELECT * FROM \(db_fulfilment_orders) WHERE ORDER_ID = '\(order.ORDER_ID)'") {
+                                    let count = orderAgainstId.filter { (logs) -> Bool in
+                                        logs.ITEM_STATUS.lowercased() == "received" || logs.ITEM_STATUS.lowercased() == "scanned"
+                                    }.count
+                                    
+                                    if orderAgainstId.count == 1 {
+                                        self.playSound(soundName: "beep")
+                                        dismiss(animated: true) {
+                                            self.delegate?.didScanCode(code: orderAgainstId.first?.ORDER_ID ?? "",
+                                                                       isBucket: false,
+                                                                       CN: orderAgainstId.first?.CNSG_NO ?? "")
+                                        }
+                                    } else {
+                                        if count == orderAgainstId.count {
+                                            self.playSound(soundName: "beep")
+                                            if var noBasket = orderAgainstId.filter({ (logs) -> Bool in
+                                                logs.BASKET_BARCODE == ""
+                                            }).first {
+                                                noBasket.BASKET_BARCODE = orderAgainstId.first?.BASKET_BARCODE ?? ""
+                                                AppDelegate.sharedInstance.db?.updateTables(tableName: db_fulfilment_orders, columnName: ["BASKET_BARCODE"], updateValue: [orderAgainstId.first?.BASKET_BARCODE ?? ""], onCondition: "CNSG_NO = '\(noBasket.CNSG_NO)'", { _ in
+                                                    if let orders = AppDelegate.sharedInstance.db?.read_tbl_fulfilment_orders(query: "SELECT * FROM \(db_fulfilment_orders) WHERE ORDER_ID = '\(orderAgainstId.first?.ORDER_ID ?? "")'") {
+                                                        self.delegate?.didScanOrder(orders: orders)
+                                                    }
+                                                })
+                                            }
+                                            dismiss(animated: true) {
+                                                NotificationCenter.default.post(Notification.init(name: .refreshedViews))
+                                            }
+                                        }
+                                    }
+                                }
+                                
+                                self.headerViewImage.image = UIImage(named: "basket")
+                                if self.OLEPrefix == "OLEP" {
+                                    self.headerViewMessage.text = "Scan Bucket"
+                                } else {
+                                    self.headerViewMessage.text = "Scan Area"
+                                }
+                                self.headerView.backgroundColor = UIColor.inprocessColor()
+                                self.fulfilment_orders = AppDelegate.sharedInstance.db?.read_tbl_fulfilment_orders(query: "SELECT * FROM \(db_fulfilment_orders)")
+                            }
+                            break
+                        }
                     }
                 }
             }
@@ -410,6 +638,124 @@ class ScanFulfillmentViewController: BaseViewController, AVCaptureMetadataOutput
     
     @IBAction func closeBtnTapped(_ sender: Any) {
         dismiss(animated: true) {}
+    }
+    
+    
+    private func SETUP_PERMISSION(order: tbl_fulfilments_order) {
+        if let orderAgainstId = AppDelegate.sharedInstance.db?.read_tbl_fulfilment_orders(query: "SELECT * FROM \(db_fulfilment_orders) WHERE ORDER_ID = '\(order.ORDER_ID)'") {
+            if let OLEExist = AppDelegate.sharedInstance.db?.read_tbl_fulfilment_orderId(orderId: order.ORDER_ID) {
+                if OLEExist > 0 {
+                    let query = "SELECT * FROM \(db_scan_prefix) WHERE SERVICE_NO = 'OLE'"
+                    if let scan_prefix = AppDelegate.sharedInstance.db?.read_tbl_scan_prefix(query: query).first {
+                        self.OLEPrefix = scan_prefix.PREFIX_CODE
+                        self.isOLEExist = true
+                    }
+                } else {
+                    let query = "SELECT * FROM \(db_scan_prefix) WHERE SERVICE_NO = 'D' OR SERVICE_NO = 'O'"
+                    if let scan_prefix = AppDelegate.sharedInstance.db?.read_tbl_scan_prefix(query: query).first {
+                        self.DGroupPrefix = scan_prefix.PREFIX_CODE
+                        self.isOLEExist = false
+                    }
+                }
+            }
+            
+            
+            if let temp = orderAgainstId.filter({ (logs) -> Bool in
+                logs.ITEM_STATUS.lowercased() == "received" && logs.ORDER_ID == order.ORDER_ID
+            }).first {
+                self.isOrderReceived = true
+                self.receivedOrderBasket = temp.BASKET_BARCODE
+            }
+        }
+    }
+    
+    private func HIT_API(order: tbl_fulfilments_order) {
+        if !CustomReachability.isConnectedNetwork() {
+            let orders = SubmitOrder(ORDER_ID: order.ORDER_ID,
+                                     STATUS: "Scanned",
+                                     CN_NUMBER: order.CNSG_NO,
+                                     BASKET_NO: order.BASKET_BARCODE)
+            AppDelegate.sharedInstance.db?.insert_tbl_fulfilment_orders_temp(orders: orders, handler: { _ in })
+            return
+        }
+        
+        guard let access_token = UserDefaults.standard.string(forKey: USER_ACCESS_TOKEN) else {
+            let orders = SubmitOrder(ORDER_ID: order.ORDER_ID,
+                                     STATUS: "Scanned",
+                                     CN_NUMBER: order.CNSG_NO,
+                                     BASKET_NO: order.BASKET_BARCODE)
+            AppDelegate.sharedInstance.db?.insert_tbl_fulfilment_orders_temp(orders: orders, handler: { _ in })
+            return
+        }
+        
+        let temp = NSMutableDictionary()
+        temp.setValue(order.ORDER_ID, forKey: "order_id")
+        temp.setValue("Received", forKey: "status")
+        temp.setValue(order.CNSG_NO, forKey: "cn_number")
+        temp.setValue(order.BASKET_BARCODE, forKey: "basket_no")
+        let json = [
+            "update_request": [
+                "access_token" : access_token,
+                "orders" : [temp]
+            ]
+        ] as [String:Any]
+        let params = getAPIParameters(service_name: UPDATEORDERFULFILMENT, request_body: json)
+        updateFulfilmentOrder(params: params)
+    }
+    func updateFulfilmentOrder(params: [String:Any]) {
+        NetworkCalls.updatefulfillmentorder(params: params) { (granted, response) in
+            if granted {
+                if let orders = JSON(response).array {
+                    for order in orders {
+                        AppDelegate.sharedInstance.db?.deleteRow(tableName: db_fulfilment_orders, column: "CNSG_NO", ref_id: order["CNSG_NO"].stringValue, handler: { _ in
+                            do {
+                                let data = try order.rawData()
+                                let fulfilment_order = try JSONDecoder().decode(FulfilmentOrders.self, from: data)
+                                AppDelegate.sharedInstance.db?.insert_tbl_fulfilment_orders(fulfilment_orders: fulfilment_order, handler: { _ in })
+                            } catch let DecodingError.dataCorrupted(context) {
+                                print(context)
+                            } catch let DecodingError.keyNotFound(key, context) {
+                                print("Key '\(key)' not found:", context.debugDescription)
+                                print("codingPath:", context.codingPath)
+                            } catch let DecodingError.valueNotFound(value, context) {
+                                print("Value '\(value)' not found:", context.debugDescription)
+                                print("codingPath:", context.codingPath)
+                            } catch let DecodingError.typeMismatch(type, context)  {
+                                print("Type '\(type)' mismatch:", context.debugDescription)
+                                print("codingPath:", context.codingPath)
+                            } catch {
+                                print("error: ", error)
+                            }
+                        })
+                    }
+                    self.fulfilment_orders = AppDelegate.sharedInstance.db?.read_tbl_fulfilment_orders(query: "SELECT * FROM \(db_fulfilment_orders) WHERE CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)'")
+                }
+            } else {
+                print("ERROR")
+            }
+        }
+    }
+    private func getAPIParameters(service_name: String, request_body: [String:Any]) -> [String:Any] {
+        let params = [
+            "eAI_MESSAGE": [
+                "eAI_HEADER": [
+                    "serviceName": service_name,
+                    "client": "ibm_apiconnect",
+                    "clientChannel": "MOB",
+                    "referenceNum": "",
+                    "securityInfo": [
+                        "authentication": [
+                            "userId": "",
+                            "password": ""
+                        ]
+                    ]
+                ],
+                "eAI_BODY": [
+                    "eAI_REQUEST": request_body
+                ]
+            ]
+        ]
+        return params as [String: Any]
     }
 }
 
