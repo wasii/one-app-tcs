@@ -327,7 +327,9 @@ let MODULE_TAG_GRIEVANCE = "Grievance";
 let MODULE_TAG_IMS = "IMS"
 let MODULE_TAG_LEADERSHIPAWAZ = "AWAZ"
 let MODULE_TAG_FULFILMENT = "FULFILMENT"
-
+let MODULE_TAG_ATTENDANCE = "ATTENDANCE"
+let MODULE_TAG_CLS = "CLS"
+let MODULE_TAG_TRACK = "TRACK"
 
 let DOC = "application/msword";
 let DOCX = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";

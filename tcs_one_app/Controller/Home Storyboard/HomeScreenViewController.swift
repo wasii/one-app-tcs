@@ -190,30 +190,32 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
         if let _ = self.module {
             chartViews = [ChartViews]()
             for mod in self.module! {
-                if mod.MODULENAME == "Track" || mod.MODULENAME == "IMS" || mod.MODULENAME == "Leadership Connect" || mod.MODULENAME == "Attendance" || mod.MODULENAME == "Fulfilment" || mod.MODULENAME == "CLS" {
+                if mod.TAGNAME == MODULE_TAG_TRACK || mod.TAGNAME == MODULE_TAG_IMS || mod.TAGNAME == MODULE_TAG_LEADERSHIPAWAZ || mod.TAGNAME == MODULE_TAG_ATTENDANCE || mod.TAGNAME == MODULE_TAG_FULFILMENT || mod.TAGNAME == MODULE_TAG_CLS {
                     print(mod.MODULENAME)
                     continue
                 }
                 let chart:ChartViews = Bundle.main.loadNibNamed("ChartViews", owner: self, options: nil)?.first as! ChartViews
-                switch mod.MODULENAME {
-                case "HR Help Desk":
+                switch mod.TAGNAME {
+                case MODULE_TAG_HR:
                     chart.heading.text = "HR Dashboard"
                     chart.pieChart = self.setupGraphs(pieChartView: chart.pieChart,
                                                       module_id: mod.SERVER_ID_PK,
                                                       pending: "Pending",
                                                       approved: "Completed",
                                                       rejected: "Rejected",
-                                                      tag: mod.SERVER_ID_PK)
+                                                      tag: mod.SERVER_ID_PK,
+                                                      module: MODULE_TAG_HR)
                     self.ModuleCount += 1
                     break
-                case "Awaz":
+                case MODULE_TAG_GRIEVANCE:
                     chart.heading.text = "Awaz Dashboard"
                     chart.pieChart = self.setupGraphs(pieChartView: chart.pieChart,
                                                       module_id: mod.SERVER_ID_PK,
                                                       pending: "Submitted",
                                                       approved: INREVIEW,
                                                       rejected: "Closed",
-                                                      tag: mod.SERVER_ID_PK)
+                                                      tag: mod.SERVER_ID_PK,
+                                                      module: MODULE_TAG_GRIEVANCE)
                     self.ModuleCount += 1
                     break
                 //                case "IMS":
@@ -251,7 +253,8 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
                                                       pending: "Web",
                                                       approved: "Android",
                                                       rejected: "iOS",
-                                                      tag: -1)
+                                                      tag: -1,
+                                                      module: "-1")
                     self.ModuleCount += 1
                     chartViews.append(chart)
                 }
@@ -266,7 +269,8 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
                                                   pending: "Pending",
                                                   approved: "In Process",
                                                   rejected: "Ready to Delivery",
-                                                  tag: -2)
+                                                  tag: -2,
+                                                  module: "-2")
                 self.ModuleCount += 1
                 chartViews.append(chart)
             }
@@ -292,7 +296,7 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
         }
     }
     
-    func setupGraphs(pieChartView: PieChartView, module_id: Int, pending: String, approved: String, rejected: String , tag: Int) -> PieChartView {
+    func setupGraphs(pieChartView: PieChartView, module_id: Int, pending: String, approved: String, rejected: String , tag: Int, module: String) -> PieChartView {
         
         pieChartView.highlightPerTapEnabled = true
         pieChartView.usePercentValuesEnabled = false
@@ -320,7 +324,7 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
         var approvedCounter :Double = 0
         var rejectedCounter :Double = 0
         
-        if tag == -1 {
+        if module == "-1" {
             let appCount = AppDelegate.sharedInstance.db?.read_tbl_login_count(query: "SELECT * FROM \(db_login_count)")
             if let data = appCount {
                 for index in data {
@@ -339,7 +343,7 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
                     }
                 }
             }
-        } else if tag == -2 {
+        } else if module == "-2" {
             let orderIdQuery = "SELECT DISTINCT ORDER_ID FROM FULFILMENT_ORDERS WHERE CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)'"
             if let ids = AppDelegate.sharedInstance.db?.read_tbl_fulfilment_orderId(query: orderIdQuery) {
                 for id in ids {
@@ -379,8 +383,8 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
                 let chartValue = ((data.ticket_total ?? "0") as NSString).doubleValue
                 let key = data.ticket_status ?? ""
                 
-                switch tag {
-                case 1, 4:
+                switch module {
+                case MODULE_TAG_HR, MODULE_TAG_LEADERSHIPAWAZ:
                     switch key {
                     case "Pending", "pending":
                         pendingCounter = chartValue
@@ -395,7 +399,7 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
                         break
                     }
                     break
-                case 2:
+                case MODULE_TAG_GRIEVANCE:
                     switch key {
                     case "Submitted":
                         pendingCounter += chartValue
@@ -439,8 +443,8 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
         set!.sliceSpace = 0
         
         for data in entries {
-            switch tag {
-            case 1, 4:
+            switch module {
+            case MODULE_TAG_HR, MODULE_TAG_LEADERSHIPAWAZ:
                 switch data.label {
                 case "Pending", "pending": colors.append(UIColor.pendingColor())
                     break
@@ -453,7 +457,7 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
                 }
                 break
                 
-            case 2, 3:
+            case MODULE_TAG_GRIEVANCE, MODULE_TAG_IMS:
                 switch data.label {
                 case "Closed": colors.append(UIColor.rejectedColor())
                     break
@@ -464,14 +468,14 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
                 default: break
                 }
                 break
-            case -1:
+            case "-1":
                 switch data.label {
                 case "Web": colors.append(UIColor.pendingColor()); break
                 case "Android": colors.append(UIColor.approvedColor()); break
                 case "iOS": colors.append(UIColor.rejectedColor()); break
                 default: break
                 }
-            case -2:
+            case "-2":
                 switch data.label {
                 case "Pending": colors.append(UIColor.pendingColor()); break
                 case "In Process": colors.append(UIColor.inprocessColor()); break

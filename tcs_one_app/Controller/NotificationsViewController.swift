@@ -318,6 +318,13 @@ extension NotificationsViewController: UITableViewDelegate, UITableViewDataSourc
             }
             break
         case 105:
+            break
+        default:
+            break
+        }
+        
+        switch data.MODULE_DSCRP {
+        case "Fulfilment":
             cell.status.text = data.TICKET_STATUS
             cell.type.text = "Fulfillment"
             let query = "SELECT * FROM \(db_fulfilment_orders) WHERE ORDER_ID = '\(data.TICKET_ID)'"
