@@ -324,9 +324,9 @@ extension NotificationsViewController: UITableViewDelegate, UITableViewDataSourc
         }
         
         switch data.MODULE_DSCRP {
-        case "Fulfilment":
+        case "FULFILMENT":
             cell.status.text = data.TICKET_STATUS
-            cell.type.text = "Fulfillment"
+            cell.type.text = "Fulfilment"
             let query = "SELECT * FROM \(db_fulfilment_orders) WHERE ORDER_ID = '\(data.TICKET_ID)'"
             if let orders = AppDelegate.sharedInstance.db?.read_tbl_fulfilment_orders(query: query) {
                 var p = 0
@@ -461,6 +461,12 @@ extension NotificationsViewController: UITableViewDelegate, UITableViewDataSourc
             self.navigationController?.pushViewController(controller, animated: true)
             break
         case 105:
+            break
+        default:
+            break
+        }
+        switch self.hr_notification![indexPath.row].MODULE_DSCRP {
+        case "FULFILMENT":
             let query = "SELECT * FROM \(db_fulfilment_orders) WHERE ORDER_ID = '\(ticket_id)'"
             if let orders = AppDelegate.sharedInstance.db?.read_tbl_fulfilment_orders(query: query) {
                 var p = 0

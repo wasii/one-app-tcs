@@ -74,22 +74,21 @@ class ScanFulfillmentViewController: BaseViewController, AVCaptureMetadataOutput
         super.viewDidLoad()
         setupConditions()
         setupCameraView()
-        title = "Fulfillment"
+        title = "Fulfilment"
         if let v = view.viewWithTag(10) {
             self.videoView.bringSubviewToFront(v)
         }
         avPlayer = AVAudioPlayer()
     }
     private func playSound(soundName: String) {
-//        let url = Bundle.main.
         let url = Bundle.main.url(forResource: soundName, withExtension: "mp3")
 
         do {
             avPlayer = try AVAudioPlayer(contentsOf: url!)
-            guard let player = avPlayer else { return }
+//            guard let player = avPlayer else { return }
 
-            player.prepareToPlay()
-            player.play()
+//            player.prepareToPlay()
+            self.avPlayer?.play()
 
         } catch let error as NSError {
             print(error.description)
@@ -291,6 +290,7 @@ class ScanFulfillmentViewController: BaseViewController, AVCaptureMetadataOutput
                                 log.CNSG_NO == self.currentCNSG
                             }).first
                             self.playSound(soundName: "beep")
+                            self.startHapticTouch(type: .success)
                             self.conditionView.backgroundColor = UIColor.approvedColor()
                             self.messageLabel.text = "Bucket # \(code) valid"
                             
@@ -317,6 +317,7 @@ class ScanFulfillmentViewController: BaseViewController, AVCaptureMetadataOutput
                                 log.CNSG_NO == self.currentCNSG
                             }).first
                             self.playSound(soundName: "beep")
+                            self.startHapticTouch(type: .success)
                             self.conditionView.backgroundColor = UIColor.approvedColor()
                             self.messageLabel.text = "Bucket # \(code) valid"
                             self.isCNScanned = false
@@ -331,6 +332,7 @@ class ScanFulfillmentViewController: BaseViewController, AVCaptureMetadataOutput
                         }
                     } else {
                         self.playSound(soundName: "buzzer")
+                        self.startHapticTouch(type: .error)
                         self.conditionView.backgroundColor = UIColor.nativeRedColor()
                         self.messageLabel.text = "Bucket # \(code) not valid"
                     }
@@ -344,6 +346,7 @@ class ScanFulfillmentViewController: BaseViewController, AVCaptureMetadataOutput
                                 log.CNSG_NO == self.currentCNSG
                             }).first
                             self.playSound(soundName: "beep")
+                            self.startHapticTouch(type: .success)
                             self.conditionView.backgroundColor = UIColor.approvedColor()
                             self.messageLabel.text = "Bucket # \(code) valid"
                             self.isCNScanned = false
@@ -360,6 +363,7 @@ class ScanFulfillmentViewController: BaseViewController, AVCaptureMetadataOutput
                         }
                     } else {
                         self.playSound(soundName: "buzzer")
+                        self.startHapticTouch(type: .error)
                         self.conditionView.backgroundColor = UIColor.nativeRedColor()
                         self.messageLabel.text = "Bucket # \(code) not valid"
                         
@@ -386,10 +390,14 @@ class ScanFulfillmentViewController: BaseViewController, AVCaptureMetadataOutput
                             } else {
                                 return
                             }
+                            self.playSound(soundName: "buzzer")
+                            self.startHapticTouch(type: .error)
                         } else if self.fulfilment_orders![index].ITEM_STATUS == "Received" {
                             self.isBasketScanned = false
                             self.conditionView.backgroundColor = UIColor.pendingColor()
                             self.messageLabel.text = "CN # \(code) already received."
+                            self.playSound(soundName: "buzzer")
+                            self.startHapticTouch(type: .error)
                             return
                         } else {
                             self.fulfilment_orders![index].ITEM_STATUS = "Scanned"
@@ -421,11 +429,13 @@ class ScanFulfillmentViewController: BaseViewController, AVCaptureMetadataOutput
                 }
                 if isFound {
                     self.playSound(soundName: "beep")
+                    self.startHapticTouch(type: .success)
                     self.isBasketScanned = false
                     self.conditionView.backgroundColor = UIColor.approvedColor()
                     self.messageLabel.text = "CN # \(code) valid"
                 } else {
                     self.playSound(soundName: "buzzer")
+                    self.startHapticTouch(type: .error)
                     self.isBasketScanned = false
                     self.conditionView.backgroundColor = UIColor.nativeRedColor()
                     self.messageLabel.text = "CN # \(code) not valid"
@@ -448,6 +458,7 @@ class ScanFulfillmentViewController: BaseViewController, AVCaptureMetadataOutput
                                         for tt in t {
                                             if tt.ITEM_STATUS == "Pending" {
                                                 self.playSound(soundName: "buzzer")
+                                                self.startHapticTouch(type: .error)
                                                 self.conditionView.backgroundColor = UIColor.rejectedColor()
                                                 self.messageLabel.text = "Bucket # \(code) already is in used."
                                                 return
@@ -459,10 +470,11 @@ class ScanFulfillmentViewController: BaseViewController, AVCaptureMetadataOutput
                                     if prefix == self.OLEPrefix {
                                         for (i,_) in ordersAgainstId.enumerated() {
                                             ordersAgainstId[i].BASKET_BARCODE = code
-                                            AppDelegate.sharedInstance.db?.updateTables(tableName: db_fulfilment_orders, columnName: ["BASKET_BARCODE"], updateValue: [code], onCondition: "CNSG_NO = \(ordersAgainstId[i].CNSG_NO)", { _ in })
+                                            AppDelegate.sharedInstance.db?.updateTables(tableName: db_fulfilment_orders, columnName: ["BASKET_BARCODE"], updateValue: [code], onCondition: "CNSG_NO = '\(ordersAgainstId[i].CNSG_NO)'", { _ in })
                                         }
                                         DispatchQueue.main.async {
                                             self.playSound(soundName: "beep")
+                                            self.startHapticTouch(type: .success)
                                             let o = ordersAgainstId.filter({ (log) -> Bool in
                                                 log.CNSG_NO == self.currentCNSG
                                             }).first
@@ -485,10 +497,11 @@ class ScanFulfillmentViewController: BaseViewController, AVCaptureMetadataOutput
                                     } else if prefix == DGroupPrefix {
                                         for (i,_) in ordersAgainstId.enumerated() {
                                             ordersAgainstId[i].BASKET_BARCODE = code
-                                            AppDelegate.sharedInstance.db?.updateTables(tableName: db_fulfilment_orders, columnName: ["BASKET_BARCODE"], updateValue: [code], onCondition: "CNSG_NO = \(ordersAgainstId[i].CNSG_NO)", { _ in })
+                                            AppDelegate.sharedInstance.db?.updateTables(tableName: db_fulfilment_orders, columnName: ["BASKET_BARCODE"], updateValue: [code], onCondition: "CNSG_NO = '\(ordersAgainstId[i].CNSG_NO)'", { _ in })
                                         }
                                         DispatchQueue.main.async {
                                             self.playSound(soundName: "beep")
+                                            self.startHapticTouch(type: .success)
                                             let o = ordersAgainstId.filter({ (log) -> Bool in
                                                 log.CNSG_NO == self.currentCNSG
                                             }).first
@@ -516,12 +529,13 @@ class ScanFulfillmentViewController: BaseViewController, AVCaptureMetadataOutput
                                         DispatchQueue.main.async {
                                             for (i,_) in ordersAgainstId.enumerated() {
                                                 ordersAgainstId[i].BASKET_BARCODE = code
-                                                AppDelegate.sharedInstance.db?.updateTables(tableName: db_fulfilment_orders, columnName: ["BASKET_BARCODE"], updateValue: [code], onCondition: "CNSG_NO = \(ordersAgainstId[i].CNSG_NO)", { _ in })
+                                                AppDelegate.sharedInstance.db?.updateTables(tableName: db_fulfilment_orders, columnName: ["BASKET_BARCODE"], updateValue: [code], onCondition: "CNSG_NO = '\(ordersAgainstId[i].CNSG_NO)'", { _ in })
                                             }
                                             let o = ordersAgainstId.filter({ (log) -> Bool in
                                                 log.CNSG_NO == self.currentCNSG
                                             }).first
                                             self.playSound(soundName: "beep")
+                                            self.startHapticTouch(type: .success)
                                             self.conditionView.backgroundColor = UIColor.approvedColor()
                                             self.messageLabel.text = "Bucket # \(code) valid"
                                             self.isCNScanned = false
@@ -537,6 +551,7 @@ class ScanFulfillmentViewController: BaseViewController, AVCaptureMetadataOutput
                                         }
                                     } else {
                                         self.playSound(soundName: "buzzer")
+                                        self.startHapticTouch(type: .error)
                                         self.conditionView.backgroundColor = UIColor.nativeRedColor()
                                         self.messageLabel.text = "Bucket # \(code) not valid"
                                     }
@@ -555,7 +570,8 @@ class ScanFulfillmentViewController: BaseViewController, AVCaptureMetadataOutput
                                 self.isBasketScanned = false
                                 self.conditionView.backgroundColor = UIColor.pendingColor()
                                 self.messageLabel.text = "CN # \(code) already scanned."
-                                self.playSound(soundName: "beep")
+                                self.playSound(soundName: "buzzer")
+                                self.startHapticTouch(type: .error)
                                 if order.BASKET_BARCODE == "" {
                                     self.headerViewImage.image = UIImage(named: "basket")
                                     if self.OLEPrefix == "OLEP" {
@@ -573,6 +589,7 @@ class ScanFulfillmentViewController: BaseViewController, AVCaptureMetadataOutput
                                 self.conditionView.backgroundColor = UIColor.pendingColor()
                                 self.messageLabel.text = "CN # \(code) already received."
                                 self.playSound(soundName: "buzzer")
+                                self.startHapticTouch(type: .error)
                                 return
                                 
                             } else {
@@ -594,6 +611,7 @@ class ScanFulfillmentViewController: BaseViewController, AVCaptureMetadataOutput
                                     
                                     if orderAgainstId.count == 1 {
                                         self.playSound(soundName: "beep")
+                                        self.startHapticTouch(type: .success)
                                         dismiss(animated: true) {
                                             self.delegate?.didScanCode(code: orderAgainstId.first?.ORDER_ID ?? "",
                                                                        isBucket: false,
@@ -602,6 +620,7 @@ class ScanFulfillmentViewController: BaseViewController, AVCaptureMetadataOutput
                                     } else {
                                         if count == orderAgainstId.count {
                                             self.playSound(soundName: "beep")
+                                            self.startHapticTouch(type: .success)
                                             if var noBasket = orderAgainstId.filter({ (logs) -> Bool in
                                                 logs.BASKET_BARCODE == ""
                                             }).first {
@@ -617,15 +636,19 @@ class ScanFulfillmentViewController: BaseViewController, AVCaptureMetadataOutput
                                             }
                                         }
                                     }
+                                    let basket_barcode = orderAgainstId.filter { (logs) -> Bool in
+                                        logs.BASKET_BARCODE != ""
+                                    }.first
+                                    self.playSound(soundName: "beep")
+                                    self.startHapticTouch(type: .success)
+                                    self.headerViewImage.image = UIImage(named: "basket")
+                                    if self.OLEPrefix == "OLEP" {
+                                        self.headerViewMessage.text = "Scan Bucket - \(basket_barcode?.BASKET_BARCODE ?? "")"
+                                    } else {
+                                        self.headerViewMessage.text = "Scan Area - \(basket_barcode?.BASKET_BARCODE ?? "")"
+                                    }
+                                    self.headerView.backgroundColor = UIColor.inprocessColor()
                                 }
-                                
-                                self.headerViewImage.image = UIImage(named: "basket")
-                                if self.OLEPrefix == "OLEP" {
-                                    self.headerViewMessage.text = "Scan Bucket"
-                                } else {
-                                    self.headerViewMessage.text = "Scan Area"
-                                }
-                                self.headerView.backgroundColor = UIColor.inprocessColor()
                                 self.fulfilment_orders = AppDelegate.sharedInstance.db?.read_tbl_fulfilment_orders(query: "SELECT * FROM \(db_fulfilment_orders)")
                             }
                             break

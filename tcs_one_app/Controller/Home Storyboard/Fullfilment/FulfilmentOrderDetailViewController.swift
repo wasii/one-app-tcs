@@ -60,7 +60,7 @@ class FulfilmentOrderDetailViewController: BaseViewController {
     let barcodeViewController = BarcodeScannerViewController()
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "Fulfillment"
+        title = "Fulfilment"
         addDoubleNavigationButtons()
         setupTextField()
         
@@ -88,8 +88,8 @@ class FulfilmentOrderDetailViewController: BaseViewController {
         address.setOutlineColor(UIColor.nativeRedColor(), for: .normal)
         
         shipment.label.textColor = UIColor.nativeRedColor()
-        shipment.label.text = "Shipment #"
-        shipment.placeholder = ""
+        shipment.label.text = "Search"
+        shipment.placeholder = "Enter CN / Order Number"
         shipment.setOutlineColor(UIColor.nativeRedColor(), for: .normal)
         shipment.setOutlineColor(UIColor.nativeRedColor(), for: .editing)
         shipment.delegate = self
@@ -250,8 +250,6 @@ class FulfilmentOrderDetailViewController: BaseViewController {
             if rCount == self.fulfilment_orders?.count {
                 self.truckBtn.isHidden = true
                 self.checkBtn.isHidden = true
-                self.shipment.isEnabled = false
-                self.scanBtn.isEnabled = false
                 return
             }
             if usCount == self.fulfilment_orders?.count {
@@ -461,13 +459,33 @@ class FulfilmentOrderDetailViewController: BaseViewController {
     }
     //MARK: IBACTIONS
     @IBAction func scanBarCod(_ sender: Any) {
-        openBarCodeScanner(is_cn_scanned: false)
+        if shipment.text == "" {
+            return
+        }
+        
+        self.fulfilment_orders = AppDelegate.sharedInstance.db?.read_tbl_fulfilment_orders(query: "SELECT * FROM \(db_fulfilment_orders) WHERE CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)'")
+        
+        self.fulfilment_orders = self.fulfilment_orders?.filter({ (logs) -> Bool in
+            return (logs.ORDER_ID.lowercased().contains(self.shipment.text?.lowercased() ?? "")) ||
+                (String(logs.CNSG_NO).contains(self.shipment.text?.lowercased() ?? ""))
+        })
+        
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
+            self.getCounts()
+            self.setupTableViewHeight()
+        }
+        if let order = fulfilment_orders?.first {
+            orderID.text = order.ORDER_ID
+            city.text = order.DESTINATION
+            if order.CONSIGNEE_ADDRESS == "" {
+                address.text = "No Address Found"
+            } else {
+                address.text = order.CONSIGNEE_ADDRESS
+            }
+        }
     }
     @IBAction func checkBtnTapped(_ sender: Any) {
-        let generator = UINotificationFeedbackGenerator()
-        generator.notificationOccurred(.warning)
-        
-        
         checkBtn.isEnabled = false
         let popup = UIStoryboard(name: "Popups", bundle: nil)
         let controller = popup.instantiateViewController(withIdentifier: "ConfirmationPopViewController") as! ConfirmationPopViewController
@@ -587,16 +605,19 @@ extension FulfilmentOrderDetailViewController: BarcodeScannerDismissalDelegate {
 
 
 extension FulfilmentOrderDetailViewController: UITextFieldDelegate {
-    func textFieldDidEndEditing(_ textField: UITextField) {
-        if textField.text != "" {
-            for (i,o) in self.fulfilment_orders!.enumerated() {
-                if o.CNSG_NO == textField.text {
-                    self.currentCNSGIndex = i
-                    break
-                }
-            }
-            self.scannedBarCode(code: textField.text ?? "")
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        if string.isEmpty {
+            return true
         }
+        let maxlength = 12
+        let currentString: NSString = textField.text as! NSString
+        let newString: NSString = currentString.replacingCharacters(in: range, with: string) as NSString
+        if newString.length <= maxlength {
+            let alphaNumericRegEx = "[a-zA-Z0-9]"
+            let predicate = NSPredicate(format:"SELF MATCHES %@", alphaNumericRegEx)
+            return predicate.evaluate(with: string)
+        }
+        return false
     }
 }
 
@@ -816,6 +837,12 @@ extension FulfilmentOrderDetailViewController: ScanFulfillmentProtocol {
                                                         onCondition: condition, { _ in })
         }
         
+        if let id = orderId {
+            fulfilment_orders = AppDelegate.sharedInstance.db?.read_tbl_fulfilment_orders(query: "SELECT * FROM \(db_fulfilment_orders) WHERE ORDER_ID = '\(id)'")
+            self.tableView.reloadData()
+            self.getCounts()
+            self.setupTableViewHeight()
+        }
     }
     func didScanOrder(orders: [tbl_fulfilments_order]) {}
 }

@@ -563,4 +563,9 @@ class BaseViewController: UIViewController {
             locationManager.stopMonitoring(for: circularRegion)
         }
     }
+    
+    func startHapticTouch(type: UINotificationFeedbackGenerator.FeedbackType) {
+        let generator = UINotificationFeedbackGenerator()
+        generator.notificationOccurred(type)
+    }
 }

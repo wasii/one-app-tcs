@@ -990,7 +990,7 @@
                                                     <constraint firstAttribute="height" constant="50" id="p5e-dF-4KU"/>
                                                 </constraints>
                                                 <fontDescription key="fontDescription" type="system" pointSize="13"/>
-                                                <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
+                                                <textInputTraits key="textInputTraits"/>
                                             </textField>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="CN Detail" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4x6-Rg-79v">
                                                 <rect key="frame" x="149.5" y="300.5" width="76" height="21.5"/>
@@ -1016,7 +1016,10 @@
                                                     <constraint firstAttribute="height" constant="40" id="Bl4-Dc-isK"/>
                                                     <constraint firstAttribute="width" secondItem="FKv-IF-H6y" secondAttribute="height" multiplier="1:1" id="eq6-Vr-R72"/>
                                                 </constraints>
-                                                <state key="normal" image="cam"/>
+                                                <color key="tintColor" red="0.87058823529411766" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                <state key="normal">
+                                                    <imageReference key="image" image="magnifyingglass" catalog="system" symbolScale="large"/>
+                                                </state>
                                                 <connections>
                                                     <action selector="scanBarCod:" destination="n08-wJ-bKd" eventType="touchUpInside" id="0Uc-I4-Dbf"/>
                                                 </connections>

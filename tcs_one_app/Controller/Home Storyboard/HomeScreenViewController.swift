@@ -506,6 +506,16 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
     }
     func setupUserModules() {
         module = AppDelegate.sharedInstance.db?.read_tbl_UserModule(query: "Select * from \(db_user_module) GROUP BY SERVER_ID_PK")
+        if let permission = AppDelegate.sharedInstance.db?.read_tbl_UserPermission(permission: PERMISSION_FulfilmentModule).count {
+            if permission == 0 {
+                for (i, m) in module!.enumerated() {
+                    if m.TAGNAME == MODULE_TAG_FULFILMENT {
+                        self.module?.remove(at: i)
+                        break
+                    }
+                }
+            }
+        }
         if let permission = AppDelegate.sharedInstance.db?.read_tbl_UserPermission(permission: PERMISSION_ViewBroadcastMode).count {
             if let emp_info = AppDelegate.sharedInstance.db?.read_tbl_UserProfile().first {
                 if emp_info.HIGHNESS == "1" {
