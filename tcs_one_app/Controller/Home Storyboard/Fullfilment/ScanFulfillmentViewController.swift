@@ -163,6 +163,30 @@ class ScanFulfillmentViewController: BaseViewController, AVCaptureMetadataOutput
                 }
             }
         }
+//        else if let _ = fulfilment_orders {
+//            if let temp = fulfilment_orders!.filter { (logs) -> Bool in
+//                logs.ITEM_STATUS == "Scanned"
+//            }.first {
+//                self.isCNScanned = true
+//                SETUP_PERMISSION(order: temp)
+//                self.conditionView.backgroundColor = UIColor.approvedColor()
+//                self.messageLabel.text = "CN # \(temp.CNSG_NO) scanned."
+//
+//                let basket_barcode = AppDelegate.sharedInstance.db?.read_tbl_fulfilment_orders(query: "SELECT * FROM \(db_fulfilment_orders) WHERE ORDER_ID = '\(temp.ORDER_ID)'").filter { (logs) -> Bool in
+//                    logs.BASKET_BARCODE != ""
+//                }.first
+//                self.playSound(soundName: "beep")
+//                self.startHapticTouch(type: .success)
+//                self.headerViewImage.image = UIImage(named: "basket")
+//                if self.OLEPrefix == "OLEP" {
+//                    self.headerViewMessage.text = "Scan Bucket - \(basket_barcode?.BASKET_BARCODE ?? "")"
+//                } else {
+//                    self.headerViewMessage.text = "Scan Area - \(basket_barcode?.BASKET_BARCODE ?? "")"
+//                }
+//                self.headerView.backgroundColor = UIColor.inprocessColor()
+//                currentCNSG = temp.CNSG_NO
+//            }
+//        }
     }
     private func setupCameraView() {
         self.captureDevice = AVCaptureDevice.default(for: .video)

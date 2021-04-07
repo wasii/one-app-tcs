@@ -85,6 +85,31 @@ extension SceneDelegate: CLLocationManagerDelegate {
                 return
             }
             
+            if !CustomReachability.isConnectedNetwork() {
+                return
+            }
+            
+            if !isEnter {
+                if let locations = AppDelegate.sharedInstance.db?.read_tbl_att_locations(query: "SELECT * FROM \(db_att_locations)") {
+                    if locations.count > 0 {
+                        for location in locations {
+                            let latitude = (location.LATITUDE as NSString).doubleValue
+                            let longitude = (location.LONGITUDE as NSString).doubleValue
+                            let cllocation = CLLocation(latitude: latitude, longitude: longitude)
+                            let currentLocation = CLLocation(latitude: coordinates.location?.coordinate.latitude ?? 0.0,
+                                                             longitude: coordinates.location?.coordinate.longitude ?? 0.0)
+                            
+                            let distance = currentLocation.distance(from: cllocation)
+                            if distance > 450 {
+                                return
+                            } else {
+                                continue
+                            }
+                        }
+                    }
+                }
+            }
+            
             let query = "SELECT * FROM \(db_att_userAttendance)"
             if let attendance = AppDelegate.sharedInstance.db?.read_tbl_att_user_attendance_for_notification(query: query) {
                 let current_day = attendance.filter { (att) -> Bool in
