@@ -116,14 +116,22 @@ extension SceneDelegate: CLLocationManagerDelegate {
                     att.STATUS == "1"
                 }.first
                 if current_day?.TIME_IN == "00:00" {
-                    hitApi(access_token: access_token, coordinates: coordinates)
-                    hitApi(access_token: access_token, coordinates: coordinates)
+                    if isEnter {
+                        hitApi(access_token: access_token, coordinates: coordinates)
+                    } else {
+                        hitApi(access_token: access_token, coordinates: coordinates)
+                        hitApi(access_token: access_token, coordinates: coordinates)
+                    }
                 } else {
                     hitApi(access_token: access_token, coordinates: coordinates)
                 }
             } else {
-                hitApi(access_token: access_token, coordinates: coordinates)
-                hitApi(access_token: access_token, coordinates: coordinates)
+                if isEnter {
+                    hitApi(access_token: access_token, coordinates: coordinates)
+                } else {
+                    hitApi(access_token: access_token, coordinates: coordinates)
+                    hitApi(access_token: access_token, coordinates: coordinates)
+                }
             }
             
             let notificationContent = UNMutableNotificationContent()

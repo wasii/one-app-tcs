@@ -181,6 +181,9 @@ class FulfilmentListingViewController: BaseViewController {
                     }
                 }
             }
+            temp_data = temp_data.sorted(by: { (logs, logs2) -> Bool in
+                logs.UPDATED_AT > logs2.UPDATED_AT
+            })
             self.fulfilment_orders = temp_data
             self.temp_data = temp_data
         } else {
@@ -297,7 +300,7 @@ extension FulfilmentListingViewController: UITableViewDelegate, UITableViewDataS
         let data = self.fulfilment_orders![indexPath.row]
         
         cell.orderId.text = "\(data.ORDER_ID)"
-        cell.date.text = data.CREATE_AT.dateSeperateWithT
+        cell.date.text = data.CREATE_AT.dateSeperateWithT.replacingOccurrences(of: "Z", with: "")
         cell.status.text = ticket_status
         switch ticket_status {
         case "Pending":

@@ -17,10 +17,12 @@ class FulfilmentOrderDetailViewController: BaseViewController {
     @IBOutlet weak var mainViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var orderID: MDCOutlinedTextField!
     @IBOutlet weak var city: MDCOutlinedTextField!
-    @IBOutlet weak var address: MDCOutlinedTextField!
+//    @IBOutlet weak var address: MDCOutlinedTextField!
+    @IBOutlet weak var address: UITextView!
     
-    @IBOutlet weak var scan_shipment_label: UILabel!
     
+    
+    @IBOutlet weak var readyToDeliverText: UILabel!
     @IBOutlet weak var shipment: MDCOutlinedTextField!
     @IBOutlet weak var scanBtn: UIButton!
     @IBOutlet weak var unscanned: UILabel!
@@ -58,6 +60,7 @@ class FulfilmentOrderDetailViewController: BaseViewController {
     var isNavigateFromDashboard = false
     var cnsg_no: String?
     let barcodeViewController = BarcodeScannerViewController()
+    var isAreaScanned = false
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Fulfilment"
@@ -82,10 +85,10 @@ class FulfilmentOrderDetailViewController: BaseViewController {
         city.placeholder = ""
         city.setOutlineColor(UIColor.nativeRedColor(), for: .normal)
         
-        address.label.textColor = UIColor.nativeRedColor()
-        address.label.text = "Address"
-        address.placeholder = ""
-        address.setOutlineColor(UIColor.nativeRedColor(), for: .normal)
+//        address.label.textColor = UIColor.nativeRedColor()
+//        address.label.text = "Address"
+//        address.placeholder = ""
+//        address.setOutlineColor(UIColor.nativeRedColor(), for: .normal)
         
         shipment.label.textColor = UIColor.nativeRedColor()
         shipment.label.text = "Search"
@@ -142,7 +145,14 @@ class FulfilmentOrderDetailViewController: BaseViewController {
                 }
                 
                 self.fulfilment_orders = fulfilment_order
-                
+                self.fulfilment_orders?.forEach({ (logs) in
+                    if logs.SERVICE_NO == "OLE" {
+                        self.isAreaScanned = true
+                    }
+                    self.createSubmissionArray(orderId: logs.ORDER_ID,
+                                               cn_number: logs.CNSG_NO,
+                                               basket_no: logs.BASKET_BARCODE)
+                })
                 orderID.text = fulfilment_order.first?.ORDER_ID ?? ""
                 city.text = fulfilment_order.first?.DESTINATION ?? ""
                 if fulfilment_order.first?.CONSIGNEE_ADDRESS == "" {
@@ -151,27 +161,27 @@ class FulfilmentOrderDetailViewController: BaseViewController {
                     address.text = fulfilment_order.first?.CONSIGNEE_ADDRESS ?? ""
                 }
                 
-                let query = "SELECT * FROM \(db_fulfilment_orders_temp) WHERE ORDER_ID = '\(orderId!)'"
-                if let temp_order = AppDelegate.sharedInstance.db?.read_tbl_fulfilment_orders_temp(query: query) {
-                    let scanned_item = temp_order.filter { (log) -> Bool in
-                        log.STATUS == "Scanned"
-                    }
-                    for (i,o) in self.fulfilment_orders!.enumerated() {
-                        for si in scanned_item {
-                            if o.CNSG_NO == si.CN_NUMBER {
-                                if si.BASKET_NO == "" {
-                                    self.fulfilment_orders![i].ITEM_STATUS = si.STATUS
-                                } else {
-                                    self.fulfilment_orders![i].ITEM_STATUS = si.STATUS
-                                    self.fulfilment_orders![i].BASKET_BARCODE = si.BASKET_NO
-                                    self.createSubmissionArray(orderId: orderId!, cn_number: si.CN_NUMBER, basket_no: si.BASKET_NO)
-                                    self.isBasketScanned = true
-                                }
-                                break
-                            }
-                        }
-                    }
-                }
+//                let query = "SELECT * FROM \(db_fulfilment_orders_temp) WHERE ORDER_ID = '\(orderId!)'"
+//                if let temp_order = AppDelegate.sharedInstance.db?.read_tbl_fulfilment_orders_temp(query: query) {
+//                    let scanned_item = temp_order.filter { (log) -> Bool in
+//                        log.STATUS == "Scanned"
+//                    }
+//                    for (i,o) in self.fulfilment_orders!.enumerated() {
+//                        for si in scanned_item {
+//                            if o.CNSG_NO == si.CN_NUMBER {
+//                                if si.BASKET_NO == "" {
+//                                    self.fulfilment_orders![i].ITEM_STATUS = si.STATUS
+//                                } else {
+//                                    self.fulfilment_orders![i].ITEM_STATUS = si.STATUS
+//                                    self.fulfilment_orders![i].BASKET_BARCODE = si.BASKET_NO
+//                                    self.createSubmissionArray(orderId: orderId!, cn_number: si.CN_NUMBER, basket_no: si.BASKET_NO)
+//                                    self.isBasketScanned = true
+//                                }
+//                                break
+//                            }
+//                        }
+//                    }
+//                }
                 if self.fulfilment_orders?.count == 1 {
                     if self.fulfilment_orders![0].ITEM_STATUS != "Received" {
                         self.fulfilment_orders![0].ITEM_STATUS = "Scanned"
@@ -222,6 +232,9 @@ class FulfilmentOrderDetailViewController: BaseViewController {
                 address.text = orders.first?.CONSIGNEE_ADDRESS ?? ""
             }
             orders.forEach { (logs) in
+                if logs.SERVICE_NO == "OLE" {
+                    self.isAreaScanned = true
+                }
                 self.createSubmissionArray(orderId: logs.ORDER_ID, cn_number: logs.CNSG_NO, basket_no: logs.BASKET_BARCODE)
                 orderId = logs.ORDER_ID
             }
@@ -259,11 +272,13 @@ class FulfilmentOrderDetailViewController: BaseViewController {
             }
             if (sCount + rCount) == self.fulfilment_orders?.count {
                 self.truckBtn.isHidden = false
+                self.readyToDeliverText.isHidden = false
                 return
             }
             
             if sCount == self.fulfilment_orders?.count {
                 if isBasketScanned {
+                    self.readyToDeliverText.isHidden = false
                     truckBtn.isHidden = false
                     checkBtn.isHidden = true
                 } else {
@@ -304,8 +319,6 @@ class FulfilmentOrderDetailViewController: BaseViewController {
                         self.isBasketScanned = true
                         
                         self.isAllASKT = true
-                        
-                        self.scan_shipment_label.text = "Scan Shipment"
                         self.shipment.label.text = "Shipment #"
                         self.shipment.text = ""
                         
@@ -329,7 +342,6 @@ class FulfilmentOrderDetailViewController: BaseViewController {
                         self.isCNScanned = false
                         self.isBasketScanned = true
                         
-                        self.scan_shipment_label.text = "Scan Shipment"
                         self.shipment.label.text = "Shipment #"
                         self.shipment.text = ""
                         
@@ -352,7 +364,6 @@ class FulfilmentOrderDetailViewController: BaseViewController {
                         self.isCNScanned = false
                         self.isBasketScanned = true
                         
-                        self.scan_shipment_label.text = "Scan Shipment"
                         self.shipment.label.text = "Shipment #"
                         self.shipment.text = ""
                         
@@ -379,7 +390,7 @@ class FulfilmentOrderDetailViewController: BaseViewController {
                         self.isCNScanned = false
                     } else {
                         self.isCNScanned = true
-                        self.scan_shipment_label.text = "Scan Bucket"
+                        
                         shipment.label.text = "Bucket #"
                         shipment.text = ""
                     }
@@ -526,7 +537,12 @@ extension FulfilmentOrderDetailViewController: UITableViewDataSource, UITableVie
         let data = self.fulfilment_orders![indexPath.row]
         
         cell.orderID.text = "CN # \(data.CNSG_NO)"
-        cell.bucketBarcode.text = "Bucket # \(data.BASKET_BARCODE)"
+        if self.isAreaScanned {
+            cell.bucketBarcode.text = "Area # \(data.BASKET_BARCODE)"
+        } else {
+            cell.bucketBarcode.text = "Bucket # \(data.BASKET_BARCODE)"
+        }
+        
 //        cell.resetBtn.tag = indexPath.row
 //        cell.resetBtn.addTarget(self, action: #selector(revertStatus(sender:)), for: .touchUpInside)
         cell.status.text = data.ITEM_STATUS
@@ -567,7 +583,7 @@ extension FulfilmentOrderDetailViewController: UITableViewDataSource, UITableVie
                 self.receivedOrderBasket = ""
             }
             self.removeFromSubmissionArray(cn_number: self.fulfilment_orders![sender.tag].CNSG_NO)
-            self.scan_shipment_label.text = "Scan Shipment"
+            
             self.shipment.label.text = "Shipment #"
             self.shipment.text = ""
             
@@ -737,17 +753,18 @@ extension FulfilmentOrderDetailViewController: ConfirmationProtocol {
             let params = self.getAPIParameters(service_name: UPDATEORDERFULFILMENT, request_body: json)
             self.updateFulfilmentOrder(params: params) { granted in
                 if granted {
-                    DispatchQueue.main.async {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
                         self.view.hideToastActivity()
                         self.unFreezeScreen()
                         
-                        let controller = self.storyboard?.instantiateViewController(withIdentifier: "FulfillmentPopViewController") as! FulfillmentPopViewController
+                        let popup = UIStoryboard(name: "Popups", bundle: nil)
+                        let controller = popup.instantiateViewController(withIdentifier: "FulfillmentPopViewController") as! FulfillmentPopViewController
                         if #available(iOS 13.0, *) {
-                            controller.modalPresentationStyle = .fullScreen
+                            controller.modalPresentationStyle = .overFullScreen
                         }
-                        controller.delegate = self
                         controller.modalTransitionStyle = .crossDissolve
-                        self.present(controller, animated: true, completion: nil)
+                        controller.delegate = self
+                        Helper.topMostController().present(controller, animated: true, completion: nil)
                     }
                 } else {
                     DispatchQueue.main.async {
@@ -760,6 +777,7 @@ extension FulfilmentOrderDetailViewController: ConfirmationProtocol {
                 }
             }
         } else {
+            self.truckBtn.isEnabled = true
             self.view.makeToast("Scan any consignment first.")
         }
     }
