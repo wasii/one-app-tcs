@@ -21,7 +21,7 @@ var NOTIFICATION_COUNT      = 0
 //let UPLOADFILESURL          = "https://oneappapi.tcscourier.com/api/file-upload"
 
 //DEV
-let ENDPOINT                = "https://devapi.tcscourier.com/qacore/api/main"
+let ENDPOINT                = "https://devapi.tcscourier.com/core/api/main"
 let UPLOADFILESURL          = "https://pwaqaapi.tcscourier.com/api/file-upload"
 
 let LOGIN                   = "oneapp.login"
@@ -625,7 +625,12 @@ let ENTER_RISK_REMARKS = "Enter Risk Remarks"
 let ENTER_CONTROLLER_RECOMMENDATIONS_TAG = 13
 let ENTER_CONTROLLER_RECOMMENDATION = "Enter Remarks"
 
+//changes
+let ENTER_REFERENCE_TAG = 16
+let ENTER_REFERENCE_NUM = "Enter Reference #"
 
+let ENTER_INVESTIGATION_TITLE_TAG = 17
+let ENTER_INVESTIGATION_TITLE = "Enter Investigation Title"
 
 
 let ENTER_EMAILS_TAG = 14
