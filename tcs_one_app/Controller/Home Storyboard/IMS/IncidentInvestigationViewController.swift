@@ -38,6 +38,14 @@ class IncidentInvestigationViewController: BaseViewController {
     @IBOutlet weak var opinions_textview: UITextView!
     @IBOutlet weak var opinions_wordcounter: UILabel!
     
+    @IBOutlet weak var rn_view: UIView!
+    @IBOutlet weak var rn_textview: UITextView!
+    @IBOutlet weak var rn_wordcounter: UILabel!
+    
+    @IBOutlet weak var it_view: UIView!
+    @IBOutlet weak var it_textview: UITextView!
+    @IBOutlet weak var it_wordcounter: UILabel!
+    
     @IBOutlet weak var es_view: UIView!
     @IBOutlet weak var es_textview: UITextView!
     @IBOutlet weak var es_wordcounter: UILabel!
@@ -69,6 +77,9 @@ class IncidentInvestigationViewController: BaseViewController {
         fact_textview.delegate = self
         findings_textview.delegate = self
         opinions_textview.delegate = self
+        
+        rn_textview.delegate = self
+        it_textview.delegate = self
         
         setupTextFields()
     }
@@ -206,6 +217,40 @@ class IncidentInvestigationViewController: BaseViewController {
         } else {
             self.o_view.isHidden = true
         }
+        if AppDelegate.sharedInstance.db!.read_tbl_UserPermission(permission: IMS_Area_View_Reference).count > 0 {
+            self.rn_view.isHidden = false
+            if self.isEditable {
+                self.rn_textview.isUserInteractionEnabled = true
+                if ticket?.AREA_REF == "" {
+                    self.rn_textview.text = ENTER_REFERENCE_NUM
+                } else {
+                    self.rn_textview.text = ticket?.AREA_REF ?? ""
+                }
+            } else {
+                self.rn_textview.isEditable = false
+                self.rn_textview.text = ticket?.OPINION ?? ""
+                self.rn_wordcounter.text = "\(ticket?.AREA_REF?.count ?? 0)/100"
+            }
+        } else {
+            self.rn_view.isHidden = true
+        }
+        if AppDelegate.sharedInstance.db!.read_tbl_UserPermission(permission: IMS_Area_View_Title).count > 0 {
+            self.it_view.isHidden = false
+            if self.isEditable {
+                self.it_textview.isUserInteractionEnabled = true
+                if ticket?.AREA_INVEST_TITLE == "" {
+                    self.it_textview.text = ENTER_INVESTIGATION_TITLE
+                } else {
+                    self.it_textview.text = ticket?.AREA_INVEST_TITLE ?? ""
+                }
+            } else {
+                self.it_textview.isEditable = false
+                self.it_textview.text = ticket?.OPINION ?? ""
+                self.it_wordcounter.text = "\(ticket?.AREA_INVEST_TITLE?.count ?? 0)/525"
+            }
+        } else {
+            self.it_view.isHidden = true
+        }
         
         //HS
         if AppDelegate.sharedInstance.db!.read_tbl_UserPermission(permission: IMS_View_Executive_Summary).count > 0 {
@@ -292,6 +337,15 @@ extension IncidentInvestigationViewController: UITextViewDelegate {
                 textView.text = ""
             }
             break
+        case ENTER_REFERENCE_TAG:
+            if textView.text == ENTER_REFERENCE_NUM {
+                textView.text = ""
+            }
+        case ENTER_INVESTIGATION_TITLE_TAG:
+            if textView.text == ENTER_INVESTIGATION_TITLE {
+                textView.text = ""
+            }
+            break
         default:
             break
         }
@@ -354,6 +408,22 @@ extension IncidentInvestigationViewController: UITextViewDelegate {
                 ticket?.OPINION = textView.text
             }
             break
+        case ENTER_REFERENCE_TAG:
+            if textView.text.count <= 0 {
+                textView.text = ENTER_REFERENCE_NUM
+                ticket?.AREA_REF = ""
+            } else {
+                ticket?.AREA_REF = textView.text
+            }
+            break
+        case ENTER_INVESTIGATION_TITLE_TAG:
+            if textView.text.count <= 0 {
+                textView.text = ENTER_INVESTIGATION_TITLE
+                ticket?.AREA_INVEST_TITLE = ""
+            } else {
+                ticket?.AREA_INVEST_TITLE = textView.text
+            }
+            break
         default:
             break
         }
@@ -381,6 +451,12 @@ extension IncidentInvestigationViewController: UITextViewDelegate {
             break
         case ENTER_FACTS_TAG, ENTER_OPINIONS_TAG:
             maxLength = 500
+            break
+        case ENTER_REFERENCE_TAG:
+            maxLength = 100
+            break
+        case ENTER_INVESTIGATION_TITLE_TAG:
+            maxLength = 525
             break
         default:
             break
@@ -413,6 +489,12 @@ extension IncidentInvestigationViewController: UITextViewDelegate {
                 return true
             case ENTER_OPINIONS_TAG:
                 self.opinions_wordcounter.text = "\(newString.length)/500"
+                return true
+            case ENTER_REFERENCE_TAG:
+                self.rn_wordcounter.text = "\(newString.length)/100"
+                return true
+            case ENTER_INVESTIGATION_TITLE_TAG:
+                self.it_wordcounter.text = "\(newString.length)/525"
                 return true
             default:
                 return false

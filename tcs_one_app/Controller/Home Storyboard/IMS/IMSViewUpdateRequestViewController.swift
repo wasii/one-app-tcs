@@ -204,6 +204,7 @@ var ticket_request: tbl_Hr_Request_Logs?
     
     var isRejected = false
     var willDBInsert = false
+    var ASHSFilesComments = false
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = "IMS"
@@ -430,8 +431,6 @@ var ticket_request: tbl_Hr_Request_Logs?
         }
         
         if IMS_Inprogress_As == "\(current_user)" {
-            self.reference_number_view.isHidden = false
-            self.investigation_title_view.isHidden = false
             if havePermissionToEdit {
 //                self.title = "Update Request"
                 self.headingLabel.text = "Request Detail"
@@ -440,9 +439,6 @@ var ticket_request: tbl_Hr_Request_Logs?
                 self.remarks_view.isHidden = true
                 let addRemarks = AppDelegate.sharedInstance.db?.read_tbl_UserPermission(permission: IMS_Add_Remarks_Area_Security)
                 let addFiles   = AppDelegate.sharedInstance.db?.read_tbl_UserPermission(permission: IMS_Add_Files_Area_Security)
-                
-                self.investigation_title_textview.delegate = self
-                self.reference_number_textview.delegate = self
                 
                 if addRemarks!.count > 0 {
                     remarks_attachment_stackview.isHidden = false
@@ -472,7 +468,8 @@ var ticket_request: tbl_Hr_Request_Logs?
             self.hod_stack_view.isHidden = false
             self.executive_summarty_view.isHidden = false
             self.recommendations_view.isHidden = false
-            
+            self.reference_number_view.isHidden = false
+            self.investigation_title_view.isHidden = false
             
             if havePermissionToEdit {
 //                self.title = "Update Request"
@@ -480,6 +477,10 @@ var ticket_request: tbl_Hr_Request_Logs?
                 self.remarks_attachment_stackview.isHidden = true
                 self.attachment_view.isHidden = true
                 self.remarks_view.isHidden = true
+                
+                self.investigation_title_textview.delegate = self
+                self.reference_number_textview.delegate = self
+                
                 let addRemarks = AppDelegate.sharedInstance.db?.read_tbl_UserPermission(permission: IMS_Add_Remarks_Head_Security)
                 let addFiles   = AppDelegate.sharedInstance.db?.read_tbl_UserPermission(permission: IMS_Add_Files_Head_Security)
                 
@@ -501,9 +502,14 @@ var ticket_request: tbl_Hr_Request_Logs?
                 self.headingLabel.text = "View Request"
                 self.executive_summary_textview.isUserInteractionEnabled = false
                 self.recommendations_textview.isUserInteractionEnabled = false
+                self.reference_number_textview.isUserInteractionEnabled = false
+                self.investigation_title_textview.isUserInteractionEnabled = false
                 
                 self.executive_summary_textview.text = self.ticket_request?.HO_SEC_SUMMARY ?? ""
                 self.recommendations_textview.text = self.ticket_request?.HO_SEC_RECOM ?? ""
+                self.reference_number_textview.text = self.ticket_request?.HEAD_REF ?? ""
+                self.investigation_title_textview.text = self.ticket_request?.HEAD_INVEST_TITLE ?? ""
+                
                 
                 if ticket_request?.TICKET_STATUS == IMS_Status_Closed {
                     remarks_attachment_stackview.isHidden = false
@@ -1375,6 +1381,50 @@ var ticket_request: tbl_Hr_Request_Logs?
             } else {
                 controller.heading = "Submit without investigation ?"
             }
+        }
+        if current_user == IMS_Inprogress_As {
+            if (self.ticket_request?.DETAILED_INVESTIGATION == "" ||
+                self.ticket_request?.PROSECUTION_NARRATIVE == "" ||
+                self.ticket_request?.DEFENSE_NARRATIVE == "" ||
+                self.ticket_request?.CHALLENGES == "" ||
+                self.ticket_request?.FACTS == "" ||
+                self.ticket_request?.FINDINGS == "" ||
+                self.ticket_request?.OPINION == "" ||
+                self.ticket_request?.AREA_REF == "" ||
+                    self.ticket_request?.AREA_INVEST_TITLE == "") && (self.attachmentFiles?.count == 0 || self.attachmentFiles == nil) {
+                
+                controller.heading = "Please provide Incident Investigation details or upload document file."
+                ASHSFilesComments = true
+            } else if self.ticket_request?.DETAILED_INVESTIGATION == "" ||
+                self.ticket_request?.PROSECUTION_NARRATIVE == "" ||
+                self.ticket_request?.DEFENSE_NARRATIVE == "" ||
+                self.ticket_request?.CHALLENGES == "" ||
+                self.ticket_request?.FACTS == "" ||
+                self.ticket_request?.FINDINGS == "" ||
+                self.ticket_request?.OPINION == "" ||
+                self.ticket_request?.AREA_REF == "" ||
+                self.ticket_request?.AREA_INVEST_TITLE == "" {
+                controller.heading = "Incident Investigation fields are empty.\nAre you sure you want to proceed?"
+            }
+//            } else if self.ticket_request?.DETAILED_INVESTIGATION == "" {
+//                controller.heading = "Incident Investigation fields are empty.\nAre you sure you want to proceed?"
+//            } else if self.ticket_request?.PROSECUTION_NARRATIVE == "" {
+//                controller.heading = "Incident Investigation fields are empty.\nAre you sure you want to proceed?"
+//            } else if self.ticket_request?.DEFENSE_NARRATIVE == "" {
+//                controller.heading = "Incident Investigation fields are empty.\nAre you sure you want to proceed?"
+//            } else if self.ticket_request?.CHALLENGES == "" {
+//                controller.heading = "Incident Investigation fields are empty.\nAre you sure you want to proceed?"
+//            } else if self.ticket_request?.FACTS == "" {
+//                controller.heading = "Incident Investigation fields are empty.\nAre you sure you want to proceed?"
+//            } else if self.ticket_request?.FINDINGS == "" {
+//                controller.heading = "Incident Investigation fields are empty.\nAre you sure you want to proceed?"
+//            } else if self.ticket_request?.OPINION == "" {
+//                controller.heading = "Incident Investigation fields are empty.\nAre you sure you want to proceed?"
+//            } else if self.ticket_request?.AREA_REF == "" {
+//                controller.heading = "Incident Investigation fields are empty.\nAre you sure you want to proceed?"
+//            } else if self.ticket_request?.AREA_INVEST_TITLE == "" {
+//                controller.heading = "Incident Investigation fields are empty.\nAre you sure you want to proceed?"
+//            }
         }
         
         controller.modalTransitionStyle = .crossDissolve
@@ -2602,6 +2652,15 @@ extension IMSViewUpdateRequestViewController {
             self.view.makeToast("Recommendations is mandatory")
             return nil
         }
+        //feedback change
+        if self.reference_number_textview.text == ENTER_REFERENCE_NUM {
+            self.view.makeToast("Reference # is mandatory.")
+            return nil
+        }
+        if self.investigation_title_textview.text == ENTER_INVESTIGATION_TITLE {
+            self.view.makeToast("Investigation Title is mandatory.")
+            return nil
+        }
         if !self.remarks_view.isHidden {
             if remarks_textview.text == "" || remarks_textview.text == ENTER_REMARKS {
                 self.view.makeToast("Remarks is mandatory")
@@ -2623,6 +2682,8 @@ extension IMSViewUpdateRequestViewController {
                     "closure_remarks" : "",
                     "ho_sec_summary": "\(self.executive_summary_textview.text!)",
                     "ho_sec_recom": "\(self.recommendations_textview.text!)",
+                    "head_ref": "\(self.reference_number_textview.text ?? "")",
+                    "head_invest_title": "\(self.investigation_title_textview.text ?? "")",
                     "ticket_logs": [
                         [
                             "inputby": IMS_InputBy_HeadSecurity, //"Er_Manager"
@@ -2638,16 +2699,16 @@ extension IMSViewUpdateRequestViewController {
     }
     
     func setupAreaSecurity() -> [String:Any]? {
-        if self.ticket_request!.DETAILED_INVESTIGATION == "" ||
-            self.ticket_request!.PROSECUTION_NARRATIVE == "" ||
-            self.ticket_request!.DEFENSE_NARRATIVE == "" ||
-            self.ticket_request!.CHALLENGES == "" ||
-            self.ticket_request!.FACTS == "" ||
-            self.ticket_request!.FINDINGS == "" ||
-            self.ticket_request!.OPINION == "" {
-            self.view.makeToast("Incident Investigation detail is mandatory")
-            return nil
-        }
+//        if self.ticket_request!.DETAILED_INVESTIGATION == "" ||
+//            self.ticket_request!.PROSECUTION_NARRATIVE == "" ||
+//            self.ticket_request!.DEFENSE_NARRATIVE == "" ||
+//            self.ticket_request!.CHALLENGES == "" ||
+//            self.ticket_request!.FACTS == "" ||
+//            self.ticket_request!.FINDINGS == "" ||
+//            self.ticket_request!.OPINION == "" {
+//            self.view.makeToast("Incident Investigation detail is mandatory")
+//            return nil
+//        }
         if !self.remarks_view.isHidden {
             if remarks_textview.text == "" || remarks_textview.text == ENTER_REMARKS {
                 self.view.makeToast("Remarks is mandatory")
@@ -2655,8 +2716,21 @@ extension IMSViewUpdateRequestViewController {
             }
         }
         if willDBInsert {
-            let columns = ["HO_SEC_SUMMARY", "HO_SEC_RECOM", "DIR_NOTIFY_EMAILS", "TICKET_STATUS"]
-            let values = [self.executive_summary_textview.text!, self.recommendations_textview.text!, IMS_Status_Inprogress_Hs]
+            var columns = ["DETAILED_INVESTIGATION", "PROSECUTION_NARRATIVE", "DEFENSE_NARRATIVE", "CHALLENGES", "FACTS", "FINDINGS"]
+            var values = [self.ticket_request!.DETAILED_INVESTIGATION ?? "",
+                          self.ticket_request!.PROSECUTION_NARRATIVE ?? "",
+                          self.ticket_request!.DEFENSE_NARRATIVE ?? "",
+                          self.ticket_request!.CHALLENGES ?? "",
+                          self.ticket_request!.FACTS ?? "",
+                          self.ticket_request!.FINDINGS ?? ""]
+            AppDelegate.sharedInstance.db?.updateTables(tableName: db_hr_request, columnName: columns, updateValue: values, onCondition: "SERVER_ID_PK = '\(self.ticket_request!.SERVER_ID_PK!)'", { _ in })
+            
+            
+            columns = ["OPINION", "AREA_REF", "AREA_INVEST_TITLE", "TICKET_STATUS"]
+            values = [self.ticket_request!.OPINION ?? "",
+                      self.ticket_request!.AREA_REF ?? "",
+                      self.ticket_request!.AREA_INVEST_TITLE ?? "",
+                      IMS_Status_Inprogress_Hs]
             AppDelegate.sharedInstance.db?.updateTables(tableName: db_hr_request, columnName: columns, updateValue: values, onCondition: "SERVER_ID_PK = '\(self.ticket_request!.SERVER_ID_PK!)'", { _ in })
         }
         let json = [
@@ -2674,6 +2748,8 @@ extension IMSViewUpdateRequestViewController {
                     "facts": "\(self.ticket_request!.FACTS!)",
                     "findings": "\(self.ticket_request!.FINDINGS!)",
                     "opinion": "\(self.ticket_request!.OPINION!)",
+                    "area_ref": "\(self.ticket_request!.AREA_REF ?? "")",
+                    "area_invest_title": "\(self.ticket_request!.AREA_INVEST_TITLE ?? "")",
                     "ticket_logs": [
                         [
                             "inputby": IMS_InputBy_AreaSecurity, //"Er_Manager"
@@ -3147,144 +3223,164 @@ extension IMSViewUpdateRequestViewController: ConfirmationProtocol {
         }
         //Forward button tapped
         else {
-            if current_user == IMS_Inprogress_Ca {
-                if let params = self.setupController() {
+            if ASHSFilesComments {
+                self.forwardBtn.isEnabled = true
+                ASHSFilesComments = false
+                return
+            } else {
+                if current_user == IMS_Inprogress_Ca {
+                    if let params = self.setupController() {
+                        self.navigationController?.popViewController(animated: true)
+                        NetworkCalls.updaterequestims(params: params) { (success, response) in
+                            if success {
+                                DispatchQueue.main.async {
+                                    self.updateTicketRequest(response: response)
+                                }
+                            } else {
+                                print(success)
+                            }
+                        }
+                    }
+                    return
+                }
+                if current_user == IMS_Inprogress_Fi {
+                    if let params = self.setupFinance() {
+                        self.navigationController?.popViewController(animated: true)
+                        NetworkCalls.updaterequestims(params: params) { (success, response) in
+                            if success {
+                                DispatchQueue.main.async {
+                                    self.updateTicketRequest(response: response)
+                                }
+                            } else {
+                                print(success)
+                            }
+                        }
+                    }
+                    return
+                }
+                if current_user == IMS_Inprogress_Hr {
+                    if let params = self.setupHR() {
+                        self.navigationController?.popViewController(animated: true)
+                        NetworkCalls.updaterequestims(params: params) { (success, response) in
+                            if success {
+                                DispatchQueue.main.async {
+                                    self.updateTicketRequest(response: response)
+                                }
+                            } else {
+                                print(success)
+                            }
+                        }
+                    }
+                    return
+                }
+                if current_user == IMS_Inprogress_Ins {
                     self.navigationController?.popViewController(animated: true)
-                    NetworkCalls.updaterequestims(params: params) { (success, response) in
-                        if success {
-                            DispatchQueue.main.async {
-                                self.updateTicketRequest(response: response)
+                    if let params = self.setupINSFinancialServices() {
+                        NetworkCalls.updaterequestims(params: params) { (success, response) in
+                            if success {
+                                DispatchQueue.main.async {
+                                    self.updateTicketRequest(response: response)
+                                }
+                            } else {
+                                print(success)
                             }
-                        } else {
-                            print(success)
                         }
                     }
+                    return
                 }
-                return
-            }
-            if current_user == IMS_Inprogress_Fi {
-                if let params = self.setupFinance() {
+                if current_user == IMS_Inprogress_Fs {
                     self.navigationController?.popViewController(animated: true)
-                    NetworkCalls.updaterequestims(params: params) { (success, response) in
-                        if success {
-                            DispatchQueue.main.async {
-                                self.updateTicketRequest(response: response)
+                    if let params = self.setupFinancialServices() {
+                        NetworkCalls.updaterequestims(params: params) { (success, response) in
+                            if success {
+                                DispatchQueue.main.async {
+                                    self.updateTicketRequest(response: response)
+                                }
+                            } else {
+                                print(success)
                             }
-                        } else {
-                            print(success)
                         }
                     }
+                    return
                 }
-                return
-            }
-            if current_user == IMS_Inprogress_Hr {
-                if let params = self.setupHR() {
+                if current_user == IMS_Inprogress_Ds {
                     self.navigationController?.popViewController(animated: true)
-                    NetworkCalls.updaterequestims(params: params) { (success, response) in
-                        if success {
-                            DispatchQueue.main.async {
-                                self.updateTicketRequest(response: response)
+                    if let params = self.setupDirectorOfSecurity() {
+                        NetworkCalls.updaterequestims(params: params) { (success, response) in
+                            if success {
+                                DispatchQueue.main.async {
+                                    self.updateTicketRequest(response: response)
+                                }
+                            } else {
+                                print(success)
                             }
-                        } else {
-                            print(success)
                         }
                     }
+                    return
                 }
-                return
-            }
-            if current_user == IMS_Inprogress_Ins {
-                self.navigationController?.popViewController(animated: true)
-                if let params = self.setupINSFinancialServices() {
-                    NetworkCalls.updaterequestims(params: params) { (success, response) in
-                        if success {
-                            DispatchQueue.main.async {
-                                self.updateTicketRequest(response: response)
+                if current_user == IMS_Inprogress_Hs {
+                    if let params = self.setupHeadOfSecurity() {
+                        self.navigationController?.popViewController(animated: true)
+                        NetworkCalls.updaterequestims(params: params) { (success, response) in
+                            if success {
+                                DispatchQueue.main.async {
+                                    self.updateTicketRequest(response: response)
+                                }
+                            } else {
+                                print(success)
                             }
-                        } else {
-                            print(success)
                         }
                     }
+                    return
                 }
-                return
-            }
-            if current_user == IMS_Inprogress_Fs {
-                self.navigationController?.popViewController(animated: true)
-                if let params = self.setupFinancialServices() {
-                    NetworkCalls.updaterequestims(params: params) { (success, response) in
-                        if success {
-                            DispatchQueue.main.async {
-                                self.updateTicketRequest(response: response)
+                if current_user == IMS_Inprogress_As {
+                    if let params = self.setupAreaSecurity() {
+                        self.navigationController?.popViewController(animated: true)
+                        NetworkCalls.updaterequestims(params: params) { (success, response) in
+                            if success {
+                                DispatchQueue.main.async {
+                                    self.updateTicketRequest(response: response)
+                                }
+                            } else {
+                                print(success)
                             }
-                        } else {
-                            print(success)
                         }
                     }
+                    return
                 }
-                return
-            }
-            if current_user == IMS_Inprogress_Ds {
-                self.navigationController?.popViewController(animated: true)
-                if let params = self.setupDirectorOfSecurity() {
-                    NetworkCalls.updaterequestims(params: params) { (success, response) in
-                        if success {
-                            DispatchQueue.main.async {
-                                self.updateTicketRequest(response: response)
+                
+                if current_user == IMS_Inprogress_Cs {
+                    if let params = self.setupCentralSecurity() {
+                        self.navigationController?.popViewController(animated: true)
+                        NetworkCalls.updaterequestims(params: params) { (success, response) in
+                            if success {
+                                DispatchQueue.main.async {
+                                    self.updateTicketRequest(response: response)
+                                }
+                            } else {
+                                print(success)
                             }
-                        } else {
-                            print(success)
                         }
                     }
+                    return
                 }
-                return
-            }
-            if current_user == IMS_Inprogress_Hs {
-                if let params = self.setupHeadOfSecurity() {
-                    self.navigationController?.popViewController(animated: true)
-                    NetworkCalls.updaterequestims(params: params) { (success, response) in
-                        if success {
-                            DispatchQueue.main.async {
-                                self.updateTicketRequest(response: response)
+                if current_user == IMS_Inprogress_Hod {
+                    if let params = self.setupHeadOfDepartment() {
+                        self.navigationController?.popViewController(animated: true)
+                        NetworkCalls.updaterequestims(params: params) { success, response in
+                            if success {
+                                DispatchQueue.main.async {
+                                    self.updateTicketRequest(response: response)
+                                }
+                            } else {
+                                print(success)
                             }
-                        } else {
-                            print(success)
                         }
                     }
+                    return
                 }
-                return
-            }
-            if current_user == IMS_Inprogress_As {
-                if let params = self.setupAreaSecurity() {
-                    self.navigationController?.popViewController(animated: true)
-                    NetworkCalls.updaterequestims(params: params) { (success, response) in
-                        if success {
-                            DispatchQueue.main.async {
-                                self.updateTicketRequest(response: response)
-                            }
-                        } else {
-                            print(success)
-                        }
-                    }
-                }
-                return
-            }
-            
-            if current_user == IMS_Inprogress_Cs {
-                if let params = self.setupCentralSecurity() {
-                    self.navigationController?.popViewController(animated: true)
-                    NetworkCalls.updaterequestims(params: params) { (success, response) in
-                        if success {
-                            DispatchQueue.main.async {
-                                self.updateTicketRequest(response: response)
-                            }
-                        } else {
-                            print(success)
-                        }
-                    }
-                }
-                return
-            }
-            if current_user == IMS_Inprogress_Hod {
-                if let params = self.setupHeadOfDepartment() {
+                
+                if let params = self.setupLineManager() {
                     self.navigationController?.popViewController(animated: true)
                     NetworkCalls.updaterequestims(params: params) { success, response in
                         if success {
@@ -3294,20 +3390,6 @@ extension IMSViewUpdateRequestViewController: ConfirmationProtocol {
                         } else {
                             print(success)
                         }
-                    }
-                }
-                return
-            }
-            
-            if let params = self.setupLineManager() {
-                self.navigationController?.popViewController(animated: true)
-                NetworkCalls.updaterequestims(params: params) { success, response in
-                    if success {
-                        DispatchQueue.main.async {
-                            self.updateTicketRequest(response: response)
-                        }
-                    } else {
-                        print(success)
                     }
                 }
             }
