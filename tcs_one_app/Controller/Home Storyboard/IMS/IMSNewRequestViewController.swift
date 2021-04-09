@@ -110,6 +110,12 @@ class IMSNewRequestViewController: BaseViewController {
     var offline_data = tbl_Hr_Request_Logs()
     var offline_hr_files = tbl_Files_Table()
     var offline_remarks  = tbl_Grievance_Remarks()
+    
+    @IBOutlet weak var consignmentDetailView: UIView!
+    @IBOutlet weak var viewDetailBtn: UIButton!
+    var booking_details: [BookingDetail]?
+    var delivery_details: [DeliveryDetail]?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = "IMS"
@@ -521,6 +527,16 @@ class IMSNewRequestViewController: BaseViewController {
             }
         }
     }
+    @IBAction func consignmentViewDetailTapped(_ sender: Any) {
+        let storyboard = UIStoryboard(name: "TrackStoryboard", bundle: nil)
+        let controller = storyboard.instantiateViewController(withIdentifier: "TrackHomeViewController") as! TrackHomeViewController
+        
+        controller.isFromIMS = true
+        controller.booking_details = self.booking_details
+        controller.delivery_details = self.delivery_details
+        
+        self.navigationController?.pushViewController(controller, animated: true)
+    }
     //verify consignment
     @IBAction func verifyConsignmentTapped(_ sender: Any) {
         self.view.hideToast()
@@ -539,13 +555,120 @@ class IMSNewRequestViewController: BaseViewController {
         let consignment_setup = [
             "hr_request": [
                 "access_token": token,
-                "cnno": self.consinement_number.text! //"4708109905"
+                "cnno": self.consinement_number.text! //"30326018069"
             ]
         ]
         let params = getAPIParameter(service_name: PROCCONSIGNMENTVALIDATE, request_body: consignment_setup)
         NetworkCalls.procconsignmentverify(params: params) { success, response in
             if success {
                 DispatchQueue.main.async {
+                    if let json = JSON(response).dictionary {
+                        if let booking_details = json["booking_detail"]?.array {
+                            do {
+                                self.booking_details = [BookingDetail]()
+                                for index in booking_details {
+//                                    let data = try details.rawData()
+//                                    let booking_detail = try JSONDecoder().decode(BookingDetail.self, from: data)
+//                                    self.booking_details?.append(booking_detail)
+                                    var bd = BookingDetail()
+                                    if let detail = index.dictionary?["CNSG_NO"] {
+                                        bd.cnsgNo = detail
+                                    }
+                                    if let detail = index.dictionary?["BKG_DAT"] {
+                                        bd.bkgDAT = detail
+                                    }
+                                    if let detail = index.dictionary?["NO_PCS"] {
+                                        bd.noPcs = detail
+                                    }
+                                    if let detail = index.dictionary?["ORGN"] {
+                                        bd.orgn = detail
+                                    }
+                                    if let detail = index.dictionary?["DSTN"] {
+                                        bd.dstn = detail
+                                    }
+                                    if let detail = index.dictionary?["PRODUCT"] {
+                                        bd.product = detail
+                                    }
+                                    if let detail = index.dictionary?["ROUTE"] {
+                                        bd.route = detail
+                                    }
+                                    if let detail = index.dictionary?["SERVICE"] {
+                                        bd.service = detail
+                                    }
+                                    if let detail = index.dictionary?["WTT_BKG"] {
+                                        bd.wttBkg = detail
+                                    }
+                                    if let detail = index.dictionary?["COD_STATUS"] {
+                                        bd.codStatus = detail
+                                    }
+                                    if let detail = index.dictionary?["COURIER"] {
+                                        bd.courier = detail
+                                    }
+                                    if let detail = index.dictionary?["CUS_NO"] {
+                                        bd.cusNo = detail
+                                    }
+                                    if let detail = index.dictionary?["CUS_NAM"] {
+                                        bd.cusNam = detail
+                                    }
+                                    if let detail = index.dictionary?["CUS_ADDR1"] {
+                                        bd.cusAddr1 = detail
+                                    }
+                                    if let detail = index.dictionary?["CUS_ADDR2"] {
+                                        bd.cusAddr2 = detail
+                                    }
+                                    if let detail = index.dictionary?["CUS_ADDR3"] {
+                                        bd.cusAddr3 = detail
+                                    }
+                                    if let detail = index.dictionary?["CUS_PHN"] {
+                                        bd.cusPhn = detail
+                                    }
+                                    if let detail = index.dictionary?["CUS_FAX"] {
+                                        bd.cusFax = detail
+                                    }
+                                    if let detail = index.dictionary?["CNSGEE_NAM"] {
+                                        bd.cnsgeeNam = detail
+                                    }
+                                    if let detail = index.dictionary?["CNSGEE_ADDR1"] {
+                                        bd.cnsgeeAddr1 = detail
+                                    }
+                                    if let detail = index.dictionary?["CNSGEE_ADDR2"] {
+                                        bd.cnsgeeAddr2 = detail
+                                    }
+                                    if let detail = index.dictionary?["CNSGEE_ADDR3"] {
+                                        bd.cnsgeeAddr3 = detail
+                                    }
+                                    if let detail = index.dictionary?["CNSGEE_PHN"] {
+                                        bd.cnsgeePhn = detail
+                                    }
+                                    if let detail = index.dictionary?["CNSGEE_FAX"] {
+                                        bd.cnsgeeFax = detail
+                                    }
+                                    if let detail = index.dictionary?["HNDLG_INST"] {
+                                        bd.hndlgInst = detail
+                                    }
+                                    if let detail = index.dictionary?["DLVRY_KPI"] {
+                                        bd.dlvryKpi = detail
+                                    }
+                                    self.booking_details?.append(bd)
+                                }
+                            } catch let err {
+                                print(err.localizedDescription)
+                            }
+                        }
+                        if let delivery_details = json["delivery_detail"]?.array {
+                            do {
+                                self.delivery_details = [DeliveryDetail]()
+                                for details in delivery_details {
+                                    let data = try details.rawData()
+                                    let booking_detail = try JSONDecoder().decode(DeliveryDetail.self, from: data)
+                                    self.delivery_details?.append(booking_detail)
+                                }
+                            } catch let err {
+                                print(err.localizedDescription)
+                            }
+                        }
+                        self.consignmentDetailView.isHidden = false
+                    }
                     self.consignmentVerified = true
                     self.consignmentVerifyImage.image = UIImage(named: "rightG")
                     self.view.hideToastActivity()

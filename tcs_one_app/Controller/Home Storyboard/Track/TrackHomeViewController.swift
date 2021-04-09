@@ -60,9 +60,10 @@ class TrackHomeViewController: BaseViewController {
     var PHONE_NO: JSON?
     var BARCODE_PBAG: JSON?
     
+    var isFromIMS = false
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.title = "Track"
+        
         self.makeTopCornersRounded(roundView: self.mainView)
         self.search_textfield.delegate = self
         
@@ -112,6 +113,20 @@ class TrackHomeViewController: BaseViewController {
         
         self.dman_detail_tableView.register(UINib(nibName: "DManDetailsTableCell", bundle: nil), forCellReuseIdentifier: "DManDetailsCell")
         self.dman_detail_tableView.rowHeight = 130
+        
+        self.title = "Track"
+        if isFromIMS {
+            self.title = "Consignment Details"
+            booking_detail_tableView.reloadData()
+            deliver_detail_tableView.reloadData()
+            
+            if let v = self.view.viewWithTag(10) {
+                v.isHidden = false
+            }
+            if let v = self.view.viewWithTag(20) {
+                v.isHidden = false
+            }
+        }
     }
     @IBAction func trackBtnTapped(_ sender: Any) {
         dismissKeyboard()

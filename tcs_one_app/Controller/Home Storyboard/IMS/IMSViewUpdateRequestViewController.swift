@@ -168,6 +168,13 @@ var ticket_request: tbl_Hr_Request_Logs?
     @IBOutlet weak var controller_recommendation_textview: UITextView!
     @IBOutlet weak var controller_recommendation_word_counter: UILabel!
     
+    @IBOutlet weak var reference_number_view: UIView!
+    @IBOutlet weak var reference_number_textview: UITextView!
+    @IBOutlet weak var reference_number_word_counter: UILabel!
+    
+    @IBOutlet weak var investigation_title_view: UIView!
+    @IBOutlet weak var investigation_title_textview: UITextView!
+    @IBOutlet weak var investigation_title_word_counter: UILabel!
     
     @IBOutlet weak var forwardBtn: CustomButton!
     @IBOutlet weak var rejectBtn: CustomButton!
@@ -423,6 +430,8 @@ var ticket_request: tbl_Hr_Request_Logs?
         }
         
         if IMS_Inprogress_As == "\(current_user)" {
+            self.reference_number_view.isHidden = false
+            self.investigation_title_view.isHidden = false
             if havePermissionToEdit {
 //                self.title = "Update Request"
                 self.headingLabel.text = "Request Detail"
@@ -432,6 +441,8 @@ var ticket_request: tbl_Hr_Request_Logs?
                 let addRemarks = AppDelegate.sharedInstance.db?.read_tbl_UserPermission(permission: IMS_Add_Remarks_Area_Security)
                 let addFiles   = AppDelegate.sharedInstance.db?.read_tbl_UserPermission(permission: IMS_Add_Files_Area_Security)
                 
+                self.investigation_title_textview.delegate = self
+                self.reference_number_textview.delegate = self
                 
                 if addRemarks!.count > 0 {
                     remarks_attachment_stackview.isHidden = false
@@ -961,7 +972,7 @@ var ticket_request: tbl_Hr_Request_Logs?
         //before hod
         incident_detail_cityview_textfield.label.textColor = UIColor.nativeRedColor()
         incident_detail_cityview_textfield.label.text = "City"
-        incident_detail_cityview_textfield.text = "\(AppDelegate.sharedInstance.db!.read_tbl_area(query: "SELECT * FROM \(db_lov_area) WHERE SERVER_ID_PK = '\(self.ticket_request!.AREA!)'").first!.AREA_NAME)"
+        incident_detail_cityview_textfield.text = "\(AppDelegate.sharedInstance.db!.read_tbl_city(query: "SELECT * FROM \(db_lov_city) WHERE AREA_CODE = '\(self.ticket_request!.CITY!)'").first!.CITY_NAME)"
         incident_detail_cityview_textfield.setOutlineColor(UIColor.nativeRedColor(), for: .normal)
         
         
@@ -1210,7 +1221,7 @@ var ticket_request: tbl_Hr_Request_Logs?
             } else {
                 UIView.animate(withDuration: 0.2) {
                     self.incident_detail_view_hod.isHidden = false
-                    self.incident_detail_city_textfield.text = "\(AppDelegate.sharedInstance.db!.read_tbl_area(query: "SELECT * FROM \(db_lov_area) WHERE SERVER_ID_PK = '\(self.ticket_request!.AREA!)'").first!.AREA_NAME)"
+                    self.incident_detail_city_textfield.text = "\(AppDelegate.sharedInstance.db!.read_tbl_city(query: "SELECT * FROM \(db_lov_city) WHERE AREA_CODE = '\(self.ticket_request!.CITY!)'").first!.CITY_NAME)"
                     if self.ticket_request!.CNSGNO != "" {
                         self.incident_detail_consignment_view.isHidden = false
                         self.incident_detail_consignment_textfield.text = "\(self.ticket_request!.CNSGNO!)"
@@ -1241,7 +1252,7 @@ var ticket_request: tbl_Hr_Request_Logs?
             } else {
                 UIView.animate(withDuration: 0.2) {
                     self.incident_detail_view_hod.isHidden = true
-                    self.incident_detail_city_textfield.text = "\(AppDelegate.sharedInstance.db!.read_tbl_area(query: "SELECT * FROM \(db_lov_area) WHERE SERVER_ID_PK = '\(self.ticket_request!.AREA!)'").first!.AREA_NAME)"
+                    self.incident_detail_city_textfield.text = "\(AppDelegate.sharedInstance.db!.read_tbl_city(query: "SELECT * FROM \(db_lov_city) WHERE AREA_CODE = '\(self.ticket_request!.CITY!)'").first!.CITY_NAME)"
                     
                     if self.ticket_request!.CNSGNO != "" {
                         self.incident_detail_consignment_view.isHidden = false
