@@ -9,7 +9,9 @@
 import UIKit
 import Charts
 import MBCircularProgressBar
-
+protocol CloseButtonTapped {
+    func closeButtonTapped()
+}
 class FulfilmentDashboardViewController: BaseViewController {
 
     @IBOutlet weak var mainView: UIView!
@@ -272,7 +274,7 @@ class FulfilmentDashboardViewController: BaseViewController {
         (controller.children.first as! ScanFulfillmentViewController).start_day = start_day
         (controller.children.first as! ScanFulfillmentViewController).end_day = end_day
         (controller.children.first as! ScanFulfillmentViewController).numberOfDays = number_of_days
-        
+        (controller.children.first as! ScanFulfillmentViewController).closeBtnDelegate = self
         controller.modalTransitionStyle = .crossDissolve
         if #available(iOS 13.0, *) {
             controller.modalPresentationStyle = .overFullScreen
@@ -399,5 +401,12 @@ extension FulfilmentDashboardViewController: ScanFulfillmentProtocol {
         controller.fulfilment_orders = orders
         controller.isNavigateFromDashboard = true
         self.navigationController?.pushViewController(controller, animated: true)
+    }
+}
+
+
+extension FulfilmentDashboardViewController: CloseButtonTapped {
+    func closeButtonTapped() {
+        self.setupJSON()
     }
 }

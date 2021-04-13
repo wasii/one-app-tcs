@@ -323,7 +323,7 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
                 if let jsonArray = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as? [String: Any] {
                     if let request_log = JSON(jsonArray[_data]).dictionary?[_hr_requests]?.array?.first {
                         if request_log.dictionary?["ORDER_ID"]?.string != nil {
-//                            NotificationCenter.default.post(Notification.init(name: .navigateThroughNotification, object: tbl_hr_request, userInfo: nil))
+                            NotificationCenter.default.post(Notification.init(name: .navigateThroughNotification, object: request_log.dictionary?["ORDER_ID"]?.string, userInfo: nil))
                             completionHandler()
                             return
                         }

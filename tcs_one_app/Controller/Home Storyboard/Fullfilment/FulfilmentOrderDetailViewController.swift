@@ -540,7 +540,7 @@ extension FulfilmentOrderDetailViewController: UITableViewDataSource, UITableVie
         if self.isAreaScanned {
             cell.bucketBarcode.text = "Area # \(data.BASKET_BARCODE)"
         } else {
-            cell.bucketBarcode.text = "Bucket # \(data.BASKET_BARCODE)"
+            cell.bucketBarcode.text = "Basket # \(data.BASKET_BARCODE)"
         }
         
 //        cell.resetBtn.tag = indexPath.row

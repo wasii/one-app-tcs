@@ -384,6 +384,17 @@ class BaseViewController: UIViewController {
                 }
             }
             
+        } else {
+            if let _ = notification.object as? String {
+                let storyboard = UIStoryboard(name: "Fullfillment", bundle: nil)
+                let controller = storyboard.instantiateViewController(withIdentifier: "FulfilmentListingViewController") as! FulfilmentListingViewController
+                controller.numberOfDays = "7"
+                controller.numberOfDaysSorting = "This Week"
+                controller.ticket_status = "Pending"
+                controller.ticket_status_sorting = "Pending"
+                controller.hidesBottomBarWhenPushed = true
+                self.navigationController?.pushViewController(controller, animated: true)
+            }
         }
     }
     

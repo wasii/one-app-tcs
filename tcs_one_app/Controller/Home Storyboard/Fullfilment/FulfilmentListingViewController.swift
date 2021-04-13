@@ -13,7 +13,7 @@ class FulfilmentListingViewController: BaseViewController {
     @IBOutlet weak var mainView: UIView!
     @IBOutlet weak var mainViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var search_textfileld: UITextField!
-    @IBOutlet weak var sorting_btn: UIButton!
+    @IBOutlet weak var sorting_btn: UILabel!
     @IBOutlet weak var this_week: UILabel!
     @IBOutlet weak var tableView: UITableView!
     
@@ -37,7 +37,8 @@ class FulfilmentListingViewController: BaseViewController {
         tableView.rowHeight = 85
         search_textfileld.delegate = self
         
-        self.sorting_btn.setTitle(ticket_status, for: .normal)
+//        self.sorting_btn.setTitle(ticket_status, for: .normal)
+        self.sorting_btn.text = ticket_status
         self.this_week.text = numberOfDaysSorting
         
         if ticket_status == "Pending" {
@@ -366,7 +367,8 @@ extension FulfilmentListingViewController: DateSelectionDelegate {
     
     func requestModeSelected(selected_query: String) {
         self.ticket_status = selected_query
-        self.sorting_btn.setTitle(ticket_status, for: .normal)
+//        self.sorting_btn.setTitle(ticket_status, for: .normal)
+        self.sorting_btn.text = ticket_status
         if selected_query == "Pending" {
             ticket_status_sorting = "Pending"
         } else if selected_query == "In Process" {

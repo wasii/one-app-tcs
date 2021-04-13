@@ -483,7 +483,17 @@ extension NotificationsViewController: UITableViewDelegate, UITableViewDataSourc
                         break
                     }
                 }
-                if p != count {
+                if p == count {
+                    let storyboard = UIStoryboard(name: "Fullfillment", bundle: nil)
+                    let controller = storyboard.instantiateViewController(withIdentifier: "FulfilmentListingViewController") as! FulfilmentListingViewController
+                    controller.numberOfDays = "7"
+                    controller.numberOfDaysSorting = "This Week"
+                    controller.ticket_status = "Pending"
+                    controller.ticket_status_sorting = "Pending"
+                    controller.hidesBottomBarWhenPushed = true
+                    self.navigationController?.pushViewController(controller, animated: true)
+                } else {
+//                if p != count {
                     let storyboard = UIStoryboard(name: "Fullfillment", bundle: nil)
                     let controller = storyboard.instantiateViewController(withIdentifier: "FulfilmentOrderDetailViewController") as! FulfilmentOrderDetailViewController
                     controller.orderId = "\(ticket_id)"

@@ -70,6 +70,8 @@ class ScanFulfillmentViewController: BaseViewController, AVCaptureMetadataOutput
     var delegate: ScanFulfillmentProtocol?
     
     var avPlayer: AVAudioPlayer?
+    
+    var closeBtnDelegate: CloseButtonTapped?
     override func viewDidLoad() {
         super.viewDidLoad()
         setupConditions()
@@ -149,7 +151,7 @@ class ScanFulfillmentViewController: BaseViewController, AVCaptureMetadataOutput
                 if isCNScanned {
                     self.headerViewImage.image = UIImage(named: "basket")
                     if self.OLEPrefix == "OLEP" {
-                        self.headerViewMessage.text = "Scan Bucket"
+                        self.headerViewMessage.text = "Scan Basket"
                     } else {
                         self.headerViewMessage.text = "Scan Area"
                     }
@@ -316,7 +318,7 @@ class ScanFulfillmentViewController: BaseViewController, AVCaptureMetadataOutput
                             self.playSound(soundName: "beep")
                             self.startHapticTouch(type: .success)
                             self.conditionView.backgroundColor = UIColor.approvedColor()
-                            self.messageLabel.text = "Bucket # \(code) valid"
+                            self.messageLabel.text = "Basket # \(code) valid"
                             
                             self.headerViewImage.image = UIImage(named: "box")
                             self.headerViewMessage.text = "Scan CN Number"
@@ -343,7 +345,7 @@ class ScanFulfillmentViewController: BaseViewController, AVCaptureMetadataOutput
                             self.playSound(soundName: "beep")
                             self.startHapticTouch(type: .success)
                             self.conditionView.backgroundColor = UIColor.approvedColor()
-                            self.messageLabel.text = "Bucket # \(code) valid"
+                            self.messageLabel.text = "Basket # \(code) valid"
                             self.isCNScanned = false
                             self.isBasketScanned = true
                             
@@ -358,7 +360,7 @@ class ScanFulfillmentViewController: BaseViewController, AVCaptureMetadataOutput
                         self.playSound(soundName: "buzzer")
                         self.startHapticTouch(type: .error)
                         self.conditionView.backgroundColor = UIColor.nativeRedColor()
-                        self.messageLabel.text = "Bucket # \(code) not valid"
+                        self.messageLabel.text = "Basket # \(code) not valid"
                     }
                 } else {
                     if self.receivedOrderBasket == code {
@@ -372,7 +374,7 @@ class ScanFulfillmentViewController: BaseViewController, AVCaptureMetadataOutput
                             self.playSound(soundName: "beep")
                             self.startHapticTouch(type: .success)
                             self.conditionView.backgroundColor = UIColor.approvedColor()
-                            self.messageLabel.text = "Bucket # \(code) valid"
+                            self.messageLabel.text = "Basket # \(code) valid"
                             self.isCNScanned = false
                             self.isBasketScanned = true
                             
@@ -389,7 +391,7 @@ class ScanFulfillmentViewController: BaseViewController, AVCaptureMetadataOutput
                         self.playSound(soundName: "buzzer")
                         self.startHapticTouch(type: .error)
                         self.conditionView.backgroundColor = UIColor.nativeRedColor()
-                        self.messageLabel.text = "Bucket # \(code) not valid"
+                        self.messageLabel.text = "Basket # \(code) not valid"
                         
                     }
                 }
@@ -405,7 +407,7 @@ class ScanFulfillmentViewController: BaseViewController, AVCaptureMetadataOutput
                             if order.BASKET_BARCODE == "" {
                                 self.headerViewImage.image = UIImage(named: "basket")
                                 if self.OLEPrefix == "OLEP" {
-                                    self.headerViewMessage.text = "Scan Bucket"
+                                    self.headerViewMessage.text = "Scan Basket"
                                 } else {
                                     self.headerViewMessage.text = "Scan Area"
                                 }
@@ -429,7 +431,7 @@ class ScanFulfillmentViewController: BaseViewController, AVCaptureMetadataOutput
                         
                         self.headerViewImage.image = UIImage(named: "basket")
                         if self.OLEPrefix == "OLEP" {
-                            self.headerViewMessage.text = "Scan Bucket"
+                            self.headerViewMessage.text = "Scan Basket"
                         } else {
                             self.headerViewMessage.text = "Scan Area"
                         }
@@ -484,7 +486,7 @@ class ScanFulfillmentViewController: BaseViewController, AVCaptureMetadataOutput
                                                 self.playSound(soundName: "buzzer")
                                                 self.startHapticTouch(type: .error)
                                                 self.conditionView.backgroundColor = UIColor.rejectedColor()
-                                                self.messageLabel.text = "Bucket # \(code) already is in used."
+                                                self.messageLabel.text = "Basket # \(code) already is in used."
                                                 return
                                             }
                                         }
@@ -504,7 +506,7 @@ class ScanFulfillmentViewController: BaseViewController, AVCaptureMetadataOutput
                                             }).first
                                             
                                             self.conditionView.backgroundColor = UIColor.approvedColor()
-                                            self.messageLabel.text = "Bucket # \(code) valid"
+                                            self.messageLabel.text = "Basket # \(code) valid"
                                             
                                             self.headerViewImage.image = UIImage(named: "box")
                                             self.headerViewMessage.text = "Scan CN Number"
@@ -530,7 +532,7 @@ class ScanFulfillmentViewController: BaseViewController, AVCaptureMetadataOutput
                                                 log.CNSG_NO == self.currentCNSG
                                             }).first
                                             self.conditionView.backgroundColor = UIColor.approvedColor()
-                                            self.messageLabel.text = "Bucket # \(code) valid"
+                                            self.messageLabel.text = "Basket # \(code) valid"
                                             self.isCNScanned = false
                                             self.isBasketScanned = true
                                             
@@ -542,7 +544,7 @@ class ScanFulfillmentViewController: BaseViewController, AVCaptureMetadataOutput
                                         }
                                     } else {
                                         self.conditionView.backgroundColor = UIColor.nativeRedColor()
-                                        self.messageLabel.text = "Bucket # \(code) not valid"
+                                        self.messageLabel.text = "Basket # \(code) not valid"
                                     }
                                 } else {
                                     let bucket = ordersAgainstId.filter { (logs) -> Bool in
@@ -561,7 +563,7 @@ class ScanFulfillmentViewController: BaseViewController, AVCaptureMetadataOutput
                                             self.playSound(soundName: "beep")
                                             self.startHapticTouch(type: .success)
                                             self.conditionView.backgroundColor = UIColor.approvedColor()
-                                            self.messageLabel.text = "Bucket # \(code) valid"
+                                            self.messageLabel.text = "Basket # \(code) valid"
                                             self.isCNScanned = false
                                             self.isBasketScanned = true
                                             
@@ -577,7 +579,7 @@ class ScanFulfillmentViewController: BaseViewController, AVCaptureMetadataOutput
                                         self.playSound(soundName: "buzzer")
                                         self.startHapticTouch(type: .error)
                                         self.conditionView.backgroundColor = UIColor.nativeRedColor()
-                                        self.messageLabel.text = "Bucket # \(code) not valid"
+                                        self.messageLabel.text = "Basket # \(code) not valid"
                                     }
                                 }
                             }
@@ -599,7 +601,7 @@ class ScanFulfillmentViewController: BaseViewController, AVCaptureMetadataOutput
                                 if order.BASKET_BARCODE == "" {
                                     self.headerViewImage.image = UIImage(named: "basket")
                                     if self.OLEPrefix == "OLEP" {
-                                        self.headerViewMessage.text = "Scan Bucket"
+                                        self.headerViewMessage.text = "Scan Basket"
                                     } else {
                                         self.headerViewMessage.text = "Scan Area"
                                     }
@@ -637,6 +639,10 @@ class ScanFulfillmentViewController: BaseViewController, AVCaptureMetadataOutput
                                         self.playSound(soundName: "beep")
                                         self.startHapticTouch(type: .success)
                                         dismiss(animated: true) {
+                                            AppDelegate.sharedInstance.db?.updateTables(tableName: db_fulfilment_orders,
+                                                                                        columnName: ["BASKET_BARCODE"],
+                                                                                        updateValue: ["0"],
+                                                                                        onCondition: "CNSG_NO = '\(order.CNSG_NO)'", { _ in })
                                             self.delegate?.didScanCode(code: orderAgainstId.first?.ORDER_ID ?? "",
                                                                        isBucket: false,
                                                                        CN: orderAgainstId.first?.CNSG_NO ?? "")
@@ -667,7 +673,7 @@ class ScanFulfillmentViewController: BaseViewController, AVCaptureMetadataOutput
                                     self.startHapticTouch(type: .success)
                                     self.headerViewImage.image = UIImage(named: "basket")
                                     if self.OLEPrefix == "OLEP" {
-                                        self.headerViewMessage.text = "Scan Bucket - \(basket_barcode?.BASKET_BARCODE ?? "")"
+                                        self.headerViewMessage.text = "Scan Basket - \(basket_barcode?.BASKET_BARCODE ?? "")"
                                     } else {
                                         self.headerViewMessage.text = "Scan Area - \(basket_barcode?.BASKET_BARCODE ?? "")"
                                     }
@@ -684,7 +690,9 @@ class ScanFulfillmentViewController: BaseViewController, AVCaptureMetadataOutput
     }
     
     @IBAction func closeBtnTapped(_ sender: Any) {
-        dismiss(animated: true) {}
+        dismiss(animated: true) {
+            self.closeBtnDelegate?.closeButtonTapped()
+        }
     }
     
     
