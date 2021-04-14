@@ -2766,7 +2766,7 @@ class DBHelper {
             sqlite3_bind_text(insertStatement, 16, (fulfilment_orders.orgn as NSString).utf8String, -1, nil)
             sqlite3_bind_text(insertStatement, 17, (fulfilment_orders.dstn as NSString).utf8String, -1, nil)
             sqlite3_bind_text(insertStatement, 18, ((fulfilment_orders.consigneeAddress ?? "") as NSString).utf8String, -1, nil)
-            sqlite3_bind_int(insertStatement, 19, Int32(fulfilment_orders.srNo))
+            sqlite3_bind_int(insertStatement, 19, Int32(0))
             sqlite3_bind_int(insertStatement, 20, Int32(Int(CURRENT_USER_LOGGED_IN_ID) ?? 0))
             if sqlite3_step(insertStatement) == SQLITE_DONE {
                 handler(true)

@@ -301,7 +301,19 @@ extension FulfilmentListingViewController: UITableViewDelegate, UITableViewDataS
         let data = self.fulfilment_orders![indexPath.row]
         
         cell.orderId.text = "\(data.ORDER_ID)"
-        cell.date.text = data.CREATE_AT.dateSeperateWithT.replacingOccurrences(of: "Z", with: "")
+        let date = data.CREATE_AT.dateSeperateWithT.replacingOccurrences(of: "Z", with: "")
+        
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        let tempdate = formatter.date(from: date)
+        formatter.dateFormat = "dd/MM/yyyy h:mm:ss a"
+        formatter.amSymbol = "AM"
+        formatter.pmSymbol = "PM"
+
+        let dateString = formatter.string(from: tempdate ?? Date())
+        cell.date.text = dateString
+        
         cell.status.text = ticket_status
         switch ticket_status {
         case "Pending":

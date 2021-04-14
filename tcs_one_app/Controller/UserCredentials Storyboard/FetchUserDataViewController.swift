@@ -784,8 +784,6 @@ extension FetchUserDataViewController {
         return params as [String: Any]
     }
     func getFulfilment() {
-        skip = 0
-        isTotalCounter = 0
         var fulfilment = [String: [String:Any]]()
         let lastSyncStatus = AppDelegate.sharedInstance.db?.readLastSyncStatus(tableName: db_last_sync_status,
                                                    condition: "SYNC_KEY = '\(GETORDERFULFILMET)' AND CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)'")
@@ -796,7 +794,7 @@ extension FetchUserDataViewController {
                 "hr_request":[
                     "access_token": access_token,
                     "skip" :skip,
-                    "take" : "80",
+                    "take" : 80,
                     "sync_date": ""
                 ]
             ]
@@ -805,7 +803,7 @@ extension FetchUserDataViewController {
                 "hr_request":[
                     "access_token": access_token,
                     "skip" :0,
-                    "take" : "80",
+                    "take" : 80,
                     "sync_date": lastSyncStatus!.DATE
                 ]
             ]
@@ -814,7 +812,7 @@ extension FetchUserDataViewController {
         NetworkCalls.getorderfulfilment(params: params) { success, response in
             if success {
                 self.count = JSON(response).dictionary![_count]!.intValue
-                if self.count < 0 {
+                if self.count <= 0 {
                     DispatchQueue.main.async {
                         self.loaderViews[5].backgroundColor = UIColor.nativeRedColor()
                         self.activityIndicator[5].stopAnimating()
@@ -958,6 +956,10 @@ extension FetchUserDataViewController {
                                             self.fulfilmentView.isHidden = false
                                             self.activityIndicator[5].isHidden = false
                                             self.activityIndicator[5].startAnimating()
+                                            
+                                            self.skip = 0
+                                            self.isTotalCounter = 0
+                                            
                                             self.getFulfilment()
                                             return
                                         } else {
@@ -1020,6 +1022,10 @@ extension FetchUserDataViewController {
                                                     self.fulfilmentView.isHidden = false
                                                     self.activityIndicator[5].isHidden = false
                                                     self.activityIndicator[5].startAnimating()
+                                                    
+                                                    self.skip = 0
+                                                    self.isTotalCounter = 0
+                                                    
                                                     self.getFulfilment()
                                                     return
                                                 } else {
@@ -1064,6 +1070,10 @@ extension FetchUserDataViewController {
                                         self.fulfilmentView.isHidden = false
                                         self.activityIndicator[5].isHidden = false
                                         self.activityIndicator[5].startAnimating()
+                                        
+                                        self.skip = 0
+                                        self.isTotalCounter = 0
+                                        
                                         self.getFulfilment()
                                         return
                                     } else {

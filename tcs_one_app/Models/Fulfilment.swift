@@ -32,7 +32,7 @@ struct FulfilmentOrders: Codable {
     let orderID, createAt, serviceNo: String
     let orderStatus, itemStatus, origin, destination: String
     let orgn, dstn: String
-    let srNo: Int
+//    let srNo: Int
     
     let basketBarcode, isqc, consigneeAddress, updatedAt, updateBy: String?
     enum CodingKeys: String, CodingKey {
@@ -54,7 +54,7 @@ struct FulfilmentOrders: Codable {
         case orgn = "ORGN"
         case dstn = "DSTN"
         case consigneeAddress = "CONSIGNEE_ADDRESS"
-        case srNo = "SR_NO"
+//        case srNo = "SR_NO"
     }
 }
 

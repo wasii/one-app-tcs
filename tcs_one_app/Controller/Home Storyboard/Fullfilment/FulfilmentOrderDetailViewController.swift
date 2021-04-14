@@ -253,6 +253,11 @@ class FulfilmentOrderDetailViewController: BaseViewController {
             let rCount = self.fulfilment_orders?.filter { (logs) -> Bool in
                 logs.ITEM_STATUS == "Received"
             }.count ?? 0
+            let sCountWOBasket = self.fulfilment_orders?.filter { (logs) -> Bool in
+                logs.ITEM_STATUS == "Scanned" && logs.BASKET_BARCODE != ""
+            }.count ?? 0
+            
+            
             
             self.scanned.text = "Scanned: \(sCount)"
             self.unscanned.text = "Unscanned: \(usCount)"
@@ -260,6 +265,9 @@ class FulfilmentOrderDetailViewController: BaseViewController {
                 self.received.text = "Received: \(rCount)"
             }
             
+            if sCountWOBasket == 0 {
+                return
+            }
             if rCount == self.fulfilment_orders?.count {
                 self.truckBtn.isHidden = true
                 self.checkBtn.isHidden = true
