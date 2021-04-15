@@ -2715,6 +2715,9 @@ extension IMSViewUpdateRequestViewController {
                 return nil
             }
         }
+        if ASHSFilesComments {
+            return nil
+        }
         if willDBInsert {
             var columns = ["DETAILED_INVESTIGATION", "PROSECUTION_NARRATIVE", "DEFENSE_NARRATIVE", "CHALLENGES", "FACTS", "FINDINGS"]
             var values = [self.ticket_request!.DETAILED_INVESTIGATION ?? "",

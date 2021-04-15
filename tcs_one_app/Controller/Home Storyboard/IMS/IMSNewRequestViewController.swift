@@ -1394,8 +1394,8 @@ extension IMSNewRequestViewController: UIDocumentPickerDelegate,UINavigationCont
     }
     func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
         let fileName = urls.first?.lastPathComponent
-        if urls.first!.fileSize > 2048000 {
-            self.view.makeToast("File size should be less than 2MB")
+        if urls.first!.fileSize > 5242880 {
+            self.view.makeToast("File size should be less than 5MB")
             return
         }
         let fileManager = FileManager.default
