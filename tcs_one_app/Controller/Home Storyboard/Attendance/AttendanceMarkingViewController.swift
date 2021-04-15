@@ -135,13 +135,32 @@ class AttendanceMarkingViewController: BaseViewController, MKMapViewDelegate {
                     } else {
                         self.checkInTime.text =  "\(user_attendace?.date.dateOnly ?? "") - \(user_attendace?.timeIn ?? "")"
                         
-                        let dateFormatter = DateFormatter()
-                        dateFormatter.dateFormat = "h:mm a"
-                        let timeInDate = dateFormatter.date(from: user_attendace!.timeIn)
-                        let fixedTime = dateFormatter.date(from: "09:15 AM")
+                        let locale = NSLocale.current
+                        let formatter: String = DateFormatter.dateFormat(fromTemplate: "j", options: 0, locale: locale)!
+                        
+                        var fixedTime = Date()
+                        var timeInDate = Date()
+                        if formatter.contains("a") {
+                            let dateFormatter = DateFormatter()
+                            dateFormatter.dateFormat = "h:mm a"
+                            timeInDate = dateFormatter.date(from: user_attendace!.timeIn)!
+                            fixedTime = dateFormatter.date(from: "09:15 AM")!
+                        } else {
+                            print("ABC")
+                            let dateFormatter = DateFormatter()
+                            dateFormatter.dateFormat = "h:mm a"
+                            dateFormatter.locale = NSLocale(localeIdentifier: "en_US_POSIX") as Locale
+                            let tempTimeInDate = dateFormatter.date(from: user_attendace!.timeIn)!
+                            
+                            dateFormatter.dateFormat = "HH:mm"
+                            dateFormatter.locale = NSLocale(localeIdentifier: "en_US_POSIX") as Locale
+                            let strinTimeInDate = dateFormatter.string(from: tempTimeInDate)
+                            timeInDate = dateFormatter.date(from: strinTimeInDate)!
+                            fixedTime = dateFormatter.date(from: "9:15")!
+                        }
                         
                         let calendar = Calendar.current
-                        let dateComponents = calendar.dateComponents([Calendar.Component.minute], from: fixedTime!, to: timeInDate!)
+                        let dateComponents = calendar.dateComponents([Calendar.Component.minute], from: fixedTime, to: timeInDate)
                         
                         if dateComponents.minute ?? 0 >= 15 {
                             self.timeInImage.image = UIImage(named: "in-arrow-red")
@@ -155,21 +174,54 @@ class AttendanceMarkingViewController: BaseViewController, MKMapViewDelegate {
                     } else {
                         self.checkOutTime.text = "\(user_attendace?.date.dateOnly ?? "") - \(user_attendace?.timeOut ?? "")"
                         
-                        let dateFormatter = DateFormatter()
-                        dateFormatter.dateFormat = "h:mm a"
+                        let locale = NSLocale.current
+                        let formatter: String = DateFormatter.dateFormat(fromTemplate: "j", options: 0, locale: locale)!
                         
-                        let timeInDate = dateFormatter.date(from: user_attendace!.timeIn)
-                        let timeOutDate = dateFormatter.date(from: user_attendace!.timeOut)
-                        
-                        let calendar = Calendar.current
-                        let dateComponents = calendar.dateComponents([Calendar.Component.hour, Calendar.Component.minute], from: timeInDate!, to: timeOutDate!)
-                        
-                        let hours = dateComponents.hour ?? 0
-                        
-                        if hours >= 9 {
-                            self.timeOutImage.image = UIImage(named: "out-array-green")
+                        if formatter.contains("a") {
+                            print("12 hours format")
+                            let dateFormatter = DateFormatter()
+                            dateFormatter.dateFormat = "h:mm a"
+
+                            let timeInDate = dateFormatter.date(from: user_attendace!.timeIn)
+                            let timeOutDate = dateFormatter.date(from: user_attendace!.timeOut)
+
+                            let calendar = Calendar.current
+                            let dateComponents = calendar.dateComponents([Calendar.Component.hour, Calendar.Component.minute], from: timeInDate!, to: timeOutDate!)
+
+                            let hours = dateComponents.hour ?? 0
+
+                            if hours >= 9 {
+                                self.timeOutImage.image = UIImage(named: "out-array-green")
+                            } else {
+                                self.timeOutImage.image = UIImage(named: "out-array")
+                            }
                         } else {
-                            self.timeOutImage.image = UIImage(named: "out-array")
+                            print("24 hours format")
+                            let dateFormatter = DateFormatter()
+                            dateFormatter.dateFormat = "h:mm a"
+                            dateFormatter.locale = NSLocale(localeIdentifier: "en_US_POSIX") as Locale
+                            
+                            let tempTimeInDate = dateFormatter.date(from: user_attendace!.timeIn)
+                            let tempTimeOutDate = dateFormatter.date(from: user_attendace!.timeOut)
+                            
+                            dateFormatter.dateFormat = "HH:mm"
+                            dateFormatter.locale = NSLocale(localeIdentifier: "en_US_POSIX") as Locale
+                            let stringTimeInDate = dateFormatter.string(from: tempTimeInDate!)
+                            let stringTimeOutDate = dateFormatter.string(from: tempTimeOutDate!)
+                            
+                            let timeInDate = dateFormatter.date(from: stringTimeInDate)!
+                            let timeOutDate = dateFormatter.date(from: stringTimeOutDate)!
+                            
+                            let calendar = Calendar.current
+                            let dateComponents = calendar.dateComponents([Calendar.Component.hour, Calendar.Component.minute], from: timeInDate, to: timeOutDate)
+
+                            let hours = dateComponents.hour ?? 0
+
+                            if hours >= 9 {
+                                self.timeOutImage.image = UIImage(named: "out-array-green")
+                            } else {
+                                self.timeOutImage.image = UIImage(named: "out-array")
+                            }
                         }
                     }
                     
@@ -425,9 +477,9 @@ extension AttendanceMarkingViewController: CLLocationManagerDelegate {
         
         
         if self.isUserInsideFence {
-            self.slideView.isUserInteractionEnabled = true
+            self.slideView.isHidden = false
         } else {
-            self.slideView.isUserInteractionEnabled = false
+            self.slideView.isHidden = true
         }
         print("UserInside Fence: \(self.isUserInsideFence)")
     }

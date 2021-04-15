@@ -49,33 +49,71 @@ extension AttendanceDetailsViewController: UITableViewDataSource, UITableViewDel
                 cell.timeIn.text = "Awaited"
                 cell.timeOut.text = "Awaited"
             } else {
-                dateFormatter.dateFormat = "h:mm a"
-                let timeInDate = dateFormatter.date(from: data.TIME_IN)
-                let fixedTime = dateFormatter.date(from: "09:15 AM")
-                
+                let locale = NSLocale.current
+                let formatter: String = DateFormatter.dateFormat(fromTemplate: "j", options: 0, locale: locale)!
+                var dateComponents: DateComponents?
+                var fixedTime = Date()
+                var timeInDate = Date()
+                var stringTimeInDate = ""
+                if formatter.contains("a") {
+                    dateFormatter.dateFormat = "h:mm a"
+                    timeInDate = dateFormatter.date(from: data.TIME_IN)!
+                    fixedTime = dateFormatter.date(from: "09:15 AM")!
+                } else {
+                    dateFormatter.dateFormat = "h:mm a"
+                    dateFormatter.locale = NSLocale(localeIdentifier: "en_US_POSIX") as Locale
+                    let tempTimeInDate = dateFormatter.date(from: data.TIME_IN)!
+                    
+                    dateFormatter.dateFormat = "HH:mm"
+                    dateFormatter.locale = NSLocale(localeIdentifier: "en_US_POSIX") as Locale
+                    stringTimeInDate = dateFormatter.string(from: tempTimeInDate)
+                    timeInDate = dateFormatter.date(from: stringTimeInDate)!
+                    fixedTime = dateFormatter.date(from: "9:15")!
+                }
                 let calendar = Calendar.current
-                let dateComponents = calendar.dateComponents([Calendar.Component.minute], from: fixedTime!, to: timeInDate!)
+                dateComponents = calendar.dateComponents([Calendar.Component.minute], from: fixedTime, to: timeInDate)
                 
-                if dateComponents.minute ?? 0 >= 15 {
+                if dateComponents?.minute ?? 0 >= 15 {
                     cell.timeInLabel.textColor = UIColor.nativeRedColor()
                     cell.timeInImage.image = UIImage(named: "in-arrow-red")
                 } else {
                     cell.timeInLabel.textColor = UIColor.approvedColor()
                     cell.timeInImage.image = UIImage(named: "in-arrow")
                 }
-                cell.timeIn.text = data.TIME_IN
+                if stringTimeInDate == "" {
+                    cell.timeIn.text = data.TIME_IN
+                } else {
+                    cell.timeIn.text = stringTimeInDate
+                }
                 cell.timeOut.text = data.TIME_OUT
             }
         } else {
             if data.TIME_IN != "00:00" {
-                dateFormatter.dateFormat = "h:mm a"
-                let timeInDate = dateFormatter.date(from: data.TIME_IN)
-                let fixedTime = dateFormatter.date(from: "09:15 AM")
                 
+                let locale = NSLocale.current
+                let formatter: String = DateFormatter.dateFormat(fromTemplate: "j", options: 0, locale: locale)!
+                var dateComponents: DateComponents?
+                var fixedTime = Date()
+                var timeInDate = Date()
+                if formatter.contains("a") {
+                    dateFormatter.dateFormat = "h:mm a"
+                    timeInDate = dateFormatter.date(from: data.TIME_IN)!
+                    fixedTime = dateFormatter.date(from: "09:15 AM")!
+                } else {
+                    dateFormatter.dateFormat = "h:mm a"
+                    dateFormatter.locale = NSLocale(localeIdentifier: "en_US_POSIX") as Locale
+                    let tempTimeInDate = dateFormatter.date(from: data.TIME_IN)!
+                    
+                    dateFormatter.dateFormat = "HH:mm"
+                    dateFormatter.locale = NSLocale(localeIdentifier: "en_US_POSIX") as Locale
+                    let strinTimeInDate = dateFormatter.string(from: tempTimeInDate)
+                    timeInDate = dateFormatter.date(from: strinTimeInDate)!
+                    fixedTime = dateFormatter.date(from: "9:15")!
+                }
                 let calendar = Calendar.current
-                let dateComponents = calendar.dateComponents([Calendar.Component.minute], from: fixedTime!, to: timeInDate!)
+                dateComponents = calendar.dateComponents([Calendar.Component.minute], from: fixedTime, to: timeInDate)
                 
-                if dateComponents.minute ?? 0 >= 15 {
+                if dateComponents?.minute ?? 0 >= 15 {
                     cell.timeIn.textColor = UIColor.nativeRedColor()
                     cell.timeInLabel.textColor = UIColor.nativeRedColor()
                     cell.timeInImage.image = UIImage(named: "in-arrow-red")
@@ -92,22 +130,54 @@ extension AttendanceDetailsViewController: UITableViewDataSource, UITableViewDel
         
         
         if data.TIME_OUT != "00:00" {
-            dateFormatter.dateFormat = "h:mm a"
-            
-            let timeInDate = dateFormatter.date(from: data.TIME_IN)
-            let timeOutDate = dateFormatter.date(from: data.TIME_OUT)
-            
-            let calendar = Calendar.current
-            let dateComponents = calendar.dateComponents([Calendar.Component.hour, Calendar.Component.minute], from: timeInDate!, to: timeOutDate!)
-            
-            let hours = dateComponents.hour ?? 0
-            
-            if hours >= 9 {
-                cell.timeOutLabel.textColor = UIColor.approvedColor()
-                cell.timeOutImage.image = UIImage(named: "out-array-green")
+            let locale = NSLocale.current
+            let formatter: String = DateFormatter.dateFormat(fromTemplate: "j", options: 0, locale: locale)!
+            if formatter.contains("a") {
+                print("12 hours format")
+                dateFormatter.dateFormat = "h:mm a"
+
+                let timeInDate = dateFormatter.date(from: data.TIME_IN)
+                let timeOutDate = dateFormatter.date(from: data.TIME_OUT)
+
+                let calendar = Calendar.current
+                let dateComponents = calendar.dateComponents([Calendar.Component.hour, Calendar.Component.minute], from: timeInDate!, to: timeOutDate!)
+
+                let hours = dateComponents.hour ?? 0
+
+                if hours >= 9 {
+                    cell.timeOutLabel.textColor = UIColor.approvedColor()
+                    cell.timeOutImage.image = UIImage(named: "out-array-green")
+                } else {
+                    cell.timeOutLabel.textColor = UIColor.nativeRedColor()
+                    cell.timeOutImage.image = UIImage(named: "out-array")
+                }
             } else {
-                cell.timeOutLabel.textColor = UIColor.nativeRedColor()
-                cell.timeOutImage.image = UIImage(named: "out-array")
+                dateFormatter.dateFormat = "h:mm a"
+                dateFormatter.locale = NSLocale(localeIdentifier: "en_US_POSIX") as Locale
+                
+                let tempTimeInDate = dateFormatter.date(from: data.TIME_IN)
+                let tempTimeOutDate = dateFormatter.date(from: data.TIME_OUT)
+                
+                dateFormatter.dateFormat = "HH:mm"
+                dateFormatter.locale = NSLocale(localeIdentifier: "en_US_POSIX") as Locale
+                let stringTimeInDate = dateFormatter.string(from: tempTimeInDate!)
+                let stringTimeOutDate = dateFormatter.string(from: tempTimeOutDate!)
+                
+                let timeInDate = dateFormatter.date(from: stringTimeInDate)!
+                let timeOutDate = dateFormatter.date(from: stringTimeOutDate)!
+                
+                let calendar = Calendar.current
+                let dateComponents = calendar.dateComponents([Calendar.Component.hour, Calendar.Component.minute], from: timeInDate, to: timeOutDate)
+
+                let hours = dateComponents.hour ?? 0
+
+                if hours >= 9 {
+                    cell.timeOutLabel.textColor = UIColor.approvedColor()
+                    cell.timeOutImage.image = UIImage(named: "out-array-green")
+                } else {
+                    cell.timeOutLabel.textColor = UIColor.nativeRedColor()
+                    cell.timeOutImage.image = UIImage(named: "out-array")
+                }
             }
         }
         
@@ -120,5 +190,3 @@ extension AttendanceDetailsViewController: UITableViewDataSource, UITableViewDel
         return cell
     }
 }
-
-

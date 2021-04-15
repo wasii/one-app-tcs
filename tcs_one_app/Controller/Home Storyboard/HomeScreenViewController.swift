@@ -93,6 +93,10 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
         
         loadAllGeotifications()
         if UserDefaults.standard.data(forKey: PreferencesKeys.savedItems.rawValue) == nil {
+            geotifications.forEach { (logss) in
+                stopMonitoring(geotification: logss)
+                UserDefaults.standard.removeObject(forKey: "GeofenceAdd")
+            }
             let query = "select * from \(db_att_locations)"
             if let locations = AppDelegate.sharedInstance.db?.read_tbl_att_locations(query: query) {
                 for location in locations {
@@ -102,7 +106,7 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
                     
                     let radius : CLLocationDistance = 75
                     let entry = Geotification(coordinate: crd, radius: radius, identifier: NSUUID().uuidString, note: "Welcome to TCS", eventType: .onEntry)
-                    let exit  = Geotification(coordinate: crd, radius: radius, identifier: NSUUID().uuidString, note: "Goodbye from TCS", eventType: .onExit)
+                    let exit  = Geotification(coordinate: crd, radius: radius, identifier: NSUUID().uuidString, note: "See you tomorrow", eventType: .onExit)
 
                     add(entry)
                     add(exit)
