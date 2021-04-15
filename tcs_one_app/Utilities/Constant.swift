@@ -12,8 +12,8 @@ let BACKGROUND              = "BACKGROUND"
 let INACTIVE                = "INACTIVE"
 let API_KEY                 = "5E4D0F6D8E12D8EC5EA3BBB11B63B2F88E39A7561F25EC67CCB440F782FD0360"
 
-let BROADCAST_KEY           = "broadcastiosdev"
-//let BROADCAST_KEY           = "broadcastiosqa"
+//let BROADCAST_KEY           = "broadcastiosdev"
+let BROADCAST_KEY           = "broadcastiosqa"
 //let BROADCAST_KEY           = "broadcastios"
 
 let IS_NEW_DATABASE: Bool   = true

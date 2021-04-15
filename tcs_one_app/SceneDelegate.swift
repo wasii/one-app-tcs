@@ -8,6 +8,7 @@
 
 import UIKit
 import CoreLocation
+import SwiftyJSON
 
 @available(iOS 13.0, *)
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
@@ -15,6 +16,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
     let locationManager = CLLocationManager()
     var isEnter = false
+    var didEnterBackground = false
+    var skip = 0
+    var count = 0
+    var isTotalCounter = 0
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
         // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
@@ -35,6 +40,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func sceneDidBecomeActive(_ scene: UIScene) {
         // Called when the scene has moved from an inactive state to an active state.
         // Use this method to restart any tasks that were paused (or not yet started) when the scene was inactive.
+        if didEnterBackground {
+            didEnterBackground = false
+            self.getFulfilment()
+        }
     }
     
     func sceneWillResignActive(_ scene: UIScene) {
@@ -51,9 +60,76 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // Called as the scene transitions from the foreground to the background.
         // Use this method to save data, release shared resources, and store enough scene-specific state information
         // to restore the scene back to its current state.
+        didEnterBackground = true
     }
-    
-    
+    func getFulfilment() {
+        var fulfilment = [String: [String:Any]]()
+        let lastSyncStatus = AppDelegate.sharedInstance.db?.readLastSyncStatus(tableName: db_last_sync_status,
+                                                   condition: "SYNC_KEY = '\(GETORDERFULFILMET)' AND CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)'")
+        guard let access_token = UserDefaults.standard.string(forKey: USER_ACCESS_TOKEN) else {
+            return
+        }
+        print(lastSyncStatus)
+        if lastSyncStatus == nil {
+            fulfilment = [
+                "hr_request":[
+                    "access_token": access_token,
+                    "skip" :skip,
+                    "take" : 80,
+                    "sync_date": ""
+                ]
+            ]
+        } else {
+            fulfilment = [
+                "hr_request":[
+                    "access_token": access_token,
+                    "skip" :0,
+                    "take" : 80,
+                    "sync_date": lastSyncStatus!.DATE
+                ]
+            ]
+        }
+        let params = self.getAPIParameter(service_name: GETORDERFULFILMET, request_body: fulfilment)
+        NetworkCalls.getorderfulfilment(params: params) { success, response in
+            if success {
+                self.count = JSON(response).dictionary![_count]!.intValue
+                if self.count <= 0 {
+                    return
+                }
+                
+                if let fulfilment_orders = JSON(response).dictionary?[_orders]?.array {
+                    let sync_date = JSON(response).dictionary?[_sync_date]?.string ?? ""
+                    do {
+                        for json in fulfilment_orders {
+                            self.isTotalCounter += 1
+                            let dictionary = try json.rawData()
+                            let fulfilment_orders: FulfilmentOrders = try JSONDecoder().decode(FulfilmentOrders.self, from: dictionary)
+                            AppDelegate.sharedInstance.db?.deleteRowWithMultipleConditions(tbl: db_fulfilment_orders, conditions: "CNSG_NO = '\(fulfilment_orders.cnsgNo)' AND CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)'", { _ in
+                                AppDelegate.sharedInstance.db?.insert_tbl_fulfilment_orders(fulfilment_orders: fulfilment_orders, handler: { _ in
+                                    DispatchQueue.main.async {
+                                        print("new order received")
+                                    }
+                                })
+                            })
+                        }
+                        if self.isTotalCounter  >= self.count {
+                            DispatchQueue.main.async {
+                                Helper.updateLastSyncStatus(APIName: GETORDERFULFILMET,
+                                                          date: sync_date,
+                                                          skip: self.skip,
+                                                          take: 80,
+                                                          total_records: self.count)
+                                NotificationCenter.default.post(Notification.init(name: .refreshedViews))
+                            }
+                        } else {
+                            self.skip += 80
+                            self.getFulfilment()
+                        }
+                    } catch let err { print(err.localizedDescription) }
+                } else {}
+            } else {}
+        }
+    }
 }
 @available(iOS 13.0, *)
 // MARK: - Location Manager Delegate
