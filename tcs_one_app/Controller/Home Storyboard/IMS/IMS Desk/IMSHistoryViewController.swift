@@ -144,27 +144,10 @@ class IMSHistoryViewController: BaseViewController {
                     temp_remarks.append(r)
                 }
             }
-            temp_remarks = temp_remarks.filter({ (remarks) -> Bool in
-                remarks.REF_ID != ""
-            }).sorted(by: { (remarks1, remarks2) -> Bool in
-                remarks1.CREATED < remarks2.CREATED
+            temp_remarks = temp_remarks.sorted(by: { (remarks1, remarks2) -> Bool in
+                remarks1.CREATED > remarks2.CREATED
             })
-            if closure_remarks != "" {
-                if AppDelegate.sharedInstance.db!.read_tbl_UserPermission(permission: IMS_View_Closure_Remarks).count > 0 {
-                    let temp = self.grievance_remarks!.last!
-                    temp_remarks.append(tbl_Grievance_Remarks(ID: temp.ID,
-                                                              SERVER_ID_PK: temp.SERVER_ID_PK,
-                                                              EMPL_NO: temp.EMPL_NO,
-                                                              TICKET_ID: temp.TICKET_ID,
-                                                              REMARKS: self.closure_remarks,
-                                                              REF_ID: temp.REF_ID,
-                                                              CREATED: temp.CREATED,
-                                                              REMARKS_INPUT: "Closure Remarks",
-                                                              REMARKS_SYNC: temp.REMARKS_SYNC))
-                }
-                
-            }
-            self.grievance_remarks = temp_remarks
+            self.grievance_remarks = temp
             handler(self.grievance_remarks!.count)
             
         } else {

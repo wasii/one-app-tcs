@@ -228,7 +228,7 @@ class IncidentInvestigationViewController: BaseViewController {
                 }
             } else {
                 self.rn_textview.isEditable = false
-                self.rn_textview.text = ticket?.OPINION ?? ""
+                self.rn_textview.text = ticket?.AREA_REF ?? ""
                 self.rn_wordcounter.text = "\(ticket?.AREA_REF?.count ?? 0)/100"
             }
         } else {
@@ -245,7 +245,7 @@ class IncidentInvestigationViewController: BaseViewController {
                 }
             } else {
                 self.it_textview.isEditable = false
-                self.it_textview.text = ticket?.OPINION ?? ""
+                self.it_textview.text = ticket?.AREA_INVEST_TITLE ?? ""
                 self.it_wordcounter.text = "\(ticket?.AREA_INVEST_TITLE?.count ?? 0)/525"
             }
         } else {

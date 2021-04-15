@@ -1383,14 +1383,14 @@ var ticket_request: tbl_Hr_Request_Logs?
             }
         }
         if current_user == IMS_Inprogress_As {
-            if (self.ticket_request?.DETAILED_INVESTIGATION == "" ||
-                self.ticket_request?.PROSECUTION_NARRATIVE == "" ||
-                self.ticket_request?.DEFENSE_NARRATIVE == "" ||
-                self.ticket_request?.CHALLENGES == "" ||
-                self.ticket_request?.FACTS == "" ||
-                self.ticket_request?.FINDINGS == "" ||
-                self.ticket_request?.OPINION == "" ||
-                self.ticket_request?.AREA_REF == "" ||
+            if (self.ticket_request?.DETAILED_INVESTIGATION == "" &&
+                self.ticket_request?.PROSECUTION_NARRATIVE == "" &&
+                self.ticket_request?.DEFENSE_NARRATIVE == "" &&
+                self.ticket_request?.CHALLENGES == "" &&
+                self.ticket_request?.FACTS == "" &&
+                self.ticket_request?.FINDINGS == "" &&
+                self.ticket_request?.OPINION == "" &&
+                self.ticket_request?.AREA_REF == "" &&
                     self.ticket_request?.AREA_INVEST_TITLE == "") && (self.attachmentFiles?.count == 0 || self.attachmentFiles == nil) {
                 
                 controller.heading = "Please provide Incident Investigation details or upload document file."
@@ -2071,6 +2071,16 @@ extension IMSViewUpdateRequestViewController: UITextViewDelegate {
                 textView.text = ""
             }
             break
+        case ENTER_REFERENCE_TAG:
+            if textView.text == ENTER_REFERENCE_NUM {
+                textView.text = ""
+            }
+            break
+        case ENTER_INVESTIGATION_TITLE_TAG:
+            if textView.text == ENTER_INVESTIGATION_TITLE {
+                textView.text = ""
+            }
+            break
 //        case ENTER_CLOSURE_REMARKS_TAG:
 //            if textView.text == ENTER_CLOSURE_REMARKS {
 //                textView.text = ""
@@ -2117,6 +2127,16 @@ extension IMSViewUpdateRequestViewController: UITextViewDelegate {
                 textView.text = ENTER_RISK_REMARKS
             }
             break
+        case ENTER_REFERENCE_TAG:
+            if textView.text.count <= 0 {
+                textView.text = ENTER_REFERENCE_NUM
+            }
+            break
+        case ENTER_INVESTIGATION_TITLE_TAG:
+            if textView.text.count <= 0 {
+                textView.text = ENTER_INVESTIGATION_TITLE
+            }
+            break
         default:
             break
         }
@@ -2126,10 +2146,12 @@ extension IMSViewUpdateRequestViewController: UITextViewDelegate {
         var maxLength = 0
         if textView.tag == ENTER_EMAILS_TAG { //email
             maxLength = 20000
-        } else if textView.tag == ENTER_ENDORESSEMENT_TAG || textView.tag == ENTER_DS_RECOMMENDATIONS_TAG { // ds recommendations and
+        } else if textView.tag == ENTER_ENDORESSEMENT_TAG || textView.tag == ENTER_DS_RECOMMENDATIONS_TAG || textView.tag == ENTER_INVESTIGATION_TITLE_TAG { // ds recommendations and
             maxLength = 1000
         } else if textView.tag == ENTER_REMARKS_TAG {
             maxLength = 525
+        } else if textView.tag == ENTER_REFERENCE_TAG {
+            maxLength = 100
         } else {
             maxLength = 200
         }
@@ -2163,6 +2185,11 @@ extension IMSViewUpdateRequestViewController: UITextViewDelegate {
             case ENTER_RISK_REMARKS_TAG:
                 self.risk_remarks_word_counter.text = "\(newString.length)/200"
                 return true
+            case ENTER_REFERENCE_TAG:
+                self.reference_number_word_counter.text = "\(newString.length)/100"
+                break
+            case ENTER_INVESTIGATION_TITLE_TAG:
+                self.investigation_title_word_counter.text = "\(newString.length)/525"
 //            case ENTER_CLOSURE_REMARKS_TAG:
 //                self.closure_remarks_word_counter.text = "\(newString.length)/200"
 //                return true
@@ -2644,14 +2671,6 @@ extension IMSViewUpdateRequestViewController {
     }
     
     func setupHeadOfSecurity() -> [String:Any]? {
-        if self.executive_summary_textview.text == ENTER_EXECUTIVE_SUMMARY || self.executive_summary_textview.text == "" {
-            self.view.makeToast("Executive Summary is mandatory")
-            return nil
-        }
-        if self.recommendations_textview.text == ENTER_RECOMMENDATIONS || self.recommendations_textview.text == "" {
-            self.view.makeToast("Recommendations is mandatory")
-            return nil
-        }
         //feedback change
         if self.reference_number_textview.text == ENTER_REFERENCE_NUM {
             self.view.makeToast("Reference # is mandatory.")
@@ -2661,6 +2680,16 @@ extension IMSViewUpdateRequestViewController {
             self.view.makeToast("Investigation Title is mandatory.")
             return nil
         }
+        
+        if self.executive_summary_textview.text == ENTER_EXECUTIVE_SUMMARY || self.executive_summary_textview.text == "" {
+            self.view.makeToast("Executive Summary is mandatory")
+            return nil
+        }
+        if self.recommendations_textview.text == ENTER_RECOMMENDATIONS || self.recommendations_textview.text == "" {
+            self.view.makeToast("Recommendations is mandatory")
+            return nil
+        }
+        
         if !self.remarks_view.isHidden {
             if remarks_textview.text == "" || remarks_textview.text == ENTER_REMARKS {
                 self.view.makeToast("Remarks is mandatory")
@@ -2668,8 +2697,8 @@ extension IMSViewUpdateRequestViewController {
             }
         }
         if willDBInsert {
-            let columns = ["HO_SEC_SUMMARY", "HO_SEC_RECOM", "TICKET_STATUS"]
-            let values = [self.executive_summary_textview.text!, self.recommendations_textview.text!, IMS_Status_Inprogress_Ds]
+            let columns = ["HO_SEC_SUMMARY", "HO_SEC_RECOM", "HEAD_REF", "HEAD_INVEST_TITLE", "TICKET_STATUS"]
+            let values = [self.executive_summary_textview.text!, self.recommendations_textview.text!, self.reference_number_textview.text!, self.investigation_title_textview.text!, IMS_Status_Inprogress_Ds]
             AppDelegate.sharedInstance.db?.updateTables(tableName: db_hr_request, columnName: columns, updateValue: values, onCondition: "SERVER_ID_PK = '\(self.ticket_request!.SERVER_ID_PK!)'", { _ in })
         }
         let json = [
