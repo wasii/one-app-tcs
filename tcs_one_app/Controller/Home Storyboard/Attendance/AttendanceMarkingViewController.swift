@@ -73,6 +73,10 @@ class AttendanceMarkingViewController: BaseViewController, MKMapViewDelegate {
         guard let access_token = UserDefaults.standard.string(forKey: USER_ACCESS_TOKEN) else {
             return
         }
+        if !CustomReachability.isConnectedNetwork() {
+            self.view.makeToast(NOINTERNETCONNECTION)
+            return
+        }
         self.freezeScreen()
         self.view.makeToastActivity(.center)
         let json = [

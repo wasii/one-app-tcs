@@ -196,8 +196,8 @@ class ScanFulfillmentViewController: BaseViewController, AVCaptureMetadataOutput
                     view.bringSubviewToFront(messageLabel)
                     
                     qrCodeFrameView = UIView()
-                    qrCodeFrameView?.layer.borderColor = UIColor.red.cgColor
-                    qrCodeFrameView?.layer.borderWidth = 2
+//                    qrCodeFrameView?.layer.borderColor = UIColor.red.cgColor
+//                    qrCodeFrameView?.layer.borderWidth = 2
                     qrCodeFrameView?.autoresizingMask = [UIView.AutoresizingMask.flexibleTopMargin, UIView.AutoresizingMask.flexibleBottomMargin, UIView.AutoresizingMask.flexibleLeftMargin, UIView.AutoresizingMask.flexibleRightMargin]
                     
                     view.addSubview(qrCodeFrameView!)
