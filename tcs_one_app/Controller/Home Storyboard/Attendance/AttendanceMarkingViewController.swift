@@ -51,6 +51,18 @@ class AttendanceMarkingViewController: BaseViewController, MKMapViewDelegate {
         fetchAttendance()
         
     }
+    override func viewDidAppear(_ animated: Bool) {
+        NotificationCenter.default.addObserver(self, selector: #selector(refresh), name: .networkRefreshed, object: nil)
+    }
+    
+    
+    @objc func refresh() {
+        self.view.hideAllToasts()
+        fetchAttendance()
+        if !self.isLocationOff {
+            self.alert()
+        }
+    }
     func slideToLock() -> MTSlideToOpenView {
         let slide = MTSlideToOpenView(frame: CGRect(x: 5, y: 4, width: 270, height: 52))
         slide.tag = 1000
@@ -74,7 +86,7 @@ class AttendanceMarkingViewController: BaseViewController, MKMapViewDelegate {
             return
         }
         if !CustomReachability.isConnectedNetwork() {
-            self.view.makeToast(NOINTERNETCONNECTION)
+            self.view.makeToast(NOINTERNETCONNECTION, duration: 20.0, position: .bottom)
             return
         }
         self.freezeScreen()
@@ -447,6 +459,9 @@ extension AttendanceMarkingViewController: CLLocationManagerDelegate {
         case .denied, .restricted, .notDetermined:
             self.isLocationOff = false
             self.isUserInsideFence = false
+            if CustomReachability.isConnectedNetwork() {
+                self.alert()
+            }
             print("location access denied")
             break
         default:
@@ -479,12 +494,20 @@ extension AttendanceMarkingViewController: CLLocationManagerDelegate {
             self.isUserInsideFence = true
         }
         
-        
-        if self.isUserInsideFence {
-            self.slideView.isHidden = false
+        if CustomReachability.isConnectedNetwork() {
+            if self.isUserInsideFence {
+                self.slideView.isHidden = false
+                DispatchQueue.main.async {
+                    self.slideView.viewWithTag(1000)?.removeFromSuperview()
+                    self.slideView.addSubview(self.slideToLock())
+                }
+            } else {
+                self.slideView.isHidden = true
+            }
         } else {
             self.slideView.isHidden = true
         }
+        
         print("UserInside Fence: \(self.isUserInsideFence)")
     }
     
