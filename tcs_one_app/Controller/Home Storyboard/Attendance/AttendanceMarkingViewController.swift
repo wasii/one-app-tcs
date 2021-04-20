@@ -92,6 +92,8 @@ class AttendanceMarkingViewController: BaseViewController, MKMapViewDelegate {
             return
         }
         if !CustomReachability.isConnectedNetwork() {
+            self.slideView.viewWithTag(1000)?.removeFromSuperview()
+            self.slideView.isHidden = true
             self.view.makeToast(NOINTERNETCONNECTION, duration: 20.0, position: .bottom)
             return
         }
@@ -455,7 +457,28 @@ extension AttendanceMarkingViewController: MTSlideToOpenDelegate {
 
 
 extension AttendanceMarkingViewController: CLLocationManagerDelegate {
-    func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
+//    func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
+//        let status = CLLocationManager.authorizationStatus()
+//        switch status {
+//        case .authorizedAlways, .authorizedWhenInUse:
+//            self.isLocationOff = true
+//            locationManager.startUpdatingLocation()
+//            break
+//        case .denied, .restricted, .notDetermined:
+//            self.isLocationOff = false
+//            self.isUserInsideFence = false
+//            DispatchQueue.main.async {
+//                self.slideView.viewWithTag(1000)?.removeFromSuperview()
+//                self.slideView.isHidden = true
+//                self.alert()
+//            }
+//            print("location access denied")
+//            break
+//        default:
+//            locationManager.requestWhenInUseAuthorization()
+//        }
+//    }
+    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
         let status = CLLocationManager.authorizationStatus()
         switch status {
         case .authorizedAlways, .authorizedWhenInUse:

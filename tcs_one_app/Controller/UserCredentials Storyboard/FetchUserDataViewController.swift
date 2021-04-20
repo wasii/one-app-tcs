@@ -646,6 +646,7 @@ class FetchUserDataViewController: BaseViewController {
                 
                 self.count = JSON(response).dictionary![_count]!.intValue
                 if self.count < 0 {
+                    self.isTotalCounter = 0
                     self.getHrNotifications()
                 }
                 if let hr_response = JSON(response).dictionary?[_hr_requests]?.array {
@@ -679,6 +680,7 @@ class FetchUserDataViewController: BaseViewController {
                                                           total_records: self.count)
                                 self.count = 0
                                 self.skip = 0
+                                self.isTotalCounter = 0
                                 DispatchQueue.main.async {
                                     self.logRequest_Label.text = "Synced HR Log Requests"
                                     self.getHrNotifications()
@@ -709,6 +711,7 @@ class FetchUserDataViewController: BaseViewController {
                 } else {
                     self.count = 0
                     self.skip = 0
+                    self.isTotalCounter = 0
                     self.getHrNotifications()
                 }
             }

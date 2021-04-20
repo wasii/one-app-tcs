@@ -181,6 +181,7 @@ var ticket_request: tbl_Hr_Request_Logs?
     @IBOutlet weak var downloadBtn: CustomButton!
     @IBOutlet weak var historyBtn: CustomButton!
     @IBOutlet weak var employeeRelatedBtn: CustomButton!
+    @IBOutlet weak var downloadTemplateBbtn: UIButton!
     
     var lov_classification:     tbl_lov_classification?
     var lov_master_table:       tbl_lov_master?
@@ -449,7 +450,8 @@ var ticket_request: tbl_Hr_Request_Logs?
                     attachment_view.isHidden = false
                 }
                 self.showEnterDetailLabel.text = "Enter Details"
-                
+                self.downloadTemplateBbtn.isHidden = false
+                self.downloadTemplateBbtn.tag = 0
             } else {
 //                self.title = "View Request"
                 self.headingLabel.text = "View Request"
@@ -497,6 +499,8 @@ var ticket_request: tbl_Hr_Request_Logs?
                 
                 self.recommendations_textview.delegate = self
                 self.executive_summary_textview.delegate = self
+                self.downloadTemplateBbtn.isHidden = false
+                self.downloadTemplateBbtn.tag = 1
             } else {
 //                self.title = "View Request"
                 self.headingLabel.text = "View Request"
@@ -1187,6 +1191,52 @@ var ticket_request: tbl_Hr_Request_Logs?
     }
     
     //MARK: IBActions
+    private func copy_file(fileName: String, pathComponent: URL) -> URL? {
+        if let bundleURL = Bundle.main.url(forResource: fileName, withExtension: "docx") {
+            do {
+                let fileManager = FileManager.default
+                try fileManager.copyItem(at: bundleURL, to: pathComponent)
+                return pathComponent
+            } catch let error {
+                print(error.localizedDescription)
+            }
+        }
+        return nil
+    }
+    @IBAction func templateDownload_tapped(_ sender: Any) {
+        let path = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).last! as String
+        let url = NSURL(fileURLWithPath: path)
+        
+        switch (sender as! UIButton).tag {
+        case 0: //Ara Security
+            if let pathComponent = url.appendingPathComponent("AreaSecurity.docx") {
+                let filePath = pathComponent.path
+                let fileManager = FileManager.default
+                if fileManager.fileExists(atPath: filePath) {
+//                    
+                } else {
+                    _ = self.copy_file(fileName: "AreaSecurity", pathComponent: pathComponent)
+                }
+            } else {
+                print("FILE PATH NOT AVAILABLE")
+            }
+            break
+        case 1: //Head Security
+            if let pathComponent = url.appendingPathComponent("HeadOfSecurity.docx") {
+                let filePath = pathComponent.path
+                let fileManager = FileManager.default
+                if fileManager.fileExists(atPath: filePath) {
+                } else {
+                    _ = self.copy_file(fileName: "HeadOfSecurity", pathComponent: pathComponent)
+                }
+            } else {
+                print("FILE PATH NOT AVAILABLE")
+            }
+            break
+        default:
+            break
+        }
+    }
     @IBAction func onOffSwitch(_ sender: UISwitch) {
         
         switch sender.tag {
@@ -2146,9 +2196,9 @@ extension IMSViewUpdateRequestViewController: UITextViewDelegate {
         var maxLength = 0
         if textView.tag == ENTER_EMAILS_TAG { //email
             maxLength = 20000
-        } else if textView.tag == ENTER_ENDORESSEMENT_TAG || textView.tag == ENTER_DS_RECOMMENDATIONS_TAG || textView.tag == ENTER_INVESTIGATION_TITLE_TAG { // ds recommendations and
+        } else if textView.tag == ENTER_ENDORESSEMENT_TAG || textView.tag == ENTER_DS_RECOMMENDATIONS_TAG { // ds recommendations and
             maxLength = 1000
-        } else if textView.tag == ENTER_REMARKS_TAG {
+        } else if textView.tag == ENTER_REMARKS_TAG || textView.tag == ENTER_INVESTIGATION_TITLE_TAG {
             maxLength = 525
         } else if textView.tag == ENTER_REFERENCE_TAG {
             maxLength = 100
@@ -2187,12 +2237,10 @@ extension IMSViewUpdateRequestViewController: UITextViewDelegate {
                 return true
             case ENTER_REFERENCE_TAG:
                 self.reference_number_word_counter.text = "\(newString.length)/100"
-                break
+                return true
             case ENTER_INVESTIGATION_TITLE_TAG:
                 self.investigation_title_word_counter.text = "\(newString.length)/525"
-//            case ENTER_CLOSURE_REMARKS_TAG:
-//                self.closure_remarks_word_counter.text = "\(newString.length)/200"
-//                return true
+                return true
             case ENTER_EMAILS_TAG:
                 return true
             default:

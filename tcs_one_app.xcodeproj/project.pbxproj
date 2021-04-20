@@ -21,6 +21,8 @@
 		1B11D079262EAE7C00C137A3 /* IMSConsignmentDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B11D078262EAE7C00C137A3 /* IMSConsignmentDetailsViewController.swift */; };
 		1B11D07E262EB37000C137A3 /* RequestListingTableCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1B11D07C262EB37000C137A3 /* RequestListingTableCell.xib */; };
 		1B11D07F262EB37000C137A3 /* RequestListingTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B11D07D262EB37000C137A3 /* RequestListingTableCell.swift */; };
+		1B11D085262EC82800C137A3 /* HeadOfSecurity.docx in Resources */ = {isa = PBXBuildFile; fileRef = 1B11D083262EC82800C137A3 /* HeadOfSecurity.docx */; };
+		1B11D086262EC82800C137A3 /* AreaSecurity.docx in Resources */ = {isa = PBXBuildFile; fileRef = 1B11D084262EC82800C137A3 /* AreaSecurity.docx */; };
 		1B14F16A25656DE500C4EA51 /* AddMemoPopupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B14F16925656DE500C4EA51 /* AddMemoPopupViewController.swift */; };
 		1B1691B525724CE40007B3B0 /* next-icon.svg in Resources */ = {isa = PBXBuildFile; fileRef = 1B1691B425724CE30007B3B0 /* next-icon.svg */; };
 		1B1691B82572524C0007B3B0 /* right-arrow-filled.svg in Resources */ = {isa = PBXBuildFile; fileRef = 1B1691B72572524C0007B3B0 /* right-arrow-filled.svg */; };
@@ -181,6 +183,8 @@
 		1B11D078262EAE7C00C137A3 /* IMSConsignmentDetailsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = IMSConsignmentDetailsViewController.swift; path = "../../../../../../ims/tcs_one_app/Controller/Home Storyboard/IMS/IMS Desk/IMSConsignmentDetailsViewController.swift"; sourceTree = "<group>"; };
 		1B11D07C262EB37000C137A3 /* RequestListingTableCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = RequestListingTableCell.xib; sourceTree = "<group>"; };
 		1B11D07D262EB37000C137A3 /* RequestListingTableCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RequestListingTableCell.swift; sourceTree = "<group>"; };
+		1B11D083262EC82800C137A3 /* HeadOfSecurity.docx */ = {isa = PBXFileReference; lastKnownFileType = file; path = HeadOfSecurity.docx; sourceTree = "<group>"; };
+		1B11D084262EC82800C137A3 /* AreaSecurity.docx */ = {isa = PBXFileReference; lastKnownFileType = file; path = AreaSecurity.docx; sourceTree = "<group>"; };
 		1B14F16925656DE500C4EA51 /* AddMemoPopupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddMemoPopupViewController.swift; sourceTree = "<group>"; };
 		1B1691B425724CE30007B3B0 /* next-icon.svg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "next-icon.svg"; sourceTree = "<group>"; };
 		1B1691B72572524C0007B3B0 /* right-arrow-filled.svg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "right-arrow-filled.svg"; sourceTree = "<group>"; };
@@ -687,6 +691,8 @@
 		609C605825387B670051CF28 /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
+				1B11D084262EC82800C137A3 /* AreaSecurity.docx */,
+				1B11D083262EC82800C137A3 /* HeadOfSecurity.docx */,
 				1B1ED24F261C99EF0026234B /* beep.mp3 */,
 				1B1ED250261C99EF0026234B /* buzzer.mp3 */,
 				1BC02EFD25FA445500EFAFE9 /* GeoLocation */,
@@ -881,6 +887,7 @@
 				1B281768257F7D44009AE4E3 /* ChartViews.xib in Resources */,
 				1B11D072262EADDD00C137A3 /* IMSBookingDetailTableCell.xib in Resources */,
 				1B1ED252261C99EF0026234B /* buzzer.mp3 in Resources */,
+				1B11D085262EC82800C137A3 /* HeadOfSecurity.docx in Resources */,
 				60978BE125523E0B009AA2F3 /* MultiplePieCharCollectionCell.xib in Resources */,
 				605CE76D2541459800509434 /* sandboxcert.p12 in Resources */,
 				1B61B2A925DD033B00CDAAE2 /* DeliveryDetailsTableCell.xib in Resources */,
@@ -895,6 +902,7 @@
 				1B61B2B325DD20B800CDAAE2 /* RBagDetailsTableCell.xib in Resources */,
 				1B3EDC97260C532E00A97984 /* Fullfillment.storyboard in Resources */,
 				1B1691B82572524C0007B3B0 /* right-arrow-filled.svg in Resources */,
+				1B11D086262EC82800C137A3 /* AreaSecurity.docx in Resources */,
 				1B1691B525724CE40007B3B0 /* next-icon.svg in Resources */,
 				1B4AAD1325DA781E00A26DE7 /* TrackStoryboard.storyboard in Resources */,
 				1B0C62EC255C100C00DCA76D /* ModulePermissionsTableCell.xib in Resources */,

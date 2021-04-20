@@ -4000,11 +4000,23 @@
                                                             <constraint firstItem="VtW-ES-Zt8" firstAttribute="width" secondItem="VtW-ES-Zt8" secondAttribute="height" multiplier="1:1" id="wt7-5V-N4C"/>
                                                         </constraints>
                                                     </stackView>
+                                                    <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="X7o-x9-zRo">
+                                                        <rect key="frame" x="0.0" y="0.0" width="112" height="27"/>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                                        <state key="normal" title="Download Template">
+                                                            <color key="titleColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        </state>
+                                                        <connections>
+                                                            <action selector="templateDownload_tapped:" destination="TwP-4I-OcV" eventType="touchUpInside" id="9JD-Wk-8Jo"/>
+                                                        </connections>
+                                                    </button>
                                                 </subviews>
                                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="45" id="1ok-69-aLB"/>
+                                                    <constraint firstItem="X7o-x9-zRo" firstAttribute="top" secondItem="UVn-Ax-lR6" secondAttribute="top" id="IxF-ym-I4p"/>
                                                     <constraint firstAttribute="bottom" secondItem="SvZ-eH-nCK" secondAttribute="bottom" id="Nc6-3U-VrS"/>
+                                                    <constraint firstItem="X7o-x9-zRo" firstAttribute="leading" secondItem="UVn-Ax-lR6" secondAttribute="leading" id="h7k-lO-ZVl"/>
                                                     <constraint firstAttribute="trailing" secondItem="SvZ-eH-nCK" secondAttribute="trailing" id="mL3-mF-kMD"/>
                                                     <constraint firstItem="SvZ-eH-nCK" firstAttribute="top" secondItem="UVn-Ax-lR6" secondAttribute="top" id="uUV-ES-y4S"/>
                                                 </constraints>
@@ -4061,6 +4073,7 @@
                         <outlet property="controller_recommendation_view" destination="sX6-bX-FcZ" id="IgG-X3-ddz"/>
                         <outlet property="controller_recommendation_word_counter" destination="3gZ-Po-IjN" id="PeZ-cr-n3T"/>
                         <outlet property="downloadBtn" destination="VtW-ES-Zt8" id="HzO-xc-GrM"/>
+                        <outlet property="downloadTemplateBbtn" destination="X7o-x9-zRo" id="M9R-3h-nLG"/>
                         <outlet property="ds_recommendation_textview" destination="HN5-L2-rQX" id="y8u-4b-itZ"/>
                         <outlet property="ds_recommendation_view" destination="MAa-0m-IuI" id="Yxh-TW-k7H"/>
                         <outlet property="ds_recommendations_word_counter" destination="4Vj-dx-vJq" id="GJ7-Co-HJV"/>
