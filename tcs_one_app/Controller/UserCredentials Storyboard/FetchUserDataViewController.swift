@@ -117,67 +117,70 @@ class FetchUserDataViewController: BaseViewController {
         let params = self.getAPIParameter(service_name: SETUP, request_body: setup_body)
         NetworkCalls.setup(params: params) { (success, response) in
             if success {
-                DispatchQueue.main.async {
-                    self.hrSetupData_Label.text = "Successfully Synced HR"
-                    //show success for view 1
-                    self.loaderViews[0].backgroundColor = UIColor.nativeRedColor()
-                    self.activityIndicator[0].stopAnimating()
-                    self.activityIndicator[0].isHidden = true
-                    self.checkedImageView[0].isHidden = false
-                    //start animation for view 2
-                    self.activityIndicator[2].isHidden = false
-                    self.activityIndicator[2].startAnimating()
-
-                    self.getHrRequest()
-                    //MARK: oneapp.gethrrequest
-//                    self.getHrRequest()
-
-                }
 //                DispatchQueue.main.async {
-//                    self.logReqTopConstraint.constant = 70
+//                    self.hrSetupData_Label.text = "Successfully Synced HR"
+//                    //show success for view 1
 //                    self.loaderViews[0].backgroundColor = UIColor.nativeRedColor()
 //                    self.activityIndicator[0].stopAnimating()
 //                    self.activityIndicator[0].isHidden = true
 //                    self.checkedImageView[0].isHidden = false
-//                    //start animation for view 1
-//                    self.activityIndicator[1].isHidden = false
-//                    self.activityIndicator[1].startAnimating()
-//                    self.imsSetupView.isHidden = false
-//                }
-//                self.getIMSSetup { imsSuccess, imsReponse in
-//                    if imsSuccess {
-//                        DispatchQueue.main.async {
-//                            let json = JSON(imsReponse)
-//                            self.initialiseIMS(response: json) { _ in
-//                                DispatchQueue.main.async {
+//                    //start animation for view 2
+//                    self.activityIndicator[2].isHidden = false
+//                    self.activityIndicator[2].startAnimating()
 //
-//                                    self.loaderViews[1].backgroundColor = UIColor.nativeRedColor()
-//                                    self.activityIndicator[1].stopAnimating()
-//                                    self.activityIndicator[1].isHidden = true
-//                                    self.checkedImageView[1].isHidden = false
-//                                    //start animation for view 2
-//                                    self.activityIndicator[2].isHidden = false
-//                                    self.activityIndicator[2].startAnimating()
-//                                    //MARK: oneapp.gethrrequest
-//                                    self.getHrRequest()
-//                                }
-//                            }
-//                        }
-//
-//                    } else {
-//                        DispatchQueue.main.async {
-//                            self.loaderViews[0].backgroundColor = UIColor.nativeRedColor()
-//                            self.activityIndicator[0].stopAnimating()
-//                            self.activityIndicator[0].isHidden = true
-//                            self.checkedImageView[0].isHidden = false
-//                            //start animation for view 2
-//                            self.activityIndicator[2].isHidden = false
-//                            self.activityIndicator[2].startAnimating()
-//                            //MARK: oneapp.gethrrequest
-//                            self.getHrRequest()
-//                        }
-//                    }
+//                    self.getHrRequest()
+                    //MARK: oneapp.gethrrequest
+//                    self.getHrRequest()
+
 //                }
+                DispatchQueue.main.async {
+                    self.hrSetupData_Label.text = "Successfully Synced HR"
+                    self.imsSetupView.isHidden = false
+                    self.imsSetupData_Label.text = "Syncing IMS Setup Data"
+                    
+                    self.loaderViews[0].backgroundColor = UIColor.nativeRedColor()
+                    self.activityIndicator[0].stopAnimating()
+                    self.activityIndicator[0].isHidden = true
+                    self.checkedImageView[0].isHidden = false
+                    //start animation for view 1
+                    self.activityIndicator[1].isHidden = false
+                    self.activityIndicator[1].startAnimating()
+                    self.imsSetupView.isHidden = false
+                }
+                self.getIMSSetup { imsSuccess, imsReponse in
+                    if imsSuccess {
+                        DispatchQueue.main.async {
+                            let json = JSON(imsReponse)
+                            self.initialiseIMS(response: json) { _ in
+                                DispatchQueue.main.async {
+                                    self.imsSetupData_Label.text = "Synced IMS Setup Data"
+                                    self.loaderViews[1].backgroundColor = UIColor.nativeRedColor()
+                                    self.activityIndicator[1].stopAnimating()
+                                    self.activityIndicator[1].isHidden = true
+                                    self.checkedImageView[1].isHidden = false
+                                    //start animation for view 2
+                                    self.activityIndicator[2].isHidden = false
+                                    self.activityIndicator[2].startAnimating()
+                                    //MARK: oneapp.gethrrequest
+                                    self.getHrRequest()
+                                }
+                            }
+                        }
+
+                    } else {
+                        DispatchQueue.main.async {
+                            self.loaderViews[0].backgroundColor = UIColor.nativeRedColor()
+                            self.activityIndicator[0].stopAnimating()
+                            self.activityIndicator[0].isHidden = true
+                            self.checkedImageView[0].isHidden = false
+                            //start animation for view 2
+                            self.activityIndicator[2].isHidden = false
+                            self.activityIndicator[2].startAnimating()
+                            //MARK: oneapp.gethrrequest
+                            self.getHrRequest()
+                        }
+                    }
+                }
             } else {
                 if response as! String == REVERTBACK {
                     DispatchQueue.main.async {
@@ -640,6 +643,7 @@ class FetchUserDataViewController: BaseViewController {
         let params = self.getAPIParameter(service_name: GET_HR_REQUEST, request_body: hr_request)
         NetworkCalls.hr_request(params: params) { success, response in
             if success {
+                
                 self.count = JSON(response).dictionary![_count]!.intValue
                 if self.count < 0 {
                     self.getHrNotifications()
@@ -652,11 +656,9 @@ class FetchUserDataViewController: BaseViewController {
                             self.counter.isHidden = false
                             self.counter.text = "\(self.isTotalCounter)/\(self.count)"
                         }
-                        
+                        self.setup_HRLogs_HRFILES(response: response)
                         for json in hr_response {
                             self.isTotalCounter += 1
-//                            print("ASSIGNED_TO: \(json.dictionary?["ASSIGNED_TO"]?.int ?? -111)")
-                            print("VIEW_COUNT: \(json.dictionary?["VIEW_COUNT"]?.int ?? -111)")
                             let dictionary = try json.rawData()
                             let hrRequest: HrRequest = try JSONDecoder().decode(HrRequest.self, from: dictionary)
                             AppDelegate.sharedInstance.db?.deleteRowWithMultipleConditions(tbl: db_hr_request, conditions: "SERVER_ID_PK = '\(hrRequest.ticketID!)' AND CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)'", { _ in
@@ -667,9 +669,6 @@ class FetchUserDataViewController: BaseViewController {
                                 })
                             })
                         }
-                        
-                        
-                        
                         if self.count == self.isTotalCounter {
                             
                             DispatchQueue.main.async {
@@ -680,9 +679,9 @@ class FetchUserDataViewController: BaseViewController {
                                                           total_records: self.count)
                                 self.count = 0
                                 self.skip = 0
-                                self.setup_HRLogs_HRFILES(response: response)
                                 DispatchQueue.main.async {
                                     self.logRequest_Label.text = "Synced HR Log Requests"
+                                    self.getHrNotifications()
                                 }
                             }
                         } else {
@@ -708,19 +707,9 @@ class FetchUserDataViewController: BaseViewController {
                         print("error: ", error)
                     }
                 } else {
-                    DispatchQueue.main.async {
-                        self.logRequest_Label.text = "Synced HR Log Requests"
-                    }
                     self.count = 0
                     self.skip = 0
                     self.getHrNotifications()
-                }
-            } else {
-                DispatchQueue.main.async {
-                    self.view.makeToast(SOMETHINGWENTWRONG)
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                        self.navigationController?.popViewController(animated: true)
-                    }
                 }
             }
         }
@@ -755,9 +744,6 @@ class FetchUserDataViewController: BaseViewController {
                 })
             }
         }
-        self.count = 0
-        self.isTotalCounter = 0
-        self.getHrNotifications()
     }
 }
 extension FetchUserDataViewController {

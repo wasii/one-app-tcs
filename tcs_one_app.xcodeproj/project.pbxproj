@@ -11,6 +11,16 @@
 		1B0C62EB255C100C00DCA76D /* ModulePermissionsTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B0C62E9255C100C00DCA76D /* ModulePermissionsTableCell.swift */; };
 		1B0C62EC255C100C00DCA76D /* ModulePermissionsTableCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1B0C62EA255C100C00DCA76D /* ModulePermissionsTableCell.xib */; };
 		1B0CD7DA25F0C0B500C1C87D /* TCSOneApp.db in Resources */ = {isa = PBXBuildFile; fileRef = 1B0CD7D925F0C0B500C1C87D /* TCSOneApp.db */; };
+		1B11D069262EAD6E00C137A3 /* IMSFilesAccordingRemarksViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B11D068262EAD6E00C137A3 /* IMSFilesAccordingRemarksViewController.swift */; };
+		1B11D071262EADDD00C137A3 /* IMSDeliveryDetailTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B11D06B262EADDD00C137A3 /* IMSDeliveryDetailTableCell.swift */; };
+		1B11D072262EADDD00C137A3 /* IMSBookingDetailTableCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1B11D06C262EADDD00C137A3 /* IMSBookingDetailTableCell.xib */; };
+		1B11D073262EADDD00C137A3 /* IMSBookingDetailTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B11D06D262EADDD00C137A3 /* IMSBookingDetailTableCell.swift */; };
+		1B11D074262EADDD00C137A3 /* IMSDeliveryDetailsTableCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1B11D06E262EADDD00C137A3 /* IMSDeliveryDetailsTableCell.xib */; };
+		1B11D075262EADDD00C137A3 /* IMSDeliveryDetailsTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B11D06F262EADDD00C137A3 /* IMSDeliveryDetailsTableCell.swift */; };
+		1B11D076262EADDD00C137A3 /* IMSDeliveryDetailTableCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1B11D070262EADDD00C137A3 /* IMSDeliveryDetailTableCell.xib */; };
+		1B11D079262EAE7C00C137A3 /* IMSConsignmentDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B11D078262EAE7C00C137A3 /* IMSConsignmentDetailsViewController.swift */; };
+		1B11D07E262EB37000C137A3 /* RequestListingTableCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1B11D07C262EB37000C137A3 /* RequestListingTableCell.xib */; };
+		1B11D07F262EB37000C137A3 /* RequestListingTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B11D07D262EB37000C137A3 /* RequestListingTableCell.swift */; };
 		1B14F16A25656DE500C4EA51 /* AddMemoPopupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B14F16925656DE500C4EA51 /* AddMemoPopupViewController.swift */; };
 		1B1691B525724CE40007B3B0 /* next-icon.svg in Resources */ = {isa = PBXBuildFile; fileRef = 1B1691B425724CE30007B3B0 /* next-icon.svg */; };
 		1B1691B82572524C0007B3B0 /* right-arrow-filled.svg in Resources */ = {isa = PBXBuildFile; fileRef = 1B1691B72572524C0007B3B0 /* right-arrow-filled.svg */; };
@@ -148,8 +158,6 @@
 		60E9991D253D719500BCDAD1 /* HRHelpDeskViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60E9991C253D719500BCDAD1 /* HRHelpDeskViewController.swift */; };
 		60E9991F253D7D9900BCDAD1 /* NewRequestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60E9991E253D7D9900BCDAD1 /* NewRequestViewController.swift */; };
 		60E99921253D7E1900BCDAD1 /* Popups.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 60E99920253D7E1900BCDAD1 /* Popups.storyboard */; };
-		60E99924253D848D00BCDAD1 /* RequestListingTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60E99922253D848D00BCDAD1 /* RequestListingTableCell.swift */; };
-		60E99925253D848D00BCDAD1 /* RequestListingTableCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 60E99923253D848D00BCDAD1 /* RequestListingTableCell.xib */; };
 		60E99928253D9EF900BCDAD1 /* FilterDataPopupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60E99927253D9EF900BCDAD1 /* FilterDataPopupViewController.swift */; };
 		60E9992A253D9FB200BCDAD1 /* FilterListingDataTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60E99929253D9FB200BCDAD1 /* FilterListingDataTableCell.swift */; };
 		60EE11B3254B262C00ACB45B /* UserInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60EE11B2254B262C00ACB45B /* UserInfoViewController.swift */; };
@@ -163,6 +171,16 @@
 		1B0C62E9255C100C00DCA76D /* ModulePermissionsTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModulePermissionsTableCell.swift; sourceTree = "<group>"; };
 		1B0C62EA255C100C00DCA76D /* ModulePermissionsTableCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ModulePermissionsTableCell.xib; sourceTree = "<group>"; };
 		1B0CD7D925F0C0B500C1C87D /* TCSOneApp.db */ = {isa = PBXFileReference; lastKnownFileType = file; path = TCSOneApp.db; sourceTree = "<group>"; };
+		1B11D068262EAD6E00C137A3 /* IMSFilesAccordingRemarksViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = IMSFilesAccordingRemarksViewController.swift; path = "../../../../../../ims/tcs_one_app/Controller/Home Storyboard/IMS/IMS Desk/IMSFilesAccordingRemarksViewController.swift"; sourceTree = "<group>"; };
+		1B11D06B262EADDD00C137A3 /* IMSDeliveryDetailTableCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = IMSDeliveryDetailTableCell.swift; path = ../../../../ims/tcs_one_app/Views/TableView/IMSDeliveryDetailTableCell.swift; sourceTree = "<group>"; };
+		1B11D06C262EADDD00C137A3 /* IMSBookingDetailTableCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = IMSBookingDetailTableCell.xib; path = ../../../../ims/tcs_one_app/Views/TableView/IMSBookingDetailTableCell.xib; sourceTree = "<group>"; };
+		1B11D06D262EADDD00C137A3 /* IMSBookingDetailTableCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = IMSBookingDetailTableCell.swift; path = ../../../../ims/tcs_one_app/Views/TableView/IMSBookingDetailTableCell.swift; sourceTree = "<group>"; };
+		1B11D06E262EADDD00C137A3 /* IMSDeliveryDetailsTableCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = IMSDeliveryDetailsTableCell.xib; path = ../../../../ims/tcs_one_app/Views/TableView/IMSDeliveryDetailsTableCell.xib; sourceTree = "<group>"; };
+		1B11D06F262EADDD00C137A3 /* IMSDeliveryDetailsTableCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = IMSDeliveryDetailsTableCell.swift; path = ../../../../ims/tcs_one_app/Views/TableView/IMSDeliveryDetailsTableCell.swift; sourceTree = "<group>"; };
+		1B11D070262EADDD00C137A3 /* IMSDeliveryDetailTableCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = IMSDeliveryDetailTableCell.xib; path = ../../../../ims/tcs_one_app/Views/TableView/IMSDeliveryDetailTableCell.xib; sourceTree = "<group>"; };
+		1B11D078262EAE7C00C137A3 /* IMSConsignmentDetailsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = IMSConsignmentDetailsViewController.swift; path = "../../../../../../ims/tcs_one_app/Controller/Home Storyboard/IMS/IMS Desk/IMSConsignmentDetailsViewController.swift"; sourceTree = "<group>"; };
+		1B11D07C262EB37000C137A3 /* RequestListingTableCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = RequestListingTableCell.xib; sourceTree = "<group>"; };
+		1B11D07D262EB37000C137A3 /* RequestListingTableCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RequestListingTableCell.swift; sourceTree = "<group>"; };
 		1B14F16925656DE500C4EA51 /* AddMemoPopupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddMemoPopupViewController.swift; sourceTree = "<group>"; };
 		1B1691B425724CE30007B3B0 /* next-icon.svg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "next-icon.svg"; sourceTree = "<group>"; };
 		1B1691B72572524C0007B3B0 /* right-arrow-filled.svg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "right-arrow-filled.svg"; sourceTree = "<group>"; };
@@ -302,8 +320,6 @@
 		60E9991C253D719500BCDAD1 /* HRHelpDeskViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HRHelpDeskViewController.swift; sourceTree = "<group>"; };
 		60E9991E253D7D9900BCDAD1 /* NewRequestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewRequestViewController.swift; sourceTree = "<group>"; };
 		60E99920253D7E1900BCDAD1 /* Popups.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Popups.storyboard; sourceTree = "<group>"; };
-		60E99922253D848D00BCDAD1 /* RequestListingTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestListingTableCell.swift; sourceTree = "<group>"; };
-		60E99923253D848D00BCDAD1 /* RequestListingTableCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = RequestListingTableCell.xib; sourceTree = "<group>"; };
 		60E99927253D9EF900BCDAD1 /* FilterDataPopupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterDataPopupViewController.swift; sourceTree = "<group>"; };
 		60E99929253D9FB200BCDAD1 /* FilterListingDataTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterListingDataTableCell.swift; sourceTree = "<group>"; };
 		60EE11B2254B262C00ACB45B /* UserInfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInfoViewController.swift; sourceTree = "<group>"; };
@@ -456,6 +472,8 @@
 		1B6279E52591E5C200C88FEE /* IMS Desk */ = {
 			isa = PBXGroup;
 			children = (
+				1B11D078262EAE7C00C137A3 /* IMSConsignmentDetailsViewController.swift */,
+				1B11D068262EAD6E00C137A3 /* IMSFilesAccordingRemarksViewController.swift */,
 				1B326587259C95BF001B94C0 /* IMSDashboardViewController.swift */,
 				1BBAEA4C259DA1AA00FBDCB4 /* IMSAllRequestsViewController.swift */,
 				1B71451725AF7E9A0058C36C /* IMSHistoryViewController.swift */,
@@ -578,11 +596,11 @@
 		604FD75E2539B762007E9E87 /* TableView */ = {
 			isa = PBXGroup;
 			children = (
+				1B11D07D262EB37000C137A3 /* RequestListingTableCell.swift */,
+				1B11D07C262EB37000C137A3 /* RequestListingTableCell.xib */,
 				1B3EDC9F260C61D000A97984 /* Fulfilment */,
 				1BFB375225F9D79B0073CC53 /* Attendance */,
 				1B61B29A25DCEE5700CDAAE2 /* Tracking */,
-				60E99922253D848D00BCDAD1 /* RequestListingTableCell.swift */,
-				60E99923253D848D00BCDAD1 /* RequestListingTableCell.xib */,
 				60E99929253D9FB200BCDAD1 /* FilterListingDataTableCell.swift */,
 				604B3965253ED2CD00864293 /* GraphListingTableCell.swift */,
 				604B3966253ED2CD00864293 /* GraphListingTableCell.xib */,
@@ -598,6 +616,12 @@
 				1B1C0B682583DBB500AAAAE9 /* NewRequestsListingTableCell.xib */,
 				1B47F99D25A5F18300FC74A4 /* IncidentInvestigationTableCell.swift */,
 				1B47F99E25A5F18300FC74A4 /* IncidentInvestigationTableCell.xib */,
+				1B11D06D262EADDD00C137A3 /* IMSBookingDetailTableCell.swift */,
+				1B11D06C262EADDD00C137A3 /* IMSBookingDetailTableCell.xib */,
+				1B11D06F262EADDD00C137A3 /* IMSDeliveryDetailsTableCell.swift */,
+				1B11D06E262EADDD00C137A3 /* IMSDeliveryDetailsTableCell.xib */,
+				1B11D06B262EADDD00C137A3 /* IMSDeliveryDetailTableCell.swift */,
+				1B11D070262EADDD00C137A3 /* IMSDeliveryDetailTableCell.xib */,
 			);
 			path = TableView;
 			sourceTree = "<group>";
@@ -855,6 +879,7 @@
 				1B61B2BD25DD25DD00CDAAE2 /* DManDetailsTableCell.xib in Resources */,
 				1BF25A4A25E7CA3B008CE34F /* LeadershipAwaz.storyboard in Resources */,
 				1B281768257F7D44009AE4E3 /* ChartViews.xib in Resources */,
+				1B11D072262EADDD00C137A3 /* IMSBookingDetailTableCell.xib in Resources */,
 				1B1ED252261C99EF0026234B /* buzzer.mp3 in Resources */,
 				60978BE125523E0B009AA2F3 /* MultiplePieCharCollectionCell.xib in Resources */,
 				605CE76D2541459800509434 /* sandboxcert.p12 in Resources */,
@@ -863,7 +888,6 @@
 				1B1C0B6A2583DBB500AAAAE9 /* NewRequestsListingTableCell.xib in Resources */,
 				1B61B2B825DD235200CDAAE2 /* TBagDetailsTableCell.xib in Resources */,
 				6010F41125400E3300CF8597 /* CicrularProgressBarCollectionCell.xib in Resources */,
-				60E99925253D848D00BCDAD1 /* RequestListingTableCell.xib in Resources */,
 				601BA4C925387B18002CFD1F /* LaunchScreen.storyboard in Resources */,
 				60E99918253D548200BCDAD1 /* ModulesCollectionCell.xib in Resources */,
 				60E99912253D4F1300BCDAD1 /* PieChartCollectionCell.xib in Resources */,
@@ -879,8 +903,11 @@
 				1B614E1C2555138500E50B3A /* GoogleService-Info.plist in Resources */,
 				1BA7BAC3260DF3FD002D9FA9 /* FulfilmentOrderDetailTableCell.xib in Resources */,
 				1BFB374725F9D6E20073CC53 /* Attendance.storyboard in Resources */,
+				1B11D074262EADDD00C137A3 /* IMSDeliveryDetailsTableCell.xib in Resources */,
 				1B6B04A4256660CD00CDEF66 /* GrievacneDownloadsTableCell.xib in Resources */,
 				60C34FE02539830E00495944 /* Home.storyboard in Resources */,
+				1B11D076262EADDD00C137A3 /* IMSDeliveryDetailTableCell.xib in Resources */,
+				1B11D07E262EB37000C137A3 /* RequestListingTableCell.xib in Resources */,
 				609C605B25387B900051CF28 /* UserCredentials.storyboard in Resources */,
 				1B47F9A025A5F18300FC74A4 /* IncidentInvestigationTableCell.xib in Resources */,
 				1B0CD7DA25F0C0B500C1C87D /* TCSOneApp.db in Resources */,
@@ -956,6 +983,7 @@
 				609C606425387C920051CF28 /* Extensions.swift in Sources */,
 				1B77CE87256257B700A821E7 /* GrievanceViewRequestViewController.swift in Sources */,
 				60978BDB2551D06B009AA2F3 /* LogoutPopupViewController.swift in Sources */,
+				1B11D073262EADDD00C137A3 /* IMSBookingDetailTableCell.swift in Sources */,
 				1B3202F92578C70B0034803F /* ImagePickerManager.swift in Sources */,
 				1B02129625A6E27300441E9F /* ConfirmationPopViewController.swift in Sources */,
 				1B14F16A25656DE500C4EA51 /* AddMemoPopupViewController.swift in Sources */,
@@ -973,11 +1001,13 @@
 				1B61B2BC25DD25DD00CDAAE2 /* DManDetailsTableCell.swift in Sources */,
 				1B3EDCA2260C620100A97984 /* FulfilmentListingTableCell.swift in Sources */,
 				1B5EAA83255EA4A600F49D09 /* GrievanceHelpDeskRequestsViewController.swift in Sources */,
+				1B11D069262EAD6E00C137A3 /* IMSFilesAccordingRemarksViewController.swift in Sources */,
 				1BA7BAC2260DF3FD002D9FA9 /* FulfilmentOrderDetailTableCell.swift in Sources */,
 				1BFB375D25F9FB580073CC53 /* MapViewController.swift in Sources */,
 				6010F41025400E3300CF8597 /* CicrularProgressBarCollectionCell.swift in Sources */,
 				60E99928253D9EF900BCDAD1 /* FilterDataPopupViewController.swift in Sources */,
 				602011A12542948100759D2E /* NewRequestListingViewController.swift in Sources */,
+				1B11D071262EADDD00C137A3 /* IMSDeliveryDetailTableCell.swift in Sources */,
 				604B3967253ED2CD00864293 /* GraphListingTableCell.swift in Sources */,
 				1B6B049E25665C6500CDEF66 /* GrievancesHistoryTableCell.swift in Sources */,
 				1B47F9A325A5F81C00FC74A4 /* IncidentInvestigationViewController.swift in Sources */,
@@ -986,13 +1016,13 @@
 				60EE11B3254B262C00ACB45B /* UserInfoViewController.swift in Sources */,
 				609922962547F43900534577 /* HRNotifications.swift in Sources */,
 				1B326588259C95BF001B94C0 /* IMSDashboardViewController.swift in Sources */,
-				60E99924253D848D00BCDAD1 /* RequestListingTableCell.swift in Sources */,
 				1B61B2B225DD20B800CDAAE2 /* RBagDetailsTableCell.swift in Sources */,
 				6010F4172540622500CF8597 /* NetworkCalls.swift in Sources */,
 				60E99911253D4F1300BCDAD1 /* PieChartCollectionCell.swift in Sources */,
 				1B3EDC9D260C598C00A97984 /* FulfilmentListingViewController.swift in Sources */,
 				1BC02EFF25FA446800EFAFE9 /* Geotification.swift in Sources */,
 				1B4AAD1725DA784300A26DE7 /* TrackHomeViewController.swift in Sources */,
+				1B11D079262EAE7C00C137A3 /* IMSConsignmentDetailsViewController.swift in Sources */,
 				6006955A254994D400EB3865 /* HRHelpDeskRequestViewController.swift in Sources */,
 				1BD4A49E261310C700491D0D /* FulfillmentPopViewController.swift in Sources */,
 				1B3EDCA7260C6BEA00A97984 /* FulfilmentOrderDetailViewController.swift in Sources */,
@@ -1012,9 +1042,11 @@
 				1B61B2AD25DD1CC000CDAAE2 /* PBagDetailsTableViewCell.swift in Sources */,
 				1B590C64255818E300C413AA /* WatchAllRequestsViewController.swift in Sources */,
 				1B61B2A325DCFB3800CDAAE2 /* BookingDetailsTableCell.swift in Sources */,
+				1B11D07F262EB37000C137A3 /* RequestListingTableCell.swift in Sources */,
 				1B71451825AF7E9A0058C36C /* IMSHistoryViewController.swift in Sources */,
 				1BFB375925F9D8E60073CC53 /* SlideManager.swift in Sources */,
 				1B6B04A3256660CD00CDEF66 /* GrievacneDownloadsTableCell.swift in Sources */,
+				1B11D075262EADDD00C137A3 /* IMSDeliveryDetailsTableCell.swift in Sources */,
 				1B1C0B692583DBB500AAAAE9 /* NewRequestsListingTableCell.swift in Sources */,
 				1B6B049A256642FF00CDEF66 /* GrievanceRemarksHistoryViewController.swift in Sources */,
 				1B77CE842562509B00A821E7 /* DownloadListViewController.swift in Sources */,

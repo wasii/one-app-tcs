@@ -103,7 +103,7 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
                     let radius : CLLocationDistance = 75
                     let entry = Geotification(coordinate: crd, radius: radius, identifier: NSUUID().uuidString, note: "Welcome to TCS", eventType: .onEntry)
                     let exit  = Geotification(coordinate: crd, radius: radius, identifier: NSUUID().uuidString, note: "Goodbye from TCS", eventType: .onExit)
-
+                    
                     add(entry)
                     add(exit)
                     
@@ -190,7 +190,7 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
         if let _ = self.module {
             chartViews = [ChartViews]()
             for mod in self.module! {
-                if mod.TAGNAME == MODULE_TAG_TRACK || mod.TAGNAME == MODULE_TAG_IMS || mod.TAGNAME == MODULE_TAG_LEADERSHIPAWAZ || mod.TAGNAME == MODULE_TAG_ATTENDANCE || mod.TAGNAME == MODULE_TAG_FULFILMENT || mod.TAGNAME == MODULE_TAG_CLS {
+                if mod.TAGNAME == MODULE_TAG_TRACK || mod.TAGNAME == MODULE_TAG_LEADERSHIPAWAZ || mod.TAGNAME == MODULE_TAG_ATTENDANCE || mod.TAGNAME == MODULE_TAG_FULFILMENT || mod.TAGNAME == MODULE_TAG_CLS {
                     print(mod.MODULENAME)
                     continue
                 }
@@ -218,15 +218,17 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
                                                       module: MODULE_TAG_GRIEVANCE)
                     self.ModuleCount += 1
                     break
-                //                case "IMS":
-                //                    chart.heading.text = "IMS Dashboard"
-                //                    chart.pieChart = self.setupGraphs(pieChartView: chart.pieChart,
-                //                                                      module_id: mod.SERVER_ID_PK,
-                //                                                      pending: "Submitted",
-                //                                                      approved: IMS_Status_Inprogress,
-                //                                                      rejected: "Closed",
-                //                                                      tag: mod.SERVER_ID_PK)
-                //                    break
+                case MODULE_TAG_IMS:
+                    chart.heading.text = "IMS Dashboard"
+                    chart.pieChart = self.setupGraphs(pieChartView: chart.pieChart,
+                                                      module_id: mod.SERVER_ID_PK,
+                                                      pending: "Submitted",
+                                                      approved: IMS_Status_Inprogress,
+                                                      rejected: "Closed",
+                                                      tag: mod.SERVER_ID_PK,
+                                                      module: MODULE_TAG_IMS)
+                    self.ModuleCount += 1
+                    break
                 //                case "Leadership Connect":
                 //                    chart.heading.text = "Leadership Connect Dashboard"
                 //                    chart.pieChart = self.setupGraphs(pieChartView: chart.pieChart,
@@ -414,20 +416,20 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
                         break
                     }
                     break
-                //                case 3:
-                //                    switch key {
-                //                    case IMS_Status_Submitted:
-                //                        pendingCounter += chartValue
-                //                        break
-                //                    case IMS_Status_Inprogress, IMS_Status_Inprogress_Rds, IMS_Status_Inprogress_Ro, IMS_Status_Inprogress_Rm, IMS_Status_Inprogress_Hod, IMS_Status_Inprogress_Cs, IMS_Status_Inprogress_As , IMS_Status_Inprogress_Hs, IMS_Status_Inprogress_Ds, IMS_Status_Inprogress_Fs, IMS_Status_Inprogress_Ins, IMS_Status_Inprogress_Hr, IMS_Status_Inprogress_Fi, IMS_Status_Inprogress_Ca, IMS_Status_Inprogress_Rhod:
-                //                        approvedCounter += chartValue
-                //                        break
-                //                    case IMS_Status_Closed:
-                //                        rejectedCounter += chartValue
-                //                        break
-                //                    default:
-                //                        break
-                //                    }
+                case MODULE_TAG_IMS:
+                    switch key {
+                    case IMS_Status_Submitted:
+                        pendingCounter += chartValue
+                        break
+                    case IMS_Status_Inprogress, IMS_Status_Inprogress_Rds, IMS_Status_Inprogress_Ro, IMS_Status_Inprogress_Rm, IMS_Status_Inprogress_Hod, IMS_Status_Inprogress_Cs, IMS_Status_Inprogress_As , IMS_Status_Inprogress_Hs, IMS_Status_Inprogress_Ds, IMS_Status_Inprogress_Fs, IMS_Status_Inprogress_Ins, IMS_Status_Inprogress_Hr, IMS_Status_Inprogress_Fi, IMS_Status_Inprogress_Ca, IMS_Status_Inprogress_Rhod:
+                        approvedCounter += chartValue
+                        break
+                    case IMS_Status_Closed:
+                        rejectedCounter += chartValue
+                        break
+                    default:
+                        break
+                    }
                 default:
                     break
                 }
@@ -574,6 +576,11 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
                     }
                     break
                 case 0:
+                    floaty.addItem("Add IMS Request", icon: UIImage(named: "helpdesk")) { item in
+                        let storyboard = UIStoryboard(name: "IMSStoryboard", bundle: nil)
+                        let controller = storyboard.instantiateViewController(withIdentifier: "IMSNewRequestViewController") as! IMSNewRequestViewController
+                        self.navigationController?.pushViewController(controller, animated: true)
+                    }
                     if ViewBroadCastPermission {
                         CONSTANT_MODULE_ID = AppDelegate.sharedInstance.db?.read_tbl_UserModule(query: "SELECT * FROM \(db_user_module) WHERE TAGNAME = '\(MODULE_TAG_LEADERSHIPAWAZ)';").first?.SERVER_ID_PK ?? -1
                         floaty.addItem("Add Leadership Connect", icon: UIImage(named: "helpdesk")) { item in
@@ -694,12 +701,12 @@ extension HomeScreenViewController: UICollectionViewDelegate, UICollectionViewDa
             
             self.navigationController?.pushViewController(controller, animated: true)
             break
-        //        case "IMS":
-        //            CONSTANT_MODULE_ID = AppDelegate.sharedInstance.db?.read_tbl_UserModule(query: "SELECT * FROM \(db_user_module) WHERE TAGNAME = '\(MODULE_TAG_IMS)';").first?.SERVER_ID_PK ?? -1
-        //            let storyboard = UIStoryboard(name: "Attendance", bundle: nil)
-        //            let controller = storyboard.instantiateViewController(withIdentifier: "MapViewController") as! MapViewController
-        //            self.navigationController?.pushViewController(controller, animated: true)
-        //            break
+        case "IMS":
+            CONSTANT_MODULE_ID = AppDelegate.sharedInstance.db?.read_tbl_UserModule(query: "SELECT * FROM \(db_user_module) WHERE TAGNAME = '\(MODULE_TAG_IMS)';").first?.SERVER_ID_PK ?? -1
+            let storyboard = UIStoryboard(name: "IMSStoryboard", bundle: nil)
+            let controller = storyboard.instantiateViewController(withIdentifier: "IMSDashboardViewController") as! IMSDashboardViewController
+            self.navigationController?.pushViewController(controller, animated: true)
+            break
         case "Attendance":
             CONSTANT_MODULE_ID = AppDelegate.sharedInstance.db?.read_tbl_UserModule(query: "SELECT * FROM \(db_user_module) WHERE TAGNAME = '\(MODULE_TAG_IMS)';").first?.SERVER_ID_PK ?? -1
             let storyboard = UIStoryboard(name: "Attendance", bundle: nil)
@@ -748,7 +755,7 @@ extension HomeScreenViewController: UICollectionViewDelegate, UICollectionViewDa
 extension HomeScreenViewController:  CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         let locValue:CLLocationCoordinate2D = manager.location!.coordinate
-
+        
         let annotation = MKPointAnnotation()
         annotation.coordinate = locValue
     }
@@ -767,8 +774,8 @@ extension HomeScreenViewController:  CLLocationManagerDelegate {
     }
     func locationManager(_ manager: CLLocationManager, monitoringDidFailFor region: CLRegion?, withError error: Error) {
         guard let region = region else {
-          print("Monitoring failed for unknown region")
-          return
+            print("Monitoring failed for unknown region")
+            return
         }
         print("Monitoring failed for region with identifier: \(region.identifier)")
     }

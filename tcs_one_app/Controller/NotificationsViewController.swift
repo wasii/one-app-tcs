@@ -233,6 +233,8 @@ extension NotificationsViewController: UITableViewDelegate, UITableViewDataSourc
         let cell = tableView.dequeueReusableCell(withIdentifier: "RequestListingCell") as! RequestListingTableCell
         
         let data = self.hr_notification![indexPath.row]
+        cell.mainHeadingTopConstraint.constant = 7
+        cell.ticketID.text = ""
         if data.READ_STATUS_DTTM != "a" {
             //read same white
             cell.mainView.bgColor = UIColor.white
