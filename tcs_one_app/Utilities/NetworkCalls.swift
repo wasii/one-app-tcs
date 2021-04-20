@@ -784,7 +784,7 @@ class NetworkCalls: NSObject {
                 let json = JSON(data)
                 if let success = json.dictionary?[returnStatus] {
                     if success.dictionary?[_code] == "0200" {
-                        handler(true, "VALID")
+                        handler(true, json)
                     } else {
                         handler(false, "NOT VALID")
                     }

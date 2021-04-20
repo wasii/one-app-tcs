@@ -20,7 +20,7 @@ class IMSHistoryViewController: BaseViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.title = "History"
+        self.title = "IMS"
         self.makeTopCornersRounded(roundView: self.mainView)
 
         // Do any additional setup after loading the view.
@@ -29,11 +29,11 @@ class IMSHistoryViewController: BaseViewController {
         self.tableView.rowHeight = UITableView.automaticDimension
         
         let query = "SELECT HR_REMARKS FROM \(db_hr_request) WHERE SERVER_ID_PK = '\(ticket_id!)'"
-        if let cr = AppDelegate.sharedInstance.db?.read_column(query: query) {
-            closure_remarks = "\(cr)"
-        }
+//        if let cr = AppDelegate.sharedInstance.db?.read_column(query: query) {
+//            closure_remarks = "\(cr)"
+//        }
         
-        setupGrievanceRemarks { (count) in
+        setupIMSRemarks { (count) in
             DispatchQueue.main.async {
                 self.tableView.reloadData()
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
@@ -49,7 +49,7 @@ class IMSHistoryViewController: BaseViewController {
         }
     }
     
-    func setupGrievanceRemarks(_ handler: @escaping(_ count: Int) -> Void) {
+    func setupIMSRemarks(_ handler: @escaping(_ count: Int) -> Void) {
         let query = "SELECT * FROM \(db_grievance_remarks) WHERE TICKET_ID = '\(self.ticket_id!)';"
         self.grievance_remarks = AppDelegate.sharedInstance.db?.read_tbl_hr_grievance(query: query)
         
@@ -144,27 +144,10 @@ class IMSHistoryViewController: BaseViewController {
                     temp_remarks.append(r)
                 }
             }
-            temp_remarks = temp_remarks.filter({ (remarks) -> Bool in
-                remarks.REF_ID != ""
-            }).sorted(by: { (remarks1, remarks2) -> Bool in
-                remarks1.CREATED < remarks2.CREATED
+            temp_remarks = temp_remarks.sorted(by: { (remarks1, remarks2) -> Bool in
+                remarks1.CREATED > remarks2.CREATED
             })
-            if closure_remarks != "" {
-                if AppDelegate.sharedInstance.db!.read_tbl_UserPermission(permission: IMS_View_Closure_Remarks).count > 0 {
-                    let temp = self.grievance_remarks!.last!
-                    temp_remarks.append(tbl_Grievance_Remarks(ID: temp.ID,
-                                                              SERVER_ID_PK: temp.SERVER_ID_PK,
-                                                              EMPL_NO: temp.EMPL_NO,
-                                                              TICKET_ID: temp.TICKET_ID,
-                                                              REMARKS: self.closure_remarks,
-                                                              REF_ID: temp.REF_ID,
-                                                              CREATED: temp.CREATED,
-                                                              REMARKS_INPUT: "Closure Remarks",
-                                                              REMARKS_SYNC: temp.REMARKS_SYNC))
-                }
-                
-            }
-            self.grievance_remarks = temp_remarks
+            self.grievance_remarks = temp
             handler(self.grievance_remarks!.count)
             
         } else {
@@ -189,7 +172,19 @@ extension IMSHistoryViewController: UITableViewDataSource, UITableViewDelegate {
         cell.roleManager.text = data.REMARKS_INPUT
         cell.dateLabel.text = data.CREATED.dateSeperateWithT
         cell.descriptions.text = data.REMARKS
+        
+        cell.openAttachments.tag = indexPath.row
+        cell.openAttachments.addTarget(self, action: #selector(openDownloadFiles(sender:)), for: .touchUpInside)
         return cell
+    }
+    
+    @objc func openDownloadFiles(sender: UIButton) {
+        let row = self.grievance_remarks![sender.tag]
+        
+        let controller = self.storyboard?.instantiateViewController(withIdentifier: "IMSFilesAccordingRemarksViewController") as! IMSFilesAccordingRemarksViewController
+        
+        controller.grem_id = row.SERVER_ID_PK
+        self.navigationController?.pushViewController(controller, animated: true)
     }
 }
 

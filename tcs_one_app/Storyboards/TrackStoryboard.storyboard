@@ -76,7 +76,7 @@
                                                     </userDefinedRuntimeAttribute>
                                                 </userDefinedRuntimeAttributes>
                                                 <connections>
-                                                    <action selector="trackBtnTapped:" destination="Juz-JS-Fbe" eventType="touchUpInside" id="Mv3-pk-MfS"/>
+                                                    <action selector="trackBtnTapped:" destination="Juz-JS-Fbe" eventType="touchUpInside" id="Ete-ay-j9Y"/>
                                                 </connections>
                                             </button>
                                             <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="No Record Found" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="B00-wI-dtW">
@@ -118,7 +118,7 @@
                                                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                         <color key="tintColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                         <connections>
-                                                                            <action selector="openDetailsWithSender:" destination="Juz-JS-Fbe" eventType="touchUpInside" id="Ae3-MC-UcA"/>
+                                                                            <action selector="openDetailsWithSender:" destination="Juz-JS-Fbe" eventType="touchUpInside" id="y5P-j6-3Tk"/>
                                                                         </connections>
                                                                     </button>
                                                                 </subviews>
@@ -152,8 +152,8 @@
                                                                     <constraint firstAttribute="height" id="kns-gV-t9Z"/>
                                                                 </constraints>
                                                                 <connections>
-                                                                    <outlet property="dataSource" destination="Juz-JS-Fbe" id="UWk-kd-CDS"/>
-                                                                    <outlet property="delegate" destination="Juz-JS-Fbe" id="BpP-of-h3c"/>
+                                                                    <outlet property="dataSource" destination="Juz-JS-Fbe" id="t8A-3f-dpd"/>
+                                                                    <outlet property="delegate" destination="Juz-JS-Fbe" id="Eir-Fi-oR8"/>
                                                                 </connections>
                                                             </tableView>
                                                         </subviews>
@@ -198,7 +198,7 @@
                                                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                         <color key="tintColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                         <connections>
-                                                                            <action selector="openDetailsWithSender:" destination="Juz-JS-Fbe" eventType="touchUpInside" id="5XI-0D-Xq0"/>
+                                                                            <action selector="openDetailsWithSender:" destination="Juz-JS-Fbe" eventType="touchUpInside" id="0lS-VH-I9B"/>
                                                                         </connections>
                                                                     </button>
                                                                 </subviews>
@@ -232,8 +232,8 @@
                                                                     <constraint firstAttribute="height" id="tap-Dl-YRu"/>
                                                                 </constraints>
                                                                 <connections>
-                                                                    <outlet property="dataSource" destination="Juz-JS-Fbe" id="Tkc-iF-fke"/>
-                                                                    <outlet property="delegate" destination="Juz-JS-Fbe" id="oLr-yP-dku"/>
+                                                                    <outlet property="dataSource" destination="Juz-JS-Fbe" id="1h7-N0-PAi"/>
+                                                                    <outlet property="delegate" destination="Juz-JS-Fbe" id="pQk-ZT-ock"/>
                                                                 </connections>
                                                             </tableView>
                                                         </subviews>
@@ -278,7 +278,7 @@
                                                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                         <color key="tintColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                         <connections>
-                                                                            <action selector="openDetailsWithSender:" destination="Juz-JS-Fbe" eventType="touchUpInside" id="zgh-hx-RNr"/>
+                                                                            <action selector="openDetailsWithSender:" destination="Juz-JS-Fbe" eventType="touchUpInside" id="aFn-zf-11j"/>
                                                                         </connections>
                                                                     </button>
                                                                 </subviews>
@@ -312,8 +312,8 @@
                                                                     <constraint firstAttribute="height" id="joS-i7-NuL"/>
                                                                 </constraints>
                                                                 <connections>
-                                                                    <outlet property="dataSource" destination="Juz-JS-Fbe" id="XfS-7p-nZG"/>
-                                                                    <outlet property="delegate" destination="Juz-JS-Fbe" id="jKe-D8-WH6"/>
+                                                                    <outlet property="dataSource" destination="Juz-JS-Fbe" id="TZX-y7-6CB"/>
+                                                                    <outlet property="delegate" destination="Juz-JS-Fbe" id="etL-67-uTR"/>
                                                                 </connections>
                                                             </tableView>
                                                         </subviews>
@@ -358,7 +358,7 @@
                                                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                         <color key="tintColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                         <connections>
-                                                                            <action selector="openDetailsWithSender:" destination="Juz-JS-Fbe" eventType="touchUpInside" id="NPd-A8-Pt2"/>
+                                                                            <action selector="openDetailsWithSender:" destination="Juz-JS-Fbe" eventType="touchUpInside" id="T56-lV-ZvU"/>
                                                                         </connections>
                                                                     </button>
                                                                 </subviews>
@@ -392,8 +392,8 @@
                                                                     <constraint firstAttribute="height" id="eXS-Se-AbM"/>
                                                                 </constraints>
                                                                 <connections>
-                                                                    <outlet property="dataSource" destination="Juz-JS-Fbe" id="tsr-1a-AeB"/>
-                                                                    <outlet property="delegate" destination="Juz-JS-Fbe" id="Heo-pg-YiD"/>
+                                                                    <outlet property="dataSource" destination="Juz-JS-Fbe" id="Ebb-66-QnS"/>
+                                                                    <outlet property="delegate" destination="Juz-JS-Fbe" id="JYy-NT-8mb"/>
                                                                 </connections>
                                                             </tableView>
                                                         </subviews>
@@ -438,7 +438,7 @@
                                                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                         <color key="tintColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                         <connections>
-                                                                            <action selector="openDetailsWithSender:" destination="Juz-JS-Fbe" eventType="touchUpInside" id="gQs-LU-JIr"/>
+                                                                            <action selector="openDetailsWithSender:" destination="Juz-JS-Fbe" eventType="touchUpInside" id="hNi-m5-mMU"/>
                                                                         </connections>
                                                                     </button>
                                                                 </subviews>
@@ -472,8 +472,8 @@
                                                                     <constraint firstAttribute="height" id="FWr-zW-cTy"/>
                                                                 </constraints>
                                                                 <connections>
-                                                                    <outlet property="dataSource" destination="Juz-JS-Fbe" id="sJi-2Z-fZr"/>
-                                                                    <outlet property="delegate" destination="Juz-JS-Fbe" id="9I9-hO-dE6"/>
+                                                                    <outlet property="dataSource" destination="Juz-JS-Fbe" id="e5O-S4-vq3"/>
+                                                                    <outlet property="delegate" destination="Juz-JS-Fbe" id="3if-ro-Jr0"/>
                                                                 </connections>
                                                             </tableView>
                                                         </subviews>
@@ -518,7 +518,7 @@
                                                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                         <color key="tintColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                         <connections>
-                                                                            <action selector="openDetailsWithSender:" destination="Juz-JS-Fbe" eventType="touchUpInside" id="uli-H7-WLR"/>
+                                                                            <action selector="openDetailsWithSender:" destination="Juz-JS-Fbe" eventType="touchUpInside" id="wod-49-2RE"/>
                                                                         </connections>
                                                                     </button>
                                                                 </subviews>
@@ -552,8 +552,8 @@
                                                                     <constraint firstAttribute="height" id="cze-sY-Op9"/>
                                                                 </constraints>
                                                                 <connections>
-                                                                    <outlet property="dataSource" destination="Juz-JS-Fbe" id="EBZ-vL-9Lz"/>
-                                                                    <outlet property="delegate" destination="Juz-JS-Fbe" id="vaA-cM-aV1"/>
+                                                                    <outlet property="dataSource" destination="Juz-JS-Fbe" id="W6Q-BP-8Sg"/>
+                                                                    <outlet property="delegate" destination="Juz-JS-Fbe" id="dxQ-wA-cch"/>
                                                                 </connections>
                                                             </tableView>
                                                         </subviews>
@@ -608,40 +608,40 @@
                     </view>
                     <navigationItem key="navigationItem" id="2da-l6-PZo"/>
                     <connections>
-                        <outlet property="booking_detail_tableView" destination="QKp-z7-Hpi" id="QXn-Sf-t4i"/>
-                        <outlet property="booking_detail_tableview_height" destination="kns-gV-t9Z" id="302-wE-fqx"/>
-                        <outlet property="deliver_detail_tableView" destination="Ie1-G3-Dko" id="MPP-PK-bHR"/>
-                        <outlet property="deliver_detail_tableview_height" destination="tap-Dl-YRu" id="JbZ-Yd-fkv"/>
-                        <outlet property="dman_detail_tableView" destination="6Pm-yT-d8a" id="OxD-zm-1xc"/>
-                        <outlet property="dman_detail_tableview_height" destination="cze-sY-Op9" id="Zh6-LO-RWI"/>
-                        <outlet property="mainView" destination="Acw-CK-zpW" id="tvM-rC-IU1"/>
-                        <outlet property="mainViewHeightConstraint" destination="zgj-8g-iFu" id="SPM-Uy-jPo"/>
-                        <outlet property="noRecordFound" destination="B00-wI-dtW" id="tC0-uR-1aQ"/>
-                        <outlet property="pbag_detail_tableview" destination="Eb2-bR-IWX" id="N2B-fs-9oq"/>
-                        <outlet property="pbag_detail_tableview_height" destination="joS-i7-NuL" id="AVq-rz-Qev"/>
-                        <outlet property="rbag_detail_tableView" destination="lpw-Jw-0jG" id="eax-aA-9ic"/>
-                        <outlet property="rbag_detail_tableview_height" destination="eXS-Se-AbM" id="Xtp-Da-saB"/>
-                        <outlet property="search_textfield" destination="lqD-Ql-2gu" id="gK0-Dz-AAH"/>
-                        <outlet property="tbag_detail_tableView" destination="BAG-0r-zcv" id="LY9-2L-ZNp"/>
-                        <outlet property="tbag_detail_tableView_height" destination="FWr-zW-cTy" id="bu4-52-ODM"/>
-                        <outletCollection property="detailLabel" destination="UGf-8c-15g" collectionClass="NSMutableArray" id="1g9-rB-JIb"/>
-                        <outletCollection property="arrowImages" destination="8D0-yv-mRC" collectionClass="NSMutableArray" id="AZz-kt-iog"/>
-                        <outletCollection property="arrowImages" destination="y5S-1w-Ert" collectionClass="NSMutableArray" id="ZDe-Zh-Slb"/>
-                        <outletCollection property="detailLabel" destination="HNQ-It-vKV" collectionClass="NSMutableArray" id="Vcw-aw-8G3"/>
-                        <outletCollection property="arrowImages" destination="EiY-da-CPb" collectionClass="NSMutableArray" id="Myj-qw-YNc"/>
-                        <outletCollection property="detailLabel" destination="2aP-2d-gg5" collectionClass="NSMutableArray" id="4Ve-w4-0Ql"/>
-                        <outletCollection property="detailLabel" destination="4nS-bQ-ABl" collectionClass="NSMutableArray" id="Gba-bI-DLt"/>
-                        <outletCollection property="arrowImages" destination="mFI-IZ-1rP" collectionClass="NSMutableArray" id="n6X-Vr-KOr"/>
-                        <outletCollection property="detailLabel" destination="rq5-w4-W31" collectionClass="NSMutableArray" id="lJ1-XL-dqi"/>
-                        <outletCollection property="arrowImages" destination="Btw-ki-Gzc" collectionClass="NSMutableArray" id="tI0-O6-NuC"/>
-                        <outletCollection property="arrowImages" destination="Vni-mG-gwp" collectionClass="NSMutableArray" id="Z2H-qh-E4i"/>
-                        <outletCollection property="detailLabel" destination="9ZF-kP-fs3" collectionClass="NSMutableArray" id="SrA-gk-Xnf"/>
-                        <outletCollection property="heightConstraint" destination="IxV-jR-JBE" collectionClass="NSMutableArray" id="DcN-df-TRR"/>
-                        <outletCollection property="heightConstraint" destination="fTR-YI-15G" collectionClass="NSMutableArray" id="Acg-Zj-ix0"/>
-                        <outletCollection property="heightConstraint" destination="8o1-Py-SqP" collectionClass="NSMutableArray" id="RQm-Ua-Lzx"/>
-                        <outletCollection property="heightConstraint" destination="jnO-xl-0Aq" collectionClass="NSMutableArray" id="ail-Vd-Sp3"/>
-                        <outletCollection property="heightConstraint" destination="Wmq-KO-JcI" collectionClass="NSMutableArray" id="0Bd-5x-1ss"/>
-                        <outletCollection property="heightConstraint" destination="vWB-ea-SAG" collectionClass="NSMutableArray" id="e9d-C2-1GB"/>
+                        <outlet property="booking_detail_tableView" destination="QKp-z7-Hpi" id="JEQ-ES-sFt"/>
+                        <outlet property="booking_detail_tableview_height" destination="kns-gV-t9Z" id="riz-ZD-3ZZ"/>
+                        <outlet property="deliver_detail_tableView" destination="Ie1-G3-Dko" id="k96-0r-nNY"/>
+                        <outlet property="deliver_detail_tableview_height" destination="tap-Dl-YRu" id="tQ1-U2-tR5"/>
+                        <outlet property="dman_detail_tableView" destination="6Pm-yT-d8a" id="U12-VE-wEJ"/>
+                        <outlet property="dman_detail_tableview_height" destination="cze-sY-Op9" id="yBb-O9-NZM"/>
+                        <outlet property="mainView" destination="Acw-CK-zpW" id="GV6-mW-2NT"/>
+                        <outlet property="mainViewHeightConstraint" destination="zgj-8g-iFu" id="zKZ-Pe-jg3"/>
+                        <outlet property="noRecordFound" destination="B00-wI-dtW" id="8NX-Qw-qTm"/>
+                        <outlet property="pbag_detail_tableview" destination="Eb2-bR-IWX" id="vnQ-Kw-WF9"/>
+                        <outlet property="pbag_detail_tableview_height" destination="joS-i7-NuL" id="Qwi-jT-ZwJ"/>
+                        <outlet property="rbag_detail_tableView" destination="lpw-Jw-0jG" id="ozE-RR-M9i"/>
+                        <outlet property="rbag_detail_tableview_height" destination="eXS-Se-AbM" id="t6F-K9-7xR"/>
+                        <outlet property="search_textfield" destination="lqD-Ql-2gu" id="WkL-sE-VEs"/>
+                        <outlet property="tbag_detail_tableView" destination="BAG-0r-zcv" id="EbE-h8-bSz"/>
+                        <outlet property="tbag_detail_tableView_height" destination="FWr-zW-cTy" id="iaG-d4-GWJ"/>
+                        <outletCollection property="detailLabel" destination="UGf-8c-15g" collectionClass="NSMutableArray" id="D0s-EO-VCe"/>
+                        <outletCollection property="arrowImages" destination="8D0-yv-mRC" collectionClass="NSMutableArray" id="VNT-Nu-Wmj"/>
+                        <outletCollection property="detailLabel" destination="HNQ-It-vKV" collectionClass="NSMutableArray" id="T2n-6u-Lw6"/>
+                        <outletCollection property="arrowImages" destination="y5S-1w-Ert" collectionClass="NSMutableArray" id="T5S-jM-bxu"/>
+                        <outletCollection property="detailLabel" destination="2aP-2d-gg5" collectionClass="NSMutableArray" id="Ddq-Bb-vHL"/>
+                        <outletCollection property="arrowImages" destination="EiY-da-CPb" collectionClass="NSMutableArray" id="MlA-qc-fI8"/>
+                        <outletCollection property="detailLabel" destination="4nS-bQ-ABl" collectionClass="NSMutableArray" id="l1Q-Jq-r3Q"/>
+                        <outletCollection property="arrowImages" destination="mFI-IZ-1rP" collectionClass="NSMutableArray" id="LKu-Uc-Mb8"/>
+                        <outletCollection property="detailLabel" destination="rq5-w4-W31" collectionClass="NSMutableArray" id="X2P-ZF-I9w"/>
+                        <outletCollection property="arrowImages" destination="Btw-ki-Gzc" collectionClass="NSMutableArray" id="VsE-b5-h7W"/>
+                        <outletCollection property="detailLabel" destination="9ZF-kP-fs3" collectionClass="NSMutableArray" id="At5-Te-DBh"/>
+                        <outletCollection property="arrowImages" destination="Vni-mG-gwp" collectionClass="NSMutableArray" id="bEc-HI-v1F"/>
+                        <outletCollection property="heightConstraint" destination="IxV-jR-JBE" collectionClass="NSMutableArray" id="zYd-s5-WOA"/>
+                        <outletCollection property="heightConstraint" destination="fTR-YI-15G" collectionClass="NSMutableArray" id="bpc-VH-1vU"/>
+                        <outletCollection property="heightConstraint" destination="8o1-Py-SqP" collectionClass="NSMutableArray" id="uNO-9S-hep"/>
+                        <outletCollection property="heightConstraint" destination="jnO-xl-0Aq" collectionClass="NSMutableArray" id="kCK-V1-jvv"/>
+                        <outletCollection property="heightConstraint" destination="Wmq-KO-JcI" collectionClass="NSMutableArray" id="NOR-pD-d7H"/>
+                        <outletCollection property="heightConstraint" destination="vWB-ea-SAG" collectionClass="NSMutableArray" id="XMl-Yr-i2D"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="GGa-aB-u48" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>

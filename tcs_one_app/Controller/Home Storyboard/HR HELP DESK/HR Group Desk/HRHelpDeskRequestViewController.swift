@@ -45,7 +45,7 @@ class HRHelpDeskRequestViewController: BaseViewController {
         self.makeTopCornersRounded(roundView: self.mainView)
         self.selected_query = "Weekly"
         self.tableView.register(UINib(nibName: "RequestListingTableCell", bundle: nil), forCellReuseIdentifier: "RequestListingCell")
-        self.tableView.rowHeight = 80
+        self.tableView.rowHeight = 100
         
         self.searchTextField.delegate = self
     }
@@ -112,9 +112,9 @@ class HRHelpDeskRequestViewController: BaseViewController {
     func setupTableViewHeight(isFiltered: Bool) {
         var height: CGFloat = 0.0
         if isFiltered {
-            height = CGFloat((filtered_data!.count * 80) + 300)
+            height = CGFloat((filtered_data!.count * 100) + 300)
         } else {
-            height = CGFloat((tbl_request_logs!.count * 80) + 300)
+            height = CGFloat((tbl_request_logs!.count * 100) + 300)
         }
         self.mainViewHeightConstraint.constant = 280
         switch UIDevice().type {
@@ -298,6 +298,9 @@ extension HRHelpDeskRequestViewController: UITableViewDelegate, UITableViewDataS
             cell.status.textColor = UIColor.rejectedColor()
         }
         
+        //HR FEEDBACK
+        cell.ticketID.text = "Ticket Id: \(data!.SERVER_ID_PK!)"
+        //HR FEEDBACK
         cell.type.text = "HR"
         return cell
     }
@@ -347,15 +350,37 @@ extension HRHelpDeskRequestViewController: UITextFieldDelegate {
         searchQueryTimer?.invalidate()
         
         let currentText = textField.text ?? ""
+        print(currentText)
         if (currentText as NSString).replacingCharacters(in: range, with: string).count >= 3 {
             searchQueryTimer = Timer.scheduledTimer(timeInterval: 0.5, target: self, selector: #selector(performSearch), userInfo: nil, repeats: false)
         }
         return true
     }
     @objc func performSearch() {
-        print(self.searchTextField.text)
+        var previousDate = Date()
+        var weekly = String()
+        let module_id = AppDelegate.sharedInstance.db?.read_tbl_UserModule(query: "SELECT * FROM \(db_user_module) WHERE TAGNAME = '\(MODULE_TAG_HR)';").first
+        var query = ""
         
-        let query = "SELECT * FROM \(db_hr_request) WHERE CREATED_DATE >= ? AND CREATED_DATE <= ? AND MODULE_ID = ? AND CURRENT_USER = ? AND (LOGIN_ID = ? OR REQ_ID = ?) AND (EMP LIKE ? OR MASTER_QUERY LIKE ? OR SERVER_ID_PK ? OR REF_ID LIKE ? OR RESPONSIBILITY LIKE ? OR RESPONSIBLE_EMPNO LIKE ? OR DETAIL_QUERY LIKE ? OR LOGIN_ID LIKE ? OR REQ_ID LIKE ?) ORDER BY CREATED_DATE DESC LIMIT 0,50"
+        
+        if start_day == nil && end_day == nil {
+            previousDate = getPreviousDays(days: -numberOfDays)
+            weekly = previousDate.convertDateToString(date: previousDate)
+            
+            query = "SELECT * FROM REQUEST_LOGS WHERE RESPONSIBLE_EMPNO = '\(CURRENT_USER_LOGGED_IN_ID)' AND CREATED_DATE >= '\(weekly)' AND CREATED_DATE <= '\(getLocalCurrentDate())' AND MODULE_ID = '\(module_id!.SERVER_ID_PK)' AND CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)'\(getKeywords()) ORDER BY CREATED_DATE DESC LIMIT 0,50"
+        } else {
+            query = "SELECT * FROM REQUEST_LOGS WHERE RESPONSIBLE_EMPNO = '\(CURRENT_USER_LOGGED_IN_ID)' CREATED_DATE >= '\(self.start_day!)' AND CREATED_DATE <= '\(self.end_day!)' AND MODULE_ID = '\(module_id!.SERVER_ID_PK)' AND CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)'\(getKeywords()) ORDER BY CREATED_DATE DESC LIMIT 0,50"
+        }
+        
+        tbl_request_logs = AppDelegate.sharedInstance.db?.read_tbl_hr_request(query: query)
+        setupCircularViews()
+        self.tableView.reloadData()
+    }
+    
+    
+    func getKeywords() -> String {
+        let text = self.searchTextField.text!
+        return " AND (EMP_NAME LIKE '%\(text)%' OR MASTER_QUERY LIKE '%\(text)%' OR SERVER_ID_PK LIKE '%\(text)%' OR REF_ID LIKE '%\(text)%' OR RESPONSIBILITY LIKE '%\(text)%' OR RESPONSIBLE_EMPNO LIKE '%\(text)%' OR DETAIL_QUERY LIKE '%\(text)%' OR LOGIN_ID LIKE '%\(text)%' OR REQ_ID LIKE '%\(text)%')"
     }
 }
 
@@ -370,6 +395,7 @@ extension HRHelpDeskRequestViewController: DateSelectionDelegate {
         
         self.start_day = nil
         self.end_day = nil
+        self.numberOfDays = numberOfDays
         
         self.setupJSON(numberOfDays: numberOfDays,  startday: nil, endday: nil)
     }

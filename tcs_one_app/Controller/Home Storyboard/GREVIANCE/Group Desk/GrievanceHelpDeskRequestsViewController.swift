@@ -46,7 +46,8 @@ class GrievanceHelpDeskRequestsViewController: BaseViewController {
         self.makeTopCornersRounded(roundView: self.mainView)
         self.selected_query = "Weekly"
         self.tableView.register(UINib(nibName: "RequestListingTableCell", bundle: nil), forCellReuseIdentifier: "RequestListingCell")
-        self.tableView.rowHeight = 80
+//        self.tableView.rowHeight = 80
+        self.tableView.rowHeight = 100
         
         self.searchTextField.delegate = self
         user_permission = AppDelegate.sharedInstance.db!.read_tbl_UserPermission()
@@ -116,9 +117,9 @@ class GrievanceHelpDeskRequestsViewController: BaseViewController {
     func setupTableViewHeight(isFiltered: Bool) {
         var height: CGFloat = 0.0
         if isFiltered {
-            height = CGFloat((filtered_data!.count * 80) + 300)
+            height = CGFloat((filtered_data!.count * 100) + 300)
         } else {
-            height = CGFloat((tbl_request_logs!.count * 80) + 300)
+            height = CGFloat((tbl_request_logs!.count * 100) + 300)
         }
         self.mainViewHeightConstraint.constant = 280
         switch UIDevice().type {
@@ -338,6 +339,9 @@ extension GrievanceHelpDeskRequestsViewController: UITableViewDataSource, UITabl
         cell.mainHeading.text = data!.MASTER_QUERY!
         cell.subHeading.text = data!.DETAIL_QUERY!
         cell.date.text = data!.CREATED_DATE?.dateSeperateWithT ?? ""
+        //HR FEEDBACK
+        cell.ticketID.text = "Ticket Id: \(data!.SERVER_ID_PK!)"
+        //HR FEEDBACK
         
         if data!.TICKET_STATUS == "Submitted" || data!.TICKET_STATUS == "submitted" {
             cell.status.text = "Submitted"

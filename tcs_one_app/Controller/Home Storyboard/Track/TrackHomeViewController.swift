@@ -54,19 +54,13 @@ class TrackHomeViewController: BaseViewController {
     
     
     var SECTION = -1
-    //BOOKING DETAIL
-//    var cnsgNo,bkgDAT,noPcs,orgn, dstn, route, service: JSON?
-//    var product,wttBkg,courier, cod_status: JSON?
-//    var cusNo, cusNam, cusAddr1, cusAddr2,cusAddr3,cusPhn, cusFax : JSON?
-//    var cnsgeNo,cnsgeeNam,cnsgeeAddr1, cnsgeeAddr2, cnsgeeAddr3,cnsgeePhn, cnsgeeFax: JSON?
-//    var dlvry_kpi, hndlg_inst: JSON?
-    
     
     var DSTN = [JSON]()
     var SEAL = [JSON]()
     var PHONE_NO: JSON?
     var BARCODE_PBAG: JSON?
     
+    var isFromIMS = false
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = "Track"
