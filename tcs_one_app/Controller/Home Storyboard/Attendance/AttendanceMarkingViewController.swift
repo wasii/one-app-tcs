@@ -33,6 +33,7 @@ class AttendanceMarkingViewController: BaseViewController, MKMapViewDelegate {
     var lon: String = "0.0"
     
     var isLocationOff = false
+    var clAuthorizatinStatus: CLAuthorizationStatus?
     
     let datePicker = DatePickerDialog(
         textColor: .nativeRedColor(),
@@ -53,15 +54,20 @@ class AttendanceMarkingViewController: BaseViewController, MKMapViewDelegate {
     }
     override func viewDidAppear(_ animated: Bool) {
         NotificationCenter.default.addObserver(self, selector: #selector(refresh), name: .networkRefreshed, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(off), name: .networkOff, object: nil)
     }
-    
+    override func viewDidDisappear(_ animated: Bool) {
+        NotificationCenter.default.removeObserver(self)
+    }
     
     @objc func refresh() {
         self.view.hideAllToasts()
         fetchAttendance()
-        if !self.isLocationOff {
-            self.alert()
-        }
+    }
+    
+    @objc func off() {
+        self.view.hideAllToasts()
+        fetchAttendance()
     }
     func slideToLock() -> MTSlideToOpenView {
         let slide = MTSlideToOpenView(frame: CGRect(x: 5, y: 4, width: 270, height: 52))
@@ -455,11 +461,13 @@ extension AttendanceMarkingViewController: CLLocationManagerDelegate {
         case .authorizedAlways, .authorizedWhenInUse:
             self.isLocationOff = true
             locationManager.startUpdatingLocation()
-            return
+            break
         case .denied, .restricted, .notDetermined:
             self.isLocationOff = false
             self.isUserInsideFence = false
-            if CustomReachability.isConnectedNetwork() {
+            DispatchQueue.main.async {
+                self.slideView.viewWithTag(1000)?.removeFromSuperview()
+                self.slideView.isHidden = true
                 self.alert()
             }
             print("location access denied")

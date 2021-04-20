@@ -620,6 +620,7 @@ extension Notification.Name {
     static let navigateThroughNotification = Notification.Name.init("NavigateThroughNotification")
     
     static let networkRefreshed = Notification.Name.init("NetworkRefreshed")
+    static let networkOff = Notification.Name.init("NetworkOff")
     static let refreshedViews = Notification.Name.init("RefreshedViews")
 }
 
