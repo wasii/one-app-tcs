@@ -162,6 +162,7 @@ class FetchUserDataViewController: BaseViewController {
                                     self.activityIndicator[2].isHidden = false
                                     self.activityIndicator[2].startAnimating()
                                     //MARK: oneapp.gethrrequest
+                                    self.logRequest_Label.text = "Syncing HR Log Requests"
                                     self.getHrRequest()
                                 }
                             }
@@ -647,7 +648,12 @@ class FetchUserDataViewController: BaseViewController {
                 self.count = JSON(response).dictionary![_count]!.intValue
                 if self.count < 0 {
                     self.isTotalCounter = 0
+                    DispatchQueue.main.async {
+                        self.logRequest_Label.text = "Synced HR Log Requests"
+                    }
+                    
                     self.getHrNotifications()
+                    
                 }
                 if let hr_response = JSON(response).dictionary?[_hr_requests]?.array {
                     let sync_date = JSON(response).dictionary?[_sync_date]?.string ?? ""
@@ -712,7 +718,10 @@ class FetchUserDataViewController: BaseViewController {
                     self.count = 0
                     self.skip = 0
                     self.isTotalCounter = 0
-                    self.getHrNotifications()
+                    DispatchQueue.main.async {
+                        self.logRequest_Label.text = "Synced HR Log Requests"
+                        self.getHrNotifications()
+                    }
                 }
             }
         }
@@ -931,10 +940,10 @@ extension FetchUserDataViewController {
                             
                             self.activityIndicator[4].isHidden = false
                             self.activityIndicator[4].startAnimating()
-                            
+                            self.attecndance_label.text = "Syncing Attendance Locations"
                             self.getTCSLocations {
                                 DispatchQueue.main.async {
-                                    
+                                    self.attecndance_label.text = "Synced Attendance Locations"
                                     self.loaderViews[4].backgroundColor = UIColor.nativeRedColor()
                                     self.activityIndicator[4].stopAnimating()
                                     self.activityIndicator[4].isHidden = true
@@ -998,9 +1007,11 @@ extension FetchUserDataViewController {
                                         self.activityIndicator[4].isHidden = false
                                         self.activityIndicator[4].startAnimating()
                                         self.hrNotification_Label.text = "Synced HR Notifications Logs"
+                                        self.attecndance_label.text = "Syncing Attendance Locations"
                                     }
                                     self.getTCSLocations {
                                         DispatchQueue.main.async {
+                                            self.attecndance_label.text = "Synced Attendance Locations"
                                             self.loaderViews[4].backgroundColor = UIColor.nativeRedColor()
                                             self.activityIndicator[4].stopAnimating()
                                             self.activityIndicator[4].isHidden = true
@@ -1046,9 +1057,12 @@ extension FetchUserDataViewController {
                             self.activityIndicator[4].isHidden = false
                             self.activityIndicator[4].startAnimating()
                             self.hrNotification_Label.text = "Synced HR Notifications Logs"
+                            self.attecndance_label.text = "Syncing Attendance Locations"
                         }
+                        
                         self.getTCSLocations {
                             DispatchQueue.main.async {
+                                self.attecndance_label.text = "Synced Attendance Locations"
                                 self.loaderViews[4].backgroundColor = UIColor.nativeRedColor()
                                 self.activityIndicator[4].stopAnimating()
                                 self.activityIndicator[4].isHidden = true

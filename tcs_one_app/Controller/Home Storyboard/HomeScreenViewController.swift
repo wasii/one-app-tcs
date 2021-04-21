@@ -577,6 +577,7 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
                     break
                 case 0:
                     floaty.addItem("Add IMS Request", icon: UIImage(named: "helpdesk")) { item in
+                        CONSTANT_MODULE_ID = AppDelegate.sharedInstance.db?.read_tbl_UserModule(query: "SELECT * FROM \(db_user_module) WHERE TAGNAME = '\(MODULE_TAG_IMS)';").first?.SERVER_ID_PK ?? -1
                         let storyboard = UIStoryboard(name: "IMSStoryboard", bundle: nil)
                         let controller = storyboard.instantiateViewController(withIdentifier: "IMSNewRequestViewController") as! IMSNewRequestViewController
                         self.navigationController?.pushViewController(controller, animated: true)

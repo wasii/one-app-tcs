@@ -206,6 +206,7 @@ var ticket_request: tbl_Hr_Request_Logs?
     var isRejected = false
     var willDBInsert = false
     var ASHSFilesComments = false
+    var downloadedTemplateURL: URL?
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = "IMS"
@@ -1194,9 +1195,10 @@ var ticket_request: tbl_Hr_Request_Logs?
     private func copy_file(fileName: String, pathComponent: URL) -> URL? {
         if let bundleURL = Bundle.main.url(forResource: fileName, withExtension: "docx") {
             do {
+                let destination = FileManager.default.temporaryDirectory.appendingPathComponent(fileName+".docx")
                 let fileManager = FileManager.default
-                try fileManager.copyItem(at: bundleURL, to: pathComponent)
-                return pathComponent
+                try fileManager.copyItem(at: bundleURL, to: destination)
+                return destination
             } catch let error {
                 print(error.localizedDescription)
             }
@@ -1206,16 +1208,16 @@ var ticket_request: tbl_Hr_Request_Logs?
     @IBAction func templateDownload_tapped(_ sender: Any) {
         let path = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).last! as String
         let url = NSURL(fileURLWithPath: path)
-        
+        FileManager.default.clearTmpDirectory()
         switch (sender as! UIButton).tag {
         case 0: //Ara Security
             if let pathComponent = url.appendingPathComponent("AreaSecurity.docx") {
                 let filePath = pathComponent.path
                 let fileManager = FileManager.default
                 if fileManager.fileExists(atPath: filePath) {
-//                    
+                    self.downloadedTemplateURL = pathComponent
                 } else {
-                    _ = self.copy_file(fileName: "AreaSecurity", pathComponent: pathComponent)
+                    self.downloadedTemplateURL = self.copy_file(fileName: "AreaSecurity", pathComponent: pathComponent)
                 }
             } else {
                 print("FILE PATH NOT AVAILABLE")
@@ -1226,8 +1228,9 @@ var ticket_request: tbl_Hr_Request_Logs?
                 let filePath = pathComponent.path
                 let fileManager = FileManager.default
                 if fileManager.fileExists(atPath: filePath) {
+                    self.downloadedTemplateURL = pathComponent
                 } else {
-                    _ = self.copy_file(fileName: "HeadOfSecurity", pathComponent: pathComponent)
+                    self.downloadedTemplateURL = self.copy_file(fileName: "HeadOfSecurity", pathComponent: pathComponent)
                 }
             } else {
                 print("FILE PATH NOT AVAILABLE")
@@ -1236,6 +1239,26 @@ var ticket_request: tbl_Hr_Request_Logs?
         default:
             break
         }
+        
+        let documentPickerController = UIDocumentPickerViewController(documentTypes: ["com.microsoft.word.docx", "org.openxmlformats.wordprocessingml.document"], in: .open)
+        documentPickerController.delegate = self
+        documentPickerController.modalPresentationStyle = .fullScreen
+        self.present(documentPickerController, animated: true, completion: nil)
+        
+//        let documentOpen = UIDocumentInteractionController(url: self.downloadedTemplateURL!)
+//        documentOpen.delegate = self
+//        documentOpen.presentOptionsMenu(from: (sender as! UIButton).frame, in: self.view, animated: true)
+//        let finalURL = downloadedTemplateURL!.absoluteString
+//
+//        DispatchQueue.main.async {
+//            if let url = URL(string: finalURL) {
+//                if #available(iOS 10, *){
+//                    UIApplication.shared.open(url)
+//                }else{
+//                    UIApplication.shared.openURL(url)
+//                }
+//            }
+//        }
     }
     @IBAction func onOffSwitch(_ sender: UISwitch) {
         
@@ -1774,8 +1797,8 @@ extension IMSViewUpdateRequestViewController: UIDocumentPickerDelegate,UINavigat
     }
     func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
         let fileName = urls.first?.lastPathComponent
-        if urls.first!.fileSize > 2048000 {
-            self.view.makeToast("File size should be less than 2MB")
+        if urls.first!.fileSize > 5242880 {
+            self.view.makeToast("File size should be less than 5MB")
             return
         }
         let fileManager = FileManager.default
@@ -3513,4 +3536,17 @@ extension IMSViewUpdateRequestViewController: GrowingTextViewDelegate {
             self.view.layoutIfNeeded()
         }
     }
+}
+
+
+extension IMSViewUpdateRequestViewController: UIDocumentInteractionControllerDelegate {
+    public func documentInteractionControllerViewControllerForPreview(_ controller: UIDocumentInteractionController) -> UIViewController {
+        return self
+    }
+    func documentInteractionController(_ controller: UIDocumentInteractionController, willBeginSendingToApplication application: String?) {
+        print(application)
+    }
+//    public func documentInteractionControllerDidEndPreview(_ controller: UIDocumentInteractionController) {
+//        controller = nil
+//    }
 }

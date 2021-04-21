@@ -25,6 +25,7 @@ class AttendanceMarkingViewController: BaseViewController, MKMapViewDelegate {
     @IBOutlet weak var checkOutBtn: UIButton!
     
     @IBOutlet weak var mapView: MKMapView!
+    @IBOutlet weak var errorMessage: UILabel!
     //    var mapView: MKMapView?
     let places = Place.getPlaces()
     var isUserInsideFence = false
@@ -533,6 +534,7 @@ extension AttendanceMarkingViewController: CLLocationManagerDelegate {
                     self.slideView.addSubview(self.slideToLock())
                 }
             } else {
+                self.errorMessage.isHidden = false
                 self.slideView.isHidden = true
             }
         } else {
