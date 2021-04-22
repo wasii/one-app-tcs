@@ -343,7 +343,8 @@ extension NotificationsViewController: UITableViewDelegate, UITableViewDataSourc
                 cell.status.text = IMS_Status_Closed
                 cell.status.textColor = UIColor.rejectedColor()
             default:
-                print("Wrong Ticket Status")
+                cell.status.text = "Submitted"
+                cell.status.textColor = UIColor.pendingColor()
                 break
             }
             break

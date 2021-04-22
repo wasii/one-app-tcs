@@ -725,7 +725,7 @@ class IMSNewRequestViewController: BaseViewController {
         offline_data.INCIDENT_TYPE = self.tbl_incident_type!.SERVER_ID_PK
         offline_data.CITY = self.tbl_city!.CITY_CODE
         offline_data.AREA = self.tbl_area!.SERVER_ID_PK
-        offline_data.DEPARTMENT = String(self.tbl_department!.DEPT_ID)
+        offline_data.DEPARTMENT = self.tbl_department!.DEPT_ID
         offline_data.INCIDENT_DATE = self.ticketCreateDate!.dateSeperateWithT
         offline_data.CNSGNO = cnsg_no
         offline_data.IS_FINANCIAL = Int(is_financial)

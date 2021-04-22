@@ -372,6 +372,49 @@ class BaseViewController: UIViewController {
                         }
                     }
                     break
+                case 3:
+                    let storyboard = UIStoryboard(name: "IMSStoryboard", bundle: nil)
+                    let controller = storyboard.instantiateViewController(withIdentifier: "IMSViewUpdateRequestViewController") as! IMSViewUpdateRequestViewController
+                    let permissions = AppDelegate.sharedInstance.db?.read_tbl_UserPermission()
+                    var current_user = ""
+                    for perm in permissions! {
+                        var breakk = false
+                        let p = perm.PERMISSION
+                        for constant in IMSAllPermissions {
+                            if p == constant {
+                                current_user = p
+                                breakk = true
+                                break
+                            }
+                        }
+                        if breakk {
+                            break
+                        }
+                    }
+                    
+                    let isGranted = permissions?.contains(where: { (perm) -> Bool in
+                        let permission = String(perm.PERMISSION.lowercased().split(separator: " ").last!)
+                        return permission == hr_request.TICKET_STATUS?.lowercased() ?? ""
+                    })
+                    
+                    let query = "SELECT * FROM \(db_hr_request) WHERE SERVER_ID_PK = '\(hr_request.SERVER_ID_PK!)'"
+                    if let data = AppDelegate.sharedInstance.db?.read_tbl_hr_request(query: query).first {
+                        controller.ticket_request = data
+                        controller.current_user = current_user
+                        controller.havePermissionToEdit = isGranted!
+                        
+                        print(current_user)
+                        if current_user == "" {
+                            let controller = storyboard.instantiateViewController(withIdentifier: "IMSNewRequestViewController") as! IMSNewRequestViewController
+                            controller.current_ticket = data
+                            controller.hidesBottomBarWhenPushed = true
+                            self.navigationController?.pushViewController(controller, animated: true)
+                        } else {
+                            controller.hidesBottomBarWhenPushed = true
+                            self.navigationController?.pushViewController(controller, animated: true)
+                        }
+                    }
+                    break
                 case 4:
                     let storyboard = UIStoryboard(name: "LeadershipAwaz", bundle: nil)
                     let controller = storyboard.instantiateViewController(withIdentifier: "NewRequestLeadershipAwazViewController") as! NewRequestLeadershipAwazViewController

@@ -1240,25 +1240,11 @@ var ticket_request: tbl_Hr_Request_Logs?
             break
         }
         
-        let documentPickerController = UIDocumentPickerViewController(documentTypes: ["com.microsoft.word.docx", "org.openxmlformats.wordprocessingml.document"], in: .open)
-        documentPickerController.delegate = self
-        documentPickerController.modalPresentationStyle = .fullScreen
-        self.present(documentPickerController, animated: true, completion: nil)
-        
-//        let documentOpen = UIDocumentInteractionController(url: self.downloadedTemplateURL!)
-//        documentOpen.delegate = self
-//        documentOpen.presentOptionsMenu(from: (sender as! UIButton).frame, in: self.view, animated: true)
-//        let finalURL = downloadedTemplateURL!.absoluteString
-//
-//        DispatchQueue.main.async {
-//            if let url = URL(string: finalURL) {
-//                if #available(iOS 10, *){
-//                    UIApplication.shared.open(url)
-//                }else{
-//                    UIApplication.shared.openURL(url)
-//                }
-//            }
-//        }
+        let fileURL = NSURL(fileURLWithPath: self.downloadedTemplateURL?.absoluteString ?? "")
+        var filesToShare = [Any]()
+        filesToShare.append(fileURL)
+        let activityViewController = UIActivityViewController(activityItems: filesToShare, applicationActivities: nil)
+        self.present(activityViewController, animated: true, completion: nil)
     }
     @IBAction func onOffSwitch(_ sender: UISwitch) {
         

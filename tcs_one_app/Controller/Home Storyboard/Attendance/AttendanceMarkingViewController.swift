@@ -529,10 +529,10 @@ extension AttendanceMarkingViewController: CLLocationManagerDelegate {
         if CustomReachability.isConnectedNetwork() {
             if self.isUserInsideFence {
                 self.slideView.isHidden = false
-                DispatchQueue.main.async {
-                    self.slideView.viewWithTag(1000)?.removeFromSuperview()
-                    self.slideView.addSubview(self.slideToLock())
-                }
+//                DispatchQueue.main.async {
+//                    self.slideView.viewWithTag(1000)?.removeFromSuperview()
+//                    self.slideView.addSubview(self.slideToLock())
+//                }
             } else {
                 self.errorMessage.isHidden = false
                 self.slideView.isHidden = true

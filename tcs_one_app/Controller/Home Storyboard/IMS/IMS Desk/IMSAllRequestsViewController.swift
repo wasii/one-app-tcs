@@ -447,7 +447,7 @@ extension IMSAllRequestsViewController: UITableViewDataSource, UITableViewDelega
             data = self.tbl_request_logs![indexPath.row]
         }
         cell.mainHeading.text = data!.INCIDENT_TYPE!
-        if let department = AppDelegate.sharedInstance.db?.read_tbl_department(query: "SELECT * FROM \(db_lov_department) WHERE SERVER_ID_PK = '\(data?.DEPARTMENT ?? "")'").first {
+        if let department = AppDelegate.sharedInstance.db?.read_tbl_department(query: "SELECT * FROM \(db_lov_department) WHERE SERVER_ID_PK = '\(data?.DEPARTMENT ?? 0)'").first {
             cell.subHeading.text = department.DEPAT_NAME
         }
         cell.date.text = data!.CREATED_DATE?.dateSeperateWithT ?? ""

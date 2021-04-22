@@ -38,7 +38,7 @@ struct HrRequest: Encodable, Decodable {
     
     let amount, insClaimedAmt: Double?
     let incidentType, cnsgNo, classification, city: String?
-    let area, incidentDate, department, recoveryType: String?
+    let area, incidentDate, recoveryType: String?
     var isFinancial, areaSECEmpno, isInsClaimable, isInsClaimProcess: Int?
     let lovMasterVal, lovDetailVal, lovSubdetailVal, isEmpRelated: Int?
     let detailedInvestigation: String?
@@ -46,7 +46,7 @@ struct HrRequest: Encodable, Decodable {
     let findings, opinion, hoSECSummary, hoSECRecom: String?
     let dirSECEndors, dirSECRecom, insClaimRefNo: String?
     let hrRefNo, hrStatus, financeGlNo: String?
-    let isControlDefined: Int?
+    let isControlDefined, department: Int?
     let riskRemarks, riskType, controlCategory, controlType: String?
     let secArea, dirNotifyEmails: String?
     let isInvestigation: Int?
