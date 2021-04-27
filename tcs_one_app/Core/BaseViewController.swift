@@ -289,6 +289,11 @@ class BaseViewController: UIViewController {
         
         AppDelegate.sharedInstance.db?.deleteAll(tableName: db_hr_notifications, handler: { _ in })
         AppDelegate.sharedInstance.db?.deleteAll(tableName: db_fulfilment_orders, handler: { _ in })
+        Geotification.allGeotifications().forEach { (geotification) in
+            stopMonitoring(geotification: geotification)
+        }
+        UserDefaults.standard.removeObject(forKey: PreferencesKeys.savedItems.rawValue)
+        UserDefaults.standard.set(false, forKey: "GeofenceAdd")
         if isNavigate {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                 self.navigationController?.popViewController(animated: true)
