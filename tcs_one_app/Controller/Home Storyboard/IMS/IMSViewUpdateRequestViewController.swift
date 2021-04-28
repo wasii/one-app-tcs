@@ -18,6 +18,9 @@ class IMSViewUpdateRequestViewController: BaseViewController {
 var current_user = String()
 var havePermissionToEdit = false
 var ticket_request: tbl_Hr_Request_Logs?
+
+var booking_details: [IMSBookingDetail]?
+var delivery_details: [IMSDeliveryDetail]?
     
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var headingLabel: UILabel!
@@ -224,8 +227,102 @@ var ticket_request: tbl_Hr_Request_Logs?
         setupPermissions()
     }
     
+    @IBAction func showConsignmentDetails(_ sender: UIButton) {
+        if self.incident_detail_consignment_textfield.text != "" {
+            showConsignentDetails(cnno: incident_detail_consignment_textfield.text ?? "")
+            return
+        }
+        if self.incident_details_consignment_view_textfield.text != "" {
+            showConsignentDetails(cnno: incident_details_consignment_view_textfield.text ?? "")
+            return
+        }
+    }
     
     //MARK: Custom Methods
+    func showConsignentDetails(cnno: String) {
+        guard let token = UserDefaults.standard.string(forKey: USER_ACCESS_TOKEN) else {
+            self.dismiss(animated: true) {
+                Helper.topMostController().view.makeToast("Session Expired")
+            }
+            return
+        }
+        self.view.makeToastActivity(.center)
+        self.freezeScreen()
+        let consignment_setup = [
+            "hr_request": [
+                "access_token": token,
+                "cnno": cnno //"30326018069"
+            ]
+        ]
+        let params = getAPIParameter(service_name: PROCCONSIGNMENTVALIDATE, request_body: consignment_setup)
+        NetworkCalls.procconsignmentverify(params: params) { success, response in
+            if success {
+                DispatchQueue.main.async {
+                    if let json = JSON(response).dictionary {
+                        if let booking_details = json["booking_detail"]?.array {
+                            do {
+                                self.booking_details = [IMSBookingDetail]()
+                                for details in booking_details {
+                                    let data = try details.rawData()
+                                    let booking_detail = try JSONDecoder().decode(IMSBookingDetail.self, from: data)
+                                    self.booking_details?.append(booking_detail)
+                                }
+                            } catch let DecodingError.dataCorrupted(context) {
+                                print(context)
+                            } catch let DecodingError.keyNotFound(key, context) {
+                                print("Key '\(key)' not found:", context.debugDescription)
+                                print("codingPath:", context.codingPath)
+                            } catch let DecodingError.valueNotFound(value, context) {
+                                print("Value '\(value)' not found:", context.debugDescription)
+                                print("codingPath:", context.codingPath)
+                            } catch let DecodingError.typeMismatch(type, context)  {
+                                print("Type '\(type)' mismatch:", context.debugDescription)
+                                print("codingPath:", context.codingPath)
+                            } catch {
+                                print("error: ", error)
+                            }
+                        }
+                        if let delivery_details = json["delivery_detail"]?.array {
+                            do {
+                                self.delivery_details = [IMSDeliveryDetail]()
+                                for details in delivery_details {
+                                    let data = try details.rawData()
+                                    let delivery_detail = try JSONDecoder().decode(IMSDeliveryDetail.self, from: data)
+                                    self.delivery_details?.append(delivery_detail)
+                                }
+                            } catch let DecodingError.dataCorrupted(context) {
+                                print(context)
+                            } catch let DecodingError.keyNotFound(key, context) {
+                                print("Key '\(key)' not found:", context.debugDescription)
+                                print("codingPath:", context.codingPath)
+                            } catch let DecodingError.valueNotFound(value, context) {
+                                print("Value '\(value)' not found:", context.debugDescription)
+                                print("codingPath:", context.codingPath)
+                            } catch let DecodingError.typeMismatch(type, context)  {
+                                print("Type '\(type)' mismatch:", context.debugDescription)
+                                print("codingPath:", context.codingPath)
+                            } catch {
+                                print("error: ", error)
+                            }
+                        }
+                    }
+                    self.view.hideToastActivity()
+                    self.unFreezeScreen()
+                    let controller = self.storyboard?.instantiateViewController(withIdentifier: "IMSConsignmentDetailsViewController") as! IMSConsignmentDetailsViewController
+                    
+                    controller.booking_detail = self.booking_details
+                    controller.delivery_detail = self.delivery_details
+                    
+                    self.navigationController?.pushViewController(controller, animated: true)
+                }
+            } else {
+                DispatchQueue.main.async {
+                    self.view.hideToastActivity()
+                    self.unFreezeScreen()
+                }
+            }
+        }
+    }
     func setupViews() {
         if IMS_Submitted == "\(current_user)" || IMS_Inprogress_Ro == "\(current_user)" || IMS_Inprogress_Rhod == "\(current_user)" {
             self.classification_view.isHidden = false
@@ -1646,7 +1743,7 @@ extension IMSViewUpdateRequestViewController: UITableViewDelegate, UITableViewDa
                                     case "0400", "0401","0402","0403","0404":
                                         DispatchQueue.main.async {
                                             self.view.hideToastActivity()
-                                            self.view.makeToast("Max allowed file size is 2 MB")
+                                            self.view.makeToast("Max allowed file size is 5 MB")
                                             self.unFreezeScreen()
                                         }
                                         break
@@ -2665,7 +2762,7 @@ extension IMSViewUpdateRequestViewController {
             self.view.makeToast("Email is mandatory")
             return nil
         }
-        if let emails = self.email_textview.text?.split(separator: ",") {
+        if let emails = self.email_textview.text?.split(separator: ";") {
             for email in emails {
                 if !isValidEmail(String(email)) {
                     self.view.makeToast("\(String(email)) is not a valid email.")

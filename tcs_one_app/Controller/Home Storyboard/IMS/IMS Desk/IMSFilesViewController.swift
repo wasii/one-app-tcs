@@ -220,7 +220,7 @@ extension IMSFilesViewController: UITableViewDelegate, UITableViewDataSource {
         
         let fileSize = Double(data.fileSize)
         
-        cell.fileSize.text = String(format: "(%.4f MB)", (fileSize! / 1000)/1024)
+        cell.fileSize.text = String(format: "(%.4f MB)", (fileSize! / 1000))
         
         cell.downloadBtn.tag = indexPath.row
         cell.downloadBtn.addTarget(self, action: #selector(downloadFile(sender:)), for: .touchUpInside)

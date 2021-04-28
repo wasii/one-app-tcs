@@ -2048,13 +2048,27 @@
                                                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                                                 <textInputTraits key="textInputTraits"/>
                                                                             </textField>
+                                                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Lvc-UT-esi">
+                                                                                <rect key="frame" x="-30" y="17.5" width="20" height="20"/>
+                                                                                <constraints>
+                                                                                    <constraint firstAttribute="height" constant="20" id="JFv-a1-RBa"/>
+                                                                                    <constraint firstAttribute="width" constant="20" id="TE0-Pr-Ioq"/>
+                                                                                </constraints>
+                                                                                <state key="normal" image="move_forward_red"/>
+                                                                                <connections>
+                                                                                    <action selector="consignmentViewDetailTapped:" destination="SQ8-11-H2L" eventType="touchUpInside" id="4c2-Vw-q50"/>
+                                                                                    <action selector="showConsignmentDetails:" destination="TwP-4I-OcV" eventType="touchUpInside" id="iIz-h6-SPW"/>
+                                                                                </connections>
+                                                                            </button>
                                                                         </subviews>
                                                                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                                                         <constraints>
                                                                             <constraint firstAttribute="bottom" secondItem="EHr-R8-bh9" secondAttribute="bottom" id="Fw8-Dd-xdW"/>
                                                                             <constraint firstItem="EHr-R8-bh9" firstAttribute="top" secondItem="qZq-Qg-jTs" secondAttribute="top" id="Prz-3F-fs6"/>
+                                                                            <constraint firstItem="Lvc-UT-esi" firstAttribute="centerY" secondItem="qZq-Qg-jTs" secondAttribute="centerY" id="azz-uK-7Sb"/>
                                                                             <constraint firstAttribute="trailing" secondItem="EHr-R8-bh9" secondAttribute="trailing" id="cwW-N1-hBB"/>
                                                                             <constraint firstItem="EHr-R8-bh9" firstAttribute="leading" secondItem="qZq-Qg-jTs" secondAttribute="leading" id="q4p-L0-JIY"/>
+                                                                            <constraint firstAttribute="trailing" secondItem="Lvc-UT-esi" secondAttribute="trailing" constant="10" id="ujC-f4-BWu"/>
                                                                         </constraints>
                                                                     </view>
                                                                 </subviews>
@@ -2194,12 +2208,26 @@
                                                                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                                                         <textInputTraits key="textInputTraits"/>
                                                                                     </textField>
+                                                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="E4W-iu-34w">
+                                                                                        <rect key="frame" x="-30" y="17.5" width="20" height="20"/>
+                                                                                        <constraints>
+                                                                                            <constraint firstAttribute="width" constant="20" id="3qR-dG-ysM"/>
+                                                                                            <constraint firstAttribute="height" constant="20" id="Pyu-2W-d7H"/>
+                                                                                        </constraints>
+                                                                                        <state key="normal" image="move_forward_red"/>
+                                                                                        <connections>
+                                                                                            <action selector="consignmentViewDetailTapped:" destination="SQ8-11-H2L" eventType="touchUpInside" id="r2u-k4-3HK"/>
+                                                                                            <action selector="showConsignmentDetails:" destination="TwP-4I-OcV" eventType="touchUpInside" id="FXd-7N-JBH"/>
+                                                                                        </connections>
+                                                                                    </button>
                                                                                 </subviews>
                                                                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                                                                 <constraints>
+                                                                                    <constraint firstItem="E4W-iu-34w" firstAttribute="centerY" secondItem="RjN-Wr-l60" secondAttribute="centerY" id="4z8-Rz-Tpy"/>
                                                                                     <constraint firstItem="BYu-k8-Ypu" firstAttribute="leading" secondItem="RjN-Wr-l60" secondAttribute="leading" id="Akf-Z9-1g0"/>
                                                                                     <constraint firstAttribute="bottom" secondItem="BYu-k8-Ypu" secondAttribute="bottom" id="Pe8-Em-nO4"/>
                                                                                     <constraint firstAttribute="trailing" secondItem="BYu-k8-Ypu" secondAttribute="trailing" id="XJm-RJ-LEG"/>
+                                                                                    <constraint firstAttribute="trailing" secondItem="E4W-iu-34w" secondAttribute="trailing" constant="10" id="mf5-5P-RpN"/>
                                                                                     <constraint firstItem="BYu-k8-Ypu" firstAttribute="top" secondItem="RjN-Wr-l60" secondAttribute="top" id="pFF-dY-6ei"/>
                                                                                 </constraints>
                                                                             </view>
@@ -3439,7 +3467,7 @@
                                                                             <userDefinedRuntimeAttribute type="number" keyPath="maxHeight">
                                                                                 <real key="value" value="0.0"/>
                                                                             </userDefinedRuntimeAttribute>
-                                                                            <userDefinedRuntimeAttribute type="string" keyPath="placeholder" value="Enter Emails  (Comma Seperated)"/>
+                                                                            <userDefinedRuntimeAttribute type="string" keyPath="placeholder" value="Enter Emails  (Semi Colon Seperated)"/>
                                                                         </userDefinedRuntimeAttributes>
                                                                     </textView>
                                                                 </subviews>

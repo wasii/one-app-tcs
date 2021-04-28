@@ -145,9 +145,9 @@ class IMSHistoryViewController: BaseViewController {
                 }
             }
             temp_remarks = temp_remarks.sorted(by: { (remarks1, remarks2) -> Bool in
-                remarks1.CREATED > remarks2.CREATED
+                remarks1.CREATED < remarks2.CREATED
             })
-            self.grievance_remarks = temp
+            self.grievance_remarks = temp_remarks
             handler(self.grievance_remarks!.count)
             
         } else {

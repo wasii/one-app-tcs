@@ -524,6 +524,22 @@ extension NotificationsViewController: UITableViewDelegate, UITableViewDataSourc
                 let permission = String(perm.PERMISSION.lowercased().split(separator: " ").last!)
                 return permission == current_ticket.TICKET_STATUS.lowercased()
             })
+            if IMS_Inprogress_Fs == "\(current_user)" {
+                if current_ticket.TICKET_STATUS == IMS_Status_Inprogress_Ins {
+//                    isGranted = true
+                    current_user = IMS_Inprogress_Ins
+                    
+                } else {
+                    controller.current_user = current_user
+                }
+            } else if IMS_Inprogress_Ins == "\(current_user)" {
+                if current_ticket.TICKET_STATUS == IMS_Status_Inprogress_Fs {
+                    current_user = IMS_Inprogress_Ins
+//                    isGranted = false
+                }
+            } else {
+                controller.current_user = current_user
+            }
             
             let query = "SELECT * FROM \(db_hr_request) WHERE SERVER_ID_PK = '\(current_ticket.TICKET_ID)'"
             if let data = AppDelegate.sharedInstance.db?.read_tbl_hr_request(query: query).first {
