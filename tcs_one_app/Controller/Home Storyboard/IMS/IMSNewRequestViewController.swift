@@ -262,6 +262,8 @@ class IMSNewRequestViewController: BaseViewController {
                 self.consinement_number.isHidden = false
                 self.consinement_number.text = "\(ticket.CNSGNO!)"
                 self.consinement_number.isUserInteractionEnabled = false
+                self.consignmentDetailView.isHidden = false
+                self.consignmentVerifyImage.image = UIImage(named: "rightG")
             }
             
             if ticket.IS_FINANCIAL == 1 {
@@ -529,12 +531,26 @@ class IMSNewRequestViewController: BaseViewController {
         }
     }
     @IBAction func consignmentViewDetailTapped(_ sender: Any) {
+        
         let controller = self.storyboard?.instantiateViewController(withIdentifier: "IMSConsignmentDetailsViewController") as! IMSConsignmentDetailsViewController
-        
-        controller.booking_detail = self.booking_details
-        controller.delivery_detail = self.delivery_details
-        
-        self.navigationController?.pushViewController(controller, animated: true)
+        if let _ = self.booking_details {
+            controller.booking_detail = self.booking_details
+            controller.delivery_detail = self.delivery_details
+            
+            self.navigationController?.pushViewController(controller, animated: true)
+        } else {
+            self.view.makeToastActivity(.center)
+            self.freezeScreen()
+            getconsigment(isVerified: true) { success in
+                if success {
+                    DispatchQueue.main.async {
+                        self.navigationController?.pushViewController(controller, animated: true)
+                    }
+                } else {
+                    
+                }
+            }
+        }
     }
     //verify consignment
     @IBAction func verifyConsignmentTapped(_ sender: Any) {
@@ -545,6 +561,11 @@ class IMSNewRequestViewController: BaseViewController {
         }
         self.view.makeToastActivity(.center)
         self.freezeScreen()
+        
+        getconsigment(isVerified: false) { _ in }
+    }
+    
+    func getconsigment(isVerified: Bool, _ handler: @escaping(_ success: Bool)-> Void) {
         guard let token = UserDefaults.standard.string(forKey: USER_ACCESS_TOKEN) else {
             self.dismiss(animated: true) {
                 Helper.topMostController().view.makeToast("Session Expired")
@@ -614,6 +635,9 @@ class IMSNewRequestViewController: BaseViewController {
                     self.consignmentVerifyImage.image = UIImage(named: "rightG")
                     self.view.hideToastActivity()
                     self.unFreezeScreen()
+                    if isVerified {
+                        handler(true)
+                    }
                 }
             } else {
                 DispatchQueue.main.async {
@@ -621,6 +645,9 @@ class IMSNewRequestViewController: BaseViewController {
                     self.consignmentVerifyImage.image = UIImage(named: "cross")
                     self.view.hideToastActivity()
                     self.unFreezeScreen()
+                    if isVerified {
+                        handler(false)
+                    }
                 }
             }
         }
