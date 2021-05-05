@@ -508,6 +508,12 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
     }
     func setupUserModules() {
         module = AppDelegate.sharedInstance.db?.read_tbl_UserModule(query: "Select * from \(db_user_module) GROUP BY SERVER_ID_PK")
+        for (i, m) in module!.enumerated() {
+            if m.TAGNAME == MODULE_TAG_CLS {
+                self.module?.remove(at: i)
+                break
+            }
+        }
         if let permission = AppDelegate.sharedInstance.db?.read_tbl_UserPermission(permission: PERMISSION_FulfilmentModule).count {
             if permission == 0 {
                 for (i, m) in module!.enumerated() {
