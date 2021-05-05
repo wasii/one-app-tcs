@@ -104,6 +104,12 @@ class IMSFilesViewController: BaseViewController {
         
         var temp_files = [AttachmentsList]()
         let temp = fileAttachments
+        var isInitiator = false
+        if let ticket = AppDelegate.sharedInstance.db?.read_tbl_hr_request(query: "SELECT * FROM \(db_hr_request) WHERE SERVER_ID_PK = '\(self.ticket_id!)' AND CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)'").first {
+            if "\(ticket.LOGIN_ID ?? 0)" == CURRENT_USER_LOGGED_IN_ID {
+                isInitiator = true
+            }
+        }
         if AppDelegate.sharedInstance.db!.read_tbl_UserPermission(permission: IMS_Files_Initiator).count > 0 {
             fileAttachments = temp?.filter({ (AttachmentsList) -> Bool in
                 AttachmentsList.fileUploadedBy == IMS_InputBy_Initiator
@@ -111,6 +117,11 @@ class IMSFilesViewController: BaseViewController {
             for file in fileAttachments! {
                 temp_files.append(file)
             }
+        }
+        if isInitiator {
+            fileAttachments = temp_files
+            handler(true, fileAttachments!.count)
+            return
         }
         if AppDelegate.sharedInstance.db!.read_tbl_UserPermission(permission: IMS_Files_Line_Manager).count > 0 {
             fileAttachments = temp?.filter({ (AttachmentsList) -> Bool in

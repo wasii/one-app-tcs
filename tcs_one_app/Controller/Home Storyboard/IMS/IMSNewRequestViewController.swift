@@ -544,6 +544,8 @@ class IMSNewRequestViewController: BaseViewController {
             getconsigment(isVerified: true) { success in
                 if success {
                     DispatchQueue.main.async {
+                        controller.booking_detail = self.booking_details
+                        controller.delivery_detail = self.delivery_details
                         self.navigationController?.pushViewController(controller, animated: true)
                     }
                 } else {

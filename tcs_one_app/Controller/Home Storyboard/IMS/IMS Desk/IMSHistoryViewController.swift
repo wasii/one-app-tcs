@@ -52,7 +52,12 @@ class IMSHistoryViewController: BaseViewController {
     func setupIMSRemarks(_ handler: @escaping(_ count: Int) -> Void) {
         let query = "SELECT * FROM \(db_grievance_remarks) WHERE TICKET_ID = '\(self.ticket_id!)';"
         self.grievance_remarks = AppDelegate.sharedInstance.db?.read_tbl_hr_grievance(query: query)
-        
+        var isInitiator = false
+        if let ticket = AppDelegate.sharedInstance.db?.read_tbl_hr_request(query: "SELECT * FROM \(db_hr_request) WHERE SERVER_ID_PK = '\(self.ticket_id!)' AND CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)'").first {
+            if "\(ticket.LOGIN_ID ?? 0)" == CURRENT_USER_LOGGED_IN_ID {
+                isInitiator = true
+            }
+        }
         var temp_remarks = [tbl_Grievance_Remarks]()
         let temp = self.grievance_remarks
         if let _ = grievance_remarks?.count {
@@ -63,6 +68,11 @@ class IMSHistoryViewController: BaseViewController {
                 for r in self.grievance_remarks! {
                     temp_remarks.append(r)
                 }
+            }
+            if isInitiator {
+                self.grievance_remarks = temp_remarks
+                handler(self.grievance_remarks!.count)
+                return
             }
             if AppDelegate.sharedInstance.db!.read_tbl_UserPermission(permission: IMS_Remarks_Line_Manager).count > 0 {
                 self.grievance_remarks = temp?.filter({ (r1) -> Bool in

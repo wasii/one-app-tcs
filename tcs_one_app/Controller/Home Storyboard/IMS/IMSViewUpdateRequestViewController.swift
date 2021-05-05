@@ -1235,13 +1235,73 @@ var delivery_details: [IMSDeliveryDetail]?
         
         if AppDelegate.sharedInstance.db!.read_tbl_UserPermission(permission: IMS_View_Investigation_Summary).count > 0 {
             if IMS_Inprogress_Cs == "\(current_user)" {
-                if self.ticket_request?.DETAILED_INVESTIGATION == "" {
+                if self.ticket_request?.AREA_REF == "" &&
+                    self.ticket_request?.AREA_INVEST_TITLE == "" &&
+                    self.ticket_request?.DETAILED_INVESTIGATION == "" &&
+                    self.ticket_request?.PROSECUTION_NARRATIVE == "" &&
+                    self.ticket_request?.DEFENSE_NARRATIVE == "" &&
+                    self.ticket_request?.CHALLENGES == "" &&
+                    self.ticket_request?.FACTS == "" &&
+                    self.ticket_request?.FINDINGS == "" &&
+                    self.ticket_request?.OPINION == "" {
                     self.incident_investigation_view.isHidden = true
                 } else {
                     self.incident_investigation_view.isHidden = false
                 }
-            } else {
-                self.incident_investigation_view.isHidden = false
+            } else if IMS_Inprogress_As == "\(current_user)" {
+                if havePermissionToEdit {
+                    self.incident_investigation_view.isHidden = false
+                } else {
+                    if self.ticket_request?.AREA_REF == "" &&
+                        self.ticket_request?.AREA_INVEST_TITLE == "" &&
+                        self.ticket_request?.DETAILED_INVESTIGATION == "" &&
+                        self.ticket_request?.PROSECUTION_NARRATIVE == "" &&
+                        self.ticket_request?.DEFENSE_NARRATIVE == "" &&
+                        self.ticket_request?.CHALLENGES == "" &&
+                        self.ticket_request?.FACTS == "" &&
+                        self.ticket_request?.FINDINGS == "" &&
+                        self.ticket_request?.OPINION == "" {
+                        self.incident_investigation_view.isHidden = true
+                    } else {
+                        self.incident_investigation_view.isHidden = false
+                    }
+                }
+            } else if IMS_Inprogress_Hs == "\(current_user)" {
+                if self.ticket_request?.AREA_REF == "" &&
+                    self.ticket_request?.AREA_INVEST_TITLE == "" &&
+                    self.ticket_request?.DETAILED_INVESTIGATION == "" &&
+                    self.ticket_request?.PROSECUTION_NARRATIVE == "" &&
+                    self.ticket_request?.DEFENSE_NARRATIVE == "" &&
+                    self.ticket_request?.CHALLENGES == "" &&
+                    self.ticket_request?.FACTS == "" &&
+                    self.ticket_request?.FINDINGS == "" &&
+                    self.ticket_request?.OPINION == "" {
+                    self.incident_investigation_view.isHidden = true
+                } else {
+                    self.incident_investigation_view.isHidden = false
+                }
+            } else if IMS_Inprogress_Ds == "\(current_user)" ||
+                        IMS_Inprogress_Ca == "\(current_user)" ||
+                        IMS_Inprogress_Fi == "\(current_user)" ||
+                        IMS_Inprogress_Hr == "\(current_user)" ||
+                        IMS_Inprogress_Fs == "\(current_user)" {
+                if self.ticket_request?.AREA_REF == "" &&
+                    self.ticket_request?.AREA_INVEST_TITLE == "" &&
+                    self.ticket_request?.DETAILED_INVESTIGATION == "" &&
+                    self.ticket_request?.PROSECUTION_NARRATIVE == "" &&
+                    self.ticket_request?.DEFENSE_NARRATIVE == "" &&
+                    self.ticket_request?.CHALLENGES == "" &&
+                    self.ticket_request?.FACTS == "" &&
+                    self.ticket_request?.FINDINGS == "" &&
+                    self.ticket_request?.OPINION == "" &&
+                    self.ticket_request?.HO_SEC_SUMMARY == "" &&
+                    self.ticket_request?.HO_SEC_RECOM == "" &&
+                    self.ticket_request?.DIR_SEC_ENDOR == "" &&
+                    self.ticket_request?.DIR_SEC_RECOM == "" {
+                    self.incident_investigation_view.isHidden = true
+                } else {
+                    self.incident_investigation_view.isHidden = false
+                }
             }
         }
         

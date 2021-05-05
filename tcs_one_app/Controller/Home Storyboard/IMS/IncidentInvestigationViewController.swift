@@ -92,8 +92,8 @@ class IncidentInvestigationViewController: BaseViewController {
     
     func setupTextFields() {
         if AppDelegate.sharedInstance.db!.read_tbl_UserPermission(permission: IMS_View_Detailed_Investigation).count > 0 {
-            self.di_view.isHidden = false
             if self.isEditable {
+                self.di_view.isHidden = false
                 self.detal_investigation_textview.isUserInteractionEnabled = true
                 if ticket?.DETAILED_INVESTIGATION == "" {
                     self.detal_investigation_textview.text = ENTER_DETAIL_INVESTIGATION
@@ -102,17 +102,22 @@ class IncidentInvestigationViewController: BaseViewController {
                 }
                 
             } else {
-                self.detal_investigation_textview.text = ticket?.DETAILED_INVESTIGATION ?? ""
-                self.detail_investigation_wordcounter.text = "\(ticket?.DETAILED_INVESTIGATION?.count ?? 0)/2000"
-                self.detal_investigation_textview.isEditable = false
+                if ticket?.DETAILED_INVESTIGATION == "" {
+                    self.di_view.isHidden = true
+                } else {
+                    self.di_view.isHidden = false
+                    self.detal_investigation_textview.text = ticket?.DETAILED_INVESTIGATION ?? ""
+                    self.detail_investigation_wordcounter.text = "\(ticket?.DETAILED_INVESTIGATION?.count ?? 0)/2000"
+                    self.detal_investigation_textview.isEditable = false
+                }
             }
         } else {
             self.di_view.isHidden = true
         }
         
         if AppDelegate.sharedInstance.db!.read_tbl_UserPermission(permission: IMS_View_Prosecution_Narrative).count > 0 {
-            self.pn_view.isHidden = false
             if self.isEditable {
+                self.pn_view.isHidden = false
                 self.prosecution_narrative_textview.isUserInteractionEnabled = true
                 if ticket?.PROSECUTION_NARRATIVE == "" {
                     self.prosecution_narrative_textview.text = ENTER_PROCECUSTION_NARRATIVE
@@ -120,17 +125,22 @@ class IncidentInvestigationViewController: BaseViewController {
                     self.prosecution_narrative_textview.text = ticket?.PROSECUTION_NARRATIVE ?? ""
                 }
             } else {
-                self.prosecution_narrative_textview.isEditable = false
-                self.prosecution_narrative_textview.text = ticket?.PROSECUTION_NARRATIVE ?? ""
-                self.prosecution_narrative_wordcounter.text = "\(ticket?.PROSECUTION_NARRATIVE?.count ?? 0)/1000"
+                if ticket?.PROSECUTION_NARRATIVE == "" {
+                    self.pn_view.isHidden = true
+                } else {
+                    self.pn_view.isHidden = false
+                    self.prosecution_narrative_textview.isEditable = false
+                    self.prosecution_narrative_textview.text = ticket?.PROSECUTION_NARRATIVE ?? ""
+                    self.prosecution_narrative_wordcounter.text = "\(ticket?.PROSECUTION_NARRATIVE?.count ?? 0)/1000"
+                }
             }
         } else {
             self.pn_view.isHidden = true
         }
         
         if AppDelegate.sharedInstance.db!.read_tbl_UserPermission(permission: IMS_View_Defense_Narrative).count > 0 {
-            self.dn_view.isHidden = false
             if self.isEditable {
+                self.dn_view.isHidden = false
                 self.defense_narrative_textview.isUserInteractionEnabled = true
                 if ticket?.DEFENSE_NARRATIVE == "" {
                     self.defense_narrative_textview.text = ENTER_DEFENSE_NARRATIVE
@@ -138,17 +148,22 @@ class IncidentInvestigationViewController: BaseViewController {
                     self.defense_narrative_textview.text = ticket?.DEFENSE_NARRATIVE ?? ""
                 }
             } else {
-                self.defense_narrative_textview.isEditable = false
-                self.defense_narrative_textview.text = ticket?.DEFENSE_NARRATIVE ?? ""
-                self.defense_narrative_wordcounter.text = "\(ticket?.DEFENSE_NARRATIVE?.count ?? 0)/200"
+                if ticket?.DEFENSE_NARRATIVE == "" {
+                    self.dn_view.isHidden = true
+                } else {
+                    self.dn_view.isHidden = false
+                    self.defense_narrative_textview.isEditable = false
+                    self.defense_narrative_textview.text = ticket?.DEFENSE_NARRATIVE ?? ""
+                    self.defense_narrative_wordcounter.text = "\(ticket?.DEFENSE_NARRATIVE?.count ?? 0)/200"
+                }
             }
         } else {
             self.dn_view.isHidden = true
         }
         
         if AppDelegate.sharedInstance.db!.read_tbl_UserPermission(permission: IMS_View_Challenges).count > 0 {
-            self.c_view.isHidden = false
             if self.isEditable {
+                self.c_view.isHidden = false
                 self.challenges_textview.isUserInteractionEnabled = true
                 if ticket?.CHALLENGES == "" {
                     self.challenges_textview.text = ENTER_CHALLENGES
@@ -156,17 +171,22 @@ class IncidentInvestigationViewController: BaseViewController {
                     self.challenges_textview.text = ticket?.CHALLENGES ?? ""
                 }
             } else {
-                self.challenges_textview.isEditable = false
-                self.challenges_textview.text = ticket?.CHALLENGES ?? ""
-                self.challenges_wordcounter.text = "\(ticket?.CHALLENGES?.count ?? 0)/200"
+                if ticket?.CHALLENGES == "" {
+                    self.c_view.isHidden = true
+                } else {
+                    self.c_view.isHidden = false
+                    self.challenges_textview.isEditable = false
+                    self.challenges_textview.text = ticket?.CHALLENGES ?? ""
+                    self.challenges_wordcounter.text = "\(ticket?.CHALLENGES?.count ?? 0)/200"
+                }
             }
         } else {
             self.c_view.isHidden = true
         }
         
         if AppDelegate.sharedInstance.db!.read_tbl_UserPermission(permission: IMS_View_Facts).count > 0 {
-            self.f_view.isHidden = false
             if self.isEditable {
+                self.f_view.isHidden = false
                 self.fact_textview.isUserInteractionEnabled = true
                 if ticket?.FACTS == "" {
                     self.fact_textview.text = ENTER_FACTS
@@ -174,17 +194,22 @@ class IncidentInvestigationViewController: BaseViewController {
                     self.fact_textview.text = ticket?.FACTS ?? ""
                 }
             } else {
-                self.fact_textview.isEditable = false
-                self.fact_textview.text = ticket?.FACTS ?? ""
-                self.facts_wordcounter.text = "\(ticket?.FACTS?.count ?? 0)/500"
+                if ticket?.FACTS == "" {
+                    self.f_view.isHidden = true
+                } else {
+                    self.f_view.isHidden = false
+                    self.fact_textview.isEditable = false
+                    self.fact_textview.text = ticket?.FACTS ?? ""
+                    self.facts_wordcounter.text = "\(ticket?.FACTS?.count ?? 0)/500"
+                }
             }
         } else {
             self.f_view.isHidden = true
         }
         
         if AppDelegate.sharedInstance.db!.read_tbl_UserPermission(permission: IMS_View_Findings).count > 0 {
-            self.finding_view.isHidden = false
             if self.isEditable {
+                self.finding_view.isHidden = false
                 self.findings_textview.isUserInteractionEnabled = true
                 if ticket?.FINDINGS == "" {
                     self.findings_textview.text = ENTER_FINDINGS
@@ -192,17 +217,22 @@ class IncidentInvestigationViewController: BaseViewController {
                     self.findings_textview.text = ticket?.FINDINGS ?? ""
                 }
             } else {
-                self.findings_textview.isEditable = false
-                self.findings_textview.text = ticket?.FINDINGS ?? ""
-                self.findings_wordcounter.text = "\(ticket?.FINDINGS?.count ?? 0)/1000"
+                if ticket?.FINDINGS == "" {
+                    self.finding_view.isHidden = true
+                } else {
+                    self.finding_view.isHidden = false
+                    self.findings_textview.isEditable = false
+                    self.findings_textview.text = ticket?.FINDINGS ?? ""
+                    self.findings_wordcounter.text = "\(ticket?.FINDINGS?.count ?? 0)/1000"
+                }
             }
         } else {
             self.finding_view.isHidden = true
         }
         
         if AppDelegate.sharedInstance.db!.read_tbl_UserPermission(permission: IMS_View_Opinions).count > 0 {
-            self.o_view.isHidden = false
             if self.isEditable {
+                self.o_view.isHidden = false
                 self.opinions_textview.isUserInteractionEnabled = true
                 if ticket?.OPINION == "" {
                     self.opinions_textview.text = ENTER_OPINIONS
@@ -210,16 +240,21 @@ class IncidentInvestigationViewController: BaseViewController {
                     self.opinions_textview.text = ticket?.OPINION ?? ""
                 }
             } else {
-                self.opinions_textview.isEditable = false
-                self.opinions_textview.text = ticket?.OPINION ?? ""
-                self.opinions_wordcounter.text = "\(ticket?.OPINION?.count ?? 0)/500"
+                if ticket?.OPINION == "" {
+                    self.o_view.isHidden = true
+                } else {
+                    self.o_view.isHidden = false
+                    self.opinions_textview.isEditable = false
+                    self.opinions_textview.text = ticket?.OPINION ?? ""
+                    self.opinions_wordcounter.text = "\(ticket?.OPINION?.count ?? 0)/500"
+                }
             }
         } else {
             self.o_view.isHidden = true
         }
         if AppDelegate.sharedInstance.db!.read_tbl_UserPermission(permission: IMS_Area_View_Reference).count > 0 {
-            self.rn_view.isHidden = false
             if self.isEditable {
+                self.rn_view.isHidden = false
                 self.rn_textview.isUserInteractionEnabled = true
                 if ticket?.AREA_REF == "" {
                     self.rn_textview.text = ENTER_REFERENCE_NUM
@@ -227,16 +262,21 @@ class IncidentInvestigationViewController: BaseViewController {
                     self.rn_textview.text = ticket?.AREA_REF ?? ""
                 }
             } else {
-                self.rn_textview.isEditable = false
-                self.rn_textview.text = ticket?.AREA_REF ?? ""
-                self.rn_wordcounter.text = "\(ticket?.AREA_REF?.count ?? 0)/100"
+                if ticket?.AREA_REF == "" {
+                    self.rn_view.isHidden = true
+                } else {
+                    self.rn_view.isHidden = false
+                    self.rn_textview.isEditable = false
+                    self.rn_textview.text = ticket?.AREA_REF ?? ""
+                    self.rn_wordcounter.text = "\(ticket?.AREA_REF?.count ?? 0)/100"
+                }
             }
         } else {
             self.rn_view.isHidden = true
         }
         if AppDelegate.sharedInstance.db!.read_tbl_UserPermission(permission: IMS_Area_View_Title).count > 0 {
-            self.it_view.isHidden = false
             if self.isEditable {
+                self.it_view.isHidden = false
                 self.it_textview.isUserInteractionEnabled = true
                 if ticket?.AREA_INVEST_TITLE == "" {
                     self.it_textview.text = ENTER_INVESTIGATION_TITLE
@@ -244,9 +284,14 @@ class IncidentInvestigationViewController: BaseViewController {
                     self.it_textview.text = ticket?.AREA_INVEST_TITLE ?? ""
                 }
             } else {
-                self.it_textview.isEditable = false
-                self.it_textview.text = ticket?.AREA_INVEST_TITLE ?? ""
-                self.it_wordcounter.text = "\(ticket?.AREA_INVEST_TITLE?.count ?? 0)/525"
+                if ticket?.AREA_INVEST_TITLE == "" {
+                    self.it_view.isHidden = true
+                } else {
+                    self.it_view.isHidden = false
+                    self.it_textview.isEditable = false
+                    self.it_textview.text = ticket?.AREA_INVEST_TITLE ?? ""
+                    self.it_wordcounter.text = "\(ticket?.AREA_INVEST_TITLE?.count ?? 0)/525"
+                }
             }
         } else {
             self.it_view.isHidden = true
