@@ -16,7 +16,9 @@ class FetchUserDataViewController: BaseViewController {
     @IBOutlet weak var imsSetupData_Label: UILabel!
     @IBOutlet weak var logRequest_Label: UILabel!
     @IBOutlet weak var hrNotification_Label: UILabel!
-
+    @IBOutlet weak var attecndance_label: UILabel!
+    @IBOutlet weak var fulfilment_label: UILabel!
+    
     @IBOutlet weak var mainView: UIView!
 
     @IBOutlet var loaderViews: [UIView]!
@@ -26,6 +28,7 @@ class FetchUserDataViewController: BaseViewController {
     
     @IBOutlet weak var counter: UILabel!
     @IBOutlet weak var notification_counter: UILabel!
+    @IBOutlet weak var order_counter: UILabel!
     
     
     @IBOutlet weak var version: UILabel!
@@ -34,6 +37,7 @@ class FetchUserDataViewController: BaseViewController {
     //IMS Constraint/Variable
     @IBOutlet weak var logReqTopConstraint: NSLayoutConstraint!
     
+    @IBOutlet weak var fulfilmentView: CustomView!
     @IBOutlet weak var imsSetupView: CustomView!
     //IMS Constraint/Variable
     
@@ -52,9 +56,9 @@ class FetchUserDataViewController: BaseViewController {
         super.viewDidLoad()
         self.navigationItem.hidesBackButton = true
         self.title = "Fetching Data"
-
+        self.hrSetupData_Label.text = "Syncing HR"
         self.makeTopCornersRounded(roundView: self.mainView)
-        
+//        AppDelegate.sharedInstance.db?.deleteAll(tableName: db_fulfilment_orders_temp, handler: { _ in })
         version.text = "Version: " + Bundle.main.releaseVersionNumber!
         build.text = "Build: " + Bundle.main.buildVersionNumber!
         notification_counter.isHidden = true
@@ -113,74 +117,82 @@ class FetchUserDataViewController: BaseViewController {
         let params = self.getAPIParameter(service_name: SETUP, request_body: setup_body)
         NetworkCalls.setup(params: params) { (success, response) in
             if success {
-                DispatchQueue.main.async {
-                    self.hrSetupData_Label.text = "Successfully Synced HR"
-                    //show success for view 1
-                    self.loaderViews[0].backgroundColor = UIColor.nativeRedColor()
-                    self.activityIndicator[0].stopAnimating()
-                    self.activityIndicator[0].isHidden = true
-                    self.checkedImageView[0].isHidden = false
-                    //start animation for view 2
-                    self.activityIndicator[2].isHidden = false
-                    self.activityIndicator[2].startAnimating()
-
-                    self.getTCSLocations {
-                        self.getHrRequest()
-                    }
-                    //MARK: oneapp.gethrrequest
-//                    self.getHrRequest()
-
-                }
 //                DispatchQueue.main.async {
-//                    self.logReqTopConstraint.constant = 70
+//                    self.hrSetupData_Label.text = "Successfully Synced HR"
+//                    //show success for view 1
 //                    self.loaderViews[0].backgroundColor = UIColor.nativeRedColor()
 //                    self.activityIndicator[0].stopAnimating()
 //                    self.activityIndicator[0].isHidden = true
 //                    self.checkedImageView[0].isHidden = false
-//                    //start animation for view 1
-//                    self.activityIndicator[1].isHidden = false
-//                    self.activityIndicator[1].startAnimating()
-//                    self.imsSetupView.isHidden = false
-//                }
-//                self.getIMSSetup { imsSuccess, imsReponse in
-//                    if imsSuccess {
-//                        DispatchQueue.main.async {
-//                            let json = JSON(imsReponse)
-//                            self.initialiseIMS(response: json) { _ in
-//                                DispatchQueue.main.async {
+//                    //start animation for view 2
+//                    self.activityIndicator[2].isHidden = false
+//                    self.activityIndicator[2].startAnimating()
 //
-//                                    self.loaderViews[1].backgroundColor = UIColor.nativeRedColor()
-//                                    self.activityIndicator[1].stopAnimating()
-//                                    self.activityIndicator[1].isHidden = true
-//                                    self.checkedImageView[1].isHidden = false
-//                                    //start animation for view 2
-//                                    self.activityIndicator[2].isHidden = false
-//                                    self.activityIndicator[2].startAnimating()
-//                                    //MARK: oneapp.gethrrequest
-//                                    self.getHrRequest()
-//                                }
-//                            }
-//                        }
-//
-//                    } else {
-//                        DispatchQueue.main.async {
-//                            self.loaderViews[0].backgroundColor = UIColor.nativeRedColor()
-//                            self.activityIndicator[0].stopAnimating()
-//                            self.activityIndicator[0].isHidden = true
-//                            self.checkedImageView[0].isHidden = false
-//                            //start animation for view 2
-//                            self.activityIndicator[2].isHidden = false
-//                            self.activityIndicator[2].startAnimating()
-//                            //MARK: oneapp.gethrrequest
-//                            self.getHrRequest()
-//                        }
-//                    }
+//                    self.getHrRequest()
+                    //MARK: oneapp.gethrrequest
+//                    self.getHrRequest()
+
 //                }
+                DispatchQueue.main.async {
+                    self.hrSetupData_Label.text = "Successfully Synced HR"
+                    self.imsSetupView.isHidden = false
+                    self.imsSetupData_Label.text = "Syncing IMS Setup Data"
+                    
+                    self.loaderViews[0].backgroundColor = UIColor.nativeRedColor()
+                    self.activityIndicator[0].stopAnimating()
+                    self.activityIndicator[0].isHidden = true
+                    self.checkedImageView[0].isHidden = false
+                    //start animation for view 1
+                    self.activityIndicator[1].isHidden = false
+                    self.activityIndicator[1].startAnimating()
+                    self.imsSetupView.isHidden = false
+                }
+                self.getIMSSetup { imsSuccess, imsReponse in
+                    if imsSuccess {
+                        DispatchQueue.main.async {
+                            let json = JSON(imsReponse)
+                            self.initialiseIMS(response: json) { _ in
+                                DispatchQueue.main.async {
+                                    self.imsSetupData_Label.text = "Synced IMS Setup Data"
+                                    self.loaderViews[1].backgroundColor = UIColor.nativeRedColor()
+                                    self.activityIndicator[1].stopAnimating()
+                                    self.activityIndicator[1].isHidden = true
+                                    self.checkedImageView[1].isHidden = false
+                                    //start animation for view 2
+                                    self.activityIndicator[2].isHidden = false
+                                    self.activityIndicator[2].startAnimating()
+                                    //MARK: oneapp.gethrrequest
+                                    self.logRequest_Label.text = "Syncing HR Log Requests"
+                                    self.getHrRequest()
+                                }
+                            }
+                        }
+
+                    } else {
+                        DispatchQueue.main.async {
+                            self.loaderViews[0].backgroundColor = UIColor.nativeRedColor()
+                            self.activityIndicator[0].stopAnimating()
+                            self.activityIndicator[0].isHidden = true
+                            self.checkedImageView[0].isHidden = false
+                            //start animation for view 2
+                            self.activityIndicator[2].isHidden = false
+                            self.activityIndicator[2].startAnimating()
+                            //MARK: oneapp.gethrrequest
+                            self.getHrRequest()
+                        }
+                    }
+                }
             } else {
                 if response as! String == REVERTBACK {
                     DispatchQueue.main.async {
                         self.view.makeToast("Session Expired.")
                         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                            Messaging.messaging().unsubscribe(fromTopic: BROADCAST_KEY)
+                            AppDelegate.sharedInstance.db?.deleteRow(tableName: db_last_sync_status, column: "SYNC_KEY", ref_id: GET_HR_NOTIFICATION, handler: { _ in })
+                            AppDelegate.sharedInstance.db?.deleteRow(tableName: db_last_sync_status, column: "SYNC_KEY", ref_id: GETORDERFULFILMET, handler: { _ in })
+                            
+                            AppDelegate.sharedInstance.db?.deleteAll(tableName: db_hr_notifications, handler: { _ in })
+                            AppDelegate.sharedInstance.db?.deleteAll(tableName: db_fulfilment_orders, handler: { _ in })
                             UserDefaults.standard.removeObject(forKey: USER_ACCESS_TOKEN)
                             UserDefaults.standard.removeObject(forKey: "CurrentUser")
                             if self.isPresented {
@@ -632,9 +644,16 @@ class FetchUserDataViewController: BaseViewController {
         let params = self.getAPIParameter(service_name: GET_HR_REQUEST, request_body: hr_request)
         NetworkCalls.hr_request(params: params) { success, response in
             if success {
+                
                 self.count = JSON(response).dictionary![_count]!.intValue
                 if self.count < 0 {
+                    self.isTotalCounter = 0
+                    DispatchQueue.main.async {
+                        self.logRequest_Label.text = "Synced HR Log Requests"
+                    }
+                    
                     self.getHrNotifications()
+                    
                 }
                 if let hr_response = JSON(response).dictionary?[_hr_requests]?.array {
                     let sync_date = JSON(response).dictionary?[_sync_date]?.string ?? ""
@@ -644,11 +663,9 @@ class FetchUserDataViewController: BaseViewController {
                             self.counter.isHidden = false
                             self.counter.text = "\(self.isTotalCounter)/\(self.count)"
                         }
-                        
+                        self.setup_HRLogs_HRFILES(response: response)
                         for json in hr_response {
                             self.isTotalCounter += 1
-//                            print("ASSIGNED_TO: \(json.dictionary?["ASSIGNED_TO"]?.int ?? -111)")
-                            print("VIEW_COUNT: \(json.dictionary?["VIEW_COUNT"]?.int ?? -111)")
                             let dictionary = try json.rawData()
                             let hrRequest: HrRequest = try JSONDecoder().decode(HrRequest.self, from: dictionary)
                             AppDelegate.sharedInstance.db?.deleteRowWithMultipleConditions(tbl: db_hr_request, conditions: "SERVER_ID_PK = '\(hrRequest.ticketID!)' AND CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)'", { _ in
@@ -659,9 +676,6 @@ class FetchUserDataViewController: BaseViewController {
                                 })
                             })
                         }
-                        
-                        
-                        
                         if self.count == self.isTotalCounter {
                             
                             DispatchQueue.main.async {
@@ -672,9 +686,10 @@ class FetchUserDataViewController: BaseViewController {
                                                           total_records: self.count)
                                 self.count = 0
                                 self.skip = 0
-                                self.setup_HRLogs_HRFILES(response: response)
+                                self.isTotalCounter = 0
                                 DispatchQueue.main.async {
                                     self.logRequest_Label.text = "Synced HR Log Requests"
+                                    self.getHrNotifications()
                                 }
                             }
                         } else {
@@ -700,18 +715,12 @@ class FetchUserDataViewController: BaseViewController {
                         print("error: ", error)
                     }
                 } else {
-                    DispatchQueue.main.async {
-                        self.logRequest_Label.text = "Synced HR Log Requests"
-                    }
                     self.count = 0
                     self.skip = 0
-                    self.getHrNotifications()
-                }
-            } else {
-                DispatchQueue.main.async {
-                    self.view.makeToast(SOMETHINGWENTWRONG)
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                        self.navigationController?.popViewController(animated: true)
+                    self.isTotalCounter = 0
+                    DispatchQueue.main.async {
+                        self.logRequest_Label.text = "Synced HR Log Requests"
+                        self.getHrNotifications()
                     }
                 }
             }
@@ -747,9 +756,138 @@ class FetchUserDataViewController: BaseViewController {
                 })
             }
         }
-        self.count = 0
-        self.isTotalCounter = 0
-        self.getHrNotifications()
+    }
+}
+extension FetchUserDataViewController {
+    private func getAPIParameters(service_name: String, request_body: [String: Any]) -> [String:Any] {
+        let params = [
+            "eAI_MESSAGE": [
+                "eAI_HEADER": [
+                    "serviceName": service_name,
+                    "client": "ibm_apiconnect",
+                    "clientChannel": "MOB",
+                    "referenceNum": "",
+                    "securityInfo": [
+                        "authentication": [
+                            "userId": "",
+                            "password": ""
+                        ]
+                    ]
+                ],
+                "eAI_BODY": [
+                    "eAI_REQUEST": request_body
+                ]
+            ]
+        ]
+        return params as [String: Any]
+    }
+    func getFulfilment() {
+        var fulfilment = [String: [String:Any]]()
+        let lastSyncStatus = AppDelegate.sharedInstance.db?.readLastSyncStatus(tableName: db_last_sync_status,
+                                                   condition: "SYNC_KEY = '\(GETORDERFULFILMET)' AND CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)'")
+        
+        print(lastSyncStatus)
+        if lastSyncStatus == nil {
+            fulfilment = [
+                "hr_request":[
+                    "access_token": access_token,
+                    "skip" :skip,
+                    "take" : 80,
+                    "sync_date": ""
+                ]
+            ]
+        } else {
+            fulfilment = [
+                "hr_request":[
+                    "access_token": access_token,
+                    "skip" :0,
+                    "take" : 80,
+                    "sync_date": lastSyncStatus!.DATE
+                ]
+            ]
+        }
+        let params = self.getAPIParameters(service_name: GETORDERFULFILMET, request_body: fulfilment)
+        NetworkCalls.getorderfulfilment(params: params) { success, response in
+            if success {
+                self.count = JSON(response).dictionary![_count]!.intValue
+                if self.count <= 0 {
+                    DispatchQueue.main.async {
+                        self.loaderViews[5].backgroundColor = UIColor.nativeRedColor()
+                        self.activityIndicator[5].stopAnimating()
+                        self.activityIndicator[5].isHidden = true
+                        self.checkedImageView[5].isHidden = false
+                        
+                        
+                        self.navigateHomeScreen()
+                        return
+                    }
+                }
+                
+                if let fulfilment_orders = JSON(response).dictionary?[_orders]?.array {
+                    let sync_date = JSON(response).dictionary?[_sync_date]?.string ?? ""
+                    do {
+                        DispatchQueue.main.async {
+                            self.order_counter.isHidden = false
+                            self.order_counter.text = "\(self.isTotalCounter)/\(self.count)"
+                        }
+                        
+                        for json in fulfilment_orders {
+                            self.isTotalCounter += 1
+                            let dictionary = try json.rawData()
+                            let fulfilment_orders: FulfilmentOrders = try JSONDecoder().decode(FulfilmentOrders.self, from: dictionary)
+                            AppDelegate.sharedInstance.db?.deleteRowWithMultipleConditions(tbl: db_fulfilment_orders, conditions: "CNSG_NO = '\(fulfilment_orders.cnsgNo)' AND CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)'", { _ in
+                                AppDelegate.sharedInstance.db?.insert_tbl_fulfilment_orders(fulfilment_orders: fulfilment_orders, handler: { _ in
+                                    DispatchQueue.main.async {
+                                        self.order_counter.text = "\(self.isTotalCounter)/\(self.count)"
+                                    }
+                                })
+                            })
+                        }
+                        if self.isTotalCounter  >= self.count {
+                            DispatchQueue.main.async {
+                                Helper.updateLastSyncStatus(APIName: GETORDERFULFILMET,
+                                                          date: sync_date,
+                                                          skip: self.skip,
+                                                          take: 80,
+                                                          total_records: self.count)
+                                DispatchQueue.main.async {
+                                    self.fulfilment_label.text = "Synced Fulfilment Orders Log"
+                                    self.loaderViews[5].backgroundColor = UIColor.nativeRedColor()
+                                    self.activityIndicator[5].stopAnimating()
+                                    self.activityIndicator[5].isHidden = true
+                                    self.checkedImageView[5].isHidden = false
+                                }
+                                self.navigateHomeScreen()
+                            }
+                        } else {
+                            DispatchQueue.main.async {
+                                self.order_counter.isHidden = false
+                                self.order_counter.text = "\(self.isTotalCounter)/\(self.count)"
+                            }
+                            self.skip += 80
+                            self.getFulfilment()
+                        }
+                    } catch let err {
+                        print(err.localizedDescription)
+                    }
+                } else {
+                    DispatchQueue.main.async {
+                        self.loaderViews[5].backgroundColor = UIColor.nativeRedColor()
+                        self.activityIndicator[5].stopAnimating()
+                        self.activityIndicator[5].isHidden = true
+                        self.checkedImageView[5].isHidden = false
+                        self.fulfilment_label.text = "Synced Fulfilment Orders Log"
+                    }
+                    self.navigateHomeScreen()
+                }
+
+            } else {
+                DispatchQueue.main.async {
+                    self.navigationController?.popViewController(animated: true)
+                }
+            }
+        }
+        
     }
 }
 extension FetchUserDataViewController {
@@ -792,7 +930,45 @@ extension FetchUserDataViewController {
                 if success {
                     self.count = JSON(response).dictionary![_count]!.intValue
                     if self.count < 0 {
-                        self.navigateHomeScreen()
+                        DispatchQueue.main.async {
+                            self.loaderViews[3].backgroundColor = UIColor.nativeRedColor()
+                            self.activityIndicator[3].stopAnimating()
+                            self.activityIndicator[3].isHidden = true
+                            self.checkedImageView[3].isHidden = false
+                            
+                            
+                            
+                            self.activityIndicator[4].isHidden = false
+                            self.activityIndicator[4].startAnimating()
+                            self.attecndance_label.text = "Syncing Attendance Locations"
+                            self.getTCSLocations {
+                                DispatchQueue.main.async {
+                                    self.attecndance_label.text = "Synced Attendance Locations"
+                                    self.loaderViews[4].backgroundColor = UIColor.nativeRedColor()
+                                    self.activityIndicator[4].stopAnimating()
+                                    self.activityIndicator[4].isHidden = true
+                                    self.checkedImageView[4].isHidden = false
+                                    
+                                    if let fulfilment_perssion = AppDelegate.sharedInstance.db?.read_tbl_UserPermission(permission: PERMISSION_FulfilmentModule).count {
+                                        if fulfilment_perssion > 0 {
+                                            self.fulfilmentView.isHidden = false
+                                            self.activityIndicator[5].isHidden = false
+                                            self.activityIndicator[5].startAnimating()
+                                            
+                                            self.skip = 0
+                                            self.isTotalCounter = 0
+                                            
+                                            self.getFulfilment()
+                                            return
+                                        } else {
+                                            self.navigateHomeScreen()
+                                            return
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        return
                     }
                     
                     if let notification_requests = JSON(response).dictionary?[_notification_requests]?.array {
@@ -823,9 +999,42 @@ extension FetchUserDataViewController {
                                                               take: 80,
                                                               total_records: self.count)
                                     DispatchQueue.main.async {
+                                        self.loaderViews[3].backgroundColor = UIColor.nativeRedColor()
+                                        self.activityIndicator[3].stopAnimating()
+                                        self.activityIndicator[3].isHidden = true
+                                        self.checkedImageView[3].isHidden = false
+                                        
+                                        self.activityIndicator[4].isHidden = false
+                                        self.activityIndicator[4].startAnimating()
                                         self.hrNotification_Label.text = "Synced HR Notifications Logs"
+                                        self.attecndance_label.text = "Syncing Attendance Locations"
                                     }
-                                    self.navigateHomeScreen()
+                                    self.getTCSLocations {
+                                        DispatchQueue.main.async {
+                                            self.attecndance_label.text = "Synced Attendance Locations"
+                                            self.loaderViews[4].backgroundColor = UIColor.nativeRedColor()
+                                            self.activityIndicator[4].stopAnimating()
+                                            self.activityIndicator[4].isHidden = true
+                                            self.checkedImageView[4].isHidden = false
+                                            
+                                            if let fulfilment_perssion = AppDelegate.sharedInstance.db?.read_tbl_UserPermission(permission: PERMISSION_FulfilmentModule).count {
+                                                if fulfilment_perssion > 0 {
+                                                    self.fulfilmentView.isHidden = false
+                                                    self.activityIndicator[5].isHidden = false
+                                                    self.activityIndicator[5].startAnimating()
+                                                    
+                                                    self.skip = 0
+                                                    self.isTotalCounter = 0
+                                                    
+                                                    self.getFulfilment()
+                                                    return
+                                                } else {
+                                                    self.navigateHomeScreen()
+                                                    return
+                                                }
+                                            }
+                                        }
+                                    }
                                 }
                             } else {
                                 DispatchQueue.main.async {
@@ -840,9 +1049,43 @@ extension FetchUserDataViewController {
                         }
                     } else {
                         DispatchQueue.main.async {
+                            self.loaderViews[3].backgroundColor = UIColor.nativeRedColor()
+                            self.activityIndicator[3].stopAnimating()
+                            self.activityIndicator[3].isHidden = true
+                            self.checkedImageView[3].isHidden = false
+                            
+                            self.activityIndicator[4].isHidden = false
+                            self.activityIndicator[4].startAnimating()
                             self.hrNotification_Label.text = "Synced HR Notifications Logs"
+                            self.attecndance_label.text = "Syncing Attendance Locations"
                         }
-                        self.navigateHomeScreen()
+                        
+                        self.getTCSLocations {
+                            DispatchQueue.main.async {
+                                self.attecndance_label.text = "Synced Attendance Locations"
+                                self.loaderViews[4].backgroundColor = UIColor.nativeRedColor()
+                                self.activityIndicator[4].stopAnimating()
+                                self.activityIndicator[4].isHidden = true
+                                self.checkedImageView[4].isHidden = false
+                                
+                                if let fulfilment_perssion = AppDelegate.sharedInstance.db?.read_tbl_UserPermission(permission: PERMISSION_FulfilmentModule).count {
+                                    if fulfilment_perssion > 0 {
+                                        self.fulfilmentView.isHidden = false
+                                        self.activityIndicator[5].isHidden = false
+                                        self.activityIndicator[5].startAnimating()
+                                        
+                                        self.skip = 0
+                                        self.isTotalCounter = 0
+                                        
+                                        self.getFulfilment()
+                                        return
+                                    } else {
+                                        self.navigateHomeScreen()
+                                        return
+                                    }
+                                }
+                            }
+                        }
                     }
 
                 } else {
@@ -854,12 +1097,6 @@ extension FetchUserDataViewController {
         }
     }
     @objc func navigateHomeScreen() {
-        DispatchQueue.main.async {
-            self.loaderViews[3].backgroundColor = UIColor.nativeRedColor()
-            self.activityIndicator[3].stopAnimating()
-            self.activityIndicator[3].isHidden = true
-            self.checkedImageView[3].isHidden = false
-        }
         UserDefaults.standard.setValue(CURRENT_USER_LOGGED_IN_ID, forKeyPath: "CurrentUser")
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
@@ -878,7 +1115,7 @@ extension FetchUserDataViewController {
                 controller.modalPresentationStyle = .overFullScreen
                 
             }
-            
+            controller.modalTransitionStyle = .crossDissolve
             Helper.topMostController().present(controller, animated: true, completion: nil)
             self.navigationController?.popViewController(animated: true)
         }

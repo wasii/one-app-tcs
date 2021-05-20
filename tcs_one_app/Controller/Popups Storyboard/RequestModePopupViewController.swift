@@ -11,7 +11,7 @@ import UIKit
 class RequestModePopupViewController: UIViewController {
 
     @IBOutlet weak var tableView: UITableView!
-    
+    var isFulfillment = false
     var selected_option: String?
     var options: [FilterData]?
     var delegate: DateSelectionDelegate?
@@ -24,11 +24,21 @@ class RequestModePopupViewController: UIViewController {
     
     func setupJSON() {
         self.options = [FilterData]()
-        for option in REQUESTFILTERDATA {
-            if option == self.selected_option! {
-                options?.append(FilterData(title: option, isSelected: true))
-            } else {
-                options?.append(FilterData(title: option, isSelected: false))
+        if isFulfillment {
+            for option in FULFILLMENTFILTERDATA {
+                if option == self.selected_option! {
+                    options?.append(FilterData(title: option, isSelected: true))
+                } else {
+                    options?.append(FilterData(title: option, isSelected: false))
+                }
+            }
+        } else {
+            for option in REQUESTFILTERDATA {
+                if option == self.selected_option! {
+                    options?.append(FilterData(title: option, isSelected: true))
+                } else {
+                    options?.append(FilterData(title: option, isSelected: false))
+                }
             }
         }
         self.tableView.reloadData()

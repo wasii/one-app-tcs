@@ -59,6 +59,10 @@ let GETLOCATIONS            = "oneapp.getlocation"
 let FETCHATTENDANCE         = "oneapp.fetchattendance"
 let MARKATTENDANCE          = "oneapp.markattendance"
 
+//FULFILMENT
+let GETORDERFULFILMET       = "oneapp.getorderfullfilment"
+let UPDATEORDERFULFILMENT   = "oneapp.updateorderfullfilment"
+
 //API BACKEND KEYS
 let eAI_MESSAGE             = "eAI_MESSAGE"
 let eAI_BODY                = "eAI_BODY"
@@ -113,6 +117,10 @@ let _login_count            = "login_count"
 //Attendance Keys
 let _attn_out               = "attn_out"
 
+//Fulfilment Keys
+let _scan_prefix            = "scan_prefix"
+let _orders                 = "orders"
+
 //Local Storage (Database) tablename keys
 let db_user_module          = "USER_MODULE"
 let db_user_page            = "USER_PAGE"
@@ -140,6 +148,12 @@ let db_la_ad_group          = "LA_AdGROUP"
 // Attendance
 let db_att_locations        = "ATT_LOCATIONS"
 let db_att_userAttendance   = "ATT_USER_ATTENDANCE"
+
+//Fulfilment
+let db_scan_prefix          = "SCAN_PREFIX"
+let db_fulfilment_orders    = "FULFILMENT_ORDERS"
+let db_fulfilment_orders_temp = "FULFILLMENT_ORDERS_TEMP"
+
 // IMS
 let db_lov_master           = "IMS_LOV_MASTER_TABLE"
 let db_lov_detail           = "IMS_LOV_DETAIL_TABLE"
@@ -312,7 +326,10 @@ let MODULE_TAG_HR = "hr-help-desk";
 let MODULE_TAG_GRIEVANCE = "Grievance";
 let MODULE_TAG_IMS = "IMS"
 let MODULE_TAG_LEADERSHIPAWAZ = "AWAZ"
-
+let MODULE_TAG_FULFILMENT = "FULFILMENT"
+let MODULE_TAG_ATTENDANCE = "ATTENDANCE"
+let MODULE_TAG_CLS = "CLS"
+let MODULE_TAG_TRACK = "TRACK"
 
 let DOC = "application/msword";
 let DOCX = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
@@ -514,6 +531,10 @@ let IMS_View_Challenges = "View Challenges";
 let IMS_View_Facts = "View Facts";
 let IMS_View_Findings = "View Findings";
 let IMS_View_Opinions = "View Opinions";
+let IMS_Area_View_Reference = "View Reference"
+let IMS_Area_View_Title = "View Title"
+let IMS_HS_View_Reference = "View HS Reference"
+let IMS_HS_View_Title = "View HS Title"
 let IMS_View_Executive_Summary = "View Executive Summary";
 let IMS_View_HS_Recommendation = "View HS Recommendation";
 let IMS_View_Endorsement = "View Endorsement";
@@ -574,6 +595,19 @@ let IMS_InputBy_Finance = "Finance";
 let IMS_InputBy_Controller = "Controller";
 
 
+
+let INPROGRESS_INITIATOR    = IMS_Status_Inprogress + "-Initiator"
+let INPROGRESS_LINEMANAGER  = IMS_Status_Inprogress + "-Line Manager"
+let INPROGRESS_HOD          = IMS_Status_Inprogress + "-HOD"
+let INPROGRESS_CS           = IMS_Status_Inprogress + "-Central Security"
+let INPROGRESS_AS           = IMS_Status_Inprogress + "-Area Security"
+let INPROGRESS_HS           = IMS_Status_Inprogress + "-Head Security"
+let INPROGRESS_DS           = IMS_Status_Inprogress + "-Director Security"
+let INPROGRESS_FS           = IMS_Status_Inprogress + "-Financial Services"
+let INPROGRESS_HR           = IMS_Status_Inprogress + "-Human Resources"
+let INPROGRESS_FI           = IMS_Status_Inprogress + "-Finance"
+let INPROGRESS_CA           = IMS_Status_Inprogress + "-Controller"
+
 let CLASSIFICATION_TAG = 1
 let INCIDENT_LEVEL_1_TAG = 2
 let INCIDENT_LEVEL_2_TAG = 3
@@ -591,6 +625,8 @@ let CATEGORY_CONTROL = 11
 let TYPE_CONTROL = 12
 
 let HR_REF_NUMBER = 13
+
+let LOSS_AMOUNT_TAG = 14
 
 
 
@@ -623,7 +659,10 @@ let ENTER_EXECUTIVE_SUMMARY_TAG = 9
 let ENTER_EXECUTIVE_SUMMARY = "Enter Executive Summary"
 
 let ENTER_RECOMMENDATIONS_TAG = 10
+let ENTER_DS_RECOMMENDATIONS_TAG = 15
 let ENTER_RECOMMENDATIONS = "Enter Recommendations"
+
+
 
 let ENTER_ENDORESSEMENT_TAG = 11
 let ENTER_ENDORESSEMENT = "Enter Endoresment"
@@ -632,13 +671,27 @@ let ENTER_ENDORESSEMENT = "Enter Endoresment"
 let ENTER_RISK_REMARKS_TAG = 12
 let ENTER_RISK_REMARKS = "Enter Risk Remarks"
 
-let ENTER_CLOSURE_REMARKS_TAG = 13
-let ENTER_CLOSURE_REMARKS = "Enter Recommendations"
+let ENTER_CONTROLLER_RECOMMENDATIONS_TAG = 13
+let ENTER_CONTROLLER_RECOMMENDATION = "Enter Remarks"
+
+//changes
+let ENTER_REFERENCE_TAG = 16
+let ENTER_REFERENCE_NUM = "Enter Reference #"
+
+let ENTER_INVESTIGATION_TITLE_TAG = 17
+let ENTER_INVESTIGATION_TITLE = "Enter Investigation Title"
+
+
+let ENTER_EMAILS_TAG = 14
+let ENTER_EMAILS = "Enter Emails  (Semi Colon Seperated)"
 
 
 
 //MARK: LEADERSHIP AWAZ
 let PERMISSION_ViewBroadcastMode = "View Broadcast Mode"
+
+//MARK: FULFILMENT
+let PERMISSION_FulfilmentModule = "Fulfilment Module"
 
 let FILTERDATA = [
     "Weekly",
@@ -651,4 +704,10 @@ let REQUESTFILTERDATA = [
     "All",
     "Self",
     "Others"
+]
+
+let FULFILLMENTFILTERDATA = [
+    "Pending",
+    "In Process",
+    "Ready to Deliver"
 ]

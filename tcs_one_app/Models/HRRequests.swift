@@ -38,7 +38,7 @@ struct HrRequest: Encodable, Decodable {
     
     let amount, insClaimedAmt: Double?
     let incidentType, cnsgNo, classification, city: String?
-    let area, incidentDate, department, recoveryType: String?
+    let area, incidentDate, recoveryType: String?
     var isFinancial, areaSECEmpno, isInsClaimable, isInsClaimProcess: Int?
     let lovMasterVal, lovDetailVal, lovSubdetailVal, isEmpRelated: Int?
     let detailedInvestigation: String?
@@ -46,7 +46,7 @@ struct HrRequest: Encodable, Decodable {
     let findings, opinion, hoSECSummary, hoSECRecom: String?
     let dirSECEndors, dirSECRecom, insClaimRefNo: String?
     let hrRefNo, hrStatus, financeGlNo: String?
-    let isControlDefined: Int?
+    let isControlDefined, department: Int?
     let riskRemarks, riskType, controlCategory, controlType: String?
     let secArea, dirNotifyEmails: String?
     let isInvestigation: Int?
@@ -55,6 +55,11 @@ struct HrRequest: Encodable, Decodable {
     //Leadership Awaz
     let viewCount: Int?
     let desigName: String?
+    
+    //IMS
+    let areaRef, areaInvestTitle, headRef, headInvestTitle: String?
+    
+    
     
     enum CodingKeys: String, CodingKey {
         case ticketID = "TICKET_ID"
@@ -150,5 +155,9 @@ struct HrRequest: Encodable, Decodable {
         case lineManager2 = "LINE_MANAGER2"
         case viewCount = "VIEW_COUNT"
         case desigName = "DESIG_NAME"
+        case areaRef = "AREA_REF"
+        case areaInvestTitle = "AREA_INVEST_TITLE"
+        case headRef = "HEAD_REF"
+        case headInvestTitle = "HEAD_INVEST_TITLE"
     }
 }

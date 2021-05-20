@@ -20,6 +20,10 @@ extension UIColor {
         return UIColor.init(red: 222.0/255.0, green: 0.0/255.0, blue: 0.0/255.0, alpha: 1)
     }
     
+    class func inprocessColor() -> UIColor {
+        return UIColor.init(red: 19.0/255.0, green: 156.0/255.0, blue: 225.0/255.0, alpha: 1)
+    }
+    
     convenience init(hexString: String, alpha: CGFloat = 1.0) {
         let hexString: String = hexString.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
         let scanner = Scanner(string: hexString)
@@ -616,6 +620,7 @@ extension Notification.Name {
     static let navigateThroughNotification = Notification.Name.init("NavigateThroughNotification")
     
     static let networkRefreshed = Notification.Name.init("NetworkRefreshed")
+    static let networkOff = Notification.Name.init("NetworkOff")
     static let refreshedViews = Notification.Name.init("RefreshedViews")
 }
 
@@ -860,5 +865,25 @@ extension MKMapView {
     guard let coordinate = location?.coordinate else { return }
     let region = MKCoordinateRegion(center: coordinate, latitudinalMeters: 10_000, longitudinalMeters: 10_000)
     setRegion(region, animated: true)
+  }
+}
+
+
+extension tbl_HR_Notification_Request: Equatable {
+  static func ==(lhs: tbl_HR_Notification_Request, rhs: tbl_HR_Notification_Request) -> Bool {
+    return lhs.TICKET_ID == rhs.TICKET_ID && lhs.TICKET_ID == rhs.TICKET_ID
+  }
+}
+extension Array where Element: Equatable {
+  func uniqueElements() -> [Element] {
+    var out = [Element]()
+
+    for element in self {
+      if !out.contains(element) {
+        out.append(element)
+      }
+    }
+
+    return out
   }
 }

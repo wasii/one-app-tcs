@@ -284,8 +284,16 @@ class BaseViewController: UIViewController {
     @objc func logoutUser() {
 //        AppDelegate.sharedInstance.db?.deleteRow(tableName: db_last_sync_status, column: "CURRENT_USER", ref_id: CURRENT_USER_LOGGED_IN_ID, handler: { _ in })
         Messaging.messaging().unsubscribe(fromTopic: BROADCAST_KEY)
-        AppDelegate.sharedInstance.db?.deleteRow(tableName: db_last_sync_status, column: "SYNC_KEY", ref_id: "oneapp.gethrnotification", handler: { _ in })
+        AppDelegate.sharedInstance.db?.deleteRow(tableName: db_last_sync_status, column: "SYNC_KEY", ref_id: GET_HR_NOTIFICATION, handler: { _ in })
+        AppDelegate.sharedInstance.db?.deleteRow(tableName: db_last_sync_status, column: "SYNC_KEY", ref_id: GETORDERFULFILMET, handler: { _ in })
+        
         AppDelegate.sharedInstance.db?.deleteAll(tableName: db_hr_notifications, handler: { _ in })
+        AppDelegate.sharedInstance.db?.deleteAll(tableName: db_fulfilment_orders, handler: { _ in })
+        Geotification.allGeotifications().forEach { (geotification) in
+            stopMonitoring(geotification: geotification)
+        }
+        UserDefaults.standard.removeObject(forKey: PreferencesKeys.savedItems.rawValue)
+        UserDefaults.standard.set(false, forKey: "GeofenceAdd")
         if isNavigate {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                 self.navigationController?.popViewController(animated: true)
@@ -369,6 +377,49 @@ class BaseViewController: UIViewController {
                         }
                     }
                     break
+                case 3:
+                    let storyboard = UIStoryboard(name: "IMSStoryboard", bundle: nil)
+                    let controller = storyboard.instantiateViewController(withIdentifier: "IMSViewUpdateRequestViewController") as! IMSViewUpdateRequestViewController
+                    let permissions = AppDelegate.sharedInstance.db?.read_tbl_UserPermission()
+                    var current_user = ""
+                    for perm in permissions! {
+                        var breakk = false
+                        let p = perm.PERMISSION
+                        for constant in IMSAllPermissions {
+                            if p == constant {
+                                current_user = p
+                                breakk = true
+                                break
+                            }
+                        }
+                        if breakk {
+                            break
+                        }
+                    }
+                    
+                    let isGranted = permissions?.contains(where: { (perm) -> Bool in
+                        let permission = String(perm.PERMISSION.lowercased().split(separator: " ").last!)
+                        return permission == hr_request.TICKET_STATUS?.lowercased() ?? ""
+                    })
+                    
+                    let query = "SELECT * FROM \(db_hr_request) WHERE SERVER_ID_PK = '\(hr_request.SERVER_ID_PK!)'"
+                    if let data = AppDelegate.sharedInstance.db?.read_tbl_hr_request(query: query).first {
+                        controller.ticket_request = data
+                        controller.current_user = current_user
+                        controller.havePermissionToEdit = isGranted!
+                        
+                        print(current_user)
+                        if current_user == "" {
+                            let controller = storyboard.instantiateViewController(withIdentifier: "IMSNewRequestViewController") as! IMSNewRequestViewController
+                            controller.current_ticket = data
+                            controller.hidesBottomBarWhenPushed = true
+                            self.navigationController?.pushViewController(controller, animated: true)
+                        } else {
+                            controller.hidesBottomBarWhenPushed = true
+                            self.navigationController?.pushViewController(controller, animated: true)
+                        }
+                    }
+                    break
                 case 4:
                     let storyboard = UIStoryboard(name: "LeadershipAwaz", bundle: nil)
                     let controller = storyboard.instantiateViewController(withIdentifier: "NewRequestLeadershipAwazViewController") as! NewRequestLeadershipAwazViewController
@@ -381,6 +432,17 @@ class BaseViewController: UIViewController {
                 }
             }
             
+        } else {
+            if let _ = notification.object as? String {
+                let storyboard = UIStoryboard(name: "Fullfillment", bundle: nil)
+                let controller = storyboard.instantiateViewController(withIdentifier: "FulfilmentListingViewController") as! FulfilmentListingViewController
+                controller.numberOfDays = "7"
+                controller.numberOfDaysSorting = "This Week"
+                controller.ticket_status = "Pending"
+                controller.ticket_status_sorting = "Pending"
+                controller.hidesBottomBarWhenPushed = true
+                self.navigationController?.pushViewController(controller, animated: true)
+            }
         }
     }
     
@@ -410,9 +472,9 @@ class BaseViewController: UIViewController {
     }
     
     func getNotificationCounts() -> Int{
-        let query = "SELECT n.*,r.TICKET_STATUS as LOG_TICKET FROM \(db_hr_notifications) n LEFT JOIN \(db_hr_request) r ON n.TICKET_ID = r.SERVER_ID_PK WHERE r.CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)' and n.READ_STATUS_DTTM = 'a' ORDER BY n.CREATED_DATE desc"
-        return AppDelegate.sharedInstance.db?.read_tbl_hr_notification_request(query: query).count ?? 0
-        
+        let query = "select n.*,r.TICKET_STATUS as LOG_TICKET from NOTIFICATION_LOGS n LEFT JOIN FULFILMENT_ORDERS f ON n.TICKET_ID = f.ORDER_ID LEFT JOIN REQUEST_LOGS r ON n.TICKET_ID = r.SERVER_ID_PK where n.READ_STATUS_DTTM = 'a' ORDER BY n.CREATED_DATE desc"
+        let notifications_count = AppDelegate.sharedInstance.db?.read_tbl_hr_notification_request(query: query).uniqueElements().count
+        return notifications_count ?? 0
     }
     
     
@@ -559,5 +621,10 @@ class BaseViewController: UIViewController {
             
             locationManager.stopMonitoring(for: circularRegion)
         }
+    }
+    
+    func startHapticTouch(type: UINotificationFeedbackGenerator.FeedbackType) {
+        let generator = UINotificationFeedbackGenerator()
+        generator.notificationOccurred(type)
     }
 }

@@ -325,6 +325,7 @@ PODS:
     - abseil/base/config
     - abseil/meta/type_traits
   - Alamofire (4.9.1)
+  - BarcodeScanner (5.0.0)
   - BoringSSL-GRPC (0.0.14):
     - BoringSSL-GRPC/Implementation (= 0.0.14)
     - BoringSSL-GRPC/Interface (= 0.0.14)
@@ -485,6 +486,7 @@ PODS:
 
 DEPENDENCIES:
   - Alamofire (~> 4.2)
+  - BarcodeScanner
   - Charts
   - DatePickerDialog
   - ExpandableCell
@@ -512,6 +514,7 @@ SPEC REPOS:
   trunk:
     - abseil
     - Alamofire
+    - BarcodeScanner
     - BoringSSL-GRPC
     - Charts
     - DatePickerDialog
@@ -550,6 +553,7 @@ SPEC REPOS:
 SPEC CHECKSUMS:
   abseil: 1e1630cfaceb6f2f6d49c3659e83932095e42b30
   Alamofire: 85e8a02c69d6020a0d734f6054870d7ecb75cf18
+  BarcodeScanner: 2f5a53198eae49dc39bf61f2c1f05c04e01ff72d
   BoringSSL-GRPC: 63bef04e04730659f5125c3f27d72df324f68f59
   Charts: b1e3a1f5a1c9ba5394438ca3b91bd8c9076310af
   DatePickerDialog: ccff2f91ff7a018057a4d72fa5ad6de49c8cb0cd
@@ -585,6 +589,6 @@ SPEC CHECKSUMS:
   Toast-Swift: 9b6a70f28b3bf0b96c40d46c0c4b9d6639846711
   TPPDF: 000c670ca79d0b00c62dcc32b168c6f691dc92a5
 
-PODFILE CHECKSUM: dac4dc6ddd96df0a66d9363c601dc343817c4a05
+PODFILE CHECKSUM: f3147efde3ac8d06660a06ea23db05779e1c911f
 
 COCOAPODS: 1.10.1

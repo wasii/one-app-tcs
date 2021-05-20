@@ -104,14 +104,14 @@ class NotificationsViewController: BaseViewController {
     
     
     func setup_hr_notification(_ handler: @escaping(_ success: Bool, _ count: Int) -> Void) {
-        let query = "SELECT n.*,r.TICKET_STATUS as LOG_TICKET FROM \(db_hr_notifications) n LEFT JOIN \(db_hr_request) r ON n.TICKET_ID = r.SERVER_ID_PK WHERE r.CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)' ORDER BY n.CREATED_DATE desc"
+        let query = "select n.*,r.TICKET_STATUS as LOG_TICKET from NOTIFICATION_LOGS n LEFT JOIN FULFILMENT_ORDERS f ON n.TICKET_ID = f.ORDER_ID LEFT JOIN REQUEST_LOGS r ON n.TICKET_ID = r.SERVER_ID_PK  ORDER BY n.CREATED_DATE desc"
         hr_notification = AppDelegate.sharedInstance.db?.read_tbl_hr_notification_request(query: query)
         
         if hr_notification!.count > 0 {
             hr_notification = hr_notification?.sorted(by: { (req1, req2) -> Bool in
                 req1.CREATED_DATE > req2.CREATED_DATE
             })
-            
+            hr_notification = hr_notification?.uniqueElements()
 //            hr_notification = hr_notification?.filter({ (logs) -> Bool in
 //                logs.MODULE_ID != 4
 //            })
@@ -233,6 +233,8 @@ extension NotificationsViewController: UITableViewDelegate, UITableViewDataSourc
         let cell = tableView.dequeueReusableCell(withIdentifier: "RequestListingCell") as! RequestListingTableCell
         
         let data = self.hr_notification![indexPath.row]
+        cell.mainHeadingTopConstraint.constant = 7
+        cell.ticketID.text = ""
         if data.READ_STATUS_DTTM != "a" {
             //read same white
             cell.mainView.bgColor = UIColor.white
@@ -285,17 +287,64 @@ extension NotificationsViewController: UITableViewDelegate, UITableViewDataSourc
             cell.status.text = data.TICKET_STATUS
             cell.type.text = "IMS"
             switch data.TICKET_STATUS {
-            case "Submitted":
+            case IMS_Status_Submitted:
+                cell.status.text = "Submitted"
                 cell.status.textColor = UIColor.pendingColor()
                 break
-            case IMS_Status_Inprogress_As, IMS_Status_Inprogress_Hs, IMS_Status_Inprogress_Ds, IMS_Status_Inprogress_Cs, IMS_Status_Inprogress_Ro, IMS_Status_Inprogress_Ca, IMS_Status_Inprogress_Hr, IMS_Status_Inprogress_Fi, IMS_Status_Inprogress_Rm, IMS_Status_Inprogress_Fs, IMS_Status_Inprogress_Rds, IMS_Status_Inprogress_Hod, IMS_Status_Inprogress_Ins, IMS_Status_Inprogress_Rhod:
-                cell.status.textColor = UIColor.approvedColor()
+            case IMS_Status_Inprogress:
                 cell.status.text = IMS_Status_Inprogress
+                cell.status.textColor = UIColor.approvedColor()
                 break
-            case "Closed":
+            case IMS_Status_Inprogress_Rm:
+                cell.status.text = INPROGRESS_INITIATOR
+                cell.status.textColor = UIColor.approvedColor()
+                break
+            case IMS_Status_Inprogress_Ro, IMS_Status_Inprogress_Rhod:
+                cell.status.text = INPROGRESS_LINEMANAGER
+                cell.status.textColor = UIColor.approvedColor()
+                break
+            case IMS_Status_Inprogress_Hod:
+                cell.status.text = INPROGRESS_HOD
+                cell.status.textColor = UIColor.approvedColor()
+                break
+            case IMS_Status_Inprogress_Cs:
+                cell.status.text = INPROGRESS_CS
+                cell.status.textColor = UIColor.approvedColor()
+                break
+            case IMS_Status_Inprogress_As:
+                cell.status.text = INPROGRESS_AS
+                cell.status.textColor = UIColor.approvedColor()
+                break
+            case IMS_Status_Inprogress_Hs, IMS_Status_Inprogress_Rds:
+                cell.status.text = INPROGRESS_HS
+                cell.status.textColor = UIColor.approvedColor()
+                break
+            case IMS_Status_Inprogress_Ds:
+                cell.status.text = INPROGRESS_DS
+                cell.status.textColor = UIColor.approvedColor()
+                break
+            case IMS_Status_Inprogress_Fs, IMS_Status_Inprogress_Ins:
+                cell.status.text = INPROGRESS_FS
+                cell.status.textColor = UIColor.approvedColor()
+                break
+            case IMS_Status_Inprogress_Hr:
+                cell.status.text = INPROGRESS_HR
+                cell.status.textColor = UIColor.approvedColor()
+                break
+            case IMS_Status_Inprogress_Fi:
+                cell.status.text = INPROGRESS_FI
+                cell.status.textColor = UIColor.approvedColor()
+                break
+            case IMS_Status_Inprogress_Ca:
+                cell.status.text = INPROGRESS_CA
+                cell.status.textColor = UIColor.approvedColor()
+                break
+            case IMS_Status_Closed:
+                cell.status.text = IMS_Status_Closed
                 cell.status.textColor = UIColor.rejectedColor()
-                break
             default:
+                cell.status.text = "Submitted"
+                cell.status.textColor = UIColor.pendingColor()
                 break
             }
             break
@@ -315,6 +364,44 @@ extension NotificationsViewController: UITableViewDelegate, UITableViewDataSourc
                     break
             default:
                 break
+            }
+            break
+        case 105:
+            break
+        default:
+            break
+        }
+        
+        switch data.MODULE_DSCRP {
+        case "FULFILMENT":
+            cell.status.text = data.TICKET_STATUS
+            cell.type.text = "Fulfilment"
+            let query = "SELECT * FROM \(db_fulfilment_orders) WHERE ORDER_ID = '\(data.TICKET_ID)'"
+            if let orders = AppDelegate.sharedInstance.db?.read_tbl_fulfilment_orders(query: query) {
+                var p = 0
+                var r = 0
+                let count = orders.count
+                for order in orders {
+                    switch order.ITEM_STATUS {
+                    case "Pending":
+                        p += 1
+                    case "Received":
+                        r += 1
+                        break
+                    default:
+                        break
+                    }
+                }
+                if p == count {
+                    cell.status.text = "Pending"
+                    cell.status.textColor = UIColor.pendingColor()
+                } else if r == count {
+                    cell.status.text = "Ready to Deliver"
+                    cell.status.textColor = UIColor.approvedColor()
+                } else {
+                    cell.status.text = "In Process"
+                    cell.status.textColor = UIColor.inprocessColor()
+                }
             }
             break
         default:
@@ -414,6 +501,61 @@ extension NotificationsViewController: UITableViewDelegate, UITableViewDataSourc
             }
             break
         case 3:
+            let storyboard = UIStoryboard(name: "IMSStoryboard", bundle: nil)
+            let controller = storyboard.instantiateViewController(withIdentifier: "IMSViewUpdateRequestViewController") as! IMSViewUpdateRequestViewController
+            let permissions = AppDelegate.sharedInstance.db?.read_tbl_UserPermission()
+            var current_user = ""
+            for perm in permissions! {
+                var breakk = false
+                let p = perm.PERMISSION
+                for constant in IMSAllPermissions {
+                    if p == constant {
+                        current_user = p
+                        breakk = true
+                        break
+                    }
+                }
+                if breakk {
+                    break
+                }
+            }
+            let current_ticket = self.hr_notification![indexPath.row]
+            let isGranted = permissions?.contains(where: { (perm) -> Bool in
+                let permission = String(perm.PERMISSION.lowercased().split(separator: " ").last!)
+                return permission == current_ticket.TICKET_STATUS.lowercased()
+            })
+            if IMS_Inprogress_Fs == "\(current_user)" {
+                if current_ticket.TICKET_STATUS == IMS_Status_Inprogress_Ins {
+//                    isGranted = true
+                    current_user = IMS_Inprogress_Ins
+                    
+                } else {
+                    controller.current_user = current_user
+                }
+            } else if IMS_Inprogress_Ins == "\(current_user)" {
+                if current_ticket.TICKET_STATUS == IMS_Status_Inprogress_Fs {
+                    current_user = IMS_Inprogress_Ins
+//                    isGranted = false
+                }
+            } else {
+                controller.current_user = current_user
+            }
+            
+            let query = "SELECT * FROM \(db_hr_request) WHERE SERVER_ID_PK = '\(current_ticket.TICKET_ID)'"
+            if let data = AppDelegate.sharedInstance.db?.read_tbl_hr_request(query: query).first {
+                controller.ticket_request = data
+                controller.current_user = current_user
+                controller.havePermissionToEdit = isGranted!
+                
+                print(current_user)
+                if current_user == "" {
+                    let controller = storyboard.instantiateViewController(withIdentifier: "IMSNewRequestViewController") as! IMSNewRequestViewController
+                    controller.current_ticket = data
+                    self.navigationController?.pushViewController(controller, animated: true)
+                } else {
+                    self.navigationController?.pushViewController(controller, animated: true)
+                }
+            }
             break
         case 4:
             let storyboard = UIStoryboard(name: "LeadershipAwaz", bundle: nil)
@@ -421,6 +563,47 @@ extension NotificationsViewController: UITableViewDelegate, UITableViewDataSourc
             
             controller.ticket_id = self.hr_notification![indexPath.row].TICKET_ID
             self.navigationController?.pushViewController(controller, animated: true)
+            break
+        case 105:
+            break
+        default:
+            break
+        }
+        switch self.hr_notification![indexPath.row].MODULE_DSCRP {
+        case "FULFILMENT":
+            let query = "SELECT * FROM \(db_fulfilment_orders) WHERE ORDER_ID = '\(ticket_id)'"
+            if let orders = AppDelegate.sharedInstance.db?.read_tbl_fulfilment_orders(query: query) {
+                var p = 0
+                var r = 0
+                let count = orders.count
+                for order in orders {
+                    switch order.ITEM_STATUS {
+                    case "Pending":
+                        p += 1
+                    case "Received":
+                        r += 1
+                        break
+                    default:
+                        break
+                    }
+                }
+                if p == count {
+                    let storyboard = UIStoryboard(name: "Fullfillment", bundle: nil)
+                    let controller = storyboard.instantiateViewController(withIdentifier: "FulfilmentListingViewController") as! FulfilmentListingViewController
+                    controller.numberOfDays = "7"
+                    controller.numberOfDaysSorting = "This Week"
+                    controller.ticket_status = "Pending"
+                    controller.ticket_status_sorting = "Pending"
+                    controller.hidesBottomBarWhenPushed = true
+                    self.navigationController?.pushViewController(controller, animated: true)
+                } else {
+//                if p != count {
+                    let storyboard = UIStoryboard(name: "Fullfillment", bundle: nil)
+                    let controller = storyboard.instantiateViewController(withIdentifier: "FulfilmentOrderDetailViewController") as! FulfilmentOrderDetailViewController
+                    controller.orderId = "\(ticket_id)"
+                    self.navigationController?.pushViewController(controller, animated: true)
+                }
+            }
             break
         default:
             break

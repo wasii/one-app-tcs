@@ -71,6 +71,7 @@ class FilterDataPopupViewController: UIViewController {
         datePicker.show(title,
                         doneButtonTitle: "Done",
                         cancelButtonTitle: "Cancel",
+                        maximumDate: Date(),
                         datePickerMode: .date,
                         window: self.view.window) { (date) in
             if let dt = date {

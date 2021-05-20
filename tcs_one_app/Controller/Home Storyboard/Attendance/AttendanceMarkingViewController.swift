@@ -25,6 +25,7 @@ class AttendanceMarkingViewController: BaseViewController, MKMapViewDelegate {
     @IBOutlet weak var checkOutBtn: UIButton!
     
     @IBOutlet weak var mapView: MKMapView!
+    @IBOutlet weak var errorMessage: UILabel!
     //    var mapView: MKMapView?
     let places = Place.getPlaces()
     var isUserInsideFence = false
@@ -33,6 +34,7 @@ class AttendanceMarkingViewController: BaseViewController, MKMapViewDelegate {
     var lon: String = "0.0"
     
     var isLocationOff = false
+    var clAuthorizatinStatus: CLAuthorizationStatus?
     
     let datePicker = DatePickerDialog(
         textColor: .nativeRedColor(),
@@ -50,6 +52,23 @@ class AttendanceMarkingViewController: BaseViewController, MKMapViewDelegate {
         setupMapView()
         fetchAttendance()
         
+    }
+    override func viewDidAppear(_ animated: Bool) {
+        NotificationCenter.default.addObserver(self, selector: #selector(refresh), name: .networkRefreshed, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(off), name: .networkOff, object: nil)
+    }
+    override func viewDidDisappear(_ animated: Bool) {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
+    @objc func refresh() {
+        self.view.hideAllToasts()
+        fetchAttendance()
+    }
+    
+    @objc func off() {
+        self.view.hideAllToasts()
+        fetchAttendance()
     }
     func slideToLock() -> MTSlideToOpenView {
         let slide = MTSlideToOpenView(frame: CGRect(x: 5, y: 4, width: 270, height: 52))
@@ -71,6 +90,12 @@ class AttendanceMarkingViewController: BaseViewController, MKMapViewDelegate {
     
     func fetchAttendance() {
         guard let access_token = UserDefaults.standard.string(forKey: USER_ACCESS_TOKEN) else {
+            return
+        }
+        if !CustomReachability.isConnectedNetwork() {
+            self.slideView.viewWithTag(1000)?.removeFromSuperview()
+            self.slideView.isHidden = true
+            self.view.makeToast(NOINTERNETCONNECTION, duration: 20.0, position: .bottom)
             return
         }
         self.freezeScreen()
@@ -135,13 +160,32 @@ class AttendanceMarkingViewController: BaseViewController, MKMapViewDelegate {
                     } else {
                         self.checkInTime.text =  "\(user_attendace?.date.dateOnly ?? "") - \(user_attendace?.timeIn ?? "")"
                         
-                        let dateFormatter = DateFormatter()
-                        dateFormatter.dateFormat = "h:mm a"
-                        let timeInDate = dateFormatter.date(from: user_attendace!.timeIn)
-                        let fixedTime = dateFormatter.date(from: "09:15 AM")
+                        let locale = NSLocale.current
+                        let formatter: String = DateFormatter.dateFormat(fromTemplate: "j", options: 0, locale: locale)!
+                        
+                        var fixedTime = Date()
+                        var timeInDate = Date()
+                        if formatter.contains("a") {
+                            let dateFormatter = DateFormatter()
+                            dateFormatter.dateFormat = "h:mm a"
+                            timeInDate = dateFormatter.date(from: user_attendace!.timeIn)!
+                            fixedTime = dateFormatter.date(from: "09:15 AM")!
+                        } else {
+                            print("ABC")
+                            let dateFormatter = DateFormatter()
+                            dateFormatter.dateFormat = "h:mm a"
+                            dateFormatter.locale = NSLocale(localeIdentifier: "en_US_POSIX") as Locale
+                            let tempTimeInDate = dateFormatter.date(from: user_attendace!.timeIn)!
+                            
+                            dateFormatter.dateFormat = "HH:mm"
+                            dateFormatter.locale = NSLocale(localeIdentifier: "en_US_POSIX") as Locale
+                            let strinTimeInDate = dateFormatter.string(from: tempTimeInDate)
+                            timeInDate = dateFormatter.date(from: strinTimeInDate)!
+                            fixedTime = dateFormatter.date(from: "9:15")!
+                        }
                         
                         let calendar = Calendar.current
-                        let dateComponents = calendar.dateComponents([Calendar.Component.minute], from: fixedTime!, to: timeInDate!)
+                        let dateComponents = calendar.dateComponents([Calendar.Component.minute], from: fixedTime, to: timeInDate)
                         
                         if dateComponents.minute ?? 0 >= 15 {
                             self.timeInImage.image = UIImage(named: "in-arrow-red")
@@ -155,21 +199,54 @@ class AttendanceMarkingViewController: BaseViewController, MKMapViewDelegate {
                     } else {
                         self.checkOutTime.text = "\(user_attendace?.date.dateOnly ?? "") - \(user_attendace?.timeOut ?? "")"
                         
-                        let dateFormatter = DateFormatter()
-                        dateFormatter.dateFormat = "h:mm a"
+                        let locale = NSLocale.current
+                        let formatter: String = DateFormatter.dateFormat(fromTemplate: "j", options: 0, locale: locale)!
                         
-                        let timeInDate = dateFormatter.date(from: user_attendace!.timeIn)
-                        let timeOutDate = dateFormatter.date(from: user_attendace!.timeOut)
-                        
-                        let calendar = Calendar.current
-                        let dateComponents = calendar.dateComponents([Calendar.Component.hour, Calendar.Component.minute], from: timeInDate!, to: timeOutDate!)
-                        
-                        let hours = dateComponents.hour ?? 0
-                        
-                        if hours >= 9 {
-                            self.timeOutImage.image = UIImage(named: "out-array-green")
+                        if formatter.contains("a") {
+                            print("12 hours format")
+                            let dateFormatter = DateFormatter()
+                            dateFormatter.dateFormat = "h:mm a"
+
+                            let timeInDate = dateFormatter.date(from: user_attendace!.timeIn)
+                            let timeOutDate = dateFormatter.date(from: user_attendace!.timeOut)
+
+                            let calendar = Calendar.current
+                            let dateComponents = calendar.dateComponents([Calendar.Component.hour, Calendar.Component.minute], from: timeInDate!, to: timeOutDate!)
+
+                            let hours = dateComponents.hour ?? 0
+
+                            if hours >= 9 {
+                                self.timeOutImage.image = UIImage(named: "out-array-green")
+                            } else {
+                                self.timeOutImage.image = UIImage(named: "out-array")
+                            }
                         } else {
-                            self.timeOutImage.image = UIImage(named: "out-array")
+                            print("24 hours format")
+                            let dateFormatter = DateFormatter()
+                            dateFormatter.dateFormat = "h:mm a"
+                            dateFormatter.locale = NSLocale(localeIdentifier: "en_US_POSIX") as Locale
+                            
+                            let tempTimeInDate = dateFormatter.date(from: user_attendace!.timeIn)
+                            let tempTimeOutDate = dateFormatter.date(from: user_attendace!.timeOut)
+                            
+                            dateFormatter.dateFormat = "HH:mm"
+                            dateFormatter.locale = NSLocale(localeIdentifier: "en_US_POSIX") as Locale
+                            let stringTimeInDate = dateFormatter.string(from: tempTimeInDate!)
+                            let stringTimeOutDate = dateFormatter.string(from: tempTimeOutDate!)
+                            
+                            let timeInDate = dateFormatter.date(from: stringTimeInDate)!
+                            let timeOutDate = dateFormatter.date(from: stringTimeOutDate)!
+                            
+                            let calendar = Calendar.current
+                            let dateComponents = calendar.dateComponents([Calendar.Component.hour, Calendar.Component.minute], from: timeInDate, to: timeOutDate)
+
+                            let hours = dateComponents.hour ?? 0
+
+                            if hours >= 9 {
+                                self.timeOutImage.image = UIImage(named: "out-array-green")
+                            } else {
+                                self.timeOutImage.image = UIImage(named: "out-array")
+                            }
                         }
                     }
                     
@@ -381,16 +458,42 @@ extension AttendanceMarkingViewController: MTSlideToOpenDelegate {
 
 
 extension AttendanceMarkingViewController: CLLocationManagerDelegate {
-    func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
+//    func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
+//        let status = CLLocationManager.authorizationStatus()
+//        switch status {
+//        case .authorizedAlways, .authorizedWhenInUse:
+//            self.isLocationOff = true
+//            locationManager.startUpdatingLocation()
+//            break
+//        case .denied, .restricted, .notDetermined:
+//            self.isLocationOff = false
+//            self.isUserInsideFence = false
+//            DispatchQueue.main.async {
+//                self.slideView.viewWithTag(1000)?.removeFromSuperview()
+//                self.slideView.isHidden = true
+//                self.alert()
+//            }
+//            print("location access denied")
+//            break
+//        default:
+//            locationManager.requestWhenInUseAuthorization()
+//        }
+//    }
+    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
         let status = CLLocationManager.authorizationStatus()
         switch status {
         case .authorizedAlways, .authorizedWhenInUse:
             self.isLocationOff = true
             locationManager.startUpdatingLocation()
-            return
+            break
         case .denied, .restricted, .notDetermined:
             self.isLocationOff = false
             self.isUserInsideFence = false
+            DispatchQueue.main.async {
+                self.slideView.viewWithTag(1000)?.removeFromSuperview()
+                self.slideView.isHidden = true
+                self.alert()
+            }
             print("location access denied")
             break
         default:
@@ -423,12 +526,21 @@ extension AttendanceMarkingViewController: CLLocationManagerDelegate {
             self.isUserInsideFence = true
         }
         
-        
-        if self.isUserInsideFence {
-            self.slideView.isUserInteractionEnabled = true
+        if CustomReachability.isConnectedNetwork() {
+            if self.isUserInsideFence {
+                self.slideView.isHidden = false
+//                DispatchQueue.main.async {
+//                    self.slideView.viewWithTag(1000)?.removeFromSuperview()
+//                    self.slideView.addSubview(self.slideToLock())
+//                }
+            } else {
+                self.errorMessage.isHidden = false
+                self.slideView.isHidden = true
+            }
         } else {
-            self.slideView.isUserInteractionEnabled = false
+            self.slideView.isHidden = true
         }
+        
         print("UserInside Fence: \(self.isUserInsideFence)")
     }
     

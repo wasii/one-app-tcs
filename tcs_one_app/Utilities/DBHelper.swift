@@ -28,14 +28,14 @@ class DBHelper {
             let fileManager = FileManager.default
             if fileManager.fileExists(atPath: filePath) {
                 let new_db = UserDefaults.standard.bool(forKey: "NEWDB")
-                if new_db {
+                if !new_db {
                     do {
                         try fileManager.removeItem(at: pathComponent)
                         try fileManager.removeItem(at: url.appendingPathComponent("\(databaseName).db-shm")!)
                         try fileManager.removeItem(at: url.appendingPathComponent("\(databaseName).db-wal")!)
                         UserDefaults.standard.removeObject(forKey: "CurrentUser")
                         UserDefaults.standard.removeObject(forKey: USER_ACCESS_TOKEN)
-                        UserDefaults.standard.set(false, forKey: "NEWDB")
+                        UserDefaults.standard.set(true, forKey: "NEWDB")
                         return self.copy_database(databaseName: databaseName, pathComponent: pathComponent)
 
                     } catch let err {
@@ -45,7 +45,7 @@ class DBHelper {
                 print(pathComponent)
                 return pathComponent
             } else {
-                UserDefaults.standard.set(false, forKey: "NEWDB")
+                UserDefaults.standard.set(true, forKey: "NEWDB")
                 return self.copy_database(databaseName: databaseName, pathComponent: pathComponent)
             }
         } else {
@@ -910,7 +910,7 @@ class DBHelper {
         sqlite3_finalize(updateStatement)
     }
     func insert_tbl_hr_request(hrrequests: HrRequest, _ handler: @escaping(_ success: Bool) -> Void) {
-        let insertStatementString = "INSERT INTO \(db_hr_request)(SERVER_ID_PK, TICKET_DATE, LOGIN_ID, REQ_ID, REQ_MODE, MAT_ID, MQ_ID, DQ_ID, TICKET_STATUS, CREATED_DATE, CREATED_BY, REQ_REMAKS, HR_REMARKS, UPDATED_DATE, UPDATED_BY, REQ_EMAIL_LOG, REQ_EMAIL_LOG_TIME, REQ_EMAIL_STATUS, REQ_EMAIL_STATUS_TIME, TAT_DAYS, REM_TAT_STATUS, REM_TAT_STATUS_TIME, ASSIGNED_TO, REF_ID, AREA_CODE, STATION_CODE, HUB_CODE, EMP_NAME, RESPONSIBILITY, RESPONSIBLE_EMPNO, CURR_PHONE_01, PERSON_DESIG, MASTER_QUERY, DETAIL_QUERY, ESCALATE_DAYS, REQUEST_LOGS_SYNC_STATUS, REQ_MODE_DESC, REQUEST_LOGS_LATITUDE, MODULE_ID, HRBP_EXISTS, REQUEST_LOGS_LONGITUDE, CURRENT_USER, REQ_CASE_DESC, HR_CASE_DESC, INCIDENT_TYPE, CNSGNO, CLASSIFICATION, CITY, AREA, INCIDENT_DATE, DEPARTMENT, IS_FINANCIAL, AMOUNT, LOV_MASTER, LOV_DETAIL, LOV_SUBDETAIL, IS_EMP_RELATED , RECOVERY_TYPE, AREA_SEC_EMP_NO, DETAILED_INVESTIGATION, PROSECUTION_NARRATIVE, DEFENSE_NARRATIVE, CHALLENGES, FACTS, FINDINGS, OPINION, HO_SEC_SUMMARY, HO_SEC_RECOM, DIR_SEC_ENDOR, DIR_SEC_RECOM, IS_INS_CLAIMABLE, INS_CLAIM_REFNO, IS_INS_CLAIM_PROCESS, INS_CLAIMED_AMOUNT, HR_REF_NO, HR_STATUS, FINANCE_GL_NO, IS_CONTROL_DEFINED, RISK_REMARKS, RISK_TYPE, CONTROL_CATEGORY, CONTROL_TYPE, LINE_MANAGER1, LINE_MANAGER2, DIR_NOTIFY_EMAILS, SEC_AREA, IS_INVESTIGATION, CONTROLLER_RECOM, PREVIOUS_TICKET_STATUS, VIEW_COUNT, DESIG_NAME) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);"
+        let insertStatementString = "INSERT INTO \(db_hr_request)(SERVER_ID_PK, TICKET_DATE, LOGIN_ID, REQ_ID, REQ_MODE, MAT_ID, MQ_ID, DQ_ID, TICKET_STATUS, CREATED_DATE, CREATED_BY, REQ_REMAKS, HR_REMARKS, UPDATED_DATE, UPDATED_BY, REQ_EMAIL_LOG, REQ_EMAIL_LOG_TIME, REQ_EMAIL_STATUS, REQ_EMAIL_STATUS_TIME, TAT_DAYS, REM_TAT_STATUS, REM_TAT_STATUS_TIME, ASSIGNED_TO, REF_ID, AREA_CODE, STATION_CODE, HUB_CODE, EMP_NAME, RESPONSIBILITY, RESPONSIBLE_EMPNO, CURR_PHONE_01, PERSON_DESIG, MASTER_QUERY, DETAIL_QUERY, ESCALATE_DAYS, REQUEST_LOGS_SYNC_STATUS, REQ_MODE_DESC, REQUEST_LOGS_LATITUDE, MODULE_ID, HRBP_EXISTS, REQUEST_LOGS_LONGITUDE, CURRENT_USER, REQ_CASE_DESC, HR_CASE_DESC, INCIDENT_TYPE, CNSGNO, CLASSIFICATION, CITY, AREA, INCIDENT_DATE, DEPARTMENT, IS_FINANCIAL, AMOUNT, LOV_MASTER, LOV_DETAIL, LOV_SUBDETAIL, IS_EMP_RELATED , RECOVERY_TYPE, AREA_SEC_EMP_NO, DETAILED_INVESTIGATION, PROSECUTION_NARRATIVE, DEFENSE_NARRATIVE, CHALLENGES, FACTS, FINDINGS, OPINION, HO_SEC_SUMMARY, HO_SEC_RECOM, DIR_SEC_ENDOR, DIR_SEC_RECOM, IS_INS_CLAIMABLE, INS_CLAIM_REFNO, IS_INS_CLAIM_PROCESS, INS_CLAIMED_AMOUNT, HR_REF_NO, HR_STATUS, FINANCE_GL_NO, IS_CONTROL_DEFINED, RISK_REMARKS, RISK_TYPE, CONTROL_CATEGORY, CONTROL_TYPE, LINE_MANAGER1, LINE_MANAGER2, DIR_NOTIFY_EMAILS, SEC_AREA, IS_INVESTIGATION, CONTROLLER_RECOM, PREVIOUS_TICKET_STATUS, VIEW_COUNT, DESIG_NAME, AREA_REF, AREA_INVEST_TITLE, HEAD_REF, HEAD_INVEST_TITLE) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);"
         
         var insertStatement: OpaquePointer? = nil
         if sqlite3_prepare_v2(self.db, insertStatementString, -1, &insertStatement, nil) == SQLITE_OK {
@@ -980,7 +980,7 @@ class DBHelper {
             sqlite3_bind_text(insertStatement, 48, ((hrrequests.city ?? "") as NSString).utf8String, -1, nil)
             sqlite3_bind_text(insertStatement, 49, ((hrrequests.area ?? "") as NSString).utf8String, -1, nil)
             sqlite3_bind_text(insertStatement, 50, ((hrrequests.incidentDate ?? "") as NSString).utf8String, -1, nil)
-            sqlite3_bind_text(insertStatement, 51, ((hrrequests.department ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 51, (("\(hrrequests.department ?? -1)") as NSString).utf8String, -1, nil)
             sqlite3_bind_int(insertStatement, 52, Int32(hrrequests.isFinancial ?? -1))
             
             let amount = String(hrrequests.amount ?? 0.0)
@@ -1028,6 +1028,12 @@ class DBHelper {
             sqlite3_bind_text(insertStatement, 89, ("" as NSString).utf8String, -1, nil)
             sqlite3_bind_int(insertStatement, 90, Int32(hrrequests.viewCount ?? -1))
             sqlite3_bind_text(insertStatement, 91, ((hrrequests.desigName ?? "") as NSString).utf8String, -1, nil)
+            
+            //IMS
+            sqlite3_bind_text(insertStatement, 92, ((hrrequests.areaRef ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 93, ((hrrequests.areaInvestTitle ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 94, ((hrrequests.headRef ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 95, ((hrrequests.headInvestTitle ?? "") as NSString).utf8String, -1, nil)
             if sqlite3_step(insertStatement) == SQLITE_DONE {
                 handler(true)
             } else {
@@ -1166,7 +1172,12 @@ class DBHelper {
                 let view_count = Int(sqlite3_column_int(queryStatement, 90))
                 let desig_name = String(describing: String(cString: sqlite3_column_text(queryStatement, 91)))
                 
-                tbl_hr_request_logs.append(tbl_Hr_Request_Logs(ID: id, SERVER_ID_PK: server_id_pk, TICKET_DATE: ticket_date, LOGIN_ID: login_id, REQ_ID: req_id, REQ_MODE: req_mode, MAT_ID: mat_id, MQ_ID: mq_id, DQ_ID: dq_id, TICKET_STATUS: ticket_status, CREATED_DATE: created_date, CREATED_BY: created_by, REQ_REMARKS: req_remakes, HR_REMARKS: hr_remarks, UPDATED_DATE: updated_date, UPDATED_BY: String(update_by), REQ_EMAIL_LOG: req_email_log, REQ_EMAIL_LOG_TIME: req_email_log_time, REQ_EMAIL_STATUS: req_email_status, REQ_EMAIL_STATUS_TIME: req_email_status_time, TAT_DAYS: tat_day, REM_TAT_STATUS: rem_tat_status, REM_TAT_STATUS_TIME: rem_tat_status_time, ASSIGNED_TO: assigne_to, REF_ID: ref_id, AREA_CODE: area_code, STATION_CODE: station_code, HUB_CODE: hub_code, EMP_NAME: requester_name, RESPONSIBILITY: responsible_name, RESPONSIBLE_EMPNO: responsible_empno, CURR_PHONE_01: requester_phone, PERSON_DESIG: responsible_desig, MASTER_QUERY: master_query, DETAIL_QUERY: detail_query, ESCALATE_DAYS: escalate_days, REQUEST_LOGS_SYNC_STATUS: sync_date, REQ_MODE_DESC: req_mode_desc, REQUEST_LOGS_LATITUDE: latitude, MODULE_ID: module_id, HRBP_EXISTS: hrbp_exist, REQUEST_LOGS_LONGITUDE: longitude, CURRENT_USER: String(current_user), REQ_CASE_DESC: req_case_desc, HR_CASE_DESC: hr_case_desc, INCIDENT_TYPE: incident_type, CNSGNO: cnsgno, CLASSIFICATION: classification, CITY: city, AREA: area, INCIDENT_DATE: incident_date, DEPARTMENT: department, IS_FINANCIAL: is_financial, AMOUNT: Double(loss_amount), LOV_MASTER: lov_master, LOV_DETAIL: lov_detail, LOV_SUBDETAIL: lov_subdetail, IS_EMP_RELATED: is_emp_related, RECOVERY_TYPE: recovery_type, AREA_SEC_EMP_NO: area_sec_emp_no, DETAILED_INVESTIGATION: detailed_investigation, PROSECUTION_NARRATIVE: prosecution_narrative, DEFENSE_NARRATIVE: defense_narrative, CHALLENGES: challenges, FACTS: facts, FINDINGS: findings, OPINION: opinion, HO_SEC_SUMMARY: ho_sec_summary, HO_SEC_RECOM: ho_sec_recom, DIR_SEC_ENDOR: dir_sec_endor, DIR_SEC_RECOM: dir_sec_recom, IS_INS_CLAIMABLE: is_ins_claimable, INS_CLAIM_REFNO: ins_claim_refno, IS_INS_CLAIM_PROCESS: is_ins_claim_process, INS_CLAIMED_AMOUNT: Double(ins_claimed_amout), HR_REF_NO: hr_ref_no, HR_STATUS: hr_status, FINANCE_GL_NO: finance_gl_no, IS_CONTROL_DEFINED: is_control_defined, RISK_REMARKS: risk_remarks, RISK_TYPE: risk_type, CONTROL_CATEGORY: control_category, CONTROL_TYPE: control_type, LINE_MANAGER1: line_manager_1, LINE_MANAGER2: line_manager_2, DIR_NOTIFY_EMAILS: dir_notify_emails, SEC_AREA: sec_area, IS_INVESTIGATION: is_investigation, VIEW_COUNT: view_count,DESIG_NAME: desig_name))
+                let areaRef = String(describing: String(cString: sqlite3_column_text(queryStatement, 92)))
+                let areaInvestTitle = String(describing: String(cString: sqlite3_column_text(queryStatement, 93)))
+                let headRef = String(describing: String(cString: sqlite3_column_text(queryStatement, 94)))
+                let headInvestTitle = String(describing: String(cString: sqlite3_column_text(queryStatement, 95)))
+                
+                tbl_hr_request_logs.append(tbl_Hr_Request_Logs(ID: id, SERVER_ID_PK: server_id_pk, TICKET_DATE: ticket_date, LOGIN_ID: login_id, REQ_ID: req_id, REQ_MODE: req_mode, MAT_ID: mat_id, MQ_ID: mq_id, DQ_ID: dq_id, TICKET_STATUS: ticket_status, CREATED_DATE: created_date, CREATED_BY: created_by, REQ_REMARKS: req_remakes, HR_REMARKS: hr_remarks, UPDATED_DATE: updated_date, UPDATED_BY: String(update_by), REQ_EMAIL_LOG: req_email_log, REQ_EMAIL_LOG_TIME: req_email_log_time, REQ_EMAIL_STATUS: req_email_status, REQ_EMAIL_STATUS_TIME: req_email_status_time, TAT_DAYS: tat_day, REM_TAT_STATUS: rem_tat_status, REM_TAT_STATUS_TIME: rem_tat_status_time, ASSIGNED_TO: assigne_to, REF_ID: ref_id, AREA_CODE: area_code, STATION_CODE: station_code, HUB_CODE: hub_code, EMP_NAME: requester_name, RESPONSIBILITY: responsible_name, RESPONSIBLE_EMPNO: responsible_empno, CURR_PHONE_01: requester_phone, PERSON_DESIG: responsible_desig, MASTER_QUERY: master_query, DETAIL_QUERY: detail_query, ESCALATE_DAYS: escalate_days, REQUEST_LOGS_SYNC_STATUS: sync_date, REQ_MODE_DESC: req_mode_desc, REQUEST_LOGS_LATITUDE: latitude, MODULE_ID: module_id, HRBP_EXISTS: hrbp_exist, REQUEST_LOGS_LONGITUDE: longitude, CURRENT_USER: String(current_user), REQ_CASE_DESC: req_case_desc, HR_CASE_DESC: hr_case_desc, INCIDENT_TYPE: incident_type, CNSGNO: cnsgno, CLASSIFICATION: classification, CITY: city, AREA: area, INCIDENT_DATE: incident_date, DEPARTMENT: Int(department)!, IS_FINANCIAL: is_financial, AMOUNT: Double(loss_amount), LOV_MASTER: lov_master, LOV_DETAIL: lov_detail, LOV_SUBDETAIL: lov_subdetail, IS_EMP_RELATED: is_emp_related, RECOVERY_TYPE: recovery_type, AREA_SEC_EMP_NO: area_sec_emp_no, DETAILED_INVESTIGATION: detailed_investigation, PROSECUTION_NARRATIVE: prosecution_narrative, DEFENSE_NARRATIVE: defense_narrative, CHALLENGES: challenges, FACTS: facts, FINDINGS: findings, OPINION: opinion, HO_SEC_SUMMARY: ho_sec_summary, HO_SEC_RECOM: ho_sec_recom, DIR_SEC_ENDOR: dir_sec_endor, DIR_SEC_RECOM: dir_sec_recom, IS_INS_CLAIMABLE: is_ins_claimable, INS_CLAIM_REFNO: ins_claim_refno, IS_INS_CLAIM_PROCESS: is_ins_claim_process, INS_CLAIMED_AMOUNT: Double(ins_claimed_amout), HR_REF_NO: hr_ref_no, HR_STATUS: hr_status, FINANCE_GL_NO: finance_gl_no, IS_CONTROL_DEFINED: is_control_defined, RISK_REMARKS: risk_remarks, RISK_TYPE: risk_type, CONTROL_CATEGORY: control_category, CONTROL_TYPE: control_type, LINE_MANAGER1: line_manager_1, LINE_MANAGER2: line_manager_2, DIR_NOTIFY_EMAILS: dir_notify_emails, SEC_AREA: sec_area, IS_INVESTIGATION: is_investigation, VIEW_COUNT: view_count,DESIG_NAME: desig_name, AREA_REF: areaRef, AREA_INVEST_TITLE: areaInvestTitle, HEAD_REF: headRef, HEAD_INVEST_TITLE: headInvestTitle))
             }
         } else {
             print("SELECT statement \(db_hr_request) could not be prepared")
@@ -1300,7 +1311,12 @@ class DBHelper {
                 let view_count = Int(sqlite3_column_int(queryStatement, 90))
                 let desig_name = String(describing: String(cString: sqlite3_column_text(queryStatement, 91)))
                 
-                tbl_hr_request_logs.append(tbl_Hr_Request_Logs(ID: id, SERVER_ID_PK: server_id_pk, TICKET_DATE: ticket_date, LOGIN_ID: login_id, REQ_ID: req_id, REQ_MODE: req_mode, MAT_ID: mat_id, MQ_ID: mq_id, DQ_ID: dq_id, TICKET_STATUS: ticket_status, CREATED_DATE: created_date, CREATED_BY: created_by, REQ_REMARKS: req_remakes, HR_REMARKS: hr_remarks, UPDATED_DATE: updated_date, UPDATED_BY: String(update_by), REQ_EMAIL_LOG: req_email_log, REQ_EMAIL_LOG_TIME: req_email_log_time, REQ_EMAIL_STATUS: req_email_status, REQ_EMAIL_STATUS_TIME: req_email_status_time, TAT_DAYS: tat_day, REM_TAT_STATUS: rem_tat_status, REM_TAT_STATUS_TIME: rem_tat_status_time, ASSIGNED_TO: assigne_to, REF_ID: ref_id, AREA_CODE: area_code, STATION_CODE: station_code, HUB_CODE: hub_code, EMP_NAME: requester_name, RESPONSIBILITY: responsible_name, RESPONSIBLE_EMPNO: responsible_empno, CURR_PHONE_01: requester_phone, PERSON_DESIG: responsible_desig, MASTER_QUERY: master_query, DETAIL_QUERY: detail_query, ESCALATE_DAYS: escalate_days, REQUEST_LOGS_SYNC_STATUS: sync_date, REQ_MODE_DESC: req_mode_desc, REQUEST_LOGS_LATITUDE: latitude, MODULE_ID: module_id, HRBP_EXISTS: hrbp_exist, REQUEST_LOGS_LONGITUDE: longitude, CURRENT_USER: String(current_user), REQ_CASE_DESC: req_case_desc, HR_CASE_DESC: hr_case_desc, INCIDENT_TYPE: incident_type, CNSGNO: cnsgno, CLASSIFICATION: classification, CITY: city, AREA: area, INCIDENT_DATE: incident_date, DEPARTMENT: department, IS_FINANCIAL: is_financial, AMOUNT: Double(loss_amount), LOV_MASTER: lov_master, LOV_DETAIL: lov_detail, LOV_SUBDETAIL: lov_subdetail, IS_EMP_RELATED: is_emp_related, RECOVERY_TYPE: recovery_type, AREA_SEC_EMP_NO: area_sec_emp_no, DETAILED_INVESTIGATION: detailed_investigation, PROSECUTION_NARRATIVE: prosecution_narrative, DEFENSE_NARRATIVE: defense_narrative, CHALLENGES: challenges, FACTS: facts, FINDINGS: findings, OPINION: opinion, HO_SEC_SUMMARY: ho_sec_summary, HO_SEC_RECOM: ho_sec_recom, DIR_SEC_ENDOR: dir_sec_endor, DIR_SEC_RECOM: dir_sec_recom, IS_INS_CLAIMABLE: is_ins_claimable, INS_CLAIM_REFNO: ins_claim_refno, IS_INS_CLAIM_PROCESS: is_ins_claim_process, INS_CLAIMED_AMOUNT: Double(ins_claimed_amout), HR_REF_NO: hr_ref_no, HR_STATUS: hr_status, FINANCE_GL_NO: finance_gl_no, IS_CONTROL_DEFINED: is_control_defined, RISK_REMARKS: risk_remarks, RISK_TYPE: risk_type, CONTROL_CATEGORY: control_category, CONTROL_TYPE: control_type, LINE_MANAGER1: line_manager_1, LINE_MANAGER2: line_manager_2, DIR_NOTIFY_EMAILS: dir_notify_emails, SEC_AREA: sec_area, IS_INVESTIGATION: is_investigation, VIEW_COUNT: view_count,DESIG_NAME: desig_name))
+                let areaRef = String(describing: String(cString: sqlite3_column_text(queryStatement, 92)))
+                let areaInvestTitle = String(describing: String(cString: sqlite3_column_text(queryStatement, 93)))
+                let headRef = String(describing: String(cString: sqlite3_column_text(queryStatement, 94)))
+                let headInvestTitle = String(describing: String(cString: sqlite3_column_text(queryStatement, 95)))
+                
+                tbl_hr_request_logs.append(tbl_Hr_Request_Logs(ID: id, SERVER_ID_PK: server_id_pk, TICKET_DATE: ticket_date, LOGIN_ID: login_id, REQ_ID: req_id, REQ_MODE: req_mode, MAT_ID: mat_id, MQ_ID: mq_id, DQ_ID: dq_id, TICKET_STATUS: ticket_status, CREATED_DATE: created_date, CREATED_BY: created_by, REQ_REMARKS: req_remakes, HR_REMARKS: hr_remarks, UPDATED_DATE: updated_date, UPDATED_BY: String(update_by), REQ_EMAIL_LOG: req_email_log, REQ_EMAIL_LOG_TIME: req_email_log_time, REQ_EMAIL_STATUS: req_email_status, REQ_EMAIL_STATUS_TIME: req_email_status_time, TAT_DAYS: tat_day, REM_TAT_STATUS: rem_tat_status, REM_TAT_STATUS_TIME: rem_tat_status_time, ASSIGNED_TO: assigne_to, REF_ID: ref_id, AREA_CODE: area_code, STATION_CODE: station_code, HUB_CODE: hub_code, EMP_NAME: requester_name, RESPONSIBILITY: responsible_name, RESPONSIBLE_EMPNO: responsible_empno, CURR_PHONE_01: requester_phone, PERSON_DESIG: responsible_desig, MASTER_QUERY: master_query, DETAIL_QUERY: detail_query, ESCALATE_DAYS: escalate_days, REQUEST_LOGS_SYNC_STATUS: sync_date, REQ_MODE_DESC: req_mode_desc, REQUEST_LOGS_LATITUDE: latitude, MODULE_ID: module_id, HRBP_EXISTS: hrbp_exist, REQUEST_LOGS_LONGITUDE: longitude, CURRENT_USER: String(current_user), REQ_CASE_DESC: req_case_desc, HR_CASE_DESC: hr_case_desc, INCIDENT_TYPE: incident_type, CNSGNO: cnsgno, CLASSIFICATION: classification, CITY: city, AREA: area, INCIDENT_DATE: incident_date, DEPARTMENT: Int(department)!, IS_FINANCIAL: is_financial, AMOUNT: Double(loss_amount), LOV_MASTER: lov_master, LOV_DETAIL: lov_detail, LOV_SUBDETAIL: lov_subdetail, IS_EMP_RELATED: is_emp_related, RECOVERY_TYPE: recovery_type, AREA_SEC_EMP_NO: area_sec_emp_no, DETAILED_INVESTIGATION: detailed_investigation, PROSECUTION_NARRATIVE: prosecution_narrative, DEFENSE_NARRATIVE: defense_narrative, CHALLENGES: challenges, FACTS: facts, FINDINGS: findings, OPINION: opinion, HO_SEC_SUMMARY: ho_sec_summary, HO_SEC_RECOM: ho_sec_recom, DIR_SEC_ENDOR: dir_sec_endor, DIR_SEC_RECOM: dir_sec_recom, IS_INS_CLAIMABLE: is_ins_claimable, INS_CLAIM_REFNO: ins_claim_refno, IS_INS_CLAIM_PROCESS: is_ins_claim_process, INS_CLAIMED_AMOUNT: Double(ins_claimed_amout), HR_REF_NO: hr_ref_no, HR_STATUS: hr_status, FINANCE_GL_NO: finance_gl_no, IS_CONTROL_DEFINED: is_control_defined, RISK_REMARKS: risk_remarks, RISK_TYPE: risk_type, CONTROL_CATEGORY: control_category, CONTROL_TYPE: control_type, LINE_MANAGER1: line_manager_1, LINE_MANAGER2: line_manager_2, DIR_NOTIFY_EMAILS: dir_notify_emails, SEC_AREA: sec_area, IS_INVESTIGATION: is_investigation, VIEW_COUNT: view_count,DESIG_NAME: desig_name, AREA_REF: areaRef, AREA_INVEST_TITLE: areaInvestTitle, HEAD_REF: headRef, HEAD_INVEST_TITLE: headInvestTitle))
             }
         } else {
             print("SELECT statement \(db_hr_request) could not be prepared")
@@ -1386,11 +1402,12 @@ class DBHelper {
                 let ticket_id = Int(sqlite3_column_int(queryStatement, 14))
                 let sr_no = Int(sqlite3_column_int(queryStatement, 15))
                 
-//                let ticket_status = String(describing: String(cString: sqlite3_column_text(queryStatement, 28)))
-                
                 let sync_status = Int(sqlite3_column_int(queryStatement, 17))
                 let record_id = Int(sqlite3_column_int(queryStatement, 18))
-    let ticket_status = String(describing: String(cString: sqlite3_column_text(queryStatement, 19)))
+                var ticket_status = ""
+                if let _ = sqlite3_column_text(queryStatement, 19) {
+                    ticket_status = String(describing: String(cString: sqlite3_column_text(queryStatement, 19)))
+                }
                 let request_log = self.read_tbl_hr_request(query: "SELECT * FROM \(db_hr_request) WHERE CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)' AND SERVER_ID_PK = '\(server_id_pk)'")
                 
                 tbl_hrnotificationrequest.append(tbl_HR_Notification_Request(ID: id,
@@ -1567,7 +1584,7 @@ class DBHelper {
         return requestmodes
     }
     func dump_data_HRRequest(hrrequests: tbl_Hr_Request_Logs, _ handler: @escaping(_ success: Bool) -> Void) {
-        let insertStatementString = "INSERT INTO \(db_hr_request)(SERVER_ID_PK, TICKET_DATE, LOGIN_ID, REQ_ID, REQ_MODE, MAT_ID, MQ_ID, DQ_ID, TICKET_STATUS, CREATED_DATE, CREATED_BY, REQ_REMAKS, HR_REMARKS, UPDATED_DATE, UPDATED_BY, REQ_EMAIL_LOG, REQ_EMAIL_LOG_TIME, REQ_EMAIL_STATUS, REQ_EMAIL_STATUS_TIME, TAT_DAYS, REM_TAT_STATUS, REM_TAT_STATUS_TIME, ASSIGNED_TO, REF_ID, AREA_CODE, STATION_CODE, HUB_CODE, EMP_NAME, RESPONSIBILITY, RESPONSIBLE_EMPNO, CURR_PHONE_01, PERSON_DESIG, MASTER_QUERY, DETAIL_QUERY, ESCALATE_DAYS, REQUEST_LOGS_SYNC_STATUS, REQ_MODE_DESC, REQUEST_LOGS_LATITUDE, MODULE_ID, HRBP_EXISTS, REQUEST_LOGS_LONGITUDE, CURRENT_USER, REQ_CASE_DESC, HR_CASE_DESC, INCIDENT_TYPE, CNSGNO, CLASSIFICATION, CITY, AREA, INCIDENT_DATE, DEPARTMENT, IS_FINANCIAL, AMOUNT, LOV_MASTER, LOV_DETAIL, LOV_SUBDETAIL, IS_EMP_RELATED , RECOVERY_TYPE, AREA_SEC_EMP_NO, DETAILED_INVESTIGATION, PROSECUTION_NARRATIVE, DEFENSE_NARRATIVE, CHALLENGES, FACTS, FINDINGS, OPINION, HO_SEC_SUMMARY, HO_SEC_RECOM, DIR_SEC_ENDOR, DIR_SEC_RECOM, IS_INS_CLAIMABLE, INS_CLAIM_REFNO, IS_INS_CLAIM_PROCESS, INS_CLAIMED_AMOUNT, HR_REF_NO, HR_STATUS, FINANCE_GL_NO, IS_CONTROL_DEFINED, RISK_REMARKS, RISK_TYPE, CONTROL_CATEGORY, CONTROL_TYPE, LINE_MANAGER1, LINE_MANAGER2, DIR_NOTIFY_EMAILS, SEC_AREA, IS_INVESTIGATION, CONTROLLER_RECOM, PREVIOUS_TICKET_STATUS, VIEW_COUNT, DESIG_NAME) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);"
+        let insertStatementString = "INSERT INTO \(db_hr_request)(SERVER_ID_PK, TICKET_DATE, LOGIN_ID, REQ_ID, REQ_MODE, MAT_ID, MQ_ID, DQ_ID, TICKET_STATUS, CREATED_DATE, CREATED_BY, REQ_REMAKS, HR_REMARKS, UPDATED_DATE, UPDATED_BY, REQ_EMAIL_LOG, REQ_EMAIL_LOG_TIME, REQ_EMAIL_STATUS, REQ_EMAIL_STATUS_TIME, TAT_DAYS, REM_TAT_STATUS, REM_TAT_STATUS_TIME, ASSIGNED_TO, REF_ID, AREA_CODE, STATION_CODE, HUB_CODE, EMP_NAME, RESPONSIBILITY, RESPONSIBLE_EMPNO, CURR_PHONE_01, PERSON_DESIG, MASTER_QUERY, DETAIL_QUERY, ESCALATE_DAYS, REQUEST_LOGS_SYNC_STATUS, REQ_MODE_DESC, REQUEST_LOGS_LATITUDE, MODULE_ID, HRBP_EXISTS, REQUEST_LOGS_LONGITUDE, CURRENT_USER, REQ_CASE_DESC, HR_CASE_DESC, INCIDENT_TYPE, CNSGNO, CLASSIFICATION, CITY, AREA, INCIDENT_DATE, DEPARTMENT, IS_FINANCIAL, AMOUNT, LOV_MASTER, LOV_DETAIL, LOV_SUBDETAIL, IS_EMP_RELATED , RECOVERY_TYPE, AREA_SEC_EMP_NO, DETAILED_INVESTIGATION, PROSECUTION_NARRATIVE, DEFENSE_NARRATIVE, CHALLENGES, FACTS, FINDINGS, OPINION, HO_SEC_SUMMARY, HO_SEC_RECOM, DIR_SEC_ENDOR, DIR_SEC_RECOM, IS_INS_CLAIMABLE, INS_CLAIM_REFNO, IS_INS_CLAIM_PROCESS, INS_CLAIMED_AMOUNT, HR_REF_NO, HR_STATUS, FINANCE_GL_NO, IS_CONTROL_DEFINED, RISK_REMARKS, RISK_TYPE, CONTROL_CATEGORY, CONTROL_TYPE, LINE_MANAGER1, LINE_MANAGER2, DIR_NOTIFY_EMAILS, SEC_AREA, IS_INVESTIGATION, CONTROLLER_RECOM, PREVIOUS_TICKET_STATUS, VIEW_COUNT, DESIG_NAME, AREA_REF, AREA_INVEST_TITLE, HEAD_REF, HEAD_INVEST_TITLE) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);"
         
         var insertStatement: OpaquePointer? = nil
         if sqlite3_prepare_v2(self.db, insertStatementString, -1, &insertStatement, nil) == SQLITE_OK {
@@ -1636,7 +1653,7 @@ class DBHelper {
             sqlite3_bind_text(insertStatement, 48, ((hrrequests.CITY ?? "") as NSString).utf8String, -1, nil)
             sqlite3_bind_text(insertStatement, 49, ((hrrequests.AREA ?? "") as NSString).utf8String, -1, nil)
             sqlite3_bind_text(insertStatement, 50, ((hrrequests.INCIDENT_DATE ?? "") as NSString).utf8String, -1, nil)
-            sqlite3_bind_text(insertStatement, 51, ((hrrequests.DEPARTMENT ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 51, (("\(hrrequests.DEPARTMENT ?? -1)") as NSString).utf8String, -1, nil)
             sqlite3_bind_int(insertStatement, 52, Int32(hrrequests.IS_FINANCIAL ?? -1))
             
             let amount = String(hrrequests.AMOUNT ?? 0.0)
@@ -1684,6 +1701,11 @@ class DBHelper {
             sqlite3_bind_text(insertStatement, 89, ("" as NSString).utf8String, -1, nil)
             sqlite3_bind_int(insertStatement, 90, Int32(hrrequests.VIEW_COUNT ?? -1))
             sqlite3_bind_text(insertStatement, 91, ((hrrequests.EMP_NAME ?? "") as NSString).utf8String, -1, nil)
+            //IMS
+            sqlite3_bind_text(insertStatement, 92, ((hrrequests.AREA_REF ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 93, ((hrrequests.AREA_INVEST_TITLE ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 94, ((hrrequests.HEAD_REF ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 95, ((hrrequests.HEAD_INVEST_TITLE ?? "") as NSString).utf8String, -1, nil)
             if sqlite3_step(insertStatement) == SQLITE_DONE {
                 handler(true)
             } else {
@@ -2666,6 +2688,225 @@ class DBHelper {
             return nil
         }
     }
+    
+    //MARK: FULFILMENT METHODS
+    func insert_tbl_scan_prefix(scan_prefix: ScanPrefix) {
+        let insertStatementString = "INSERT INTO \(db_scan_prefix)(PREFIX_ID, PREFIX_DESC, MODULE_ID, PAGE_ID, CREATED, PREFIX_CODE, SERVICE_NO) VALUES (?,?,?,?,?,?,?);"
+        
+        var insertStatement: OpaquePointer? = nil
+        if sqlite3_prepare_v2(self.db, insertStatementString, -1, &insertStatement, nil) == SQLITE_OK {
+            sqlite3_bind_int(insertStatement, 1, Int32(scan_prefix.prefixID))
+            sqlite3_bind_text(insertStatement, 2, (scan_prefix.prefixDesc as NSString).utf8String, -1, nil)
+            sqlite3_bind_int(insertStatement, 3, Int32(scan_prefix.moduleID))
+            sqlite3_bind_int(insertStatement, 4, Int32(scan_prefix.pageID ?? 0))
+            sqlite3_bind_text(insertStatement, 5, (scan_prefix.created as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 6, (scan_prefix.prefixCode as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 7, (scan_prefix.serviceNo as NSString).utf8String, -1, nil)
+            if sqlite3_step(insertStatement) == SQLITE_DONE {
+                print("\(db_scan_prefix): Successfully inserted row.")
+            } else {
+                print("\(db_scan_prefix): Could not insert row.")
+            }
+        } else {
+            print("\(db_scan_prefix): INSERT statement could not be prepared.")
+        }
+        sqlite3_finalize(insertStatement)
+    }
+    func read_tbl_scan_prefix(query: String) -> [tbl_scan_prefix] {
+        let queryStatementString = query
+        var queryStatement: OpaquePointer? = nil
+        var scan_prefix: [tbl_scan_prefix] = []
+        
+        if sqlite3_prepare_v2(db, queryStatementString, -1, &queryStatement, nil) == SQLITE_OK {
+            while sqlite3_step(queryStatement) == SQLITE_ROW {
+                let id = Int(sqlite3_column_int(queryStatement, 0))
+                let prefixId = Int(sqlite3_column_int(queryStatement, 1))
+                let prefixDesc = String(describing: String(cString: sqlite3_column_text(queryStatement, 2)))
+                let moduleId = Int(sqlite3_column_int(queryStatement, 3))
+                let pageId = Int(sqlite3_column_int(queryStatement, 4))
+                let created = String(describing: String(cString: sqlite3_column_text(queryStatement, 5)))
+                let prefixCode = String(describing: String(cString: sqlite3_column_text(queryStatement, 6)))
+                let serviceNo = String(describing: String(cString: sqlite3_column_text(queryStatement, 7)))
+                
+                scan_prefix.append(tbl_scan_prefix(ID: id,
+                                                   PREFIX_ID: prefixId,
+                                                   PREFIX_DESC: prefixDesc,
+                                                   MODULE_ID: moduleId,
+                                                   PAGE_ID: pageId,
+                                                   CREATED: created,
+                                                   PREFIX_CODE: prefixCode,
+                                                   SERVICE_NO: serviceNo))
+            }
+        } else {
+            print("SELECT statement \(db_scan_prefix) could not be prepared")
+        }
+        return scan_prefix
+    }
+    
+    func insert_tbl_fulfilment_orders(fulfilment_orders: FulfilmentOrders, handler: @escaping(_ success: Bool) -> Void) {
+        let insertStatementString = "INSERT INTO \(db_fulfilment_orders)(POWERAPP_ORDER_ID, CNSG_NO, BASKET_BARCODE, SKU, QUNATITY, ISQC, ORDER_ID, CREATE_AT, SERVICE_NO, UPDATED_AT, UPDATE_BY, ORDER_STATUS, ITEM_STATUS, ORIGIN, DESTINATION, ORGN, DSTN, CONSIGNEE_ADDRESS, SR_NO, CURRENT_USER) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);"
+
+        var insertStatement: OpaquePointer? = nil
+        if sqlite3_prepare_v2(self.db, insertStatementString, -1, &insertStatement, nil) == SQLITE_OK {
+            sqlite3_bind_int(insertStatement, 1, Int32(fulfilment_orders.powerappOrderID))
+            sqlite3_bind_text(insertStatement, 2, (fulfilment_orders.cnsgNo as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 3, ((fulfilment_orders.basketBarcode ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 4, (fulfilment_orders.sku as NSString).utf8String, -1, nil)
+            sqlite3_bind_int(insertStatement, 5, Int32(fulfilment_orders.qunatity))
+            sqlite3_bind_text(insertStatement, 6, ((fulfilment_orders.isqc ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 7, (fulfilment_orders.orderID as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 8, (fulfilment_orders.createAt as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 9, (fulfilment_orders.serviceNo as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 10, ((fulfilment_orders.updatedAt ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 11, ((fulfilment_orders.updateBy ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 12, (fulfilment_orders.orderStatus as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 13, (fulfilment_orders.itemStatus as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 14, (fulfilment_orders.origin as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 15, (fulfilment_orders.destination as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 16, (fulfilment_orders.orgn as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 17, (fulfilment_orders.dstn as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 18, ((fulfilment_orders.consigneeAddress ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_int(insertStatement, 19, Int32(0))
+            sqlite3_bind_int(insertStatement, 20, Int32(Int(CURRENT_USER_LOGGED_IN_ID) ?? 0))
+            if sqlite3_step(insertStatement) == SQLITE_DONE {
+                handler(true)
+            } else {
+                print("\(db_fulfilment_orders): Could not insert row.")
+                handler(false)
+            }
+        } else {
+            handler(false)
+            print("\(db_fulfilment_orders): INSERT statement could not be prepared.")
+        }
+        sqlite3_finalize(insertStatement)
+    }
+    func read_tbl_fulfilment_orders(query: String) -> [tbl_fulfilments_order] {
+        let queryStatementString = query
+        var queryStatement: OpaquePointer? = nil
+        var fulfilment_orders: [tbl_fulfilments_order] = []
+
+        if sqlite3_prepare_v2(db, queryStatementString, -1, &queryStatement, nil) == SQLITE_OK {
+            while sqlite3_step(queryStatement) == SQLITE_ROW {
+                let ID = Int(sqlite3_column_int(queryStatement, 0))
+                let POWERAPP_ORDER_ID = Int(sqlite3_column_int(queryStatement, 1))
+                let CNSG_NO = String(describing: String(cString: sqlite3_column_text(queryStatement, 2)))
+                let BASKET_BARCODE = String(describing: String(cString: sqlite3_column_text(queryStatement, 3)))
+                let SKU = String(describing: String(cString: sqlite3_column_text(queryStatement, 4)))
+                let QUNATITY = Int(sqlite3_column_int(queryStatement, 5))
+                let ISQC = String(describing: String(cString: sqlite3_column_text(queryStatement, 6)))
+                let ORDER_ID = String(describing: String(cString: sqlite3_column_text(queryStatement, 7)))
+                let CREATE_AT = String(describing: String(cString: sqlite3_column_text(queryStatement, 8)))
+                let SERVICE_NO = String(describing: String(cString: sqlite3_column_text(queryStatement, 9)))
+                let UPDATED_AT = String(describing: String(cString: sqlite3_column_text(queryStatement, 10)))
+                let UPDATE_BY = String(describing: String(cString: sqlite3_column_text(queryStatement, 11)))
+                let ORDER_STATUS = String(describing: String(cString: sqlite3_column_text(queryStatement, 12)))
+                let ITEM_STATUS = String(describing: String(cString: sqlite3_column_text(queryStatement, 13)))
+                let ORIGIN = String(describing: String(cString: sqlite3_column_text(queryStatement, 14)))
+                let DESTINATION = String(describing: String(cString: sqlite3_column_text(queryStatement, 15)))
+                let ORGN = String(describing: String(cString: sqlite3_column_text(queryStatement, 16)))
+                let DSTN = String(describing: String(cString: sqlite3_column_text(queryStatement, 17)))
+                let CONSIGNEE_ADDRESS = String(describing: String(cString: sqlite3_column_text(queryStatement, 18)))
+                let SR_NO = Int(sqlite3_column_int(queryStatement, 19))
+
+                fulfilment_orders.append(tbl_fulfilments_order(ID: ID,
+                                                               POWERAPP_ORDER_ID: POWERAPP_ORDER_ID,
+                                                               CNSG_NO: CNSG_NO,
+                                                               BASKET_BARCODE: BASKET_BARCODE,
+                                                               SKU: SKU,
+                                                               QUNATITY: QUNATITY,
+                                                               ISQC: ISQC,
+                                                               ORDER_ID: ORDER_ID,
+                                                               CREATE_AT: CREATE_AT,
+                                                               SERVICE_NO: SERVICE_NO,
+                                                               UPDATED_AT: UPDATED_AT,
+                                                               UPDATE_BY: UPDATE_BY,
+                                                               ORDER_STATUS: ORDER_STATUS,
+                                                               ITEM_STATUS: ITEM_STATUS,
+                                                               ORIGIN: ORIGIN,
+                                                               DESTINATION: DESTINATION,
+                                                               ORGN: ORGN,
+                                                               DSTN: DSTN,
+                                                               CONSIGNEE_ADDRESS: CONSIGNEE_ADDRESS,
+                                                               SR_NO: SR_NO))
+            }
+        } else {
+            print("SELECT statement \(db_fulfilment_orders) could not be prepared")
+        }
+        return fulfilment_orders
+    }
+    func read_tbl_fulfilment_orderId(query: String) -> [String]? {
+        let queryStatementString = query
+        var queryStatement: OpaquePointer? = nil
+        var fulfilment_orders: [String]?
+
+        if sqlite3_prepare_v2(db, queryStatementString, -1, &queryStatement, nil) == SQLITE_OK {
+            fulfilment_orders = [String]()
+            while sqlite3_step(queryStatement) == SQLITE_ROW {
+                let orderId = String(describing: String(cString: sqlite3_column_text(queryStatement, 0)))
+                fulfilment_orders?.append(orderId)
+            }
+        } else {
+            print("SELECT statement \(db_fulfilment_orders) could not be prepared")
+        }
+        return fulfilment_orders
+    }
+    func read_tbl_fulfilment_orderId(orderId: String) -> Int {
+        let queryStatementString = "SELECT count(*) as count FROM FULFILMENT_ORDERS WHERE ORDER_ID = '\(orderId)' AND SERVICE_NO = 'OLE'"
+        var queryStatement: OpaquePointer? = nil
+        var count = 0
+
+        if sqlite3_prepare_v2(db, queryStatementString, -1, &queryStatement, nil) == SQLITE_OK {
+            while sqlite3_step(queryStatement) == SQLITE_ROW {
+                count = Int(sqlite3_column_int(queryStatement, 0))
+            }
+        } else {
+            print("SELECT statement \(db_fulfilment_orders) could not be prepared")
+        }
+        return count
+    }
+    func read_tbl_fulfilment_orders_temp(query: String) -> [tbl_fulfillment_orders_temp]? {
+        let queryStatementString = query
+        var queryStatement: OpaquePointer? = nil
+        var fulfilment_orders = [tbl_fulfillment_orders_temp]()
+
+        if sqlite3_prepare_v2(db, queryStatementString, -1, &queryStatement, nil) == SQLITE_OK {
+            while sqlite3_step(queryStatement) == SQLITE_ROW {
+                let ID = Int(sqlite3_column_int(queryStatement, 0))
+                let ORDER_ID = String(describing: String(cString: sqlite3_column_text(queryStatement, 1)))
+                let STATUS = String(describing: String(cString: sqlite3_column_text(queryStatement, 2)))
+                let CN_NUMBER = String(describing: String(cString: sqlite3_column_text(queryStatement, 3)))
+                let BASKET_NO = String(describing: String(cString: sqlite3_column_text(queryStatement, 4)))
+                let CURRENT_USER = String(describing: String(cString: sqlite3_column_text(queryStatement, 5)))
+                fulfilment_orders.append(tbl_fulfillment_orders_temp(ID: ID, ORDER_ID: ORDER_ID, STATUS: STATUS, CN_NUMBER: CN_NUMBER, BASKET_NO: BASKET_NO, CURRENT_USER: CURRENT_USER))
+            }
+        } else {
+            print("SELECT statement \(db_fulfilment_orders) could not be prepared")
+        }
+        return fulfilment_orders.count > 0 ? fulfilment_orders : nil
+    }
+    func insert_tbl_fulfilment_orders_temp(orders: SubmitOrder, handler: @escaping(_ success: Bool) -> Void) {
+        let insertStatementString = "INSERT INTO \(db_fulfilment_orders_temp)(ORDER_ID, STATUS, CN_NUMBER, BASKET_NO, CURRENT_USER) VALUES (?,?,?,?,?);"
+
+        var insertStatement: OpaquePointer? = nil
+        if sqlite3_prepare_v2(self.db, insertStatementString, -1, &insertStatement, nil) == SQLITE_OK {
+            
+            sqlite3_bind_text(insertStatement, 1, (orders.ORDER_ID as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 2, (orders.STATUS as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 3, (orders.CN_NUMBER as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 4, (orders.BASKET_NO as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 5, (CURRENT_USER_LOGGED_IN_ID as NSString).utf8String, -1, nil)
+            if sqlite3_step(insertStatement) == SQLITE_DONE {
+                handler(true)
+            } else {
+                print("\(db_fulfilment_orders): Could not insert row.")
+                handler(false)
+            }
+        } else {
+            handler(false)
+            print("\(db_fulfilment_orders): INSERT statement could not be prepared.")
+        }
+        sqlite3_finalize(insertStatement)
+    }
 }
 
 
@@ -2875,7 +3116,7 @@ struct tbl_Hr_Request_Logs: Encodable, Decodable {
     var CITY: String? // = -1
     var AREA: String? // = -1
     var INCIDENT_DATE: String? // = -1
-    var DEPARTMENT: String? // = -1
+    var DEPARTMENT: Int? // = -1
     var IS_FINANCIAL: Int? // = -1
     var AMOUNT: Double? // = -1
     var LOV_MASTER: Int? // = ""
@@ -2918,6 +3159,12 @@ struct tbl_Hr_Request_Logs: Encodable, Decodable {
     //Leadership Awaz
     var VIEW_COUNT: Int?
     var DESIG_NAME: String?
+    
+    //IMS
+    var AREA_REF: String?
+    var AREA_INVEST_TITLE: String?
+    var HEAD_REF: String?
+    var HEAD_INVEST_TITLE: String?
 }
 
 
@@ -3154,4 +3401,48 @@ struct tbl_att_user_attendance {
     var DAYS: String = ""
     var STATUS: String = ""
     var CURRENT_USER: Int = 0
+}
+
+//MARK: FULFILMENT
+struct tbl_scan_prefix {
+    var ID: Int = -1
+    var PREFIX_ID: Int = -1
+    var PREFIX_DESC: String = ""
+    var MODULE_ID: Int = -1 //105,
+    var PAGE_ID: Int = -1 //null,
+    var CREATED: String = "" //"2021-03-24T14:39:44",
+    var PREFIX_CODE: String = ""// "BSKT",
+    var SERVICE_NO: String = ""// "O"
+}
+
+struct tbl_fulfilments_order {
+    var ID: Int = -1
+    var POWERAPP_ORDER_ID: Int = -1
+    var CNSG_NO: String  = ""
+    var BASKET_BARCODE: String = ""
+    var SKU: String = ""
+    var QUNATITY: Int = -1
+    var ISQC: String = ""
+    var ORDER_ID: String = ""
+    var CREATE_AT: String = ""
+    var SERVICE_NO: String = ""
+    var UPDATED_AT: String = ""
+    var UPDATE_BY: String = ""
+    var ORDER_STATUS: String = ""
+    var ITEM_STATUS: String = ""
+    var ORIGIN: String = ""
+    var DESTINATION: String = ""
+    var ORGN: String = ""
+    var DSTN: String = ""
+    var CONSIGNEE_ADDRESS: String = ""
+    var SR_NO: Int = -1
+}
+
+struct tbl_fulfillment_orders_temp {
+    var ID: Int = -1
+    var ORDER_ID: String = ""
+    var STATUS: String = ""
+    var CN_NUMBER: String = ""
+    var BASKET_NO: String = ""
+    var CURRENT_USER: String = ""
 }

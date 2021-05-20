@@ -65,10 +65,10 @@ class EnterPinViewController: BaseViewController {
         if employeeId_textField.text == "" {
             self.view.makeToast("Please Enter Employee Id")
         } else {
-//            if !Reachability.isConnectedNetwork() {
-//                self.view.makeToast(NOINTERNETCONNECTION)
-//                return
-//            }
+            if !CustomReachability.isConnectedNetwork() {
+                self.view.makeToast(NOINTERNETCONNECTION)
+                return
+            }
             if isVerifiedId {
 //                if self.enterPIN_textField.text == "1234" {
 //                    

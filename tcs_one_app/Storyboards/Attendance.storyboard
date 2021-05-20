@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17505"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -215,7 +215,13 @@
                                             </userDefinedRuntimeAttribute>
                                         </userDefinedRuntimeAttributes>
                                     </view>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qGL-IL-RuB" userLabel="SlideView" customClass="CustomView" customModule="One_App" customModuleProvider="target">
+                                    <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="You are not in the TCS Fence" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Bw6-ag-0lU">
+                                        <rect key="frame" x="65.5" y="476" width="244" height="23"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="19"/>
+                                        <color key="textColor" red="0.87058823529999996" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qGL-IL-RuB" userLabel="SlideView" customClass="CustomView" customModule="One_App" customModuleProvider="target">
                                         <rect key="frame" x="47.5" y="461" width="280" height="60"/>
                                         <color key="backgroundColor" red="0.94901960780000005" green="0.95294117649999999" blue="0.95686274510000002" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                         <constraints>
@@ -261,6 +267,8 @@
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <constraints>
                                     <constraint firstItem="DIP-Nf-naZ" firstAttribute="leading" secondItem="Fd9-OV-39D" secondAttribute="leading" constant="15" id="35q-0F-OST"/>
+                                    <constraint firstItem="Bw6-ag-0lU" firstAttribute="top" secondItem="iYX-hY-WtM" secondAttribute="bottom" constant="25" id="3n5-E2-XSX"/>
+                                    <constraint firstItem="Bw6-ag-0lU" firstAttribute="centerX" secondItem="Fd9-OV-39D" secondAttribute="centerX" id="5Xu-wc-2dw"/>
                                     <constraint firstItem="DIP-Nf-naZ" firstAttribute="centerY" secondItem="Obv-kd-MjB" secondAttribute="centerY" id="BRA-3I-hDj"/>
                                     <constraint firstAttribute="trailing" secondItem="HKE-Jk-2db" secondAttribute="trailing" constant="35" id="Dy1-aC-wdq"/>
                                     <constraint firstAttribute="trailing" secondItem="iYX-hY-WtM" secondAttribute="trailing" constant="15" id="FHQ-Ma-FHq"/>
@@ -296,6 +304,7 @@
                     <connections>
                         <outlet property="checkInTime" destination="6iy-US-0pT" id="y5B-fR-XwS"/>
                         <outlet property="checkOutTime" destination="i77-yw-qXI" id="zjO-6c-49b"/>
+                        <outlet property="errorMessage" destination="Bw6-ag-0lU" id="Y05-BE-nIU"/>
                         <outlet property="mainView" destination="Fd9-OV-39D" id="ayg-qM-H5J"/>
                         <outlet property="mapView" destination="iYX-hY-WtM" id="l14-Xq-b5V"/>
                         <outlet property="slideView" destination="qGL-IL-RuB" id="RpS-q8-Fhl"/>

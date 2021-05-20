@@ -23,7 +23,7 @@ class IMSFilesViewController: BaseViewController {
     var fileDownloadedURL: URL?
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.title = "Downloads"
+        self.title = "IMS"
         
         self.makeTopCornersRounded(roundView: self.mainView)
         self.tableView.register(UINib(nibName: "GrievacneDownloadsTableCell", bundle: nil), forCellReuseIdentifier: "GrievacneDownloadsCell")
@@ -104,6 +104,12 @@ class IMSFilesViewController: BaseViewController {
         
         var temp_files = [AttachmentsList]()
         let temp = fileAttachments
+        var isInitiator = false
+        if let ticket = AppDelegate.sharedInstance.db?.read_tbl_hr_request(query: "SELECT * FROM \(db_hr_request) WHERE SERVER_ID_PK = '\(self.ticket_id!)' AND CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)'").first {
+            if "\(ticket.LOGIN_ID ?? 0)" == CURRENT_USER_LOGGED_IN_ID {
+                isInitiator = true
+            }
+        }
         if AppDelegate.sharedInstance.db!.read_tbl_UserPermission(permission: IMS_Files_Initiator).count > 0 {
             fileAttachments = temp?.filter({ (AttachmentsList) -> Bool in
                 AttachmentsList.fileUploadedBy == IMS_InputBy_Initiator
@@ -111,6 +117,11 @@ class IMSFilesViewController: BaseViewController {
             for file in fileAttachments! {
                 temp_files.append(file)
             }
+        }
+        if isInitiator {
+            fileAttachments = temp_files
+            handler(true, fileAttachments!.count)
+            return
         }
         if AppDelegate.sharedInstance.db!.read_tbl_UserPermission(permission: IMS_Files_Line_Manager).count > 0 {
             fileAttachments = temp?.filter({ (AttachmentsList) -> Bool in
@@ -220,7 +231,7 @@ extension IMSFilesViewController: UITableViewDelegate, UITableViewDataSource {
         
         let fileSize = Double(data.fileSize)
         
-        cell.fileSize.text = String(format: "(%.4f MB)", (fileSize! / 1024) / 1024)
+        cell.fileSize.text = String(format: "(%.4f MB)", (fileSize! / 1000))
         
         cell.downloadBtn.tag = indexPath.row
         cell.downloadBtn.addTarget(self, action: #selector(downloadFile(sender:)), for: .touchUpInside)
@@ -237,7 +248,7 @@ extension IMSFilesViewController: UITableViewDelegate, UITableViewDataSource {
         let fileUrl = self.fileAttachments![sender.tag].fileUrl
         let fileName = String(fileUrl.split(separator: "/").last!)
         
-        let url = URL(string: fileUrl)
+        let url = URL(string: fileUrl.replacingOccurrences(of: " ", with: "%20"))
 
         let fileManager = FileManager.default
         let documentsURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first!

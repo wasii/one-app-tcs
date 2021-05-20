@@ -52,7 +52,12 @@ class IMSHistoryViewController: BaseViewController {
     func setupGrievanceRemarks(_ handler: @escaping(_ count: Int) -> Void) {
         let query = "SELECT * FROM \(db_grievance_remarks) WHERE TICKET_ID = '\(self.ticket_id!)';"
         self.grievance_remarks = AppDelegate.sharedInstance.db?.read_tbl_hr_grievance(query: query)
-        
+        var isInitiator = false
+        if let ticket = AppDelegate.sharedInstance.db?.read_tbl_hr_request(query: "SELECT * FROM \(db_hr_request) WHERE SERVER_ID_PK = '\(self.ticket_id!)' AND CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)'").first {
+            if "\(ticket.LOGIN_ID ?? 0)" == CURRENT_USER_LOGGED_IN_ID {
+                isInitiator = true
+            }
+        }
         var temp_remarks = [tbl_Grievance_Remarks]()
         let temp = self.grievance_remarks
         if let _ = grievance_remarks?.count {
@@ -63,6 +68,11 @@ class IMSHistoryViewController: BaseViewController {
                 for r in self.grievance_remarks! {
                     temp_remarks.append(r)
                 }
+            }
+            if isInitiator {
+                self.grievance_remarks = temp_remarks
+                handler(self.grievance_remarks!.count)
+                return
             }
             if AppDelegate.sharedInstance.db!.read_tbl_UserPermission(permission: IMS_Remarks_Line_Manager).count > 0 {
                 self.grievance_remarks = temp?.filter({ (r1) -> Bool in
@@ -144,26 +154,9 @@ class IMSHistoryViewController: BaseViewController {
                     temp_remarks.append(r)
                 }
             }
-            temp_remarks = temp_remarks.filter({ (remarks) -> Bool in
-                remarks.REF_ID != ""
-            }).sorted(by: { (remarks1, remarks2) -> Bool in
+            temp_remarks = temp_remarks.sorted(by: { (remarks1, remarks2) -> Bool in
                 remarks1.CREATED < remarks2.CREATED
             })
-            if closure_remarks != "" {
-                if AppDelegate.sharedInstance.db!.read_tbl_UserPermission(permission: IMS_View_Closure_Remarks).count > 0 {
-                    let temp = self.grievance_remarks!.last!
-                    temp_remarks.append(tbl_Grievance_Remarks(ID: temp.ID,
-                                                              SERVER_ID_PK: temp.SERVER_ID_PK,
-                                                              EMPL_NO: temp.EMPL_NO,
-                                                              TICKET_ID: temp.TICKET_ID,
-                                                              REMARKS: self.closure_remarks,
-                                                              REF_ID: temp.REF_ID,
-                                                              CREATED: temp.CREATED,
-                                                              REMARKS_INPUT: "Closure Remarks",
-                                                              REMARKS_SYNC: temp.REMARKS_SYNC))
-                }
-                
-            }
             self.grievance_remarks = temp_remarks
             handler(self.grievance_remarks!.count)
             

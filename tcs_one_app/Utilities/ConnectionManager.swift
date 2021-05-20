@@ -29,13 +29,12 @@ func observeReachability(){
         print("Network available.")
         NotificationCenter.default.post(Notification.init(name: .networkRefreshed))
         break
-//    case .wifi:
-//        print("Network available via WiFi.")
-//        break
     case .none:
+        NotificationCenter.default.post(Notification.init(name: .networkOff))
         print("Network is not available.")
         break
     case .unavailable:
+        NotificationCenter.default.post(Notification.init(name: .networkOff))
         print("Network is  unavailable.")
         break
     }

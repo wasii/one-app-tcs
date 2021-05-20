@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="17506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
-    <device id="retina5_5" orientation="portrait" appearance="light"/>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_0" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17505"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -21,13 +21,22 @@
                         <rect key="frame" x="5" y="5" width="310" height="70"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Attendance &amp; Leaves" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="o9I-KM-lOp">
+<<<<<<< HEAD
                                 <rect key="frame" x="15" y="6" width="143" height="18"/>
+=======
+                                <rect key="frame" x="15" y="26.5" width="145" height="18"/>
+>>>>>>> fulfilment+ims
                                 <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                 <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
+<<<<<<< HEAD
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Pending" textAlignment="right" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QGf-la-yTE">
                                 <rect key="frame" x="239" y="42" width="56" height="18"/>
+=======
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Pending" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QGf-la-yTE">
+                                <rect key="frame" x="239" y="62" width="56" height="18"/>
+>>>>>>> fulfilment+ims
                                 <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                 <color key="textColor" red="0.86666666670000003" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
@@ -39,19 +48,27 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Attendance" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7bo-Ww-lG1">
+<<<<<<< HEAD
                                 <rect key="frame" x="15" y="29" width="200" height="12"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="200" id="mKq-tR-3eK"/>
                                 </constraints>
+=======
+                                <rect key="frame" x="15" y="49.5" width="56" height="12"/>
+>>>>>>> fulfilment+ims
                                 <fontDescription key="fontDescription" type="system" pointSize="10"/>
                                 <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="2020-10-06 11:53:00 AM" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Lg5-Os-b6G">
+<<<<<<< HEAD
                                 <rect key="frame" x="173" y="10" width="122" height="12"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="122" id="QDT-7K-6WL"/>
                                 </constraints>
+=======
+                                <rect key="frame" x="173" y="8.5" width="122" height="12"/>
+>>>>>>> fulfilment+ims
                                 <fontDescription key="fontDescription" type="system" pointSize="10"/>
                                 <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
@@ -67,8 +84,11 @@
                             <constraint firstItem="Lrd-aA-COp" firstAttribute="leading" secondItem="VaK-nR-Hef" secondAttribute="leading" constant="15" id="evo-3I-GXx"/>
                             <constraint firstItem="Lrd-aA-COp" firstAttribute="top" secondItem="7bo-Ww-lG1" secondAttribute="bottom" constant="5" id="gkk-IK-KnI"/>
                             <constraint firstAttribute="bottom" secondItem="QGf-la-yTE" secondAttribute="bottom" constant="10" id="oP7-Vc-H46"/>
+<<<<<<< HEAD
                             <constraint firstItem="Lg5-Os-b6G" firstAttribute="top" secondItem="VaK-nR-Hef" secondAttribute="top" constant="10" id="qTP-nl-4ju"/>
                             <constraint firstItem="Lg5-Os-b6G" firstAttribute="leading" secondItem="o9I-KM-lOp" secondAttribute="trailing" constant="15" id="quS-9i-LiC"/>
+=======
+>>>>>>> fulfilment+ims
                             <constraint firstItem="o9I-KM-lOp" firstAttribute="leading" secondItem="VaK-nR-Hef" secondAttribute="leading" constant="15" id="v5p-Fn-2Y5"/>
                         </constraints>
                         <userDefinedRuntimeAttributes>
