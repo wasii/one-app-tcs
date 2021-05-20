@@ -13,8 +13,8 @@ let INACTIVE                = "INACTIVE"
 let API_KEY                 = "5E4D0F6D8E12D8EC5EA3BBB11B63B2F88E39A7561F25EC67CCB440F782FD0360"
 
 //let BROADCAST_KEY           = "broadcastiosdev"
-let BROADCAST_KEY           = "broadcastiosqa"
-//let BROADCAST_KEY           = "broadcastios"
+//let BROADCAST_KEY           = "broadcastiosqa"
+let BROADCAST_KEY           = "broadcastios"
 
 let IS_NEW_DATABASE: Bool   = true
 var NOTIFICATION_COUNT      = 0
@@ -23,12 +23,12 @@ var RECORD_ID               = 0
 //API ENDPOINTS
 
 //PRODUCTION
-//let ENDPOINT                = "https://prodapi.tcscourier.com/core/api/main/"
-//let UPLOADFILESURL          = "https://oneappapi.tcscourier.com/api/file-upload"
+let ENDPOINT                = "https://prodapi.tcscourier.com/core/api/main/"
+let UPLOADFILESURL          = "https://oneappapi.tcscourier.com/api/file-upload"
 
 //DEV
-let ENDPOINT                = "https://devapi.tcscourier.com/qacore/api/main"
-let UPLOADFILESURL          = "https://pwaqaapi.tcscourier.com/api/file-upload"
+//let ENDPOINT                = "https://devapi.tcscourier.com/qacore/api/main"
+//let UPLOADFILESURL          = "https://pwaqaapi.tcscourier.com/api/file-upload"
 
 let LOGIN                   = "oneapp.login"
 let PIN_VALIDATE            = "oneapp.pinvalidate"
