@@ -823,24 +823,24 @@ class FetchUserDataViewController: BaseViewController {
                             do {
                                 let dictionary = try locations.rawData()
                                 let att_location = try JSONDecoder().decode(AttLocations.self, from: dictionary)
-                                
-                                if twentyCounter == 8 {
-                                    if att_location.locCode == "HOF" {
-                                        AppDelegate.sharedInstance.db?.insert_tbl_att_locations(att_location: att_location)
-                                        twentyCounter = twentyCounter + 1
-                                    }
-                                } else if twentyCounter == 9 {
-                                    if att_location.locCode == "X01103" {
-                                        AppDelegate.sharedInstance.db?.insert_tbl_att_locations(att_location: att_location)
-                                        twentyCounter = twentyCounter + 1
-                                    }
-                                } else if twentyCounter == 10 {
-                                    handler()
-                                    return
-                                } else {
-                                    AppDelegate.sharedInstance.db?.insert_tbl_att_locations(att_location: att_location)
-                                    twentyCounter = twentyCounter + 1
-                                }
+                                AppDelegate.sharedInstance.db?.insert_tbl_att_locations(att_location: att_location)
+//                                if twentyCounter == 8 {
+//                                    if att_location.locCode == "HOF" {
+//                                        AppDelegate.sharedInstance.db?.insert_tbl_att_locations(att_location: att_location)
+//                                        twentyCounter = twentyCounter + 1
+//                                    }
+//                                } else if twentyCounter == 9 {
+//                                    if att_location.locCode == "X01103" {
+//                                        AppDelegate.sharedInstance.db?.insert_tbl_att_locations(att_location: att_location)
+//                                        twentyCounter = twentyCounter + 1
+//                                    }
+//                                } else if twentyCounter == 10 {
+//                                    handler()
+//                                    return
+//                                } else {
+//                                    AppDelegate.sharedInstance.db?.insert_tbl_att_locations(att_location: att_location)
+//                                    twentyCounter = twentyCounter + 1
+//                                }
                             } catch let DecodingError.dataCorrupted(context) {
                                 print(context)
                             } catch let DecodingError.keyNotFound(key, context) {
