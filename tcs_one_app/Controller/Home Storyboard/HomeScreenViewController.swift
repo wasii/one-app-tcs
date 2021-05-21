@@ -91,26 +91,46 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
         locationManager.pausesLocationUpdatesAutomatically = false
         locationManager.allowsBackgroundLocationUpdates = true
         
-        loadAllGeotifications()
-        if UserDefaults.standard.data(forKey: PreferencesKeys.savedItems.rawValue) == nil {
-            let query = "select * from \(db_att_locations)"
-            if let locations = AppDelegate.sharedInstance.db?.read_tbl_att_locations(query: query) {
-                for location in locations {
-                    let lat = (location.LATITUDE as NSString).doubleValue
-                    let lon = (location.LONGITUDE as NSString).doubleValue
-                    let crd = CLLocationCoordinate2D(latitude: lat, longitude: lon)
-                    
-                    let radius : CLLocationDistance = 75
-                    let entry = Geotification(coordinate: crd, radius: radius, identifier: NSUUID().uuidString, note: "Welcome to TCS", eventType: .onEntry)
-                    let exit  = Geotification(coordinate: crd, radius: radius, identifier: NSUUID().uuidString, note: "You are not in TCS premises", eventType: .onExit)
-                    
-                    add(entry)
-                    add(exit)
-                    
-                }
-                UserDefaults.standard.set(true, forKey: "GeofenceAdd")
+//        loadAllGeotifications()
+        Geotification.allGeotifications().forEach { (geotification) in
+            stopMonitoring(geotification: geotification)
+        }
+        UserDefaults.standard.removeObject(forKey: PreferencesKeys.savedItems.rawValue)
+        let query = "select * from \(db_att_locations)"
+        if let locations = AppDelegate.sharedInstance.db?.read_tbl_att_locations(query: query) {
+            for location in locations {
+                let lat = (location.LATITUDE as NSString).doubleValue
+                let lon = (location.LONGITUDE as NSString).doubleValue
+                let crd = CLLocationCoordinate2D(latitude: lat, longitude: lon)
+                
+                let radius : CLLocationDistance = 75
+                let entry = Geotification(coordinate: crd, radius: radius, identifier: NSUUID().uuidString, note: "Welcome to TCS", eventType: .onEntry)
+                let exit  = Geotification(coordinate: crd, radius: radius, identifier: NSUUID().uuidString, note: "See you tomorrow", eventType: .onExit)
+                
+                add(entry)
+                add(exit)
+                
             }
         }
+//        if UserDefaults.standard.data(forKey: PreferencesKeys.savedItems.rawValue) == nil {
+//            let query = "select * from \(db_att_locations)"
+//            if let locations = AppDelegate.sharedInstance.db?.read_tbl_att_locations(query: query) {
+//                for location in locations {
+//                    let lat = (location.LATITUDE as NSString).doubleValue
+//                    let lon = (location.LONGITUDE as NSString).doubleValue
+//                    let crd = CLLocationCoordinate2D(latitude: lat, longitude: lon)
+//
+//                    let radius : CLLocationDistance = 75
+//                    let entry = Geotification(coordinate: crd, radius: radius, identifier: NSUUID().uuidString, note: "Welcome to TCS", eventType: .onEntry)
+//                    let exit  = Geotification(coordinate: crd, radius: radius, identifier: NSUUID().uuidString, note: "You are not in TCS premises", eventType: .onExit)
+//
+//                    add(entry)
+//                    add(exit)
+//
+//                }
+//                UserDefaults.standard.set(true, forKey: "GeofenceAdd")
+//            }
+//        }
     }
     
     func loadAllGeotifications() {
@@ -129,11 +149,8 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
     }
     func add(_ geotification: Geotification) {
         geotifications.append(geotification)
-        
-        if !UserDefaults.standard.bool(forKey: "GeofenceAdd") {
-            startMonitoring(geotification: geotification)
-            saveAllGeotifications()
-        }
+        startMonitoring(geotification: geotification)
+        saveAllGeotifications()
     }
     func remove(_ geotification: Geotification) {
         guard let index = geotifications.firstIndex(of: geotification) else { return }

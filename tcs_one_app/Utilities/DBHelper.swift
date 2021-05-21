@@ -42,9 +42,17 @@ class DBHelper {
                         print(err.localizedDescription)
                     }
                 }
+                //ONLY FOR IMS
+                if !UserDefaults.standard.bool(forKey: "IMS") {
+                    UserDefaults.standard.removeObject(forKey: "CurrentUser")
+                    UserDefaults.standard.removeObject(forKey: USER_ACCESS_TOKEN)
+                    UserDefaults.standard.set(true, forKey: "IMS")
+                }
+                
                 print(pathComponent)
                 return pathComponent
             } else {
+                UserDefaults.standard.set(true, forKey: "IMS")
                 UserDefaults.standard.set(true, forKey: "NEWDB")
                 return self.copy_database(databaseName: databaseName, pathComponent: pathComponent)
             }

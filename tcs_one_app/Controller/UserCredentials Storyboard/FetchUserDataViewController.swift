@@ -242,8 +242,19 @@ class FetchUserDataViewController: BaseViewController {
                         }
                     }
                 }
-            } catch let err {
-                print(err.localizedDescription)
+            } catch let DecodingError.dataCorrupted(context) {
+                print(context)
+            } catch let DecodingError.keyNotFound(key, context) {
+                print("Key '\(key)' not found:", context.debugDescription)
+                print("codingPath:", context.codingPath)
+            } catch let DecodingError.valueNotFound(value, context) {
+                print("Value '\(value)' not found:", context.debugDescription)
+                print("codingPath:", context.codingPath)
+            } catch let DecodingError.typeMismatch(type, context)  {
+                print("Type '\(type)' mismatch:", context.debugDescription)
+                print("codingPath:", context.codingPath)
+            } catch {
+                print("error: ", error)
             }
         }
 
@@ -261,8 +272,19 @@ class FetchUserDataViewController: BaseViewController {
                         }
                     }
                 }
-            } catch let err {
-                print(err.localizedDescription)
+            } catch let DecodingError.dataCorrupted(context) {
+                print(context)
+            } catch let DecodingError.keyNotFound(key, context) {
+                print("Key '\(key)' not found:", context.debugDescription)
+                print("codingPath:", context.codingPath)
+            } catch let DecodingError.valueNotFound(value, context) {
+                print("Value '\(value)' not found:", context.debugDescription)
+                print("codingPath:", context.codingPath)
+            } catch let DecodingError.typeMismatch(type, context)  {
+                print("Type '\(type)' mismatch:", context.debugDescription)
+                print("codingPath:", context.codingPath)
+            } catch {
+                print("error: ", error)
             }
         }
         var masterquery = [MasterQuery]()
@@ -279,8 +301,19 @@ class FetchUserDataViewController: BaseViewController {
                         }
                     }
                 }
-            } catch let err {
-                print(err.localizedDescription)
+            } catch let DecodingError.dataCorrupted(context) {
+                print(context)
+            } catch let DecodingError.keyNotFound(key, context) {
+                print("Key '\(key)' not found:", context.debugDescription)
+                print("codingPath:", context.codingPath)
+            } catch let DecodingError.valueNotFound(value, context) {
+                print("Value '\(value)' not found:", context.debugDescription)
+                print("codingPath:", context.codingPath)
+            } catch let DecodingError.typeMismatch(type, context)  {
+                print("Type '\(type)' mismatch:", context.debugDescription)
+                print("codingPath:", context.codingPath)
+            } catch {
+                print("error: ", error)
             }
         }
         var detailquery = [DetailQuery]()
@@ -297,8 +330,19 @@ class FetchUserDataViewController: BaseViewController {
                         }
                     }
                 }
-            } catch let err {
-                print(err.localizedDescription)
+            } catch let DecodingError.dataCorrupted(context) {
+                print(context)
+            } catch let DecodingError.keyNotFound(key, context) {
+                print("Key '\(key)' not found:", context.debugDescription)
+                print("codingPath:", context.codingPath)
+            } catch let DecodingError.valueNotFound(value, context) {
+                print("Value '\(value)' not found:", context.debugDescription)
+                print("codingPath:", context.codingPath)
+            } catch let DecodingError.typeMismatch(type, context)  {
+                print("Type '\(type)' mismatch:", context.debugDescription)
+                print("codingPath:", context.codingPath)
+            } catch {
+                print("error: ", error)
             }
         }
         var searchkeywords = [SearchKeyword]()
@@ -315,8 +359,19 @@ class FetchUserDataViewController: BaseViewController {
                         }
                     }
                 }
-            } catch let err {
-                print(err.localizedDescription)
+            } catch let DecodingError.dataCorrupted(context) {
+                print(context)
+            } catch let DecodingError.keyNotFound(key, context) {
+                print("Key '\(key)' not found:", context.debugDescription)
+                print("codingPath:", context.codingPath)
+            } catch let DecodingError.valueNotFound(value, context) {
+                print("Value '\(value)' not found:", context.debugDescription)
+                print("codingPath:", context.codingPath)
+            } catch let DecodingError.typeMismatch(type, context)  {
+                print("Type '\(type)' mismatch:", context.debugDescription)
+                print("codingPath:", context.codingPath)
+            } catch {
+                print("error: ", error)
             }
         }
         var apprequestmode = [AppRequestMode]()
@@ -333,8 +388,19 @@ class FetchUserDataViewController: BaseViewController {
                         }
                     }
                 }
-            } catch let err {
-                print(err.localizedDescription)
+            } catch let DecodingError.dataCorrupted(context) {
+                print(context)
+            } catch let DecodingError.keyNotFound(key, context) {
+                print("Key '\(key)' not found:", context.debugDescription)
+                print("codingPath:", context.codingPath)
+            } catch let DecodingError.valueNotFound(value, context) {
+                print("Value '\(value)' not found:", context.debugDescription)
+                print("codingPath:", context.codingPath)
+            } catch let DecodingError.typeMismatch(type, context)  {
+                print("Type '\(type)' mismatch:", context.debugDescription)
+                print("codingPath:", context.codingPath)
+            } catch {
+                print("error: ", error)
             }
         }
         handler(true)
@@ -366,8 +432,19 @@ class FetchUserDataViewController: BaseViewController {
                 do {
                 let dictionary = try master.rawData()
                 Lov_Master.append(try JSONDecoder().decode(LovMaster.self, from: dictionary))
-                } catch let err {
-                    print(err.localizedDescription)
+                } catch let DecodingError.dataCorrupted(context) {
+                    print(context)
+                } catch let DecodingError.keyNotFound(key, context) {
+                    print("Key '\(key)' not found:", context.debugDescription)
+                    print("codingPath:", context.codingPath)
+                } catch let DecodingError.valueNotFound(value, context) {
+                    print("Value '\(value)' not found:", context.debugDescription)
+                    print("codingPath:", context.codingPath)
+                } catch let DecodingError.typeMismatch(type, context)  {
+                    print("Type '\(type)' mismatch:", context.debugDescription)
+                    print("codingPath:", context.codingPath)
+                } catch {
+                    print("error: ", error)
                 }
             }
             AppDelegate.sharedInstance.db?.deleteAll(tableName: db_lov_master, handler: { _ in
@@ -382,8 +459,19 @@ class FetchUserDataViewController: BaseViewController {
                 do {
                 let dictionary = try detail.rawData()
                     Lov_Detail.append(try JSONDecoder().decode(LovDetail.self, from: dictionary))
-                } catch let err {
-                    print(err.localizedDescription)
+                } catch let DecodingError.dataCorrupted(context) {
+                    print(context)
+                } catch let DecodingError.keyNotFound(key, context) {
+                    print("Key '\(key)' not found:", context.debugDescription)
+                    print("codingPath:", context.codingPath)
+                } catch let DecodingError.valueNotFound(value, context) {
+                    print("Value '\(value)' not found:", context.debugDescription)
+                    print("codingPath:", context.codingPath)
+                } catch let DecodingError.typeMismatch(type, context)  {
+                    print("Type '\(type)' mismatch:", context.debugDescription)
+                    print("codingPath:", context.codingPath)
+                } catch {
+                    print("error: ", error)
                 }
             }
             AppDelegate.sharedInstance.db?.deleteAll(tableName: db_lov_detail, handler: { _ in
@@ -398,8 +486,19 @@ class FetchUserDataViewController: BaseViewController {
                 do {
                 let dictionary = try subdetail.rawData()
                     Lov_Subdetail.append(try JSONDecoder().decode(LovSubdetail.self, from: dictionary))
-                } catch let err {
-                    print(err.localizedDescription)
+                } catch let DecodingError.dataCorrupted(context) {
+                    print(context)
+                } catch let DecodingError.keyNotFound(key, context) {
+                    print("Key '\(key)' not found:", context.debugDescription)
+                    print("codingPath:", context.codingPath)
+                } catch let DecodingError.valueNotFound(value, context) {
+                    print("Value '\(value)' not found:", context.debugDescription)
+                    print("codingPath:", context.codingPath)
+                } catch let DecodingError.typeMismatch(type, context)  {
+                    print("Type '\(type)' mismatch:", context.debugDescription)
+                    print("codingPath:", context.codingPath)
+                } catch {
+                    print("error: ", error)
                 }
             }
             AppDelegate.sharedInstance.db?.deleteAll(tableName: db_lov_sub_detail, handler: { _ in
@@ -414,8 +513,19 @@ class FetchUserDataViewController: BaseViewController {
                 do {
                 let dictionary = try subdetail.rawData()
                     Lov_Area.append(try JSONDecoder().decode(Area.self, from: dictionary))
-                } catch let err {
-                    print(err.localizedDescription)
+                } catch let DecodingError.dataCorrupted(context) {
+                    print(context)
+                } catch let DecodingError.keyNotFound(key, context) {
+                    print("Key '\(key)' not found:", context.debugDescription)
+                    print("codingPath:", context.codingPath)
+                } catch let DecodingError.valueNotFound(value, context) {
+                    print("Value '\(value)' not found:", context.debugDescription)
+                    print("codingPath:", context.codingPath)
+                } catch let DecodingError.typeMismatch(type, context)  {
+                    print("Type '\(type)' mismatch:", context.debugDescription)
+                    print("codingPath:", context.codingPath)
+                } catch {
+                    print("error: ", error)
                 }
             }
             AppDelegate.sharedInstance.db?.deleteAll(tableName: db_lov_area, handler: { _ in
@@ -430,8 +540,19 @@ class FetchUserDataViewController: BaseViewController {
                 do {
                 let dictionary = try city.rawData()
                     Lov_City.append(try JSONDecoder().decode(City.self, from: dictionary))
-                } catch let err {
-                    print(err.localizedDescription)
+                } catch let DecodingError.dataCorrupted(context) {
+                    print(context)
+                } catch let DecodingError.keyNotFound(key, context) {
+                    print("Key '\(key)' not found:", context.debugDescription)
+                    print("codingPath:", context.codingPath)
+                } catch let DecodingError.valueNotFound(value, context) {
+                    print("Value '\(value)' not found:", context.debugDescription)
+                    print("codingPath:", context.codingPath)
+                } catch let DecodingError.typeMismatch(type, context)  {
+                    print("Type '\(type)' mismatch:", context.debugDescription)
+                    print("codingPath:", context.codingPath)
+                } catch {
+                    print("error: ", error)
                 }
             }
             AppDelegate.sharedInstance.db?.deleteAll(tableName: db_lov_city, handler: { _ in
@@ -446,8 +567,19 @@ class FetchUserDataViewController: BaseViewController {
                 do {
                 let dictionary = try areaSecurity.rawData()
                     Lov_AreaSecurity.append(try JSONDecoder().decode(AreaSecurity.self, from: dictionary))
-                } catch let err {
-                    print(err.localizedDescription)
+                } catch let DecodingError.dataCorrupted(context) {
+                    print(context)
+                } catch let DecodingError.keyNotFound(key, context) {
+                    print("Key '\(key)' not found:", context.debugDescription)
+                    print("codingPath:", context.codingPath)
+                } catch let DecodingError.valueNotFound(value, context) {
+                    print("Value '\(value)' not found:", context.debugDescription)
+                    print("codingPath:", context.codingPath)
+                } catch let DecodingError.typeMismatch(type, context)  {
+                    print("Type '\(type)' mismatch:", context.debugDescription)
+                    print("codingPath:", context.codingPath)
+                } catch {
+                    print("error: ", error)
                 }
             }
             AppDelegate.sharedInstance.db?.deleteAll(tableName: db_lov_area_security, handler: { _ in
@@ -462,8 +594,19 @@ class FetchUserDataViewController: BaseViewController {
                 do {
                 let dictionary = try lov_department.rawData()
                     Lov_Department.append(try JSONDecoder().decode(Department.self, from: dictionary))
-                } catch let err {
-                    print(err.localizedDescription)
+                } catch let DecodingError.dataCorrupted(context) {
+                    print(context)
+                } catch let DecodingError.keyNotFound(key, context) {
+                    print("Key '\(key)' not found:", context.debugDescription)
+                    print("codingPath:", context.codingPath)
+                } catch let DecodingError.valueNotFound(value, context) {
+                    print("Value '\(value)' not found:", context.debugDescription)
+                    print("codingPath:", context.codingPath)
+                } catch let DecodingError.typeMismatch(type, context)  {
+                    print("Type '\(type)' mismatch:", context.debugDescription)
+                    print("codingPath:", context.codingPath)
+                } catch {
+                    print("error: ", error)
                 }
             }
             AppDelegate.sharedInstance.db?.deleteAll(tableName: db_lov_department, handler: { _ in
@@ -478,8 +621,19 @@ class FetchUserDataViewController: BaseViewController {
                 do {
                 let dictionary = try lov_incidenttype.rawData()
                     Lov_IncidentType.append(try JSONDecoder().decode(IncidentType.self, from: dictionary))
-                } catch let err {
-                    print(err.localizedDescription)
+                } catch let DecodingError.dataCorrupted(context) {
+                    print(context)
+                } catch let DecodingError.keyNotFound(key, context) {
+                    print("Key '\(key)' not found:", context.debugDescription)
+                    print("codingPath:", context.codingPath)
+                } catch let DecodingError.valueNotFound(value, context) {
+                    print("Value '\(value)' not found:", context.debugDescription)
+                    print("codingPath:", context.codingPath)
+                } catch let DecodingError.typeMismatch(type, context)  {
+                    print("Type '\(type)' mismatch:", context.debugDescription)
+                    print("codingPath:", context.codingPath)
+                } catch {
+                    print("error: ", error)
                 }
             }
             AppDelegate.sharedInstance.db?.deleteAll(tableName: db_lov_incident_type, handler: { _ in
@@ -494,8 +648,19 @@ class FetchUserDataViewController: BaseViewController {
                 do {
                 let dictionary = try lov_incidenttype.rawData()
                     Lov_Classification.append(try JSONDecoder().decode(Classification.self, from: dictionary))
-                } catch let err {
-                    print(err.localizedDescription)
+                } catch let DecodingError.dataCorrupted(context) {
+                    print(context)
+                } catch let DecodingError.keyNotFound(key, context) {
+                    print("Key '\(key)' not found:", context.debugDescription)
+                    print("codingPath:", context.codingPath)
+                } catch let DecodingError.valueNotFound(value, context) {
+                    print("Value '\(value)' not found:", context.debugDescription)
+                    print("codingPath:", context.codingPath)
+                } catch let DecodingError.typeMismatch(type, context)  {
+                    print("Type '\(type)' mismatch:", context.debugDescription)
+                    print("codingPath:", context.codingPath)
+                } catch {
+                    print("error: ", error)
                 }
             }
             AppDelegate.sharedInstance.db?.deleteAll(tableName: db_lov_classification, handler: { _ in
@@ -510,8 +675,19 @@ class FetchUserDataViewController: BaseViewController {
                 do {
                 let dictionary = try recovery.rawData()
                     Lov_RecoveryType.append(try JSONDecoder().decode(RecoveryType.self, from: dictionary))
-                } catch let err {
-                    print(err.localizedDescription)
+                } catch let DecodingError.dataCorrupted(context) {
+                    print(context)
+                } catch let DecodingError.keyNotFound(key, context) {
+                    print("Key '\(key)' not found:", context.debugDescription)
+                    print("codingPath:", context.codingPath)
+                } catch let DecodingError.valueNotFound(value, context) {
+                    print("Value '\(value)' not found:", context.debugDescription)
+                    print("codingPath:", context.codingPath)
+                } catch let DecodingError.typeMismatch(type, context)  {
+                    print("Type '\(type)' mismatch:", context.debugDescription)
+                    print("codingPath:", context.codingPath)
+                } catch {
+                    print("error: ", error)
                 }
             }
             AppDelegate.sharedInstance.db?.deleteAll(tableName: db_lov_recovery_type, handler: { _ in
@@ -526,8 +702,19 @@ class FetchUserDataViewController: BaseViewController {
                 do {
                 let dictionary = try hrstatus.rawData()
                     hrStatus.append(try JSONDecoder().decode(HrStatus.self, from: dictionary))
-                } catch let err {
-                    print(err.localizedDescription)
+                } catch let DecodingError.dataCorrupted(context) {
+                    print(context)
+                } catch let DecodingError.keyNotFound(key, context) {
+                    print("Key '\(key)' not found:", context.debugDescription)
+                    print("codingPath:", context.codingPath)
+                } catch let DecodingError.valueNotFound(value, context) {
+                    print("Value '\(value)' not found:", context.debugDescription)
+                    print("codingPath:", context.codingPath)
+                } catch let DecodingError.typeMismatch(type, context)  {
+                    print("Type '\(type)' mismatch:", context.debugDescription)
+                    print("codingPath:", context.codingPath)
+                } catch {
+                    print("error: ", error)
                 }
             }
             AppDelegate.sharedInstance.db?.deleteAll(tableName: db_lov_hr_status, handler: { _ in
@@ -542,8 +729,19 @@ class FetchUserDataViewController: BaseViewController {
                 do {
                 let dictionary = try controlcategory.rawData()
                     controlCategory.append(try JSONDecoder().decode(ControlCategory.self, from: dictionary))
-                } catch let err {
-                    print(err.localizedDescription)
+                } catch let DecodingError.dataCorrupted(context) {
+                    print(context)
+                } catch let DecodingError.keyNotFound(key, context) {
+                    print("Key '\(key)' not found:", context.debugDescription)
+                    print("codingPath:", context.codingPath)
+                } catch let DecodingError.valueNotFound(value, context) {
+                    print("Value '\(value)' not found:", context.debugDescription)
+                    print("codingPath:", context.codingPath)
+                } catch let DecodingError.typeMismatch(type, context)  {
+                    print("Type '\(type)' mismatch:", context.debugDescription)
+                    print("codingPath:", context.codingPath)
+                } catch {
+                    print("error: ", error)
                 }
             }
             AppDelegate.sharedInstance.db?.deleteAll(tableName: db_lov_control_category, handler: { _ in
@@ -558,8 +756,19 @@ class FetchUserDataViewController: BaseViewController {
                 do {
                 let dictionary = try risktype.rawData()
                     riskType.append(try JSONDecoder().decode(RiskType.self, from: dictionary))
-                } catch let err {
-                    print(err.localizedDescription)
+                } catch let DecodingError.dataCorrupted(context) {
+                    print(context)
+                } catch let DecodingError.keyNotFound(key, context) {
+                    print("Key '\(key)' not found:", context.debugDescription)
+                    print("codingPath:", context.codingPath)
+                } catch let DecodingError.valueNotFound(value, context) {
+                    print("Value '\(value)' not found:", context.debugDescription)
+                    print("codingPath:", context.codingPath)
+                } catch let DecodingError.typeMismatch(type, context)  {
+                    print("Type '\(type)' mismatch:", context.debugDescription)
+                    print("codingPath:", context.codingPath)
+                } catch {
+                    print("error: ", error)
                 }
             }
             AppDelegate.sharedInstance.db?.deleteAll(tableName: db_lov_risk_type, handler: { _ in
@@ -574,8 +783,19 @@ class FetchUserDataViewController: BaseViewController {
                 do {
                 let dictionary = try controltype.rawData()
                     controlType.append(try JSONDecoder().decode(ControlType.self, from: dictionary))
-                } catch let err {
-                    print(err.localizedDescription)
+                } catch let DecodingError.dataCorrupted(context) {
+                    print(context)
+                } catch let DecodingError.keyNotFound(key, context) {
+                    print("Key '\(key)' not found:", context.debugDescription)
+                    print("codingPath:", context.codingPath)
+                } catch let DecodingError.valueNotFound(value, context) {
+                    print("Value '\(value)' not found:", context.debugDescription)
+                    print("codingPath:", context.codingPath)
+                } catch let DecodingError.typeMismatch(type, context)  {
+                    print("Type '\(type)' mismatch:", context.debugDescription)
+                    print("codingPath:", context.codingPath)
+                } catch {
+                    print("error: ", error)
                 }
             }
             AppDelegate.sharedInstance.db?.deleteAll(tableName: db_lov_control_type, handler: { _ in
@@ -597,14 +817,43 @@ class FetchUserDataViewController: BaseViewController {
         NetworkCalls.get_tcs_location(params: params) { (granted, response) in
             if granted {
                 if let data = JSON(response).array {
+                    var twentyCounter = 0
                     AppDelegate.sharedInstance.db?.deleteAll(tableName: db_att_locations, handler: { _ in
                         for locations in data {
                             do {
                                 let dictionary = try locations.rawData()
                                 let att_location = try JSONDecoder().decode(AttLocations.self, from: dictionary)
-                                AppDelegate.sharedInstance.db?.insert_tbl_att_locations(att_location: att_location)
-                            } catch let err {
-                                print(err.localizedDescription)
+                                
+                                if twentyCounter == 8 {
+                                    if att_location.locCode == "HOF" {
+                                        AppDelegate.sharedInstance.db?.insert_tbl_att_locations(att_location: att_location)
+                                        twentyCounter = twentyCounter + 1
+                                    }
+                                } else if twentyCounter == 9 {
+                                    if att_location.locCode == "X01103" {
+                                        AppDelegate.sharedInstance.db?.insert_tbl_att_locations(att_location: att_location)
+                                        twentyCounter = twentyCounter + 1
+                                    }
+                                } else if twentyCounter == 10 {
+                                    handler()
+                                    return
+                                } else {
+                                    AppDelegate.sharedInstance.db?.insert_tbl_att_locations(att_location: att_location)
+                                    twentyCounter = twentyCounter + 1
+                                }
+                            } catch let DecodingError.dataCorrupted(context) {
+                                print(context)
+                            } catch let DecodingError.keyNotFound(key, context) {
+                                print("Key '\(key)' not found:", context.debugDescription)
+                                print("codingPath:", context.codingPath)
+                            } catch let DecodingError.valueNotFound(value, context) {
+                                print("Value '\(value)' not found:", context.debugDescription)
+                                print("codingPath:", context.codingPath)
+                            } catch let DecodingError.typeMismatch(type, context)  {
+                                print("Type '\(type)' mismatch:", context.debugDescription)
+                                print("codingPath:", context.codingPath)
+                            } catch {
+                                print("error: ", error)
                             }
                         }
                     })
@@ -736,8 +985,19 @@ class FetchUserDataViewController: BaseViewController {
                         let dictionary = try file.rawData()
                         let file = try JSONDecoder().decode(HrFiles.self, from: dictionary)
                         AppDelegate.sharedInstance.db?.insert_tbl_hr_files(hrfile: file)
-                    } catch let err {
-                        print("File Error: \(err.localizedDescription)")
+                    } catch let DecodingError.dataCorrupted(context) {
+                        print(context)
+                    } catch let DecodingError.keyNotFound(key, context) {
+                        print("Key '\(key)' not found:", context.debugDescription)
+                        print("codingPath:", context.codingPath)
+                    } catch let DecodingError.valueNotFound(value, context) {
+                        print("Value '\(value)' not found:", context.debugDescription)
+                        print("codingPath:", context.codingPath)
+                    } catch let DecodingError.typeMismatch(type, context)  {
+                        print("Type '\(type)' mismatch:", context.debugDescription)
+                        print("codingPath:", context.codingPath)
+                    } catch {
+                        print("error: ", error)
                     }
                 })
             }
@@ -867,8 +1127,19 @@ extension FetchUserDataViewController {
                             self.skip += 80
                             self.getFulfilment()
                         }
-                    } catch let err {
-                        print(err.localizedDescription)
+                    } catch let DecodingError.dataCorrupted(context) {
+                        print(context)
+                    } catch let DecodingError.keyNotFound(key, context) {
+                        print("Key '\(key)' not found:", context.debugDescription)
+                        print("codingPath:", context.codingPath)
+                    } catch let DecodingError.valueNotFound(value, context) {
+                        print("Value '\(value)' not found:", context.debugDescription)
+                        print("codingPath:", context.codingPath)
+                    } catch let DecodingError.typeMismatch(type, context)  {
+                        print("Type '\(type)' mismatch:", context.debugDescription)
+                        print("codingPath:", context.codingPath)
+                    } catch {
+                        print("error: ", error)
                     }
                 } else {
                     DispatchQueue.main.async {
@@ -1044,8 +1315,19 @@ extension FetchUserDataViewController {
                                 self.skip += 80
                                 self.getHrNotifications()
                             }
-                        } catch let err {
-                            print(err.localizedDescription)
+                        } catch let DecodingError.dataCorrupted(context) {
+                            print(context)
+                        } catch let DecodingError.keyNotFound(key, context) {
+                            print("Key '\(key)' not found:", context.debugDescription)
+                            print("codingPath:", context.codingPath)
+                        } catch let DecodingError.valueNotFound(value, context) {
+                            print("Value '\(value)' not found:", context.debugDescription)
+                            print("codingPath:", context.codingPath)
+                        } catch let DecodingError.typeMismatch(type, context)  {
+                            print("Type '\(type)' mismatch:", context.debugDescription)
+                            print("codingPath:", context.codingPath)
+                        } catch {
+                            print("error: ", error)
                         }
                     } else {
                         DispatchQueue.main.async {
