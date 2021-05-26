@@ -104,8 +104,8 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
                 let crd = CLLocationCoordinate2D(latitude: lat, longitude: lon)
                 
                 let radius : CLLocationDistance = 75
-                let entry = Geotification(coordinate: crd, radius: radius, identifier: NSUUID().uuidString, note: "Welcome to TCS", eventType: .onEntry)
-                let exit  = Geotification(coordinate: crd, radius: radius, identifier: NSUUID().uuidString, note: "See you tomorrow", eventType: .onExit)
+                let entry = Geotification(coordinate: crd, radius: radius, identifier: location.HUB_CODE, note: "Welcome to TCS", eventType: .onEntry)
+                let exit  = Geotification(coordinate: crd, radius: radius, identifier: location.HUB_CODE, note: "See you tomorrow", eventType: .onExit)
                 
                 add(entry)
                 add(exit)

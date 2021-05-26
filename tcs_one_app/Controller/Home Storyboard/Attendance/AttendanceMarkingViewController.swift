@@ -35,7 +35,7 @@ class AttendanceMarkingViewController: BaseViewController, MKMapViewDelegate {
     
     var isLocationOff = false
     var clAuthorizatinStatus: CLAuthorizationStatus?
-    
+    var hub_code: String = ""
     let datePicker = DatePickerDialog(
         textColor: .nativeRedColor(),
         buttonColor: .nativeRedColor(),
@@ -372,12 +372,14 @@ class AttendanceMarkingViewController: BaseViewController, MKMapViewDelegate {
         }
         self.view.makeToastActivity(.center)
         self.freezeScreen()
+        
         let json = [
             "attendance_request" : [
                 "access_token" : access_token,
                 "latitude": self.lat,
                 "longitude": self.lon,
-                "app_datime" : getAttendanceMarkingTime()
+                "app_datime" : getAttendanceMarkingTime(),
+                "hub_code": hub_code
             ]
         ]
         let params = self.getAPIParameter(service_name: MARKATTENDANCE, request_body: json)
@@ -524,6 +526,7 @@ extension AttendanceMarkingViewController: CLLocationManagerDelegate {
                 self.isUserInsideFence = false
             }
             else{
+                hub_code = location.hub_code
                 self.isUserInsideFence = true
             }
             

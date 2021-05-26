@@ -9,6 +9,7 @@
 import UIKit
 import CoreLocation
 import SwiftyJSON
+import MapKit
 
 @available(iOS 13.0, *)
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
@@ -235,13 +236,29 @@ extension SceneDelegate: CLLocationManagerDelegate {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "dd/MM/yyyy HH:mm:ss"
         
+        //FETCHING HUB CODE
+        var hub_code: String = ""
+        for location in Place.getPlaces() {
+            let officeLocation = CLLocation.init(latitude: location.coordinate.latitude,
+                                                 longitude: location.coordinate.longitude)
+
+            let circle = MKCircle(center: officeLocation.coordinate, radius: Double(10) as CLLocationDistance)
+            
+            
+            
+            if coordinates.location!.distance(from: officeLocation) < circle.radius { continue }
+            else{ hub_code = location.hub_code; break }
+        }
+        
+        
         let date = dateFormatter.string(from: Date())
         let json = [
             "attendance_request" : [
                 "access_token" : access_token,
                 "latitude": "\(coordinates.location?.coordinate.latitude ?? 0.0)",
                 "longitude": "\(coordinates.location?.coordinate.longitude ?? 0.0)",
-                "app_datime" : date
+                "app_datime" : date,
+                "hub_code": hub_code
             ]
         ]
         let params = self.getAPIParameter(service_name: MARKATTENDANCE, request_body: json)

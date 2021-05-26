@@ -687,7 +687,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xyU-Mj-PmC">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xyU-Mj-PmC" customClass="CustomView" customModule="One_App" customModuleProvider="target">
                                 <rect key="frame" x="40" y="224" width="240" height="120"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jat-Qj-P2b" customClass="CustomButton" customModule="One_App" customModuleProvider="target">
@@ -763,6 +763,11 @@
                                     <constraint firstItem="n74-u4-wTU" firstAttribute="leading" secondItem="xyU-Mj-PmC" secondAttribute="leading" constant="10" id="uMO-6W-rJG"/>
                                     <constraint firstItem="jat-Qj-P2b" firstAttribute="centerY" secondItem="RX0-To-PsJ" secondAttribute="centerY" id="z9O-20-7hM"/>
                                 </constraints>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                        <real key="value" value="10"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
                             </view>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="C4Y-9K-lRo"/>
