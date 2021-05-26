@@ -180,9 +180,11 @@ extension MapViewController: CLLocationManagerDelegate {
 @objc class Place: NSObject {
     var coordinate: CLLocationCoordinate2D
     var radius: Int
-    init(coordinate: CLLocationCoordinate2D, radius: Int) {
+    var hub_code: String
+    init(coordinate: CLLocationCoordinate2D, radius: Int, hub_code: String) {
         self.coordinate = coordinate
         self.radius = radius
+        self.hub_code = hub_code
     }
     
     static func getPlaces() -> [Place] {
@@ -193,10 +195,12 @@ extension MapViewController: CLLocationManagerDelegate {
                 let latitude = (location.LATITUDE as NSString).doubleValue
                 let longitude = (location.LONGITUDE as NSString).doubleValue
                 let radius = location.RADIUS
+                let hubCode = location.HUB_CODE
                 
                 let place = Place(coordinate: CLLocationCoordinate2D(latitude: latitude,
                                                                      longitude: longitude),
-                                  radius: radius)
+                                  radius: radius,
+                                  hub_code: hubCode)
                 
                 places.append(place)
             }

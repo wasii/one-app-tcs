@@ -35,7 +35,7 @@ class AttendanceMarkingViewController: BaseViewController, MKMapViewDelegate {
     
     var isLocationOff = false
     var clAuthorizatinStatus: CLAuthorizationStatus?
-    
+    var hub_code: String = ""
     let datePicker = DatePickerDialog(
         textColor: .nativeRedColor(),
         buttonColor: .nativeRedColor(),
@@ -372,12 +372,14 @@ class AttendanceMarkingViewController: BaseViewController, MKMapViewDelegate {
         }
         self.view.makeToastActivity(.center)
         self.freezeScreen()
+        
         let json = [
             "attendance_request" : [
                 "access_token" : access_token,
                 "latitude": self.lat,
                 "longitude": self.lon,
-                "app_datime" : getAttendanceMarkingTime()
+                "app_datime" : getAttendanceMarkingTime(),
+                "hub_code": hub_code
             ]
         ]
         let params = self.getAPIParameter(service_name: MARKATTENDANCE, request_body: json)
@@ -512,36 +514,35 @@ extension AttendanceMarkingViewController: CLLocationManagerDelegate {
 //        print(lon)
         mapView?.mapType = MKMapType.standard
         
-        let officeLocation = CLLocation.init(latitude: places.first?.coordinate.latitude ?? 0.0,
-                                             longitude: places.first?.coordinate.longitude ?? 0.0)
+        for location in places {
+            let officeLocation = CLLocation.init(latitude: location.coordinate.latitude,
+                                                 longitude: location.coordinate.longitude)
 
-        let circle = MKCircle(center: officeLocation.coordinate, radius: Double(90) as CLLocationDistance)
-        
-        
-        
-        if locations.first!.distance(from: officeLocation) > circle.radius {
-            self.isUserInsideFence = false
-        }
-        else{
-            self.isUserInsideFence = true
-        }
-        
-        if CustomReachability.isConnectedNetwork() {
-            if self.isUserInsideFence {
-                self.slideView.isHidden = false
-//                DispatchQueue.main.async {
-//                    self.slideView.viewWithTag(1000)?.removeFromSuperview()
-//                    self.slideView.addSubview(self.slideToLock())
-//                }
+            let circle = MKCircle(center: officeLocation.coordinate, radius: Double(90) as CLLocationDistance)
+            
+            
+            
+            if locations.first!.distance(from: officeLocation) > circle.radius {
+                self.isUserInsideFence = false
+            }
+            else{
+                hub_code = location.hub_code
+                self.isUserInsideFence = true
+            }
+            
+            if CustomReachability.isConnectedNetwork() {
+                if self.isUserInsideFence {
+                    self.slideView.isHidden = false
+                } else {
+                    self.errorMessage.isHidden = false
+                    self.slideView.isHidden = true
+                }
             } else {
-                self.errorMessage.isHidden = false
                 self.slideView.isHidden = true
             }
-        } else {
-            self.slideView.isHidden = true
+            
+            print("UserInside Fence: \(self.isUserInsideFence)")
         }
-        
-        print("UserInside Fence: \(self.isUserInsideFence)")
     }
     
     

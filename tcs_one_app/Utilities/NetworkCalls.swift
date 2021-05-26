@@ -145,8 +145,19 @@ class NetworkCalls: NSObject {
                                             AppDelegate.sharedInstance.db?.insert_tbl_UserProfile(user: user)
                                         }
                                     }
-                                } catch let err {
-                                    print(err.localizedDescription)
+                                } catch let DecodingError.dataCorrupted(context) {
+                                    print(context)
+                                } catch let DecodingError.keyNotFound(key, context) {
+                                    print("Key '\(key)' not found:", context.debugDescription)
+                                    print("codingPath:", context.codingPath)
+                                } catch let DecodingError.valueNotFound(value, context) {
+                                    print("Value '\(value)' not found:", context.debugDescription)
+                                    print("codingPath:", context.codingPath)
+                                } catch let DecodingError.typeMismatch(type, context)  {
+                                    print("Type '\(type)' mismatch:", context.debugDescription)
+                                    print("codingPath:", context.codingPath)
+                                } catch {
+                                    print("error: ", error)
                                 }
                             }
                             UserDefaults.standard.set(access_token, forKey: USER_ACCESS_TOKEN)

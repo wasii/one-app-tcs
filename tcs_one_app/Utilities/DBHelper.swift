@@ -28,14 +28,14 @@ class DBHelper {
             let fileManager = FileManager.default
             if fileManager.fileExists(atPath: filePath) {
                 let new_db = UserDefaults.standard.bool(forKey: "NEWDB")
-                if !new_db {
+                if new_db {
                     do {
                         try fileManager.removeItem(at: pathComponent)
                         try fileManager.removeItem(at: url.appendingPathComponent("\(databaseName).db-shm")!)
                         try fileManager.removeItem(at: url.appendingPathComponent("\(databaseName).db-wal")!)
                         UserDefaults.standard.removeObject(forKey: "CurrentUser")
                         UserDefaults.standard.removeObject(forKey: USER_ACCESS_TOKEN)
-                        UserDefaults.standard.set(true, forKey: "NEWDB")
+                        UserDefaults.standard.set(false, forKey: "NEWDB")
                         return self.copy_database(databaseName: databaseName, pathComponent: pathComponent)
 
                     } catch let err {
@@ -45,7 +45,7 @@ class DBHelper {
                 print(pathComponent)
                 return pathComponent
             } else {
-                UserDefaults.standard.set(true, forKey: "NEWDB")
+                UserDefaults.standard.set(false, forKey: "NEWDB")
                 return self.copy_database(databaseName: databaseName, pathComponent: pathComponent)
             }
         } else {
@@ -485,9 +485,9 @@ class DBHelper {
             sqlite3_bind_text(insertStatement, 10, ((user.empStatus ?? "") as NSString).utf8String, -1, nil)
             sqlite3_bind_text(insertStatement, 11, ((user.unitCode ?? "") as NSString).utf8String, -1, nil)
             sqlite3_bind_text(insertStatement, 12, ((user.workingDesig ?? "") as NSString).utf8String, -1, nil)
-            sqlite3_bind_int(insertStatement, 13, Int32(user.deptCode ?? -1))
-            sqlite3_bind_int(insertStatement, 14, Int32(user.deptCode ?? -1))
-            sqlite3_bind_int(insertStatement, 15, Int32(user.subDeptCode ?? -1))
+            sqlite3_bind_text(insertStatement, 13, ((user.deptCode ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 14, ((user.deptCode ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 15, ((user.subDeptCode ?? "") as NSString).utf8String, -1, nil)
             sqlite3_bind_text(insertStatement, 16, ((user.userid ?? "") as NSString).utf8String, -1, nil)
             sqlite3_bind_text(insertStatement, 17, ((user.areaCode ?? "") as NSString).utf8String, -1, nil)
             sqlite3_bind_text(insertStatement, 18, ((user.stationCode ?? "") as NSString).utf8String, -1, nil)
@@ -526,9 +526,9 @@ class DBHelper {
                 let emp_status = String(describing: String(cString: sqlite3_column_text(queryStatement, 10)))
                 let unit_code = String(describing: String(cString: sqlite3_column_text(queryStatement, 11)))
                 let working_desig_code = String(describing: String(cString: sqlite3_column_text(queryStatement, 12)))
-                let desig_code = Int(sqlite3_column_int(queryStatement, 13))
-                let dept_code = Int(sqlite3_column_int(queryStatement, 14))
-                let sub_dept_code = Int(sqlite3_column_int(queryStatement, 15))
+                let desig_code = String(describing: String(cString: sqlite3_column_text(queryStatement, 13)))
+                let dept_code = String(describing: String(cString: sqlite3_column_text(queryStatement, 14)))
+                let sub_dept_code = String(describing: String(cString: sqlite3_column_text(queryStatement, 15)))
                 let user_id = String(describing: String(cString: sqlite3_column_text(queryStatement, 16)))
                 let area_code = String(describing: String(cString: sqlite3_column_text(queryStatement, 17)))
                 let station_code = String(describing: String(cString: sqlite3_column_text(queryStatement, 18)))
@@ -2564,7 +2564,7 @@ class DBHelper {
     }
     
     func insert_tbl_att_locations(att_location: AttLocations) {
-        let insertStatementString = "INSERT INTO \(db_att_locations)(LOC_CODE, LOC_NAME, LATITUDE, LONGITUDE, RADIUS) VALUES (?,?,?,?,?);"
+        let insertStatementString = "INSERT INTO \(db_att_locations)(LOC_CODE, LOC_NAME, LATITUDE, LONGITUDE, RADIUS, HUB_CODE) VALUES (?,?,?,?,?,?);"
         
         var insertStatement: OpaquePointer? = nil
         if sqlite3_prepare_v2(self.db, insertStatementString, -1, &insertStatement, nil) == SQLITE_OK {
@@ -2573,6 +2573,7 @@ class DBHelper {
             sqlite3_bind_text(insertStatement, 3, (att_location.latitude as NSString).utf8String, -1, nil)
             sqlite3_bind_text(insertStatement, 4, (att_location.longitude as NSString).utf8String, -1, nil)
             sqlite3_bind_int(insertStatement, 5, Int32(att_location.radius))
+            sqlite3_bind_text(insertStatement, 6, (att_location.hubCode as NSString).utf8String, -1, nil)
             if sqlite3_step(insertStatement) == SQLITE_DONE {
                 print("\(db_att_locations): Successfully inserted row.")
             } else {
@@ -2596,12 +2597,14 @@ class DBHelper {
                 let latitude = String(describing: String(cString: sqlite3_column_text(queryStatement, 3)))
                 let longitude = String(describing: String(cString: sqlite3_column_text(queryStatement, 4)))
                 let radius = Int(sqlite3_column_int(queryStatement, 5))
+                let hubCode = String(describing: String(cString: sqlite3_column_text(queryStatement, 6)))
                 attLocations.append(tbl_att_locations(ID: id,
                                                       LOC_CODE: locCode,
                                                       LOC_NAME: locName,
                                                       LATITUDE: latitude,
                                                       LONGITUDE: longitude,
-                                                      RADIUS: radius))
+                                                      RADIUS: radius,
+                                                      HUB_CODE: hubCode))
             }
         } else {
             print("SELECT statement \(db_att_locations) could not be prepared")
@@ -2960,9 +2963,9 @@ struct tbl_UserProfile: Encodable, Decodable {
     var EMP_STATUS: String = ""
     var UNIT_CODE: String = ""
     var WORKING_DESIG_CODE: String = ""
-    var DESIG_CODE: Int = -1
-    var DEPT_CODE: Int = -1
-    var SUB_DEPT_CODE: Int = -1
+    var DESIG_CODE: String = ""
+    var DEPT_CODE: String = ""
+    var SUB_DEPT_CODE: String = ""
     var USERID: String = ""
     var AREA_CODE: String = ""
     var STATION_CODE: String = ""
@@ -3391,6 +3394,7 @@ struct tbl_att_locations {
     var LATITUDE: String = ""
     var LONGITUDE: String = ""
     var RADIUS: Int = -1
+    var HUB_CODE: String = ""
 }
 
 struct tbl_att_user_attendance {
