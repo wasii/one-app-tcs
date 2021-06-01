@@ -13,16 +13,19 @@ import UserNotifications
 import SwiftyJSON
 import IQKeyboardManagerSwift
 
+import CoreLocation
+import MapKit
+
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate {
 
-
+    let locationManager = CLLocationManager()
     var user_profile: User?
     var db: DBHelper?
     let gcmMessageIDKey = "gcm.message_id"
     
     var record_id = 0
-    
+    var window: UIWindow?
     static let sharedInstance: AppDelegate = UIApplication.shared.delegate as! AppDelegate
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
@@ -54,11 +57,50 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
           UIUserNotificationSettings(types: [.alert, .badge, .sound], categories: nil)
           application.registerUserNotificationSettings(settings)
         }
+        let systemVersion = (UIDevice.current.systemVersion as NSString).floatValue
+        if systemVersion < 13.0 {
+            locationManager.delegate = self
+            locationManager.requestWhenInUseAuthorization()
+            locationManager.desiredAccuracy = kCLLocationAccuracyBest
+            locationManager.startUpdatingLocation()
+            locationManager.startMonitoringSignificantLocationChanges()
+        }
 
         application.registerForRemoteNotifications()
         
         Messaging.messaging().delegate = self
         return true
+    }
+    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+        switch status {
+        case .authorizedAlways, .authorizedWhenInUse:
+            return
+        case .denied, .restricted:
+            print("location access denied")
+            break
+        default:
+            locationManager.requestAlwaysAuthorization()
+        }
+    }
+    
+    func applicationWillResignActive(_ application: UIApplication) {
+        print("applicationWillResignActive")
+    }
+
+    func applicationDidEnterBackground(_ application: UIApplication) {
+        print("applicationDidEnterBackground")
+    }
+
+    func applicationWillEnterForeground(_ application: UIApplication) {
+        print("applicationWillEnterForeground")
+    }
+
+    func applicationDidBecomeActive(_ application: UIApplication) {
+        print("applicationDidBecomeActive")
+    }
+
+    func applicationWillTerminate(_ application: UIApplication) {
+        print("applicationWillTerminate")
     }
     
     func registerForPushNotifications() {

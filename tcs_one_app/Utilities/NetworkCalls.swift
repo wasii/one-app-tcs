@@ -51,11 +51,6 @@ class NetworkCalls: NSObject {
             return
         }
         request.httpBody = httpBody
-//        let session = URLSession(
-//            configuration: URLSessionConfiguration.ephemeral,
-//            delegate: NSURLSessionPinningDelegate(),
-//            delegateQueue: nil
-//        )
         let session = URLSession.shared
         session.dataTask(with: request) { (data, response, error) in
             if let data = data {
