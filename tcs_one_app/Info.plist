@@ -33,9 +33,9 @@
 	</dict>
 	<key>NSCameraUsageDescription</key>
 	<string>This app requires access to the camera.</string>
-    <key>NSLocationUsageDescription</key>
-    <string>OneApp requires constant access to your phone’s location to mark your attendance when you enter or leave a TCS.</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>OneApp requires constant access to your phone’s location to mark your attendance when you enter or leave a TCS.</string>
+	<key>NSLocationUsageDescription</key>
 	<string>OneApp requires constant access to your phone’s location to mark your attendance when you enter or leave a TCS.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>OneApp requires constant access to your phone’s location to mark your attendance when you enter or leave a TCS.</string>

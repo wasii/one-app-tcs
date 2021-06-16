@@ -9,10 +9,9 @@
 import UIKit
 
 class DashboardViewController: UITabBarController, UITabBarControllerDelegate {
-
     override func viewDidLoad() {
         super.viewDidLoad()
-//        UITabBar.appearance().selectionIndicatorImage = UIImage().makeImageWithColorAndSize(color: UIColor.nativeRedColor(), size: CGSize(width: self.tabBar.frame.width/5, height: self.tabBar.frame.height))
+//        UITabBar.appearance().selectionIndicatorImage = UIImage().makeImageWithColorAndSize(color: UIColor.clear, size: CGSize(width: self.tabBar.frame.width/5, height: 90))
         self.delegate = self
     }
     func tabBarController(_ tabBarController: UITabBarController, shouldSelect viewController: UIViewController) -> Bool {
@@ -29,28 +28,39 @@ class DashboardViewController: UITabBarController, UITabBarControllerDelegate {
 //                self.showAlert()
                 return false
             }
-            if let _ = viewController.children[0] as? UserInfoViewController {
-                self.showAlert()
-                return false
+            if let _ = viewController.children[0] as? AttendanceMarkingViewController {
+//                self.showAlert()
+                return true
+            }
+            if let _ = viewController.children[0] as? WalletDashboardViewController {
+//                self.showAlert()
+                return true
             }
             
-            if let _ = viewController.children[0] as? UIViewController {
-                let storyboard = UIStoryboard(name: "Popups", bundle: nil)
-                let controller = storyboard.instantiateViewController(withIdentifier: "LogoutPopupViewController") as! LogoutPopupViewController
-                
-                if #available(iOS 13.0, *) {
-                    controller.modalPresentationStyle = .overFullScreen
-                }
-                
-                controller.modalTransitionStyle = .crossDissolve
-                
-                Helper.topMostController().present(controller, animated: true, completion: nil)
-                return false
-            }
+//            if let _ = viewController.children[0] as? UIViewController {
+//                let storyboard = UIStoryboard(name: "Popups", bundle: nil)
+//                let controller = storyboard.instantiateViewController(withIdentifier: "LogoutPopupViewController") as! LogoutPopupViewController
+//
+//                if #available(iOS 13.0, *) {
+//                    controller.modalPresentationStyle = .overFullScreen
+//                }
+//
+//                controller.modalTransitionStyle = .crossDissolve
+//
+//                Helper.topMostController().present(controller, animated: true, completion: nil)
+//                return false
+//            }
         }
         return true
     }
-    
+    override func viewWillLayoutSubviews() {
+//        tabBar.sizeThatFits(CGSize(width: UIScreen().bounds.width, height: 70))
+//        self.tabBar.bottomAnchor.constraint(equalTo: self.view.layoutMarginsGuide.bottomAnchor).isActive = true
+//        var tabFrame = tabBar.frame
+//                tabFrame.size.height = 60
+//                tabFrame.origin.y = self.view.frame.size.height - 60
+//                tabBar.frame = tabFrame
+    }
     func showAlert() {
         let comingsoon = self.storyboard?.instantiateViewController(withIdentifier: "ComingSoonViewController") as! ComingSoonViewController
         comingsoon.modalTransitionStyle = .crossDissolve
