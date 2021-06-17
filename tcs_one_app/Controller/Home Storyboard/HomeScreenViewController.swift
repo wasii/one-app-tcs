@@ -49,7 +49,7 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
         super.viewDidLoad()
         self.title = "Dashboard"
         
-        addSingleNavigationButton()
+        addHomeNavigationButton()
         self.makeTopCornersRounded(roundView: self.mainView)
         
         

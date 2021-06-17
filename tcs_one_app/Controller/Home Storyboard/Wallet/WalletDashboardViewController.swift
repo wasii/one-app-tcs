@@ -38,6 +38,7 @@ class WalletDashboardViewController: BaseViewController {
         title = "Wallet"
         self.makeTopCornersRounded(roundView: self.mainView)
         layoutFAB()
+        addDoubleNavigationButtons()
     }
     
     func layoutFAB() {
@@ -52,14 +53,21 @@ class WalletDashboardViewController: BaseViewController {
         self.view.addSubview(floaty)
     }
     
+    @IBAction func historyBttnTapped(_ sender: Any) {
+        let controller = self.storyboard?.instantiateViewController(withIdentifier: "WalletHistoryViewController") as! WalletHistoryViewController
+        
+        self.navigationController?.pushViewController(controller, animated: true)
+    }
     @IBAction func sortingBtnTapped(_ sender: UIButton) {
         sortedImages.forEach { imageview in
             imageview.image = nil
         }
+        
         self.matureView.isHidden = true
         self.unmatureView.isHidden = true
         switch sender.tag {
         case 0:
+            sender.isSelected = !sender.isSelected
             if sender.isSelected {
                 sortedImages[0].image = UIImage(named: "rightY")
                 self.matureView.isHidden = false
@@ -70,10 +78,12 @@ class WalletDashboardViewController: BaseViewController {
             }
             return
         case 1:
+            sender.isSelected = !sender.isSelected
             let controller = self.storyboard?.instantiateViewController(withIdentifier: "WalletDetailsViewController") as! WalletDetailsViewController
             self.navigationController?.pushViewController(controller, animated: true)
             break
         case 2:
+            sender.isSelected = !sender.isSelected
             break
         default:
             break

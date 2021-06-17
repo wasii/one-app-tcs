@@ -57,6 +57,20 @@ class BaseViewController: UIViewController {
         self.navigationController?.navigationBar.topItem?.title = title
     }
     
+    func addHomeNavigationButton() {
+        let sync = UIButton()
+        sync.setImage(UIImage(named: "sync"), for: .normal)
+        sync.addTarget(self, action: #selector(syncServerData), for: .touchUpInside)
+        let syncBtn = UIBarButtonItem(customView: sync)
+        
+        let setting = UIButton()
+        setting.setImage(UIImage(named: "settings-navbar"), for: .normal)
+        setting.addTarget(self, action: #selector(openActionSheet), for: .touchUpInside)
+        let settingBtn = UIBarButtonItem(customView: setting)
+        
+        self.navigationItem.rightBarButtonItems = [settingBtn, syncBtn]
+    }
+    
     func addSingleNavigationButton() {
         let sync = UIButton()
         sync.setImage(UIImage(named: "sync"), for: .normal)
@@ -77,6 +91,35 @@ class BaseViewController: UIViewController {
         let notificationBtn = UIBarButtonItem(customView: notification)
         
         self.navigationItem.rightBarButtonItems = [notificationBtn, syncBtn]
+    }
+    
+    func addTripleNavigationButtons() {
+        let sync = UIButton()
+        sync.setImage(UIImage(named: "sync"), for: .normal)
+        sync.addTarget(self, action: #selector(syncServerData), for: .touchUpInside)
+        let syncBtn = UIBarButtonItem(customView: sync)
+        
+        let notification = UIButton()
+        notification.setImage(UIImage(named: "notification"), for: .normal)
+        notification.addTarget(self, action: #selector(openNotificationViewController), for: .touchUpInside)
+        let notificationBtn = UIBarButtonItem(customView: notification)
+        
+        self.navigationItem.rightBarButtonItems = [notificationBtn, syncBtn]
+    }
+    
+    @objc func openActionSheet(sender: UIButton) {
+        let actionSheet = UIAlertController(title: "\n\n\n\n\n\n", message: nil, preferredStyle: .actionSheet)
+
+        let view = UIView(frame: CGRect(x: 8.0, y: 8.0, width: actionSheet.view.bounds.size.width - 8.0 * 4.5, height: 120.0))
+        view.backgroundColor = UIColor.green
+        actionSheet.view.addSubview(view)
+        
+//        actionSheet.addAction(UIAlertAction(title: "Add to a Playlist", style: .default, handler: nil))
+//        actionSheet.addAction(UIAlertAction(title: "Create Playlist", style: .default, handler: nil))
+//        actionSheet.addAction(UIAlertAction(title: "Remove from this Playlist", style: .default, handler: nil))
+//
+        actionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        present(actionSheet, animated: true, completion: nil)
     }
     
     @objc func openNotificationViewController(sender: UIButton) {
