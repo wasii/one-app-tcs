@@ -80,6 +80,9 @@
 		1B77CE87256257B700A821E7 /* GrievanceViewRequestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B77CE86256257B700A821E7 /* GrievanceViewRequestViewController.swift */; };
 		1B78A6F525EE3434005670BE /* LeadershipAwazAllRequestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B78A6F425EE3434005670BE /* LeadershipAwazAllRequestViewController.swift */; };
 		1B7A292425A05E3C005694B6 /* IMSViewUpdateRequestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B7A292325A05E3C005694B6 /* IMSViewUpdateRequestViewController.swift */; };
+		1B7F0D0B267CB0DF0060F405 /* Rider.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1B7F0D0A267CB0DF0060F405 /* Rider.storyboard */; };
+		1B7F0D0E267CB3350060F405 /* FetchRiderDataViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B7F0D0D267CB3350060F405 /* FetchRiderDataViewController.swift */; };
+		1B7F0D10267CB9BA0060F405 /* RiderDashboardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B7F0D0F267CB9BA0060F405 /* RiderDashboardViewController.swift */; };
 		1B96C0A325E8D3020059775C /* NewRequestLeadershipAwazViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B96C0A225E8D3020059775C /* NewRequestLeadershipAwazViewController.swift */; };
 		1B9E6C812562779D006529C3 /* GrievanceViewClosedRequestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B9E6C802562779D006529C3 /* GrievanceViewClosedRequestViewController.swift */; };
 		1BA5110B267B28A400E0E642 /* WalletHistoryTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BA51109267B28A400E0E642 /* WalletHistoryTableCell.swift */; };
@@ -250,6 +253,9 @@
 		1B77CE86256257B700A821E7 /* GrievanceViewRequestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GrievanceViewRequestViewController.swift; sourceTree = "<group>"; };
 		1B78A6F425EE3434005670BE /* LeadershipAwazAllRequestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeadershipAwazAllRequestViewController.swift; sourceTree = "<group>"; };
 		1B7A292325A05E3C005694B6 /* IMSViewUpdateRequestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMSViewUpdateRequestViewController.swift; sourceTree = "<group>"; };
+		1B7F0D0A267CB0DF0060F405 /* Rider.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Rider.storyboard; sourceTree = "<group>"; };
+		1B7F0D0D267CB3350060F405 /* FetchRiderDataViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchRiderDataViewController.swift; sourceTree = "<group>"; };
+		1B7F0D0F267CB9BA0060F405 /* RiderDashboardViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RiderDashboardViewController.swift; sourceTree = "<group>"; };
 		1B96C0A225E8D3020059775C /* NewRequestLeadershipAwazViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewRequestLeadershipAwazViewController.swift; sourceTree = "<group>"; };
 		1B9E6C802562779D006529C3 /* GrievanceViewClosedRequestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GrievanceViewClosedRequestViewController.swift; sourceTree = "<group>"; };
 		1BA51109267B28A400E0E642 /* WalletHistoryTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletHistoryTableCell.swift; sourceTree = "<group>"; };
@@ -500,6 +506,15 @@
 				1B71451A25AF85250058C36C /* IMSFilesViewController.swift */,
 			);
 			path = "IMS Desk";
+			sourceTree = "<group>";
+		};
+		1B7F0D0C267CB0E80060F405 /* Rider */ = {
+			isa = PBXGroup;
+			children = (
+				1B7F0D0D267CB3350060F405 /* FetchRiderDataViewController.swift */,
+				1B7F0D0F267CB9BA0060F405 /* RiderDashboardViewController.swift */,
+			);
+			path = Rider;
 			sourceTree = "<group>";
 		};
 		1BA51108267B287F00E0E642 /* Wallet */ = {
@@ -766,6 +781,7 @@
 				1BFB374625F9D6E20073CC53 /* Attendance.storyboard */,
 				1B3EDC96260C532E00A97984 /* Fullfillment.storyboard */,
 				1BE523DB2679E1CF00F5F030 /* Wallet.storyboard */,
+				1B7F0D0A267CB0DF0060F405 /* Rider.storyboard */,
 			);
 			path = Storyboards;
 			sourceTree = "<group>";
@@ -782,6 +798,7 @@
 		60C34FE1253985D100495944 /* Home Storyboard */ = {
 			isa = PBXGroup;
 			children = (
+				1B7F0D0C267CB0E80060F405 /* Rider */,
 				1BE523DD2679E25500F5F030 /* Wallet */,
 				1B3EDC95260C530D00A97984 /* Fullfilment */,
 				1BFB374925F9D7070073CC53 /* Attendance */,
@@ -929,6 +946,7 @@
 				1B281768257F7D44009AE4E3 /* ChartViews.xib in Resources */,
 				1B1ED252261C99EF0026234B /* buzzer.mp3 in Resources */,
 				1B11D085262EC82800C137A3 /* HeadOfSecurity.docx in Resources */,
+				1B7F0D0B267CB0DF0060F405 /* Rider.storyboard in Resources */,
 				60978BE125523E0B009AA2F3 /* MultiplePieCharCollectionCell.xib in Resources */,
 				605CE76D2541459800509434 /* sandboxcert.p12 in Resources */,
 				1B61B2A925DD033B00CDAAE2 /* DeliveryDetailsTableCell.xib in Resources */,
@@ -1065,6 +1083,7 @@
 				1B6B049E25665C6500CDEF66 /* GrievancesHistoryTableCell.swift in Sources */,
 				1B47F9A325A5F81C00FC74A4 /* IncidentInvestigationViewController.swift in Sources */,
 				605CE7752541977100509434 /* PinValidator.swift in Sources */,
+				1B7F0D10267CB9BA0060F405 /* RiderDashboardViewController.swift in Sources */,
 				60C34FE3253985DD00495944 /* HomeScreenViewController.swift in Sources */,
 				60EE11B3254B262C00ACB45B /* UserInfoViewController.swift in Sources */,
 				609922962547F43900534577 /* HRNotifications.swift in Sources */,
@@ -1091,6 +1110,7 @@
 				60C34FE62539875B00495944 /* DashboardViewController.swift in Sources */,
 				1B1B5F3D25B1C5E9006A9B51 /* HRFilesViewController.swift in Sources */,
 				60584D762542EA3D00AD5DA8 /* Setup.swift in Sources */,
+				1B7F0D0E267CB3350060F405 /* FetchRiderDataViewController.swift in Sources */,
 				607B979D25440927003B7800 /* HRRequests.swift in Sources */,
 				1B5970B0256553CF00FF8CA0 /* AddAttachmentsTableCell.swift in Sources */,
 				1B61B2AD25DD1CC000CDAAE2 /* PBagDetailsTableViewCell.swift in Sources */,
