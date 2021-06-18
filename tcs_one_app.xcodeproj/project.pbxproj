@@ -82,6 +82,11 @@
 		1B7A292425A05E3C005694B6 /* IMSViewUpdateRequestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B7A292325A05E3C005694B6 /* IMSViewUpdateRequestViewController.swift */; };
 		1B96C0A325E8D3020059775C /* NewRequestLeadershipAwazViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B96C0A225E8D3020059775C /* NewRequestLeadershipAwazViewController.swift */; };
 		1B9E6C812562779D006529C3 /* GrievanceViewClosedRequestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B9E6C802562779D006529C3 /* GrievanceViewClosedRequestViewController.swift */; };
+		1BA5110B267B28A400E0E642 /* WalletHistoryTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BA51109267B28A400E0E642 /* WalletHistoryTableCell.swift */; };
+		1BA5110C267B28A400E0E642 /* WalletHistoryTableCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1BA5110A267B28A400E0E642 /* WalletHistoryTableCell.xib */; };
+		1BA5110E267B31F900E0E642 /* WalletHistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BA5110D267B31F900E0E642 /* WalletHistoryViewController.swift */; };
+		1BA51110267B801600E0E642 /* CustomAlertView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1BA5110F267B801600E0E642 /* CustomAlertView.xib */; };
+		1BA51112267B804100E0E642 /* CustomAlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BA51111267B804100E0E642 /* CustomAlertView.swift */; };
 		1BA7BAC2260DF3FD002D9FA9 /* FulfilmentOrderDetailTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BA7BAC0260DF3FD002D9FA9 /* FulfilmentOrderDetailTableCell.swift */; };
 		1BA7BAC3260DF3FD002D9FA9 /* FulfilmentOrderDetailTableCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1BA7BAC1260DF3FD002D9FA9 /* FulfilmentOrderDetailTableCell.xib */; };
 		1BBAEA4D259DA1AA00FBDCB4 /* IMSAllRequestsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BBAEA4C259DA1AA00FBDCB4 /* IMSAllRequestsViewController.swift */; };
@@ -97,6 +102,9 @@
 		1BE523D82679DB1100F5F030 /* IMSDeliveryDetailsTableCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1BE523D22679DB1000F5F030 /* IMSDeliveryDetailsTableCell.xib */; };
 		1BE523D92679DB1100F5F030 /* IMSDeliveryDetailsTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BE523D32679DB1100F5F030 /* IMSDeliveryDetailsTableCell.swift */; };
 		1BE523DA2679DB1100F5F030 /* IMSDeliveryDetailTableCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1BE523D42679DB1100F5F030 /* IMSDeliveryDetailTableCell.xib */; };
+		1BE523DC2679E1CF00F5F030 /* Wallet.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1BE523DB2679E1CF00F5F030 /* Wallet.storyboard */; };
+		1BE523DF2679E26500F5F030 /* WalletDashboardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BE523DE2679E26500F5F030 /* WalletDashboardViewController.swift */; };
+		1BE523E1267A325100F5F030 /* WalletDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BE523E0267A325100F5F030 /* WalletDetailsViewController.swift */; };
 		1BF25A4A25E7CA3B008CE34F /* LeadershipAwaz.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1BF25A4925E7CA3B008CE34F /* LeadershipAwaz.storyboard */; };
 		1BF25A4F25E7D4EB008CE34F /* LeadershipListingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BF25A4E25E7D4EB008CE34F /* LeadershipListingViewController.swift */; };
 		1BF25A5325E7D507008CE34F /* ChairmenListingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BF25A5225E7D507008CE34F /* ChairmenListingViewController.swift */; };
@@ -244,6 +252,11 @@
 		1B7A292325A05E3C005694B6 /* IMSViewUpdateRequestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMSViewUpdateRequestViewController.swift; sourceTree = "<group>"; };
 		1B96C0A225E8D3020059775C /* NewRequestLeadershipAwazViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewRequestLeadershipAwazViewController.swift; sourceTree = "<group>"; };
 		1B9E6C802562779D006529C3 /* GrievanceViewClosedRequestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GrievanceViewClosedRequestViewController.swift; sourceTree = "<group>"; };
+		1BA51109267B28A400E0E642 /* WalletHistoryTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletHistoryTableCell.swift; sourceTree = "<group>"; };
+		1BA5110A267B28A400E0E642 /* WalletHistoryTableCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WalletHistoryTableCell.xib; sourceTree = "<group>"; };
+		1BA5110D267B31F900E0E642 /* WalletHistoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletHistoryViewController.swift; sourceTree = "<group>"; };
+		1BA5110F267B801600E0E642 /* CustomAlertView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CustomAlertView.xib; sourceTree = "<group>"; };
+		1BA51111267B804100E0E642 /* CustomAlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomAlertView.swift; sourceTree = "<group>"; };
 		1BA7BAC0260DF3FD002D9FA9 /* FulfilmentOrderDetailTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FulfilmentOrderDetailTableCell.swift; sourceTree = "<group>"; };
 		1BA7BAC1260DF3FD002D9FA9 /* FulfilmentOrderDetailTableCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FulfilmentOrderDetailTableCell.xib; sourceTree = "<group>"; };
 		1BBAEA4C259DA1AA00FBDCB4 /* IMSAllRequestsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMSAllRequestsViewController.swift; sourceTree = "<group>"; };
@@ -259,6 +272,9 @@
 		1BE523D22679DB1000F5F030 /* IMSDeliveryDetailsTableCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = IMSDeliveryDetailsTableCell.xib; sourceTree = "<group>"; };
 		1BE523D32679DB1100F5F030 /* IMSDeliveryDetailsTableCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMSDeliveryDetailsTableCell.swift; sourceTree = "<group>"; };
 		1BE523D42679DB1100F5F030 /* IMSDeliveryDetailTableCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = IMSDeliveryDetailTableCell.xib; sourceTree = "<group>"; };
+		1BE523DB2679E1CF00F5F030 /* Wallet.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Wallet.storyboard; sourceTree = "<group>"; };
+		1BE523DE2679E26500F5F030 /* WalletDashboardViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletDashboardViewController.swift; sourceTree = "<group>"; };
+		1BE523E0267A325100F5F030 /* WalletDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletDetailsViewController.swift; sourceTree = "<group>"; };
 		1BF25A4925E7CA3B008CE34F /* LeadershipAwaz.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LeadershipAwaz.storyboard; sourceTree = "<group>"; };
 		1BF25A4E25E7D4EB008CE34F /* LeadershipListingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeadershipListingViewController.swift; sourceTree = "<group>"; };
 		1BF25A5225E7D507008CE34F /* ChairmenListingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChairmenListingViewController.swift; sourceTree = "<group>"; };
@@ -486,12 +502,31 @@
 			path = "IMS Desk";
 			sourceTree = "<group>";
 		};
+		1BA51108267B287F00E0E642 /* Wallet */ = {
+			isa = PBXGroup;
+			children = (
+				1BA51109267B28A400E0E642 /* WalletHistoryTableCell.swift */,
+				1BA5110A267B28A400E0E642 /* WalletHistoryTableCell.xib */,
+			);
+			path = Wallet;
+			sourceTree = "<group>";
+		};
 		1BC02EFD25FA445500EFAFE9 /* GeoLocation */ = {
 			isa = PBXGroup;
 			children = (
 				1BC02EFE25FA446800EFAFE9 /* Geotification.swift */,
 			);
 			path = GeoLocation;
+			sourceTree = "<group>";
+		};
+		1BE523DD2679E25500F5F030 /* Wallet */ = {
+			isa = PBXGroup;
+			children = (
+				1BE523DE2679E26500F5F030 /* WalletDashboardViewController.swift */,
+				1BE523E0267A325100F5F030 /* WalletDetailsViewController.swift */,
+				1BA5110D267B31F900E0E642 /* WalletHistoryViewController.swift */,
+			);
+			path = Wallet;
 			sourceTree = "<group>";
 		};
 		1BF25A4825E7B52C008CE34F /* Leadership-Awaz */ = {
@@ -600,6 +635,7 @@
 		604FD75E2539B762007E9E87 /* TableView */ = {
 			isa = PBXGroup;
 			children = (
+				1BA51108267B287F00E0E642 /* Wallet */,
 				1B11D07D262EB37000C137A3 /* RequestListingTableCell.swift */,
 				1B11D07C262EB37000C137A3 /* RequestListingTableCell.xib */,
 				1B3EDC9F260C61D000A97984 /* Fulfilment */,
@@ -660,6 +696,8 @@
 				604FD75D2539B759007E9E87 /* CollectionView */,
 				1B281767257F7D44009AE4E3 /* ChartViews.xib */,
 				1B28176A257F7D4F009AE4E3 /* ChartViews.swift */,
+				1BA5110F267B801600E0E642 /* CustomAlertView.xib */,
+				1BA51111267B804100E0E642 /* CustomAlertView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -727,6 +765,7 @@
 				1BF25A4925E7CA3B008CE34F /* LeadershipAwaz.storyboard */,
 				1BFB374625F9D6E20073CC53 /* Attendance.storyboard */,
 				1B3EDC96260C532E00A97984 /* Fullfillment.storyboard */,
+				1BE523DB2679E1CF00F5F030 /* Wallet.storyboard */,
 			);
 			path = Storyboards;
 			sourceTree = "<group>";
@@ -743,6 +782,7 @@
 		60C34FE1253985D100495944 /* Home Storyboard */ = {
 			isa = PBXGroup;
 			children = (
+				1BE523DD2679E25500F5F030 /* Wallet */,
 				1B3EDC95260C530D00A97984 /* Fullfilment */,
 				1BFB374925F9D7070073CC53 /* Attendance */,
 				1BF25A4825E7B52C008CE34F /* Leadership-Awaz */,
@@ -874,6 +914,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1BA51110267B801600E0E642 /* CustomAlertView.xib in Resources */,
 				1B3B36102574D86B0051779A /* download-fill-icon.svg in Resources */,
 				1B5EAA7F255E63CB00F49D09 /* GrievanceStoryboard.storyboard in Resources */,
 				1B1ED251261C99EF0026234B /* beep.mp3 in Resources */,
@@ -906,11 +947,13 @@
 				1B11D086262EC82800C137A3 /* AreaSecurity.docx in Resources */,
 				1B1691B525724CE40007B3B0 /* next-icon.svg in Resources */,
 				1B4AAD1325DA781E00A26DE7 /* TrackStoryboard.storyboard in Resources */,
+				1BE523DC2679E1CF00F5F030 /* Wallet.storyboard in Resources */,
 				1B0C62EC255C100C00DCA76D /* ModulePermissionsTableCell.xib in Resources */,
 				1B1691BB257253C10007B3B0 /* checked-fill-icon.svg in Resources */,
 				1B6279E22591E54D00C88FEE /* IMSStoryboard.storyboard in Resources */,
 				1B614E1C2555138500E50B3A /* GoogleService-Info.plist in Resources */,
 				1BA7BAC3260DF3FD002D9FA9 /* FulfilmentOrderDetailTableCell.xib in Resources */,
+				1BA5110C267B28A400E0E642 /* WalletHistoryTableCell.xib in Resources */,
 				1BFB374725F9D6E20073CC53 /* Attendance.storyboard in Resources */,
 				1B6B04A4256660CD00CDEF66 /* GrievacneDownloadsTableCell.xib in Resources */,
 				60C34FE02539830E00495944 /* Home.storyboard in Resources */,
@@ -984,6 +1027,7 @@
 				1B47F99F25A5F18300FC74A4 /* IncidentInvestigationTableCell.swift in Sources */,
 				601BA4BD25387B17002CFD1F /* AppDelegate.swift in Sources */,
 				60E9992A253D9FB200BCDAD1 /* FilterListingDataTableCell.swift in Sources */,
+				1BA5110E267B31F900E0E642 /* WalletHistoryViewController.swift in Sources */,
 				60E9991D253D719500BCDAD1 /* HRHelpDeskViewController.swift in Sources */,
 				609C606625387CCD0051CF28 /* Helper.swift in Sources */,
 				606D6403254974BC00F67B77 /* ConnectionManager.swift in Sources */,
@@ -994,6 +1038,7 @@
 				60978BDB2551D06B009AA2F3 /* LogoutPopupViewController.swift in Sources */,
 				1B3202F92578C70B0034803F /* ImagePickerManager.swift in Sources */,
 				1B02129625A6E27300441E9F /* ConfirmationPopViewController.swift in Sources */,
+				1BE523E1267A325100F5F030 /* WalletDetailsViewController.swift in Sources */,
 				1B14F16A25656DE500C4EA51 /* AddMemoPopupViewController.swift in Sources */,
 				60E99917253D548200BCDAD1 /* ModulesCollectionCell.swift in Sources */,
 				1BBAEA4D259DA1AA00FBDCB4 /* IMSAllRequestsViewController.swift in Sources */,
@@ -1002,10 +1047,12 @@
 				60978BDD2551D1A6009AA2F3 /* LogoutViewController.swift in Sources */,
 				609C606025387C4B0051CF28 /* BaseViewController.swift in Sources */,
 				1B6279E72591E5E200C88FEE /* IMSNewRequestViewController.swift in Sources */,
+				1BE523DF2679E26500F5F030 /* WalletDashboardViewController.swift in Sources */,
 				1BFB374D25F9D73B0073CC53 /* AttendanceMarkingViewController.swift in Sources */,
 				60C34FDA25397D1600495944 /* FetchUserDataViewController.swift in Sources */,
 				1B96C0A325E8D3020059775C /* NewRequestLeadershipAwazViewController.swift in Sources */,
 				1B5EAACD255EB71C00F49D09 /* GrievanceNewRequestViewController.swift in Sources */,
+				1BA5110B267B28A400E0E642 /* WalletHistoryTableCell.swift in Sources */,
 				1B61B2BC25DD25DD00CDAAE2 /* DManDetailsTableCell.swift in Sources */,
 				1B3EDCA2260C620100A97984 /* FulfilmentListingTableCell.swift in Sources */,
 				1B5EAA83255EA4A600F49D09 /* GrievanceHelpDeskRequestsViewController.swift in Sources */,
@@ -1050,6 +1097,7 @@
 				1B590C64255818E300C413AA /* WatchAllRequestsViewController.swift in Sources */,
 				1B61B2A325DCFB3800CDAAE2 /* BookingDetailsTableCell.swift in Sources */,
 				1B11D07F262EB37000C137A3 /* RequestListingTableCell.swift in Sources */,
+				1BA51112267B804100E0E642 /* CustomAlertView.swift in Sources */,
 				1B71451825AF7E9A0058C36C /* IMSHistoryViewController.swift in Sources */,
 				1BFB375925F9D8E60073CC53 /* SlideManager.swift in Sources */,
 				1B6B04A3256660CD00CDEF66 /* GrievacneDownloadsTableCell.swift in Sources */,
@@ -1221,7 +1269,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "tcs_one_app/One App.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.2;
+				CURRENT_PROJECT_VERSION = 1.0;
 				DEVELOPMENT_TEAM = R33FJ93Y8M;
 				INFOPLIST_FILE = tcs_one_app/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
@@ -1229,7 +1277,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 5.0;
+				MARKETING_VERSION = 6.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.tcs.tcsoneapp;
 				PRODUCT_NAME = "One App";
 				SWIFT_VERSION = 4.2;
@@ -1244,7 +1292,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "tcs_one_app/One App.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.2;
+				CURRENT_PROJECT_VERSION = 1.0;
 				DEVELOPMENT_TEAM = R33FJ93Y8M;
 				INFOPLIST_FILE = tcs_one_app/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
@@ -1252,7 +1300,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 5.0;
+				MARKETING_VERSION = 6.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.tcs.tcsoneapp;
 				PRODUCT_NAME = "One App";
 				SWIFT_VERSION = 4.2;

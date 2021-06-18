@@ -444,7 +444,7 @@ extension AttendanceMarkingViewController: MTSlideToOpenDelegate {
     }
     
     func alert() {
-        let alert = UIAlertController(title: "Alert!", message: "Turn on your location to mark you attendnace", preferredStyle: .alert)
+        let alert = UIAlertController(title: "Alert!", message: "Turn on your location to mark your attendance", preferredStyle: .alert)
         let okAction = UIAlertAction(title: "Open Settings", style: .default) { _ in
             UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!, options: [:], completionHandler: nil)
         }
