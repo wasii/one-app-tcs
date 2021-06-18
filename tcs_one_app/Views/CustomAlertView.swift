@@ -10,6 +10,8 @@ import UIKit
 
 class CustomAlertView: UIView {
 
+    @IBOutlet weak var userInfoBtn: UIButton!
+    @IBOutlet weak var logoutBtn: UIButton!
     /*
     // Only override draw() if you perform custom drawing.
     // An empty implementation adversely affects performance during animation.

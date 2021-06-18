@@ -90,7 +90,12 @@ class BaseViewController: UIViewController {
         notification.addTarget(self, action: #selector(openNotificationViewController), for: .touchUpInside)
         let notificationBtn = UIBarButtonItem(customView: notification)
         
-        self.navigationItem.rightBarButtonItems = [notificationBtn, syncBtn]
+        let setting = UIButton()
+        setting.setImage(UIImage(named: "settings-navbar"), for: .normal)
+        setting.addTarget(self, action: #selector(openActionSheet), for: .touchUpInside)
+        let settingBtn = UIBarButtonItem(customView: setting)
+        
+        self.navigationItem.rightBarButtonItems = [notificationBtn, syncBtn, settingBtn]
     }
     
     func addTripleNavigationButtons() {
@@ -104,24 +109,62 @@ class BaseViewController: UIViewController {
         notification.addTarget(self, action: #selector(openNotificationViewController), for: .touchUpInside)
         let notificationBtn = UIBarButtonItem(customView: notification)
         
-        self.navigationItem.rightBarButtonItems = [notificationBtn, syncBtn]
+        let setting = UIButton()
+        setting.setImage(UIImage(named: "settings-navbar"), for: .normal)
+        setting.addTarget(self, action: #selector(openActionSheet), for: .touchUpInside)
+        let settingBtn = UIBarButtonItem(customView: setting)
+        
+        self.navigationItem.rightBarButtonItems = [notificationBtn, syncBtn, settingBtn]
     }
     
     @objc func openActionSheet(sender: UIButton) {
         let actionSheet = UIAlertController(title: "\n\n\n\n\n\n", message: nil, preferredStyle: .actionSheet)
-
-        let view = UIView(frame: CGRect(x: 8.0, y: 8.0, width: actionSheet.view.bounds.size.width - 8.0 * 4.5, height: 120.0))
-        view.backgroundColor = UIColor.green
-        actionSheet.view.addSubview(view)
+        let customAlertView:CustomAlertView = Bundle.main.loadNibNamed("CustomAlertView", owner: self, options: nil)?.first as! CustomAlertView
         
-//        actionSheet.addAction(UIAlertAction(title: "Add to a Playlist", style: .default, handler: nil))
-//        actionSheet.addAction(UIAlertAction(title: "Create Playlist", style: .default, handler: nil))
-//        actionSheet.addAction(UIAlertAction(title: "Remove from this Playlist", style: .default, handler: nil))
-//
-        actionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        actionSheet.view.addSubview(customAlertView)
+        customAlertView.logoutBtn.addTarget(self, action: #selector(logoutPressed), for: .touchUpInside)
+        customAlertView.userInfoBtn.addTarget(self, action: #selector(userInfoPressed), for: .touchUpInside)
+        customAlertView.backgroundColor = UIColor.clear
+        customAlertView.translatesAutoresizingMaskIntoConstraints = false
+        customAlertView.topAnchor.constraint(equalTo: actionSheet.view.topAnchor, constant: 8).isActive = true
+        customAlertView.rightAnchor.constraint(equalTo: actionSheet.view.rightAnchor, constant: -10).isActive = true
+        customAlertView.leftAnchor.constraint(equalTo: actionSheet.view.leftAnchor, constant: 10).isActive = true
+        customAlertView.heightAnchor.constraint(equalToConstant: 145).isActive = true
+        
+        actionSheet.addAction(UIAlertAction(title: "Cancel", style: .destructive, handler: nil))
+        
         present(actionSheet, animated: true, completion: nil)
     }
     
+    @objc func logoutPressed() {
+        print("Lougout pressed")
+        self.dismiss(animated: true) {
+            let storyboard = UIStoryboard(name: "Popups", bundle: nil)
+            let controller = storyboard.instantiateViewController(withIdentifier: "LogoutPopupViewController") as! LogoutPopupViewController
+
+            if #available(iOS 13.0, *) {
+                controller.modalPresentationStyle = .overFullScreen
+            }
+
+            controller.modalTransitionStyle = .crossDissolve
+
+            Helper.topMostController().present(controller, animated: true, completion: nil)
+            return 
+        }
+    }
+    @objc func userInfoPressed() {
+        print("Userinfo Pressed")
+        self.dismiss(animated: true) {
+            let storyboard = UIStoryboard(name: "Dashboard", bundle: nil)
+            let comingsoon = storyboard.instantiateViewController(withIdentifier: "ComingSoonViewController") as! ComingSoonViewController
+            comingsoon.modalTransitionStyle = .crossDissolve
+            if #available(iOS 13.0, *) {
+                comingsoon.modalPresentationStyle = .overFullScreen
+            }
+            comingsoon.emp_id = CURRENT_USER_LOGGED_IN_ID
+            Helper.topMostController().present(comingsoon, animated: true, completion: nil)
+        }
+    }
     @objc func openNotificationViewController(sender: UIButton) {
         let storyboard = UIStoryboard(name: "Dashboard", bundle: nil)
         let controller = storyboard.instantiateViewController(withIdentifier: "NotificationsViewController") as! NotificationsViewController

@@ -15,6 +15,7 @@ class WalletHistoryViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Wallet"
+        addDoubleNavigationButtons()
         self.makeTopCornersRounded(roundView: self.mainView)
         
         self.tableView.register(UINib(nibName: WalletHistoryTableCell.description(), bundle: nil), forCellReuseIdentifier: WalletHistoryTableCell.description())

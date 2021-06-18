@@ -12,22 +12,67 @@ class WalletDetailsViewController: BaseViewController {
 
     @IBOutlet weak var mainView: UIView!
     @IBOutlet weak var mainViewHeightConstraint: NSLayoutConstraint!
+    @IBOutlet weak var thisWeekBtn: UIButton!
     @IBOutlet weak var tableView: UITableView!
+    
+    
+    //MARK: Variables
+    var selected_query: String?
+    var numberOfDays = 7
+    
+    var indexPath: IndexPath?
+    var startday: String?
+    var endday: String?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Wallet"
         self.makeTopCornersRounded(roundView: self.mainView)
-        addSingleNavigationButton()
+        addDoubleNavigationButtons()
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-//            self.mainViewHeightConstraint.constant =  CGFloat(70 * 10) + 50
             self.setupTableViewHeight()
         }
+    }
+    override func viewDidAppear(_ animated: Bool) {
+        NotificationCenter.default.addObserver(self, selector: #selector(upload_pending_request), name: .networkRefreshed, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(refreshedView(notification:)), name: .refreshedViews, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(navigateThroughtNotify(notification:)), name: .navigateThroughNotification, object: nil)
+        self.navigationItem.rightBarButtonItems = nil
+        addDoubleNavigationButtons()
+        
+        if let btn = self.navigationItem.rightBarButtonItems?.first {
+            let count = getNotificationCounts()
+            if count > 0 {
+                btn.addBadge(num: count)
+            } else {
+                btn.removeBadge()
+            }
+        }
+//        setupJSON(numberOfDays: self.numberOfDays, startday: self.startday, endday: self.endday)
+    }
+    @objc func refreshedView(notification: Notification) {
+        self.navigationItem.rightBarButtonItems = nil
+        addDoubleNavigationButtons()
+        
+        
+        if let btn = self.navigationItem.rightBarButtonItems?.first {
+            let count = getNotificationCounts()
+            if count > 0 {
+                btn.addBadge(num: count)
+            } else {
+                btn.removeBadge()
+            }
+        }
+//        self.setupJSON(numberOfDays: numberOfDays, startday: startday, endday: endday)
+    }
+    override func viewDidDisappear(_ animated: Bool) {
+        NotificationCenter.default.removeObserver(self)
     }
     
     func setupTableViewHeight() {
         var height: CGFloat = 0.0
 //        if let count = self.fulfilment_orders?.count {
-            height = CGFloat((70 * 10) + 120)
+            height = CGFloat((70 * 10) + 150)
 //        }
         self.mainViewHeightConstraint.constant = 280
         switch UIDevice().type {
@@ -81,6 +126,24 @@ class WalletDetailsViewController: BaseViewController {
             break
         }
     }
+    
+    @IBAction func thisWeekBtnTapped(_ sender: Any) {
+        let storyboard = UIStoryboard(name: "Popups", bundle: nil)
+        let controller = storyboard.instantiateViewController(withIdentifier: "FilterDataPopupViewController") as! FilterDataPopupViewController
+        
+        if self.selected_query == "Custom Selection" {
+            controller.fromdate = self.startday
+            controller.todate   = self.endday
+        }
+        controller.selected_query = self.selected_query
+        controller.delegate = self
+        controller.modalTransitionStyle = .crossDissolve
+        if #available(iOS 13.0, *) {
+            controller.modalPresentationStyle = .overFullScreen
+        }
+        
+        Helper.topMostController().present(controller, animated: true, completion: nil)
+    }
 }
 
 
@@ -100,4 +163,30 @@ extension WalletDetailsViewController: UITableViewDataSource, UITableViewDelegat
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 70
     }
+}
+
+
+extension WalletDetailsViewController: DateSelectionDelegate {
+    func dateSelection(numberOfDays: Int, selected_query: String) {
+        self.selected_query = selected_query
+        self.thisWeekBtn.setTitle(selected_query, for: .normal)
+        
+        self.startday = nil
+        self.endday = nil
+        
+        self.numberOfDays = numberOfDays
+//        self.setupJSON(numberOfDays: numberOfDays,  startday: startday, endday: endday)
+    }
+    
+    func dateSelection(startDate: String, endDate: String, selected_query: String) {
+        self.selected_query = selected_query
+        self.thisWeekBtn.setTitle(selected_query, for: .normal)
+        
+        self.startday = startDate
+        self.endday   = endDate
+        
+//        self.setupJSON(numberOfDays: 0, startday: startDate, endday: endDate)
+    }
+    
+    func requestModeSelected(selected_query: String) {}
 }
