@@ -524,11 +524,26 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
         return pieChartView
     }
     func setupUserModules() {
+        let isRider = AppDelegate.sharedInstance.db?.read_tbl_UserProfile().first?.RIDER_ALLOW ?? "0"
         module = AppDelegate.sharedInstance.db?.read_tbl_UserModule(query: "Select * from \(db_user_module) GROUP BY SERVER_ID_PK")
         for (i, m) in module!.enumerated() {
             if m.TAGNAME == MODULE_TAG_CLS {
                 self.module?.remove(at: i)
                 break
+            }
+        }
+        
+        for (i,m) in module!.enumerated() {
+            if m.TAGNAME == MODULE_TAG_RIDER {
+                if isRider == "0" {
+                    self.module?.remove(at: i)
+                    break
+                }
+            }
+        }
+        for (i,m) in module!.enumerated() {
+            if m.TAGNAME == MODULE_TAG_ATTENDANCE {
+                self.module?.remove(at: i)
             }
         }
         if let permission = AppDelegate.sharedInstance.db?.read_tbl_UserPermission(permission: PERMISSION_FulfilmentModule).count {
@@ -742,7 +757,9 @@ extension HomeScreenViewController: UICollectionViewDelegate, UICollectionViewDa
             let nav = storyboard.instantiateViewController(withIdentifier: "riderNav") as! UINavigationController
             (nav.children.first as! FetchRiderDataViewController).delegate = self
             nav.modalTransitionStyle = .crossDissolve
-            
+            if #available(iOS 13.0, *) {
+                nav.modalPresentationStyle = .overFullScreen
+            }
             Helper.topMostController().present(nav, animated: true, completion: nil)
             break
         default:

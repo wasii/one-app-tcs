@@ -25,7 +25,8 @@ class FetchRiderDataViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Rider"
-        
+        addDoubleNavigationButtons()
+        self.makeTopCornersRounded(roundView: self.mainView)
         activityIndicator.forEach { (UIActivityIndicatorView) in
             UIActivityIndicatorView.isHidden = true
         }
@@ -34,11 +35,12 @@ class FetchRiderDataViewController: BaseViewController {
             UIImageView.image = UIImageView.image?.withRenderingMode(.alwaysTemplate)
             UIImageView.tintColor = UIColor.white
         }
-        
-        setupJSON { success in
-            if success {
-                self.dismiss(animated: true) {
-                    self.delegate?.moveToRiderScreen()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+            self.setupJSON { success in
+                if success {
+                    self.dismiss(animated: true) {
+                        self.delegate?.moveToRiderScreen()
+                    }
                 }
             }
         }
@@ -49,7 +51,7 @@ class FetchRiderDataViewController: BaseViewController {
         activityIndicator[0].isHidden = false
         activityIndicator[0].startAnimating()
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
             self.courierDetail.text = "Synced Courier Detail"
             self.activityIndicator[0].isHidden = true
             self.activityIndicator[0].stopAnimating()
@@ -61,7 +63,7 @@ class FetchRiderDataViewController: BaseViewController {
             self.activityIndicator[1].isHidden = false
             self.activityIndicator[1].startAnimating()
             
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                 self.deliveryStatus.text = "Synced Delivery Detail"
                 self.activityIndicator[1].isHidden = true
                 self.activityIndicator[1].stopAnimating()
@@ -72,7 +74,7 @@ class FetchRiderDataViewController: BaseViewController {
                 self.activityIndicator[2].isHidden = false
                 self.activityIndicator[2].startAnimating()
                 
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                     self.deliverySheet.text = "Synced Delivery Sheet"
                     self.activityIndicator[2].isHidden = true
                     self.activityIndicator[2].stopAnimating()
@@ -83,7 +85,7 @@ class FetchRiderDataViewController: BaseViewController {
                     self.activityIndicator[3].isHidden = false
                     self.activityIndicator[3].startAnimating()
                     
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                         self.pickup.text = "Synced Pickup"
                         self.activityIndicator[3].isHidden = true
                         self.activityIndicator[3].stopAnimating()
@@ -94,8 +96,8 @@ class FetchRiderDataViewController: BaseViewController {
                         self.activityIndicator[4].isHidden = false
                         self.activityIndicator[4].startAnimating()
                         
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                            self.courierDetail.text = "Synced Pickup Sheet"
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                            self.pickupSheet.text = "Synced Pickup Sheet"
                             self.activityIndicator[4].isHidden = true
                             self.activityIndicator[4].stopAnimating()
                             self.loaderView[4].backgroundColor = UIColor.nativeRedColor()

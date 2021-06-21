@@ -410,29 +410,105 @@
         <!--Rider Dashboard View Controller-->
         <scene sceneID="F1M-zb-QSZ">
             <objects>
-                <viewController storyboardIdentifier="RiderDashboardViewController" id="70X-66-mro" customClass="RiderDashboardViewController" customModule="One_App" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="RiderDashboardViewController" hidesBottomBarWhenPushed="YES" id="70X-66-mro" customClass="RiderDashboardViewController" customModule="One_App" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="kyj-Fz-hn0">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Welcome to Rider Screen" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0Ja-Ub-5Um">
-                                <rect key="frame" x="111" y="437.5" width="192.5" height="21"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="JBh-zq-jQC">
+                                <rect key="frame" x="0.0" y="44" width="414" height="852"/>
+                                <subviews>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Zoh-h3-5da" userLabel="PieChart View" customClass="CustomView" customModule="One_App" customModuleProvider="target">
+                                        <rect key="frame" x="13" y="20" width="388" height="250"/>
+                                        <subviews>
+                                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" pagingEnabled="YES" translatesAutoresizingMaskIntoConstraints="NO" id="pTF-6M-JJg">
+                                                <rect key="frame" x="0.0" y="0.0" width="388" height="250"/>
+                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            </scrollView>
+                                            <pageControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" numberOfPages="2" translatesAutoresizingMaskIntoConstraints="NO" id="Lik-K7-6Xj">
+                                                <rect key="frame" x="143" y="217.5" width="102" height="27.5"/>
+                                                <color key="pageIndicatorTintColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <color key="currentPageIndicatorTintColor" red="0.86666666670000003" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                            </pageControl>
+                                        </subviews>
+                                        <color key="backgroundColor" red="0.94901960780000005" green="0.95294117649999999" blue="0.95686274510000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <constraints>
+                                            <constraint firstItem="pTF-6M-JJg" firstAttribute="leading" secondItem="Zoh-h3-5da" secondAttribute="leading" id="Aet-ha-Oca"/>
+                                            <constraint firstAttribute="trailing" secondItem="pTF-6M-JJg" secondAttribute="trailing" id="KMO-yQ-WMW"/>
+                                            <constraint firstAttribute="bottom" secondItem="pTF-6M-JJg" secondAttribute="bottom" id="MHK-Go-z9Y"/>
+                                            <constraint firstAttribute="bottom" secondItem="Lik-K7-6Xj" secondAttribute="bottom" constant="5" id="NTg-9L-TiF"/>
+                                            <constraint firstItem="pTF-6M-JJg" firstAttribute="top" secondItem="Zoh-h3-5da" secondAttribute="top" id="T4P-e2-zqO"/>
+                                            <constraint firstItem="Lik-K7-6Xj" firstAttribute="centerX" secondItem="Zoh-h3-5da" secondAttribute="centerX" id="YO5-Ww-oXQ"/>
+                                            <constraint firstAttribute="height" constant="250" id="Ztq-cj-sLf"/>
+                                        </constraints>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="color" keyPath="shadowColor">
+                                                <color key="value" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="size" keyPath="shadowOffSet">
+                                                <size key="value" width="0.0" height="0.0"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="shadowRadius">
+                                                <real key="value" value="0.0"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="shadowOpacity">
+                                                <real key="value" value="0.0"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                <real key="value" value="10"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="color" keyPath="bgColor">
+                                                <color key="value" red="0.94901960780000005" green="0.95294117649999999" blue="0.95686274510000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                    </view>
+                                    <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="KZT-QP-wtF">
+                                        <rect key="frame" x="10" y="290" width="394" height="542"/>
+                                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                        <collectionViewFlowLayout key="collectionViewLayout" automaticEstimatedItemSize="YES" minimumLineSpacing="10" minimumInteritemSpacing="10" id="aAt-kf-oCB">
+                                            <size key="itemSize" width="128" height="128"/>
+                                            <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                            <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                            <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                        </collectionViewFlowLayout>
+                                        <cells/>
+                                        <connections>
+                                            <outlet property="dataSource" destination="70X-66-mro" id="FMz-5G-xWc"/>
+                                            <outlet property="delegate" destination="70X-66-mro" id="sBy-bQ-QWc"/>
+                                        </connections>
+                                    </collectionView>
+                                </subviews>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="trailing" secondItem="KZT-QP-wtF" secondAttribute="trailing" constant="10" id="24C-0z-Jam"/>
+                                    <constraint firstItem="Zoh-h3-5da" firstAttribute="leading" secondItem="JBh-zq-jQC" secondAttribute="leading" constant="13" id="6i2-zd-Ktr"/>
+                                    <constraint firstItem="Zoh-h3-5da" firstAttribute="top" secondItem="JBh-zq-jQC" secondAttribute="top" constant="20" id="J8O-Ds-Nex"/>
+                                    <constraint firstItem="KZT-QP-wtF" firstAttribute="top" secondItem="Zoh-h3-5da" secondAttribute="bottom" constant="20" id="O1g-7g-2tg"/>
+                                    <constraint firstItem="KZT-QP-wtF" firstAttribute="leading" secondItem="JBh-zq-jQC" secondAttribute="leading" constant="10" id="iz7-OA-jzj"/>
+                                    <constraint firstAttribute="bottom" secondItem="KZT-QP-wtF" secondAttribute="bottom" constant="20" id="wp7-hu-T3d"/>
+                                    <constraint firstAttribute="trailing" secondItem="Zoh-h3-5da" secondAttribute="trailing" constant="13" id="wzb-d4-BVi"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="E8d-tM-MDc"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstItem="0Ja-Ub-5Um" firstAttribute="centerY" secondItem="kyj-Fz-hn0" secondAttribute="centerY" id="eIw-eI-f8P"/>
-                            <constraint firstItem="0Ja-Ub-5Um" firstAttribute="centerX" secondItem="kyj-Fz-hn0" secondAttribute="centerX" id="qYf-2B-Pwh"/>
+                            <constraint firstItem="JBh-zq-jQC" firstAttribute="top" secondItem="E8d-tM-MDc" secondAttribute="top" id="5sv-69-m5W"/>
+                            <constraint firstAttribute="bottom" secondItem="JBh-zq-jQC" secondAttribute="bottom" id="CmO-8K-T9A"/>
+                            <constraint firstItem="E8d-tM-MDc" firstAttribute="trailing" secondItem="JBh-zq-jQC" secondAttribute="trailing" id="caF-Zf-gWk"/>
+                            <constraint firstItem="JBh-zq-jQC" firstAttribute="leading" secondItem="E8d-tM-MDc" secondAttribute="leading" id="sxB-GD-deQ"/>
                         </constraints>
                     </view>
+                    <connections>
+                        <outlet property="collectionView" destination="KZT-QP-wtF" id="uhx-5Z-TVn"/>
+                        <outlet property="mainView" destination="JBh-zq-jQC" id="YD4-WZ-3mK"/>
+                        <outlet property="pageControl" destination="Lik-K7-6Xj" id="Hqy-rb-S7w"/>
+                        <outlet property="scrollView" destination="pTF-6M-JJg" id="q3R-6q-Fxx"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="zg4-FH-Tui" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2014" y="100"/>
+            <point key="canvasLocation" x="1765" y="96"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="Swc-dp-Igm">

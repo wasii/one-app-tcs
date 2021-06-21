@@ -467,7 +467,7 @@ class DBHelper {
     }
     //MARK: USER_PROFILE
     func insert_tbl_UserProfile(user: User) {
-        let insertStatementString = "INSERT INTO \(db_user_profile)(SERVER_ID_PK,EMP_NAME,GENDER,CNIC_NO,DISABLE_STATUS,CURR_CITY,EMP_CELL_1,EMP_CELL_2,GRADE_CODE,EMP_STATUS,UNIT_CODE,WORKING_DESIG_CODE,DESIG_CODE,DEPT_CODE,SUB_DEPT_CODE,USERID,AREA_CODE,STATION_CODE,HUB_CODE,ACCESSTOKEN, HIGHNESS) VALUES (?, ?, ?, ?,?, ?, ?, ?,?, ?, ?, ?,?, ?, ?, ?,?, ?, ?, ?, ?);"
+        let insertStatementString = "INSERT INTO \(db_user_profile)(SERVER_ID_PK,EMP_NAME,GENDER,CNIC_NO,DISABLE_STATUS,CURR_CITY,EMP_CELL_1,EMP_CELL_2,GRADE_CODE,EMP_STATUS,UNIT_CODE,WORKING_DESIG_CODE,DESIG_CODE,DEPT_CODE,SUB_DEPT_CODE,USERID,AREA_CODE,STATION_CODE,HUB_CODE,ACCESSTOKEN, HIGHNESS, RIDER_ALLOW) VALUES (?, ?, ?, ?,?, ?, ?, ?,?, ?, ?, ?,?, ?, ?, ?,?, ?, ?, ?, ?, ?);"
         
         var insertStatement: OpaquePointer? = nil
         if sqlite3_prepare_v2(self.db, insertStatementString, -1, &insertStatement, nil) == SQLITE_OK {
@@ -493,6 +493,7 @@ class DBHelper {
             sqlite3_bind_text(insertStatement, 19, ((user.hubCode ?? "") as NSString).utf8String, -1, nil)
             sqlite3_bind_text(insertStatement, 20, ((UserDefaults.standard.string(forKey: USER_ACCESS_TOKEN) ?? "") as NSString).utf8String, -1, nil)
             sqlite3_bind_text(insertStatement, 21, ((user.highness ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 22, ((user.rider_allow ?? "") as NSString).utf8String, -1, nil)
             
             if sqlite3_step(insertStatement) == SQLITE_DONE {
                 //print("\(db_user_profile): Successfully inserted row.")
@@ -534,8 +535,8 @@ class DBHelper {
                 let hub_code = String(describing: String(cString: sqlite3_column_text(queryStatement, 19)))
                 let access_token = String(describing: String(cString: sqlite3_column_text(queryStatement, 20)))
                 let highness = String(describing: String(cString: sqlite3_column_text(queryStatement, 21)))
-                
-                tbl_userprofile.append(tbl_UserProfile(ID: id, SERVER_ID_PK: server_id_pk, EMP_NAME: emp_name, GENDER: gender, CNIC_NO: cnic_no, DISABLE_STATUS: disable_status, CURR_CITY: curr_city, EMP_CELL_1: emp_cell_1, EMP_CELL_2: emp_cell_2, GRADE_CODE: grade_code, EMP_STATUS: emp_status, UNIT_CODE: unit_code, WORKING_DESIG_CODE: working_desig_code, DESIG_CODE: desig_code, DEPT_CODE: dept_code, SUB_DEPT_CODE: sub_dept_code, USERID: user_id, AREA_CODE: area_code, STATION_CODE: station_code, HUB_CODE: hub_code, ACCESSTOKEN: access_token, HIGHNESS: highness))
+                let rider_allow = String(describing: String(cString: sqlite3_column_text(queryStatement, 22)))
+                tbl_userprofile.append(tbl_UserProfile(ID: id, SERVER_ID_PK: server_id_pk, EMP_NAME: emp_name, GENDER: gender, CNIC_NO: cnic_no, DISABLE_STATUS: disable_status, CURR_CITY: curr_city, EMP_CELL_1: emp_cell_1, EMP_CELL_2: emp_cell_2, GRADE_CODE: grade_code, EMP_STATUS: emp_status, UNIT_CODE: unit_code, WORKING_DESIG_CODE: working_desig_code, DESIG_CODE: desig_code, DEPT_CODE: dept_code, SUB_DEPT_CODE: sub_dept_code, USERID: user_id, AREA_CODE: area_code, STATION_CODE: station_code, HUB_CODE: hub_code, ACCESSTOKEN: access_token, HIGHNESS: highness, RIDER_ALLOW: rider_allow))
             }
         } else {
             print("\(db_user_profile): SELECT statement could not be prepared")
@@ -2971,6 +2972,7 @@ struct tbl_UserProfile: Encodable, Decodable {
     var HUB_CODE: String = ""
     var ACCESSTOKEN: String = ""
     var HIGHNESS: String = ""
+    var RIDER_ALLOW: String = ""
 }
 
 //MARK: SETUP API

@@ -35,7 +35,7 @@ struct User: Codable {
     let gradeCode, empStatus, unitCode: String?
     let workingDesig, deptCode: String?
     let subDeptCode, userid, areaCode: String?
-    let stationCode, hubCode, highness: String?
+    let stationCode, hubCode, highness, rider_allow: String?
 //    let empName, fatherName, gender, cnicNo: String?
 //    let disableStatus: String?
 //    let currPhone01, currAddress, currCity: String?
@@ -170,6 +170,7 @@ struct User: Codable {
         case hubCode = "HUB_CODE"
 //        case region = "REGION"
         case highness = "HIGHNESS"
+        case rider_allow = "RIDER_ALLOW"
     }
 }
 

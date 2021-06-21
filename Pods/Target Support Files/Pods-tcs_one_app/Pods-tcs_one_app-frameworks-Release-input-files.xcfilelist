@@ -20,6 +20,7 @@ ${BUILT_PRODUCTS_DIR}/SDWebImage/SDWebImage.framework
 ${BUILT_PRODUCTS_DIR}/SVProgressHUD/SVProgressHUD.framework
 ${BUILT_PRODUCTS_DIR}/SimplePDF/SimplePDF.framework
 ${BUILT_PRODUCTS_DIR}/SwiftSVG/SwiftSVG.framework
+${BUILT_PRODUCTS_DIR}/SwiftSignatureView/SwiftSignatureView.framework
 ${BUILT_PRODUCTS_DIR}/SwiftyJSON/SwiftyJSON.framework
 ${BUILT_PRODUCTS_DIR}/TPPDF/TPPDF.framework
 ${BUILT_PRODUCTS_DIR}/Toast-Swift/Toast_Swift.framework

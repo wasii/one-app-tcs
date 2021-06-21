@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="89" id="KGk-i7-Jjw" customClass="RiderDashboardTableCell" customModule="One_App" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="437" height="80"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
+                <rect key="frame" x="0.0" y="0.0" width="437" height="80"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jmA-Nc-ebL" customClass="CustomView" customModule="One_App" customModuleProvider="target">
+                        <rect key="frame" x="5" y="5" width="427" height="70"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="CN Number" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="V4v-VY-vU9">
+                                <rect key="frame" x="15" y="5" width="82" height="18"/>
+                                <fontDescription key="fontDescription" type="system" weight="medium" pointSize="15"/>
+                                <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Sheet Number" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ime-bD-xSM">
+                                <rect key="frame" x="15" y="29" width="69.5" height="12"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="10"/>
+                                <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Customer Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hvw-0E-Zd3">
+                                <rect key="frame" x="15" y="46" width="98" height="16"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dc0-tX-WA1">
+                                <rect key="frame" x="377" y="17.5" width="35" height="35"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="35" id="y3J-bd-aqg"/>
+                                    <constraint firstAttribute="width" secondItem="dc0-tX-WA1" secondAttribute="height" id="zSL-nY-uN4"/>
+                                </constraints>
+                                <state key="normal" image="call-outline"/>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1z9-0X-UJB">
+                                <rect key="frame" x="337" y="17.5" width="35" height="35"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="35" id="GRd-Dz-Ap2"/>
+                                    <constraint firstAttribute="width" secondItem="1z9-0X-UJB" secondAttribute="height" id="Rej-kl-dlF"/>
+                                </constraints>
+                                <state key="normal" image="googlepin"/>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="dc0-tX-WA1" secondAttribute="trailing" constant="15" id="1S3-mQ-t68"/>
+                            <constraint firstItem="ime-bD-xSM" firstAttribute="leading" secondItem="jmA-Nc-ebL" secondAttribute="leading" constant="15" id="1aX-f6-m06"/>
+                            <constraint firstItem="ime-bD-xSM" firstAttribute="centerY" secondItem="jmA-Nc-ebL" secondAttribute="centerY" id="2RP-kt-zlU"/>
+                            <constraint firstItem="dc0-tX-WA1" firstAttribute="centerY" secondItem="jmA-Nc-ebL" secondAttribute="centerY" id="6yY-DZ-y8O"/>
+                            <constraint firstItem="V4v-VY-vU9" firstAttribute="leading" secondItem="jmA-Nc-ebL" secondAttribute="leading" constant="15" id="8eI-Lx-qML"/>
+                            <constraint firstItem="hvw-0E-Zd3" firstAttribute="leading" secondItem="jmA-Nc-ebL" secondAttribute="leading" constant="15" id="Fhe-FB-3jK"/>
+                            <constraint firstItem="1z9-0X-UJB" firstAttribute="width" secondItem="1z9-0X-UJB" secondAttribute="height" id="Gs8-nC-zYD"/>
+                            <constraint firstItem="hvw-0E-Zd3" firstAttribute="top" secondItem="ime-bD-xSM" secondAttribute="bottom" constant="5" id="MnI-Pj-8Mb"/>
+                            <constraint firstItem="dc0-tX-WA1" firstAttribute="leading" secondItem="1z9-0X-UJB" secondAttribute="trailing" constant="5" id="ObU-Un-h4N"/>
+                            <constraint firstItem="1z9-0X-UJB" firstAttribute="centerY" secondItem="jmA-Nc-ebL" secondAttribute="centerY" id="qVh-gh-bOk"/>
+                            <constraint firstItem="V4v-VY-vU9" firstAttribute="top" secondItem="jmA-Nc-ebL" secondAttribute="top" constant="5" id="u0e-Be-iw6"/>
+                        </constraints>
+                        <userDefinedRuntimeAttributes>
+                            <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
+                                <real key="value" value="1.3999999999999999"/>
+                            </userDefinedRuntimeAttribute>
+                            <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
+                                <color key="value" red="0.87058823529999996" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                            </userDefinedRuntimeAttribute>
+                            <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                <real key="value" value="10"/>
+                            </userDefinedRuntimeAttribute>
+                        </userDefinedRuntimeAttributes>
+                    </view>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="jmA-Nc-ebL" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="5" id="WXO-g2-uBW"/>
+                    <constraint firstAttribute="trailing" secondItem="jmA-Nc-ebL" secondAttribute="trailing" constant="5" id="Ysl-Iy-Vyb"/>
+                    <constraint firstAttribute="bottom" secondItem="jmA-Nc-ebL" secondAttribute="bottom" constant="5" id="Zkl-vf-dtv"/>
+                    <constraint firstItem="jmA-Nc-ebL" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="5" id="c7d-LG-ctg"/>
+                </constraints>
+            </tableViewCellContentView>
+            <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <connections>
+                <outlet property="callBtn" destination="dc0-tX-WA1" id="4hZ-Sz-KDW"/>
+                <outlet property="cnNumber" destination="V4v-VY-vU9" id="yKa-CN-m7y"/>
+                <outlet property="customerName" destination="hvw-0E-Zd3" id="vqw-fE-cap"/>
+                <outlet property="googlePin" destination="1z9-0X-UJB" id="aEh-km-RzU"/>
+                <outlet property="sheetNumber" destination="ime-bD-xSM" id="e0t-MU-nDS"/>
+            </connections>
+            <point key="canvasLocation" x="61.594202898550726" y="106.80803571428571"/>
+        </tableViewCell>
+    </objects>
+    <resources>
+        <image name="call-outline" width="512" height="512"/>
+        <image name="googlepin" width="512" height="512"/>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
+</document>

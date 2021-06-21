@@ -371,6 +371,11 @@ PODS:
     - GoogleToolboxForMac/Logger (~> 2.1)
     - Protobuf (~> 3.5)
   - Floaty (4.2.0)
+  - GoogleMaps (5.0.0):
+    - GoogleMaps/Maps (= 5.0.0)
+  - GoogleMaps/Base (5.0.0)
+  - GoogleMaps/Maps (5.0.0):
+    - GoogleMaps/Base
   - GoogleToolboxForMac/Defines (2.3.0)
   - GoogleToolboxForMac/Logger (2.3.0):
     - GoogleToolboxForMac/Defines (= 2.3.0)
@@ -479,6 +484,7 @@ PODS:
   - SDWebImage/Core (5.9.4)
   - SimplePDF (3.0.0)
   - SVProgressHUD (2.2.5)
+  - SwiftSignatureView (3.2.0)
   - SwiftSVG (2.3.2)
   - SwiftyJSON (5.0.0)
   - Toast-Swift (5.0.1)
@@ -495,6 +501,7 @@ DEPENDENCIES:
   - Firebase/Firestore
   - Firebase/Messaging
   - Floaty
+  - GoogleMaps
   - GrowingTextView (= 0.7.2)
   - IQKeyboardManagerSwift
   - MarqueeLabel
@@ -505,6 +512,7 @@ DEPENDENCIES:
   - SDWebImage
   - SimplePDF
   - SVProgressHUD
+  - SwiftSignatureView
   - SwiftSVG
   - SwiftyJSON
   - Toast-Swift
@@ -527,6 +535,7 @@ SPEC REPOS:
     - FirebaseInstanceID
     - FirebaseMessaging
     - Floaty
+    - GoogleMaps
     - GoogleToolboxForMac
     - GrowingTextView
     - gRPC
@@ -545,6 +554,7 @@ SPEC REPOS:
     - SDWebImage
     - SimplePDF
     - SVProgressHUD
+    - SwiftSignatureView
     - SwiftSVG
     - SwiftyJSON
     - Toast-Swift
@@ -566,6 +576,7 @@ SPEC CHECKSUMS:
   FirebaseInstanceID: 8d20d890d65c917f9f7d9950b6e10a760ad34321
   FirebaseMessaging: 75cdb862e86c30e0913a2ff307e48d49357c5b73
   Floaty: e2bd5a0f6f7f70899e26ff2da31081c8bee8d1b0
+  GoogleMaps: 600e5e69bdf7f4ed7cac4d6aa96c7ec08a5aa254
   GoogleToolboxForMac: 1350d40e86a76f7863928d63bcb0b89c84c521c5
   GrowingTextView: 876bf42005b5e4a4fd740597db12caaf41f0fe6c
   gRPC: 659a45fd11266316f2f765c22e72cf5909750618
@@ -584,11 +595,12 @@ SPEC CHECKSUMS:
   SDWebImage: b69257f4ab14e9b6a2ef53e910fdf914d8f757c1
   SimplePDF: 903143ede36965886997a5c1bc6b8940b082ba20
   SVProgressHUD: 1428aafac632c1f86f62aa4243ec12008d7a51d6
+  SwiftSignatureView: cd8cca297cc2ca6a6c174da22fb908c33d03d3c0
   SwiftSVG: ca7f64e403b8ea7ea8eba8c823b83ba4a059834c
   SwiftyJSON: 36413e04c44ee145039d332b4f4e2d3e8d6c4db7
   Toast-Swift: 9b6a70f28b3bf0b96c40d46c0c4b9d6639846711
   TPPDF: 000c670ca79d0b00c62dcc32b168c6f691dc92a5
 
-PODFILE CHECKSUM: f3147efde3ac8d06660a06ea23db05779e1c911f
+PODFILE CHECKSUM: f44a34225576c86dea2d2bbe80ce21d0fd83124b
 
 COCOAPODS: 1.10.1
