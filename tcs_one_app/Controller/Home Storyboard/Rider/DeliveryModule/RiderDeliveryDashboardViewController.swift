@@ -52,7 +52,8 @@ extension RiderDeliveryDashboardViewController: UITableViewDelegate, UITableView
         return cell
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
+        let controller = self.storyboard?.instantiateViewController(withIdentifier: "RiderUpdateDeliveryViewController") as! RiderUpdateDeliveryViewController
+        self.navigationController?.pushViewController(controller, animated: true)
     }
     
     @objc func googlePinTapped(sender: UIButton) {
