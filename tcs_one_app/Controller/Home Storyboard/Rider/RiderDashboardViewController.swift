@@ -57,11 +57,19 @@ extension RiderDashboardViewController: UICollectionViewDataSource, UICollection
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        if indexPath.row == 0 {
+            let storyboard = UIStoryboard(name: "RiderPickup", bundle: nil)
+            let controller = storyboard.instantiateViewController(withIdentifier: "RiderPickupDashboardViewController") as! RiderPickupDashboardViewController
+            
+            self.navigationController?.pushViewController(controller, animated: true)
+            return
+        }
         if indexPath.row == 1 {
             let storyboard = UIStoryboard(name: "RiderDelivery", bundle: nil)
             let controller = storyboard.instantiateViewController(withIdentifier: "RiderDeliveryDashboardViewController") as! RiderDeliveryDashboardViewController
             
             self.navigationController?.pushViewController(controller, animated: true)
+            return
         }
     }
     

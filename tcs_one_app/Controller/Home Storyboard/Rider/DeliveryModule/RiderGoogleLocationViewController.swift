@@ -18,12 +18,12 @@ class RiderGoogleLocationViewController: BaseViewController {
         title = "Rider"
         GMSServices.provideAPIKey("AIzaSyAWgNm6sVh2KWgBZfHWIhevbs3V-6cmTXM")
         self.makeTopCornersRounded(roundView: mainView)
-        
+    }
+    
+    override func viewDidLayoutSubviews() {
         let camera = GMSCameraPosition(latitude: 24.895032036850953, longitude: 67.15626468971116 , zoom: 11.0)
         let mapView = GMSMapView.map(withFrame: CGRect(x: 0, y: 0, width: self.mapView.frame.size.width, height: self.mapView.frame.size.height), camera: camera)
         self.mapView.addSubview(mapView)
-        
-        
         let marker = GMSMarker()
         marker.position = CLLocationCoordinate2D(latitude: 24.895032036850953, longitude: 67.15626468971116)
         marker.map = mapView
