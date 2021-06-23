@@ -116,7 +116,9 @@
             <connections>
                 <outlet property="CNNumber" destination="anJ-RR-dhp" id="ucz-zH-S6s"/>
                 <outlet property="CODAmount" destination="GcS-8v-zLa" id="77d-ms-wzy"/>
+                <outlet property="CameraBtn" destination="KS6-tE-E7c" id="Pi3-qV-khu"/>
                 <outlet property="Description" destination="h04-h9-aRx" id="Dlj-JN-ELY"/>
+                <outlet property="EditBtn" destination="bKD-8B-jUg" id="ELa-Yc-Uat"/>
                 <outlet property="OptionsStackView" destination="pxJ-4j-ACZ" id="a4Y-B8-jzc"/>
                 <outlet property="StatusLabel" destination="uqC-XJ-m0u" id="esJ-rz-6pG"/>
                 <outlet property="mainView" destination="7Cn-RH-R8m" id="p3M-kj-G5m"/>

@@ -182,7 +182,29 @@ extension RiderPickupUpdateListingViewController: UITableViewDataSource, UITable
             cell.StatusLabel.textColor = UIColor.rejectedColor()
         }
         
+        cell.CameraBtn.tag = indexPath.row
+        cell.CameraBtn.addTarget(self, action: #selector(cameraBtnTapped(sender:)), for: .touchUpInside)
+        
+        cell.EditBtn.tag = indexPath.row
+        cell.EditBtn.addTarget(self, action: #selector(editBtnTapped(sender:)), for: .touchUpInside)
+        
+        
         return cell
+    }
+    
+    @objc func cameraBtnTapped(sender: UIButton) {
+        
+    }
+    @objc func editBtnTapped(sender: UIButton) {
+        let popup = UIStoryboard(name: "Popups", bundle: nil)
+        let controller = popup.instantiateViewController(withIdentifier: "RiderPickupUpdatePopupViewController") as! RiderPickupUpdatePopupViewController
+        
+        if #available(iOS 13.0, *) {
+            controller.modalPresentationStyle = .overFullScreen
+        }
+        controller.modalTransitionStyle = .crossDissolve
+        
+        Helper.topMostController().present(controller, animated: true, completion: nil)
     }
 }
 

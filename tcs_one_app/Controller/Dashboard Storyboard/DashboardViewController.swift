@@ -21,45 +21,24 @@ class DashboardViewController: UITabBarController, UITabBarControllerDelegate {
                 return true
             }
             if let _ = viewController.children[0] as? MessageViewController {
-//                self.showAlert()
                 return false
             }
             if let _ = viewController.children[0] as? MailViewController {
-//                self.showAlert()
                 return false
             }
             if let _ = viewController.children[0] as? AttendanceMarkingViewController {
-//                self.showAlert()
                 return true
             }
             if let _ = viewController.children[0] as? WalletDashboardViewController {
-//                self.showAlert()
                 return true
             }
-            
-//            if let _ = viewController.children[0] as? UIViewController {
-//                let storyboard = UIStoryboard(name: "Popups", bundle: nil)
-//                let controller = storyboard.instantiateViewController(withIdentifier: "LogoutPopupViewController") as! LogoutPopupViewController
-//
-//                if #available(iOS 13.0, *) {
-//                    controller.modalPresentationStyle = .overFullScreen
-//                }
-//
-//                controller.modalTransitionStyle = .crossDissolve
-//
-//                Helper.topMostController().present(controller, animated: true, completion: nil)
-//                return false
-//            }
         }
         return true
     }
-    override func viewWillLayoutSubviews() {
-//        tabBar.sizeThatFits(CGSize(width: UIScreen().bounds.width, height: 70))
-//        self.tabBar.bottomAnchor.constraint(equalTo: self.view.layoutMarginsGuide.bottomAnchor).isActive = true
-//        var tabFrame = tabBar.frame
-//                tabFrame.size.height = 60
-//                tabFrame.origin.y = self.view.frame.size.height - 60
-//                tabBar.frame = tabFrame
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        tabBar.frame.size.height = 95
+        tabBar.frame.origin.y = view.frame.height - 95
     }
     func showAlert() {
         let comingsoon = self.storyboard?.instantiateViewController(withIdentifier: "ComingSoonViewController") as! ComingSoonViewController

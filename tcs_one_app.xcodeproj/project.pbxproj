@@ -123,6 +123,7 @@
 		1BE523DC2679E1CF00F5F030 /* Wallet.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1BE523DB2679E1CF00F5F030 /* Wallet.storyboard */; };
 		1BE523DF2679E26500F5F030 /* WalletDashboardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BE523DE2679E26500F5F030 /* WalletDashboardViewController.swift */; };
 		1BE523E1267A325100F5F030 /* WalletDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BE523E0267A325100F5F030 /* WalletDetailsViewController.swift */; };
+		1BEF53242683161D0074CCB9 /* RiderPickupUpdatePopupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BEF53232683161D0074CCB9 /* RiderPickupUpdatePopupViewController.swift */; };
 		1BF25A4A25E7CA3B008CE34F /* LeadershipAwaz.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1BF25A4925E7CA3B008CE34F /* LeadershipAwaz.storyboard */; };
 		1BF25A4F25E7D4EB008CE34F /* LeadershipListingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BF25A4E25E7D4EB008CE34F /* LeadershipListingViewController.swift */; };
 		1BF25A5325E7D507008CE34F /* ChairmenListingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BF25A5225E7D507008CE34F /* ChairmenListingViewController.swift */; };
@@ -311,6 +312,7 @@
 		1BE523DB2679E1CF00F5F030 /* Wallet.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Wallet.storyboard; sourceTree = "<group>"; };
 		1BE523DE2679E26500F5F030 /* WalletDashboardViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletDashboardViewController.swift; sourceTree = "<group>"; };
 		1BE523E0267A325100F5F030 /* WalletDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletDetailsViewController.swift; sourceTree = "<group>"; };
+		1BEF53232683161D0074CCB9 /* RiderPickupUpdatePopupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RiderPickupUpdatePopupViewController.swift; sourceTree = "<group>"; };
 		1BF25A4925E7CA3B008CE34F /* LeadershipAwaz.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LeadershipAwaz.storyboard; sourceTree = "<group>"; };
 		1BF25A4E25E7D4EB008CE34F /* LeadershipListingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeadershipListingViewController.swift; sourceTree = "<group>"; };
 		1BF25A5225E7D507008CE34F /* ChairmenListingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChairmenListingViewController.swift; sourceTree = "<group>"; };
@@ -920,6 +922,7 @@
 				1B14F16925656DE500C4EA51 /* AddMemoPopupViewController.swift */,
 				1B02129525A6E27300441E9F /* ConfirmationPopViewController.swift */,
 				1B6EAAD32681E51900941863 /* SignatureCommentsViewController.swift */,
+				1BEF53232683161D0074CCB9 /* RiderPickupUpdatePopupViewController.swift */,
 			);
 			path = "Popups Storyboard";
 			sourceTree = "<group>";
@@ -1166,6 +1169,7 @@
 				60978BDD2551D1A6009AA2F3 /* LogoutViewController.swift in Sources */,
 				609C606025387C4B0051CF28 /* BaseViewController.swift in Sources */,
 				1B6279E72591E5E200C88FEE /* IMSNewRequestViewController.swift in Sources */,
+				1BEF53242683161D0074CCB9 /* RiderPickupUpdatePopupViewController.swift in Sources */,
 				1BE523DF2679E26500F5F030 /* WalletDashboardViewController.swift in Sources */,
 				1BFB374D25F9D73B0073CC53 /* AttendanceMarkingViewController.swift in Sources */,
 				60C34FDA25397D1600495944 /* FetchUserDataViewController.swift in Sources */,

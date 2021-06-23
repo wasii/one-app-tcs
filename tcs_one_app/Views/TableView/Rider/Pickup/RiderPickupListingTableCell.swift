@@ -18,6 +18,8 @@ class RiderPickupListingTableCell: UITableViewCell {
     @IBOutlet weak var Description: UILabel!
     @IBOutlet weak var StatusLabel: UILabel!
     @IBOutlet weak var OptionsStackView: UIStackView!
+    @IBOutlet weak var CameraBtn: UIButton!
+    @IBOutlet weak var EditBtn: UIButton!
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
