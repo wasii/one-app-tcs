@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		1B02129625A6E27300441E9F /* ConfirmationPopViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B02129525A6E27300441E9F /* ConfirmationPopViewController.swift */; };
+		1B06C91F268C82E4004FD140 /* RiderPickupUpdateListingPopupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B06C91E268C82E4004FD140 /* RiderPickupUpdateListingPopupViewController.swift */; };
 		1B0C62EB255C100C00DCA76D /* ModulePermissionsTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B0C62E9255C100C00DCA76D /* ModulePermissionsTableCell.swift */; };
 		1B0C62EC255C100C00DCA76D /* ModulePermissionsTableCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1B0C62EA255C100C00DCA76D /* ModulePermissionsTableCell.xib */; };
 		1B0CD7DA25F0C0B500C1C87D /* TCSOneApp.db in Resources */ = {isa = PBXBuildFile; fileRef = 1B0CD7D925F0C0B500C1C87D /* TCSOneApp.db */; };
@@ -197,6 +198,7 @@
 
 /* Begin PBXFileReference section */
 		1B02129525A6E27300441E9F /* ConfirmationPopViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmationPopViewController.swift; sourceTree = "<group>"; };
+		1B06C91E268C82E4004FD140 /* RiderPickupUpdateListingPopupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RiderPickupUpdateListingPopupViewController.swift; sourceTree = "<group>"; };
 		1B0C62E9255C100C00DCA76D /* ModulePermissionsTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModulePermissionsTableCell.swift; sourceTree = "<group>"; };
 		1B0C62EA255C100C00DCA76D /* ModulePermissionsTableCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ModulePermissionsTableCell.xib; sourceTree = "<group>"; };
 		1B0CD7D925F0C0B500C1C87D /* TCSOneApp.db */ = {isa = PBXFileReference; lastKnownFileType = file; path = TCSOneApp.db; sourceTree = "<group>"; };
@@ -923,6 +925,7 @@
 				1B02129525A6E27300441E9F /* ConfirmationPopViewController.swift */,
 				1B6EAAD32681E51900941863 /* SignatureCommentsViewController.swift */,
 				1BEF53232683161D0074CCB9 /* RiderPickupUpdatePopupViewController.swift */,
+				1B06C91E268C82E4004FD140 /* RiderPickupUpdateListingPopupViewController.swift */,
 			);
 			path = "Popups Storyboard";
 			sourceTree = "<group>";
@@ -1178,6 +1181,7 @@
 				1B6EAAD92681F19C00941863 /* RiderPickupDashboardViewController.swift in Sources */,
 				1BA5110B267B28A400E0E642 /* WalletHistoryTableCell.swift in Sources */,
 				1B6EAAE126820D3B00941863 /* RiderPickupListingTableCell.swift in Sources */,
+				1B06C91F268C82E4004FD140 /* RiderPickupUpdateListingPopupViewController.swift in Sources */,
 				1B61B2BC25DD25DD00CDAAE2 /* DManDetailsTableCell.swift in Sources */,
 				1B3EDCA2260C620100A97984 /* FulfilmentListingTableCell.swift in Sources */,
 				1B5EAA83255EA4A600F49D09 /* GrievanceHelpDeskRequestsViewController.swift in Sources */,

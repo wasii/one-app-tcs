@@ -9,6 +9,9 @@
 import UIKit
 import MaterialComponents.MaterialTextControls_OutlinedTextFields
 
+protocol OpenSignatureView {
+    func openSignatureView()
+}
 class RiderUpdateDeliveryViewController: BaseViewController {
 
     @IBOutlet weak var mainView: UIView!
@@ -164,7 +167,7 @@ class RiderUpdateDeliveryViewController: BaseViewController {
     }
     @IBAction func forwardBtnTapped(_ sender: Any) {
         let storyboard = UIStoryboard(name: "Popups", bundle: nil)
-        let controller = storyboard.instantiateViewController(withIdentifier: "SignatureCommentsViewController") as! SignatureCommentsViewController
+        let controller = storyboard.instantiateViewController(withIdentifier: "RiderPickupUpdateListingPopupViewController") as! RiderPickupUpdateListingPopupViewController
         if #available(iOS 13.0, *) {
             controller.modalPresentationStyle = .overFullScreen
         }
@@ -196,5 +199,18 @@ extension RiderUpdateDeliveryViewController: UIImagePickerControllerDelegate, UI
         } else {
             self.mainViewHeightConstraint = self.mainViewHeightConstraint.changeMultiplier(multiplier: 1.3)
         }
+    }
+}
+
+
+extension RiderUpdateDeliveryViewController: OpenSignatureView {
+    func openSignatureView() {
+        let storyboard = UIStoryboard(name: "Popups", bundle: nil)
+        let controller = storyboard.instantiateViewController(withIdentifier: "SignatureCommentsViewController") as! SignatureCommentsViewController
+        if #available(iOS 13.0, *) {
+            controller.modalPresentationStyle = .overFullScreen
+        }
+        controller.modalTransitionStyle = .crossDissolve
+        Helper.topMostController().present(controller, animated: true, completion: nil)
     }
 }
