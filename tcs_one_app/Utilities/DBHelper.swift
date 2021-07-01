@@ -28,14 +28,14 @@ class DBHelper {
             let fileManager = FileManager.default
             if fileManager.fileExists(atPath: filePath) {
                 let new_db = UserDefaults.standard.bool(forKey: "NEWDB")
-                if new_db {
+                if !new_db {
                     do {
                         try fileManager.removeItem(at: pathComponent)
                         try fileManager.removeItem(at: url.appendingPathComponent("\(databaseName).db-shm")!)
                         try fileManager.removeItem(at: url.appendingPathComponent("\(databaseName).db-wal")!)
                         UserDefaults.standard.removeObject(forKey: "CurrentUser")
                         UserDefaults.standard.removeObject(forKey: USER_ACCESS_TOKEN)
-                        UserDefaults.standard.set(false, forKey: "NEWDB")
+                        UserDefaults.standard.set(true, forKey: "NEWDB")
                         return self.copy_database(databaseName: databaseName, pathComponent: pathComponent)
 
                     } catch let err {
@@ -45,7 +45,7 @@ class DBHelper {
                 print(pathComponent)
                 return pathComponent
             } else {
-                UserDefaults.standard.set(false, forKey: "NEWDB")
+                UserDefaults.standard.set(true, forKey: "NEWDB")
                 return self.copy_database(databaseName: databaseName, pathComponent: pathComponent)
             }
         } else {
@@ -2909,6 +2909,137 @@ class DBHelper {
         }
         sqlite3_finalize(insertStatement)
     }
+    
+    //MARK: WALLET INSERT
+    func read_tbl_wallet_query_master(query: String) -> [tbl_wallet_query_master]? {
+        let queryStatementString = query
+        var queryStatement: OpaquePointer? = nil
+        var query_master = [tbl_wallet_query_master]()
+
+        if sqlite3_prepare_v2(db, queryStatementString, -1, &queryStatement, nil) == SQLITE_OK {
+            while sqlite3_step(queryStatement) == SQLITE_ROW {
+                let ID = Int(sqlite3_column_int(queryStatement, 0))
+                let HEADER_ID = Int(sqlite3_column_int(queryStatement, 1))
+                let HEADER_NAME = String(describing: String(cString: sqlite3_column_text(queryStatement, 2)))
+                let HEADER_DESCRIPTION = String(describing: String(cString: sqlite3_column_text(queryStatement, 3)))
+                
+                let DETAIL = self.read_tbl_wallet_query_detail(query: "SELECT * FROM \(db_w_query_detail) WHERE HEADER_ID = '\(HEADER_ID)'")
+                
+                query_master.append(tbl_wallet_query_master(ID: ID, HEADER_ID: HEADER_ID, HEADER_NAME: HEADER_NAME, HEADER_DESCRIPTION: HEADER_DESCRIPTION, DETAIL: DETAIL!))
+            }
+        } else {
+            print("SELECT statement \(db_w_query_master) could not be prepared")
+        }
+        return query_master.count > 0 ? query_master : nil
+    }
+    func insert_tbl_wallet_query_master(incentiveData: IncentiveData, handler: @escaping(_ success: Bool) -> Void) {
+        let insertStatementString = "INSERT INTO \(db_w_query_master)(HEADER_ID, HEADER_NAME, HEADER_DESCRIPTION) VALUES (?,?,?);"
+
+        var insertStatement: OpaquePointer? = nil
+        if sqlite3_prepare_v2(self.db, insertStatementString, -1, &insertStatement, nil) == SQLITE_OK {
+            sqlite3_bind_int(insertStatement, 1, Int32(incentiveData.headerID))
+            sqlite3_bind_text(insertStatement, 2, (incentiveData.headerName as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 3, (incentiveData.headerDescription as NSString).utf8String, -1, nil)
+            
+            for detail in incentiveData.details {
+                self.insert_tbl_wallet_query_detail(detail: detail) { _ in }
+            }
+            
+            if sqlite3_step(insertStatement) == SQLITE_DONE {
+                handler(true)
+            } else {
+                print("\(db_w_query_master): Could not insert row.")
+                handler(false)
+            }
+        } else {
+            handler(false)
+            print("\(db_w_query_master): INSERT statement could not be prepared.")
+        }
+        sqlite3_finalize(insertStatement)
+    }
+    
+    
+    func read_tbl_wallet_query_detail(query: String) -> [tbl_wallet_query_detail]? {
+        let queryStatementString = query
+        var queryStatement: OpaquePointer? = nil
+        var query_master = [tbl_wallet_query_detail]()
+
+        if sqlite3_prepare_v2(db, queryStatementString, -1, &queryStatement, nil) == SQLITE_OK {
+            while sqlite3_step(queryStatement) == SQLITE_ROW {
+                let ID = Int(sqlite3_column_int(queryStatement, 0))
+                let HEADER_ID = Int(sqlite3_column_int(queryStatement, 1))
+                let INC_CODE = String(describing: String(cString: sqlite3_column_text(queryStatement, 2)))
+                let CODE_DESCRIPTION = String(describing: String(cString: sqlite3_column_text(queryStatement, 3)))
+                
+                query_master.append(tbl_wallet_query_detail(ID: ID, HEADER_ID: HEADER_ID, INC_CODE: INC_CODE, CODE_DESCRIPTION: CODE_DESCRIPTION))
+            }
+        } else {
+            print("SELECT statement \(db_w_query_master) could not be prepared")
+        }
+        return query_master.count > 0 ? query_master : nil
+    }
+    func insert_tbl_wallet_query_detail(detail: Detail, handler: @escaping(_ success: Bool) -> Void) {
+        let insertStatementString = "INSERT INTO \(db_w_query_detail)(HEADER_ID, INC_CODE, CODE_DESCRIPTION) VALUES (?,?,?);"
+
+        var insertStatement: OpaquePointer? = nil
+        if sqlite3_prepare_v2(self.db, insertStatementString, -1, &insertStatement, nil) == SQLITE_OK {
+            sqlite3_bind_int(insertStatement, 1, Int32(detail.headerID))
+            sqlite3_bind_text(insertStatement, 2, (detail.incCode as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 3, (detail.codeDescription as NSString).utf8String, -1, nil)
+            
+            if sqlite3_step(insertStatement) == SQLITE_DONE {
+                handler(true)
+            } else {
+                print("\(db_w_query_master): Could not insert row.")
+                handler(false)
+            }
+        } else {
+            handler(false)
+            print("\(db_w_query_master): INSERT statement could not be prepared.")
+        }
+        sqlite3_finalize(insertStatement)
+    }
+    
+    func read_tbl_wallet_point_type(query: String) -> [tbl_wallet_point_type]? {
+        let queryStatementString = query
+        var queryStatement: OpaquePointer? = nil
+        var point_type = [tbl_wallet_point_type]()
+
+        if sqlite3_prepare_v2(db, queryStatementString, -1, &queryStatement, nil) == SQLITE_OK {
+            while sqlite3_step(queryStatement) == SQLITE_ROW {
+                let ID = Int(sqlite3_column_int(queryStatement, 0))
+                let POINT_ID = Int(sqlite3_column_int(queryStatement, 1))
+                let UNIT = Int(sqlite3_column_int(queryStatement, 2))
+                let EQUAL_POINT = Int(sqlite3_column_int(queryStatement, 3))
+                
+                
+            }
+        } else {
+            print("SELECT statement \(db_w_pointtypes) could not be prepared")
+        }
+        return point_type.count > 0 ? point_type : nil
+    }
+    func insert_tbl_wallet_point_type(detail: Detail, handler: @escaping(_ success: Bool) -> Void) {
+        let insertStatementString = "INSERT INTO \(db_w_query_detail)(HEADER_ID, INC_CODE, CODE_DESCRIPTION) VALUES (?,?,?);"
+
+        var insertStatement: OpaquePointer? = nil
+        if sqlite3_prepare_v2(self.db, insertStatementString, -1, &insertStatement, nil) == SQLITE_OK {
+            sqlite3_bind_int(insertStatement, 1, Int32(detail.headerID))
+            sqlite3_bind_text(insertStatement, 2, (detail.incCode as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 3, (detail.codeDescription as NSString).utf8String, -1, nil)
+            
+            if sqlite3_step(insertStatement) == SQLITE_DONE {
+                handler(true)
+            } else {
+                print("\(db_w_query_master): Could not insert row.")
+                handler(false)
+            }
+        } else {
+            handler(false)
+            print("\(db_w_query_master): INSERT statement could not be prepared.")
+        }
+        sqlite3_finalize(insertStatement)
+    }
 }
 
 
@@ -3448,4 +3579,37 @@ struct tbl_fulfillment_orders_temp {
     var CN_NUMBER: String = ""
     var BASKET_NO: String = ""
     var CURRENT_USER: String = ""
+}
+
+//MARK: Wallet
+struct tbl_wallet_query_master {
+    var ID: Int = -1
+    var HEADER_ID: Int = -1
+    var HEADER_NAME: String = ""
+    var HEADER_DESCRIPTION: String = ""
+    var DETAIL: [tbl_wallet_query_detail]
+}
+
+struct tbl_wallet_query_detail {
+    var ID: Int = -1
+    var HEADER_ID: Int = -1
+    var INC_CODE: String = ""
+    var CODE_DESCRIPTION: String = ""
+}
+
+struct tbl_wallet_point_type {
+    var ID: Int = -1
+    var POINT_ID: Int = -1
+    var UNIT: Int = -1
+    var EQUAL_POINT: Int = -1
+}
+
+struct tbl_wallet_setup {
+    var ID: Int = -1
+    var REDEMPTION_ID: Int = -1
+    var REDEMPTION_CODE: String = ""
+    var REDEMPTION_DESCRIPTION: String = ""
+    var REDEMPTION_REMARKS: String = ""
+    var IMAGE_URL_ANDROID: String = ""
+    var IMAGE_URL_IOS: String = ""
 }

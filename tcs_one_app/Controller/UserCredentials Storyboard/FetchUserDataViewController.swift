@@ -18,6 +18,7 @@ class FetchUserDataViewController: BaseViewController {
     @IBOutlet weak var hrNotification_Label: UILabel!
     @IBOutlet weak var attecndance_label: UILabel!
     @IBOutlet weak var fulfilment_label: UILabel!
+    @IBOutlet weak var wallet_label: UILabel!
     
     @IBOutlet weak var mainView: UIView!
 
@@ -1077,8 +1078,21 @@ extension FetchUserDataViewController {
                         self.activityIndicator[5].isHidden = true
                         self.checkedImageView[5].isHidden = false
                         
-                        
-                        self.navigateHomeScreen()
+                        self.activityIndicator[6].isHidden = false
+                        self.activityIndicator[6].startAnimating()
+                        self.wallet_label.text = "Syncing Wallet Setup"
+                        self.setupWallet { wallet_success in
+                            if wallet_success {
+                                DispatchQueue.main.async {
+                                    self.wallet_label.text = "Synced Wallet Setup"
+                                    self.loaderViews[6].backgroundColor = UIColor.nativeRedColor()
+                                    self.activityIndicator[6].stopAnimating()
+                                    self.activityIndicator[6].isHidden = true
+                                    self.checkedImageView[6].isHidden = false
+                                }
+                                self.navigateHomeScreen()
+                            }
+                        }
                         return
                     }
                 }
@@ -1116,8 +1130,23 @@ extension FetchUserDataViewController {
                                     self.activityIndicator[5].stopAnimating()
                                     self.activityIndicator[5].isHidden = true
                                     self.checkedImageView[5].isHidden = false
+                                    
+                                    self.activityIndicator[6].isHidden = false
+                                    self.activityIndicator[6].startAnimating()
+                                    self.wallet_label.text = "Syncing Wallet Setup"
+                                    self.setupWallet { wallet_success in
+                                        if wallet_success {
+                                            DispatchQueue.main.async {
+                                                self.wallet_label.text = "Synced Wallet Setup"
+                                                self.loaderViews[6].backgroundColor = UIColor.nativeRedColor()
+                                                self.activityIndicator[6].stopAnimating()
+                                                self.activityIndicator[6].isHidden = true
+                                                self.checkedImageView[6].isHidden = false
+                                            }
+                                        }
+                                        self.navigateHomeScreen()
+                                    }
                                 }
-                                self.navigateHomeScreen()
                             }
                         } else {
                             DispatchQueue.main.async {
@@ -1148,8 +1177,23 @@ extension FetchUserDataViewController {
                         self.activityIndicator[5].isHidden = true
                         self.checkedImageView[5].isHidden = false
                         self.fulfilment_label.text = "Synced Fulfilment Orders Log"
+                        
+                        self.activityIndicator[6].isHidden = false
+                        self.activityIndicator[6].startAnimating()
+                        self.wallet_label.text = "Syncing Wallet Setup"
+                        self.setupWallet { wallet_success in
+                            if wallet_success {
+                                DispatchQueue.main.async {
+                                    self.wallet_label.text = "Synced Wallet Setup"
+                                    self.loaderViews[6].backgroundColor = UIColor.nativeRedColor()
+                                    self.activityIndicator[6].stopAnimating()
+                                    self.activityIndicator[6].isHidden = true
+                                    self.checkedImageView[6].isHidden = false
+                                }
+                                self.navigateHomeScreen()
+                            }
+                        }
                     }
-                    self.navigateHomeScreen()
                 }
 
             } else {
@@ -1232,7 +1276,21 @@ extension FetchUserDataViewController {
                                             self.getFulfilment()
                                             return
                                         } else {
-                                            self.navigateHomeScreen()
+                                            self.activityIndicator[6].isHidden = false
+                                            self.activityIndicator[6].startAnimating()
+                                            self.wallet_label.text = "Syncing Wallet Setup"
+                                            self.setupWallet { wallet_success in
+                                                if wallet_success {
+                                                    DispatchQueue.main.async {
+                                                        self.wallet_label.text = "Synced Wallet Setup"
+                                                        self.loaderViews[6].backgroundColor = UIColor.nativeRedColor()
+                                                        self.activityIndicator[6].stopAnimating()
+                                                        self.activityIndicator[6].isHidden = true
+                                                        self.checkedImageView[6].isHidden = false
+                                                    }
+                                                    self.navigateHomeScreen()
+                                                }
+                                            }
                                             return
                                         }
                                     }
@@ -1300,7 +1358,21 @@ extension FetchUserDataViewController {
                                                     self.getFulfilment()
                                                     return
                                                 } else {
-                                                    self.navigateHomeScreen()
+                                                    self.activityIndicator[6].isHidden = false
+                                                    self.activityIndicator[6].startAnimating()
+                                                    self.wallet_label.text = "Syncing Wallet Setup"
+                                                    self.setupWallet { wallet_success in
+                                                        if wallet_success {
+                                                            DispatchQueue.main.async {
+                                                                self.wallet_label.text = "Synced Wallet Setup"
+                                                                self.loaderViews[6].backgroundColor = UIColor.nativeRedColor()
+                                                                self.activityIndicator[6].stopAnimating()
+                                                                self.activityIndicator[6].isHidden = true
+                                                                self.checkedImageView[6].isHidden = false
+                                                            }
+                                                            self.navigateHomeScreen()
+                                                        }
+                                                    }
                                                     return
                                                 }
                                             }
@@ -1362,8 +1434,22 @@ extension FetchUserDataViewController {
                                         self.getFulfilment()
                                         return
                                     } else {
-                                        self.navigateHomeScreen()
-                                        return
+                                        self.activityIndicator[6].isHidden = false
+                                        self.activityIndicator[6].startAnimating()
+                                        self.wallet_label.text = "Syncing Wallet Setup"
+                                        self.setupWallet { wallet_success in
+                                            if wallet_success {
+                                                DispatchQueue.main.async {
+                                                    self.wallet_label.text = "Synced Wallet Setup"
+                                                    self.loaderViews[6].backgroundColor = UIColor.nativeRedColor()
+                                                    self.activityIndicator[6].stopAnimating()
+                                                    self.activityIndicator[6].isHidden = true
+                                                    self.checkedImageView[6].isHidden = false
+                                                }
+                                                self.navigateHomeScreen()
+                                            }
+                                        }
+//                                        return
                                     }
                                 }
                             }
@@ -1407,6 +1493,49 @@ extension FetchUserDataViewController {
                 return
             }
             print(err.localizedDescription)
+        }
+    }
+    
+    //MARK: Wallet Setup
+    func setupWallet(_ handler: @escaping(Bool)->Void) {
+        NetworkCalls.setupwallet { granted, response in
+            if granted {
+                let json = JSON(response)
+                if let o = json.dictionary?[_walletSetupData] {
+                    do {
+                        let rawdata = try o.rawData()
+                        let model = try JSONDecoder().decode(WalletSetupData.self, from: rawdata)
+                        AppDelegate.sharedInstance.db?.deleteAll(tableName: db_w_query_detail, handler: { _ in
+                            for incentiveData in model.incentiveData {
+                                AppDelegate.sharedInstance.db?.deleteAll(tableName: db_w_query_master, handler: { _ in
+                                    AppDelegate.sharedInstance.db?.insert_tbl_wallet_query_master(incentiveData: incentiveData, handler: { _ in })
+                                })
+                            }
+                            for pointType in model.pointType {
+                                AppDelegate.sharedInstance.db?.deleteAll(tableName: db_w_pointtypes, handler: { _ in
+                                    
+                                })
+                            }
+                        })
+                    } catch let DecodingError.dataCorrupted(context) {
+                        print(context)
+                    } catch let DecodingError.keyNotFound(key, context) {
+                        print("Key '\(key)' not found:", context.debugDescription)
+                        print("codingPath:", context.codingPath)
+                    } catch let DecodingError.valueNotFound(value, context) {
+                        print("Value '\(value)' not found:", context.debugDescription)
+                        print("codingPath:", context.codingPath)
+                    } catch let DecodingError.typeMismatch(type, context)  {
+                        print("Type '\(type)' mismatch:", context.debugDescription)
+                        print("codingPath:", context.codingPath)
+                    } catch {
+                        print("error: ", error)
+                    }
+                }
+                handler(true)
+            } else {
+                
+            }
         }
     }
 }

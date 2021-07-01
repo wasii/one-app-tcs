@@ -27,6 +27,7 @@ var RECORD_ID               = 0
 //let UPLOADFILESURL          = "https://oneappapi.tcscourier.com/api/file-upload"
 
 //DEV
+let WALLET_ENDPOINT         = "http://apigatewayuat.tranzumpk.com:3001/dev/v1/wallet/setup"
 let ENDPOINT                = "https://devapi.tcscourier.com/core/api/main"
 let UPLOADFILESURL          = "https://pwaqaapi.tcscourier.com/api/file-upload"
 
@@ -121,6 +122,9 @@ let _attn_out               = "attn_out"
 let _scan_prefix            = "scan_prefix"
 let _orders                 = "orders"
 
+//Wallet_Keys
+let _walletSetupData        = "walletSetupData"
+
 //Local Storage (Database) tablename keys
 let db_user_module          = "USER_MODULE"
 let db_user_page            = "USER_PAGE"
@@ -170,7 +174,11 @@ let db_lov_control_category = "IMS_CONTROL_CATEGORY_TABLE"
 let db_lov_risk_type        = "IMS_RISK_TABLE"
 let db_lov_control_type     = "IMS_CONTROL_TYPE_TABLE"
 
-
+// Wallet
+let db_w_query_master       = "WALLET_MASTER_DETAILS"
+let db_w_query_detail       = "WALLET_QUERY_DETAILS"
+let db_w_pointtypes         = "WALLET_POINTTYPES"
+let db_w_setup_redemption   = "WALLET_REDEMPTION_SETUP"
 //ERROR MESSAGES
 let NOINTERNETCONNECTION    = "Connect your device with internet first."
 let SOMETHINGWENTWRONG      = "There is something went wrong. Please try again!"
