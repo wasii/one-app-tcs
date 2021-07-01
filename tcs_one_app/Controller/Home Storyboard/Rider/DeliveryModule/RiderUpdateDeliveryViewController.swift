@@ -5,7 +5,7 @@
 //  Created by TCS on 22/06/2021.
 //  Copyright © 2021 Personal. All rights reserved.
 //
-
+//Do you want to update same status on Pending CN's of Sheet # (Filana Dimaka)
 import UIKit
 import MaterialComponents.MaterialTextControls_OutlinedTextFields
 
@@ -20,10 +20,10 @@ class RiderUpdateDeliveryViewController: BaseViewController {
     @IBOutlet weak var SheetNumber: MDCOutlinedTextField!
     @IBOutlet weak var CustomerName: MDCOutlinedTextField!
     @IBOutlet weak var Address: UITextView!
-    @IBOutlet weak var ReceiverName: MDCOutlinedTextField!
     @IBOutlet weak var Relation: MDCOutlinedTextField!
     @IBOutlet weak var Amount: MDCOutlinedTextField!
-    @IBOutlet weak var RelationshipName: MDCOutlinedTextField!
+    @IBOutlet weak var ReceiverName: MDCOutlinedTextField!
+    @IBOutlet weak var CNICNumber: MDCOutlinedTextField!
     @IBOutlet weak var DeliveredRadioButton: UIImageView!
     @IBOutlet weak var UndeliveredRadioButton: UIImageView!
     
@@ -92,13 +92,13 @@ class RiderUpdateDeliveryViewController: BaseViewController {
         Amount.setOutlineColor(UIColor.nativeRedColor(), for: .editing)
         Amount.delegate = self
         
-        RelationshipName.label.textColor = UIColor.nativeRedColor()
-        RelationshipName.label.text = "Relationship Name"
-        RelationshipName.text = ""
-        RelationshipName.placeholder = ""
-        RelationshipName.setOutlineColor(UIColor.nativeRedColor(), for: .normal)
-        RelationshipName.setOutlineColor(UIColor.nativeRedColor(), for: .editing)
-        RelationshipName.delegate = self
+        CNICNumber.label.textColor = UIColor.nativeRedColor()
+        CNICNumber.label.text = "CNIC Number"
+        CNICNumber.text = ""
+        CNICNumber.placeholder = ""
+        CNICNumber.setOutlineColor(UIColor.nativeRedColor(), for: .normal)
+        CNICNumber.setOutlineColor(UIColor.nativeRedColor(), for: .editing)
+        CNICNumber.delegate = self
         
         StatusOne.label.textColor = UIColor.nativeRedColor()
         StatusOne.label.text = "Status"
@@ -167,7 +167,31 @@ class RiderUpdateDeliveryViewController: BaseViewController {
     }
     @IBAction func forwardBtnTapped(_ sender: Any) {
         let storyboard = UIStoryboard(name: "Popups", bundle: nil)
+        let controller = storyboard.instantiateViewController(withIdentifier: "ConfirmationPopViewController") as! ConfirmationPopViewController
+        controller.delegate = self
+        if #available(iOS 13.0, *) {
+            controller.modalPresentationStyle = .overFullScreen
+        }
+        controller.heading = "Do you want to update same status on Pending CN's of Sheet # 12321"
+        controller.modalTransitionStyle = .crossDissolve
+        Helper.topMostController().present(controller, animated: true, completion: nil)
+    }
+}
+
+//MARK: ConfirmProtocol
+extension RiderUpdateDeliveryViewController: ConfirmationProtocol {
+    func confirmationProtocol() {
+        let storyboard = UIStoryboard(name: "Popups", bundle: nil)
         let controller = storyboard.instantiateViewController(withIdentifier: "RiderPickupUpdateListingPopupViewController") as! RiderPickupUpdateListingPopupViewController
+        if #available(iOS 13.0, *) {
+            controller.modalPresentationStyle = .overFullScreen
+        }
+        controller.modalTransitionStyle = .crossDissolve
+        Helper.topMostController().present(controller, animated: true, completion: nil)
+    }
+    func noButtonTapped() {
+        let storyboard = UIStoryboard(name: "Popups", bundle: nil)
+        let controller = storyboard.instantiateViewController(withIdentifier: "SignatureCommentsViewController") as! SignatureCommentsViewController
         if #available(iOS 13.0, *) {
             controller.modalPresentationStyle = .overFullScreen
         }

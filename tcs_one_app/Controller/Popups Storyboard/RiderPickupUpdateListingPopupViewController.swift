@@ -12,7 +12,7 @@ import AVKit
 import MaterialComponents.MaterialTextControls_OutlinedTextFields
 
 class RiderPickupUpdateListingPopupViewController: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
-    let constant = "Enter or Scan Load Sheet or CN"
+    let constant = "Enter or Scan CN"
     @IBOutlet weak var searchTextField: MDCOutlinedTextField!
     @IBOutlet weak var mainViewTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var cameraView: UIView!
@@ -161,6 +161,7 @@ class RiderPickupUpdateListingPopupViewController: UIViewController, AVCaptureMe
     @IBAction func searchBtnTapped(_ sender: Any) {
     }
     @IBAction func checkedBtnTapped(_ sender: Any) {
+        self.dismiss(animated: true, completion: nil)
     }
 }
 
