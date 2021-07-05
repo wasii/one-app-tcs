@@ -19,28 +19,31 @@
                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                 <subviews>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nwW-FI-plw" customClass="CustomView" customModule="One_App" customModuleProvider="target">
-                        <rect key="frame" x="0.0" y="0.0" width="90" height="120"/>
+                        <rect key="frame" x="5" y="5" width="80" height="110"/>
                         <subviews>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="G8s-ti-bQa">
-                                <rect key="frame" x="7.5" y="12" width="75" height="80"/>
+                                <rect key="frame" x="7.5" y="10" width="65" height="70"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="80" id="58a-qZ-Wbb"/>
-                                    <constraint firstAttribute="width" constant="75" id="kTk-kv-1aA"/>
+                                    <constraint firstAttribute="height" constant="70" id="58a-qZ-Wbb"/>
+                                    <constraint firstAttribute="width" constant="65" id="kTk-kv-1aA"/>
                                 </constraints>
                             </imageView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PT2-r9-e1X">
-                                <rect key="frame" x="28.5" y="97" width="33" height="16"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label d" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PT2-r9-e1X">
+                                <rect key="frame" x="7.5" y="80" width="65" height="29"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="65" id="yl4-T9-zin"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                 <color key="textColor" red="0.87058823529999996" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstItem="PT2-r9-e1X" firstAttribute="top" secondItem="G8s-ti-bQa" secondAttribute="bottom" constant="5" id="JKK-my-rQZ"/>
+                            <constraint firstItem="PT2-r9-e1X" firstAttribute="top" secondItem="G8s-ti-bQa" secondAttribute="bottom" id="JKK-my-rQZ"/>
                             <constraint firstItem="G8s-ti-bQa" firstAttribute="centerX" secondItem="nwW-FI-plw" secondAttribute="centerX" id="YxD-JN-7P8"/>
                             <constraint firstItem="PT2-r9-e1X" firstAttribute="centerX" secondItem="nwW-FI-plw" secondAttribute="centerX" id="fxY-6i-cIN"/>
-                            <constraint firstItem="G8s-ti-bQa" firstAttribute="top" secondItem="nwW-FI-plw" secondAttribute="top" constant="12" id="qir-f7-Zdi"/>
+                            <constraint firstItem="G8s-ti-bQa" firstAttribute="top" secondItem="nwW-FI-plw" secondAttribute="top" constant="10" id="qir-f7-Zdi"/>
                         </constraints>
                         <userDefinedRuntimeAttributes>
                             <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
@@ -58,10 +61,10 @@
             </view>
             <viewLayoutGuide key="safeArea" id="ZTg-uK-7eu"/>
             <constraints>
-                <constraint firstItem="nwW-FI-plw" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" id="0c4-Ew-IX6"/>
-                <constraint firstAttribute="bottom" secondItem="nwW-FI-plw" secondAttribute="bottom" id="N31-DV-UoT"/>
-                <constraint firstItem="nwW-FI-plw" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="OZ0-XU-be1"/>
-                <constraint firstAttribute="trailing" secondItem="nwW-FI-plw" secondAttribute="trailing" id="qhZ-F6-CeM"/>
+                <constraint firstItem="nwW-FI-plw" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" constant="5" id="0c4-Ew-IX6"/>
+                <constraint firstAttribute="bottom" secondItem="nwW-FI-plw" secondAttribute="bottom" constant="5" id="N31-DV-UoT"/>
+                <constraint firstItem="nwW-FI-plw" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" constant="5" id="OZ0-XU-be1"/>
+                <constraint firstAttribute="trailing" secondItem="nwW-FI-plw" secondAttribute="trailing" constant="5" id="qhZ-F6-CeM"/>
             </constraints>
             <connections>
                 <outlet property="imageView" destination="G8s-ti-bQa" id="PsL-TJ-FH9"/>

@@ -564,6 +564,7 @@
 		1B7F0D0C267CB0E80060F405 /* Rider */ = {
 			isa = PBXGroup;
 			children = (
+				1BBF880326931A100004402B /* HistoryModule */,
 				1B6EAAD72681F18100941863 /* PickupModule */,
 				1BD43C582680775B00627A32 /* DeliveryModule */,
 				1B7F0D0D267CB3350060F405 /* FetchRiderDataViewController.swift */,
@@ -579,6 +580,13 @@
 				1BA5110A267B28A400E0E642 /* WalletHistoryTableCell.xib */,
 			);
 			path = Wallet;
+			sourceTree = "<group>";
+		};
+		1BBF880326931A100004402B /* HistoryModule */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = HistoryModule;
 			sourceTree = "<group>";
 		};
 		1BC02EFD25FA445500EFAFE9 /* GeoLocation */ = {

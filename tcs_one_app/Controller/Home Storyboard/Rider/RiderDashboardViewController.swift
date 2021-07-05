@@ -26,7 +26,7 @@ class RiderDashboardViewController: BaseViewController {
 extension RiderDashboardViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 4
+        return 6
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -48,6 +48,14 @@ extension RiderDashboardViewController: UICollectionViewDataSource, UICollection
             break
         case 3:
             cell.moduleTitle.text = "History"
+            cell.imageView.image = UIImage(named: "history")
+            break
+        case 4:
+            cell.moduleTitle.text = "Given To"
+            cell.imageView.image = UIImage(named: "history")
+            break
+        case 5:
+            cell.moduleTitle.text = "Verify Process"
             cell.imageView.image = UIImage(named: "history")
             break
         default:
