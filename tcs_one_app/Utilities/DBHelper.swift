@@ -3012,31 +3012,78 @@ class DBHelper {
                 let UNIT = Int(sqlite3_column_int(queryStatement, 2))
                 let EQUAL_POINT = Int(sqlite3_column_int(queryStatement, 3))
                 
-                
+                point_type.append(tbl_wallet_point_type(ID: ID, POINT_ID: POINT_ID, UNIT: UNIT, EQUAL_POINT: EQUAL_POINT))
             }
         } else {
             print("SELECT statement \(db_w_pointtypes) could not be prepared")
         }
         return point_type.count > 0 ? point_type : nil
     }
-    func insert_tbl_wallet_point_type(detail: Detail, handler: @escaping(_ success: Bool) -> Void) {
-        let insertStatementString = "INSERT INTO \(db_w_query_detail)(HEADER_ID, INC_CODE, CODE_DESCRIPTION) VALUES (?,?,?);"
+    func insert_tbl_wallet_point_type(pointType: PointType, handler: @escaping(_ success: Bool) -> Void) {
+        let insertStatementString = "INSERT INTO \(db_w_pointtypes)(POINT_ID, UNIT, EQUAL_POINT) VALUES (?,?,?);"
 
         var insertStatement: OpaquePointer? = nil
         if sqlite3_prepare_v2(self.db, insertStatementString, -1, &insertStatement, nil) == SQLITE_OK {
-            sqlite3_bind_int(insertStatement, 1, Int32(detail.headerID))
-            sqlite3_bind_text(insertStatement, 2, (detail.incCode as NSString).utf8String, -1, nil)
-            sqlite3_bind_text(insertStatement, 3, (detail.codeDescription as NSString).utf8String, -1, nil)
+            sqlite3_bind_int(insertStatement, 1, Int32(pointType.pointID))
+            sqlite3_bind_int(insertStatement, 2, Int32(pointType.unit))
+            sqlite3_bind_int(insertStatement, 3, Int32(pointType.equalPoint))
             
             if sqlite3_step(insertStatement) == SQLITE_DONE {
                 handler(true)
             } else {
-                print("\(db_w_query_master): Could not insert row.")
+                print("\(db_w_pointtypes): Could not insert row.")
                 handler(false)
             }
         } else {
             handler(false)
-            print("\(db_w_query_master): INSERT statement could not be prepared.")
+            print("\(db_w_pointtypes): INSERT statement could not be prepared.")
+        }
+        sqlite3_finalize(insertStatement)
+    }
+    
+    func read_tbl_wallet_setup(query: String) -> [tbl_wallet_setup]? {
+        let queryStatementString = query
+        var queryStatement: OpaquePointer? = nil
+        var wallet_setup = [tbl_wallet_setup]()
+
+        if sqlite3_prepare_v2(db, queryStatementString, -1, &queryStatement, nil) == SQLITE_OK {
+            while sqlite3_step(queryStatement) == SQLITE_ROW {
+                let ID = Int(sqlite3_column_int(queryStatement, 0))
+                let REDEMPTION_ID = Int(sqlite3_column_int(queryStatement, 1))
+                let REDEMPTION_CODE = String(describing: String(cString: sqlite3_column_text(queryStatement, 2)))
+                let REDEMPTION_DESCRIPTION = String(describing: String(cString: sqlite3_column_text(queryStatement, 3)))
+                let REDEMPTION_REMARKS = String(describing: String(cString: sqlite3_column_text(queryStatement, 4)))
+                let IMAGE_URL_ANDROID = String(describing: String(cString: sqlite3_column_text(queryStatement, 5)))
+                let IMAGE_URL_IOS = String(describing: String(cString: sqlite3_column_text(queryStatement, 6)))
+                
+                wallet_setup.append(tbl_wallet_setup(ID: ID, REDEMPTION_ID: REDEMPTION_ID, REDEMPTION_CODE: REDEMPTION_CODE, REDEMPTION_DESCRIPTION: REDEMPTION_DESCRIPTION, REDEMPTION_REMARKS: REDEMPTION_REMARKS, IMAGE_URL_ANDROID: IMAGE_URL_ANDROID, IMAGE_URL_IOS: IMAGE_URL_IOS))
+            }
+        } else {
+            print("SELECT statement \(db_w_setup_redemption) could not be prepared")
+        }
+        return wallet_setup.count > 0 ? wallet_setup : nil
+    }
+    func insert_tbl_wallet_setup(redemptionSetup: RedemptionSetup, handler: @escaping(_ success: Bool) -> Void) {
+        let insertStatementString = "INSERT INTO \(db_w_setup_redemption)(REDEMPTION_ID, REDEMPTION_CODE, REDEMPTION_DESCRIPTION, REDEMPTION_REMARKS, IMAGE_URL_ANDROID, IMAGE_URL_IOS) VALUES (?,?,?,?,?,?);"
+
+        var insertStatement: OpaquePointer? = nil
+        if sqlite3_prepare_v2(self.db, insertStatementString, -1, &insertStatement, nil) == SQLITE_OK {
+            sqlite3_bind_int(insertStatement, 1, Int32(redemptionSetup.redemptionID))
+            sqlite3_bind_text(insertStatement, 2, (redemptionSetup.redemptionCode as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 3, (redemptionSetup.redemptionDescription as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 4, (redemptionSetup.redemptionRemarks as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 5, (redemptionSetup.imageURLAndroid as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 6, (redemptionSetup.imageURLIos as NSString).utf8String, -1, nil)
+            
+            if sqlite3_step(insertStatement) == SQLITE_DONE {
+                handler(true)
+            } else {
+                print("\(db_w_setup_redemption): Could not insert row.")
+                handler(false)
+            }
+        } else {
+            handler(false)
+            print("\(db_w_setup_redemption): INSERT statement could not be prepared.")
         }
         sqlite3_finalize(insertStatement)
     }

@@ -27,7 +27,7 @@ var RECORD_ID               = 0
 //let UPLOADFILESURL          = "https://oneappapi.tcscourier.com/api/file-upload"
 
 //DEV
-let WALLET_ENDPOINT         = "http://apigatewayuat.tranzumpk.com:3001/dev/v1/wallet/setup"
+let WALLET_ENDPOINT         = "https://sandbox.tcscourier.com/dev/v1/wallet/setup"
 let ENDPOINT                = "https://devapi.tcscourier.com/core/api/main"
 let UPLOADFILESURL          = "https://pwaqaapi.tcscourier.com/api/file-upload"
 
