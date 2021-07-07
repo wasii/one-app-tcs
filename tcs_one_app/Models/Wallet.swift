@@ -74,3 +74,60 @@ struct RedemptionSetup: Codable {
     }
 }
 
+//MARK: - WalletHistoryPoint
+struct WalletHistoryPoint: Codable {
+    let rid, id, cat, subCat: Int
+    let employeeID, redemptionDatime: String
+    let redemptionPoints: Int
+    let redemptionCode: String
+    let walletHistoryPointDESCRIPTION: String?
+
+    enum CodingKeys: String, CodingKey {
+        case rid = "RID"
+        case id = "ID"
+        case cat = "CAT"
+        case subCat = "SUB_CAT"
+        case employeeID = "EMPLOYEE_ID"
+        case redemptionDatime = "REDEMPTION_DATIME"
+        case redemptionPoints = "REDEMPTION_POINTS"
+        case redemptionCode = "REDEMPTION_CODE"
+        case walletHistoryPointDESCRIPTION = "DESCRIPTION"
+    }
+}
+
+// MARK: - PointsSummary
+struct PointsSummary: Codable {
+    let employeeID, transactionDate: String
+    let maturePoints, unmaturePoints, redeemPoints, netRedeemable: Int
+    let pointSummaryDetails: [PointSummaryDetail]
+
+    enum CodingKeys: String, CodingKey {
+        case employeeID = "EMPLOYEE_ID"
+        case transactionDate = "TRANSACTION_DATE"
+        case maturePoints = "MATURE_POINTS"
+        case unmaturePoints = "UNMATURE_POINTS"
+        case redeemPoints = "REDEEM_POINTS"
+        case netRedeemable = "NET_REDEEMABLE"
+        case pointSummaryDetails = "DETAILS"
+    }
+}
+
+// MARK: - Detail
+struct PointSummaryDetail: Codable {
+    let rid: Int
+    let employeeID, transactionDate: String
+    let isMature: Int
+    let cnsgNo: String
+    let cat, subCat, points: Int
+
+    enum CodingKeys: String, CodingKey {
+        case rid = "RID"
+        case employeeID = "EMPLOYEE_ID"
+        case transactionDate = "TRANSACTION_DATE"
+        case isMature = "IS_MATURE"
+        case cnsgNo = "CNSG_NO"
+        case cat = "CAT"
+        case subCat = "SUB_CAT"
+        case points = "POINTS"
+    }
+}

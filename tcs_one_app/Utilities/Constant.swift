@@ -124,6 +124,11 @@ let _orders                 = "orders"
 
 //Wallet_Keys
 let _walletSetupData        = "walletSetupData"
+let _walletHistoryPoints    = "walletHistoryPoints"
+let _walletPointsData       = "walletPointsData"
+let _pointsSummary          = "PointsSummary"
+let _pointSummaryDetails    = "DETAILS"
+
 
 //Local Storage (Database) tablename keys
 let db_user_module          = "USER_MODULE"
@@ -179,6 +184,10 @@ let db_w_query_master       = "WALLET_MASTER_DETAILS"
 let db_w_query_detail       = "WALLET_QUERY_DETAILS"
 let db_w_pointtypes         = "WALLET_POINTTYPES"
 let db_w_setup_redemption   = "WALLET_REDEMPTION_SETUP"
+let db_w_pointSummary       = "WALLET_POINTS_SUMMARY"
+let db_w_history_point      = "WALLET_HISTORY_POINTS"
+let db_w_pointSumDetails    = "WALLET_POINT_SUMMARY_DETAILS"
+
 //ERROR MESSAGES
 let NOINTERNETCONNECTION    = "Connect your device with internet first."
 let SOMETHINGWENTWRONG      = "There is something went wrong. Please try again!"
