@@ -31,6 +31,9 @@ class FetchUserDataViewController: BaseViewController {
     @IBOutlet weak var notification_counter: UILabel!
     @IBOutlet weak var order_counter: UILabel!
     
+    @IBOutlet weak var walletPointsLabel: UILabel!
+    @IBOutlet weak var walletPointsCounter: UILabel!
+    @IBOutlet weak var walletPointsHistoryCounter: UILabel!
     
     @IBOutlet weak var version: UILabel!
     @IBOutlet weak var build: UILabel!
@@ -1090,7 +1093,7 @@ extension FetchUserDataViewController {
                                     self.activityIndicator[6].isHidden = true
                                     self.checkedImageView[6].isHidden = false
                                 }
-                                self.navigateHomeScreen()
+//                                self.navigateHomeScreen()
                             }
                         }
                         return
@@ -1144,7 +1147,7 @@ extension FetchUserDataViewController {
                                                 self.checkedImageView[6].isHidden = false
                                             }
                                         }
-                                        self.navigateHomeScreen()
+//                                        self.navigateHomeScreen()
                                     }
                                 }
                             }
@@ -1190,7 +1193,7 @@ extension FetchUserDataViewController {
                                     self.activityIndicator[6].isHidden = true
                                     self.checkedImageView[6].isHidden = false
                                 }
-                                self.navigateHomeScreen()
+//                                self.navigateHomeScreen()
                             }
                         }
                     }
@@ -1288,7 +1291,7 @@ extension FetchUserDataViewController {
                                                         self.activityIndicator[6].isHidden = true
                                                         self.checkedImageView[6].isHidden = false
                                                     }
-                                                    self.navigateHomeScreen()
+//                                                    self.navigateHomeScreen()
                                                 }
                                             }
                                             return
@@ -1370,7 +1373,7 @@ extension FetchUserDataViewController {
                                                                 self.activityIndicator[6].isHidden = true
                                                                 self.checkedImageView[6].isHidden = false
                                                             }
-                                                            self.navigateHomeScreen()
+//                                                            self.navigateHomeScreen()
                                                         }
                                                     }
                                                     return
@@ -1446,10 +1449,9 @@ extension FetchUserDataViewController {
                                                     self.activityIndicator[6].isHidden = true
                                                     self.checkedImageView[6].isHidden = false
                                                 }
-                                                self.navigateHomeScreen()
+//                                                self.navigateHomeScreen()
                                             }
                                         }
-                                        //                                        return
                                     }
                                 }
                             }
@@ -1498,53 +1500,144 @@ extension FetchUserDataViewController {
     
     //MARK: Wallet Setup
     func setupWallet(_ handler: @escaping(Bool)->Void) {
-        NetworkCalls.setupwallet { granted, response in
+        NetworkCalls.getwallettoken { granted in
             if granted {
-                let json = JSON(response)
-                if let o = json.dictionary?[_walletSetupData] {
-                    do {
-                        let rawdata = try o.rawData()
-                        let model = try JSONDecoder().decode(WalletSetupData.self, from: rawdata)
-                        AppDelegate.sharedInstance.db?.deleteAll(tableName: db_w_query_detail, handler: { _ in
-                            for incentiveData in model.incentiveData {
-                                AppDelegate.sharedInstance.db?.deleteAll(tableName: db_w_query_master, handler: { _ in
-                                    AppDelegate.sharedInstance.db?.insert_tbl_wallet_query_master(incentiveData: incentiveData, handler: { _ in })
+                NetworkCalls.setupwallet { granted, response in
+                    if granted {
+                        let json = JSON(response)
+                        if let o = json.dictionary?[_walletSetupData] {
+                            do {
+                                let rawdata = try o.rawData()
+                                let model = try JSONDecoder().decode(WalletSetupData.self, from: rawdata)
+                                AppDelegate.sharedInstance.db?.deleteAll(tableName: db_w_query_detail, handler: { _ in
+                                    for incentiveData in model.incentiveData {
+                                        AppDelegate.sharedInstance.db?.deleteAll(tableName: db_w_query_master, handler: { _ in
+                                            AppDelegate.sharedInstance.db?.insert_tbl_wallet_query_master(incentiveData: incentiveData, handler: { _ in })
+                                        })
+                                    }
+                                    AppDelegate.sharedInstance.db?.deleteAll(tableName: db_w_pointtypes, handler: { _ in
+                                        for pointType in model.pointType {
+                                            
+                                            AppDelegate.sharedInstance.db?.insert_tbl_wallet_point_type(pointType: pointType, handler: { _ in })
+                                            
+                                        }
+                                    })
+                                    AppDelegate.sharedInstance.db?.deleteAll(tableName: db_w_setup_redemption, handler: { _ in
+                                        for setupRedemption in model.redemptionSetup {
+                                            AppDelegate.sharedInstance.db?.insert_tbl_wallet_setup(redemptionSetup: setupRedemption, handler: { _ in })
+                                        }
+                                    })
                                 })
+                            } catch let DecodingError.dataCorrupted(context) {
+                                print(context)
+                            } catch let DecodingError.keyNotFound(key, context) {
+                                print("Key '\(key)' not found:", context.debugDescription)
+                                print("codingPath:", context.codingPath)
+                            } catch let DecodingError.valueNotFound(value, context) {
+                                print("Value '\(value)' not found:", context.debugDescription)
+                                print("codingPath:", context.codingPath)
+                            } catch let DecodingError.typeMismatch(type, context)  {
+                                print("Type '\(type)' mismatch:", context.debugDescription)
+                                print("codingPath:", context.codingPath)
+                            } catch {
+                                print("error: ", error)
                             }
-                            AppDelegate.sharedInstance.db?.deleteAll(tableName: db_w_pointtypes, handler: { _ in
-                                for pointType in model.pointType {
-                                    
-                                    AppDelegate.sharedInstance.db?.insert_tbl_wallet_point_type(pointType: pointType, handler: { _ in })
-                                    
-                                }
-                            })
-                            AppDelegate.sharedInstance.db?.deleteAll(tableName: db_w_setup_redemption, handler: { _ in
-                                for setupRedemption in model.redemptionSetup {
-                                    AppDelegate.sharedInstance.db?.insert_tbl_wallet_setup(redemptionSetup: setupRedemption, handler: { _ in })
-                                }
-                            })
-                            
-                            
-                        })
-                    } catch let DecodingError.dataCorrupted(context) {
-                        print(context)
-                    } catch let DecodingError.keyNotFound(key, context) {
-                        print("Key '\(key)' not found:", context.debugDescription)
-                        print("codingPath:", context.codingPath)
-                    } catch let DecodingError.valueNotFound(value, context) {
-                        print("Value '\(value)' not found:", context.debugDescription)
-                        print("codingPath:", context.codingPath)
-                    } catch let DecodingError.typeMismatch(type, context)  {
-                        print("Type '\(type)' mismatch:", context.debugDescription)
-                        print("codingPath:", context.codingPath)
-                    } catch {
-                        print("error: ", error)
+                        }
+                        handler(true)
+                    } else {
+                        
                     }
                 }
-                handler(true)
-            } else {
-                
             }
         }
+    }
+    
+    
+    func setupwalletpoints() {
+        
+        DispatchQueue.main.async {
+            self.walletPointsLabel.text = "Successfully Synced Wallet Points"
+            self.loaderViews[7].backgroundColor = UIColor.nativeRedColor()
+            self.activityIndicator[7].stopAnimating()
+            self.activityIndicator[7].isHidden = true
+            self.checkedImageView[7].isHidden = false
+            
+            self.activityIndicator[8].isHidden = false
+            self.activityIndicator[8].startAnimating()
+            self.setupwalletpointshistory()
+        }
+        return
+        
+        var wallet_points = [String: Any]()
+        let lastSyncStatus = AppDelegate.sharedInstance.db?.readLastSyncStatus(tableName: db_last_sync_status,
+                                                                               condition: "SYNC_KEY = '\(GET_HR_REQUEST)' AND CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)'")
+        
+        print(lastSyncStatus)
+        if lastSyncStatus == nil {
+            wallet_points = [
+                "access_token": access_token,
+                "skip" :skip,
+                "take" : 5000,
+                "sync_date": ""
+            ]
+        } else {
+            wallet_points = [
+                "access_token": access_token,
+                "skip" :0,
+                "take" : 5000,
+                "sync_date": lastSyncStatus!.DATE
+            ]
+        }
+        let params = self.getAPIParameter(service_name: S_WALLET_POINTS, request_body: wallet_points)
+        NetworkCalls.getwalletpoints(params: params) { granted, response in
+            if granted {
+                let json = JSON(response)
+                if let wallet_points = json.dictionary?[_walletPointsData]?.dictionary {
+                    self.count = wallet_points[_count]?.int ?? 0
+                    if self.count <= 0 {
+                        self.isTotalCounter = 0
+                        DispatchQueue.main.async {
+                            self.walletPointsLabel.text = "Synced Wallet Points"
+                        }
+                        
+                        //get POINTS HISTORY
+                    }
+                    if let point_summary = wallet_points[_pointsSummary]?.array {
+                        DispatchQueue.main.async {
+                            self.walletPointsLabel.isHidden = false
+                            self.walletPointsLabel.text = "\(self.isTotalCounter)/\(self.count)"
+                        }
+                        for summary in point_summary {
+                            do {
+                                let dictionary = try summary.rawData()
+                                let pointSummary: PointsSummary = try JSONDecoder().decode(PointsSummary.self, from: dictionary)
+                                if pointSummary.pointSummaryDetails.count > 0 {
+                                    
+                                }
+                            } catch let DecodingError.dataCorrupted(context) {
+                                print(context)
+                            } catch let DecodingError.keyNotFound(key, context) {
+                                print("Key '\(key)' not found:", context.debugDescription)
+                                print("codingPath:", context.codingPath)
+                            } catch let DecodingError.valueNotFound(value, context) {
+                                print("Value '\(value)' not found:", context.debugDescription)
+                                print("codingPath:", context.codingPath)
+                            } catch let DecodingError.typeMismatch(type, context)  {
+                                print("Type '\(type)' mismatch:", context.debugDescription)
+                                print("codingPath:", context.codingPath)
+                            } catch {
+                                print("error: ", error)
+                            }
+                        }
+                    }
+                } else {
+                    
+                }
+            }
+        }
+    }
+    
+    func setupwalletpointshistory() {
+        
     }
 }

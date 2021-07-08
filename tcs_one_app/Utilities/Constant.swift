@@ -11,7 +11,8 @@ let ACTIVE                  = "ACTIVE"
 let BACKGROUND              = "BACKGROUND"
 let INACTIVE                = "INACTIVE"
 let API_KEY                 = "5E4D0F6D8E12D8EC5EA3BBB11B63B2F88E39A7561F25EC67CCB440F782FD0360"
-
+let CLIENTSECRET            = "Tcs@wallet3001"
+var BEARER_TOKEN            = ""
 let BROADCAST_KEY           = "broadcastiosdev"
 //let BROADCAST_KEY           = "broadcastiosqa"
 //let BROADCAST_KEY           = "broadcastios"
@@ -27,7 +28,7 @@ var RECORD_ID               = 0
 //let UPLOADFILESURL          = "https://oneappapi.tcscourier.com/api/file-upload"
 
 //DEV
-let WALLET_ENDPOINT         = "https://sandbox.tcscourier.com/dev/v1/wallet/setup"
+let WALLET_ENDPOINT         = "https://sandbox.tcscourier.com/"
 let ENDPOINT                = "https://devapi.tcscourier.com/core/api/main"
 let UPLOADFILESURL          = "https://pwaqaapi.tcscourier.com/api/file-upload"
 
@@ -64,6 +65,10 @@ let MARKATTENDANCE          = "oneapp.markattendance"
 let GETORDERFULFILMET       = "oneapp.getorderfullfilment"
 let UPDATEORDERFULFILMENT   = "oneapp.updateorderfullfilment"
 
+let WALLET_SETUP            = WALLET_ENDPOINT + "dev/v1/wallet/setup"
+let WALLET_GET_TOKEN        = WALLET_ENDPOINT + "dev/v1/wallet/token?clientSecret=\(CLIENTSECRET)"
+let WALLET_POINTS           = WALLET_ENDPOINT + "dev/v1/wallet/points"
+let S_WALLET_POINTS         = "WALLET.POINTS"
 //API BACKEND KEYS
 let eAI_MESSAGE             = "eAI_MESSAGE"
 let eAI_BODY                = "eAI_BODY"
@@ -128,7 +133,7 @@ let _walletHistoryPoints    = "walletHistoryPoints"
 let _walletPointsData       = "walletPointsData"
 let _pointsSummary          = "PointsSummary"
 let _pointSummaryDetails    = "DETAILS"
-
+let _token                  = "token"
 
 //Local Storage (Database) tablename keys
 let db_user_module          = "USER_MODULE"
