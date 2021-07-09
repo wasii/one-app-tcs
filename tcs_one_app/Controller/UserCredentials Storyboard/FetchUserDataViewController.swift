@@ -33,6 +33,7 @@ class FetchUserDataViewController: BaseViewController {
     
     @IBOutlet weak var walletPointsLabel: UILabel!
     @IBOutlet weak var walletPointsCounter: UILabel!
+    @IBOutlet weak var pointHistoryLabel: UILabel!
     @IBOutlet weak var walletPointsHistoryCounter: UILabel!
     
     @IBOutlet weak var version: UILabel!
@@ -68,7 +69,7 @@ class FetchUserDataViewController: BaseViewController {
         notification_counter.isHidden = true
         self.counter.isHidden = true
         activityIndicator.forEach { (UIActivityIndicatorView) in
-            UIActivityIndicatorView.isHidden = true
+            UIActivityIndicatorView.startAnimating()
         }
         checkedImageView.forEach { (UIImageView) in
             UIImageView.isHidden = true
@@ -1092,6 +1093,8 @@ extension FetchUserDataViewController {
                                     self.activityIndicator[6].stopAnimating()
                                     self.activityIndicator[6].isHidden = true
                                     self.checkedImageView[6].isHidden = false
+                                    
+                                    self.setupwalletpoints()
                                 }
 //                                self.navigateHomeScreen()
                             }
@@ -1145,6 +1148,8 @@ extension FetchUserDataViewController {
                                                 self.activityIndicator[6].stopAnimating()
                                                 self.activityIndicator[6].isHidden = true
                                                 self.checkedImageView[6].isHidden = false
+                                                
+                                                self.setupwalletpoints()
                                             }
                                         }
 //                                        self.navigateHomeScreen()
@@ -1192,6 +1197,8 @@ extension FetchUserDataViewController {
                                     self.activityIndicator[6].stopAnimating()
                                     self.activityIndicator[6].isHidden = true
                                     self.checkedImageView[6].isHidden = false
+                                    
+                                    self.setupwalletpoints()
                                 }
 //                                self.navigateHomeScreen()
                             }
@@ -1290,6 +1297,8 @@ extension FetchUserDataViewController {
                                                         self.activityIndicator[6].stopAnimating()
                                                         self.activityIndicator[6].isHidden = true
                                                         self.checkedImageView[6].isHidden = false
+                                                        
+                                                        self.setupwalletpoints()
                                                     }
 //                                                    self.navigateHomeScreen()
                                                 }
@@ -1372,6 +1381,8 @@ extension FetchUserDataViewController {
                                                                 self.activityIndicator[6].stopAnimating()
                                                                 self.activityIndicator[6].isHidden = true
                                                                 self.checkedImageView[6].isHidden = false
+                                                                
+                                                                self.setupwalletpoints()
                                                             }
 //                                                            self.navigateHomeScreen()
                                                         }
@@ -1448,6 +1459,8 @@ extension FetchUserDataViewController {
                                                     self.activityIndicator[6].stopAnimating()
                                                     self.activityIndicator[6].isHidden = true
                                                     self.checkedImageView[6].isHidden = false
+                                                    
+                                                    self.setupwalletpoints()
                                                 }
 //                                                self.navigateHomeScreen()
                                             }
@@ -1564,6 +1577,10 @@ extension FetchUserDataViewController {
             
             self.activityIndicator[8].isHidden = false
             self.activityIndicator[8].startAnimating()
+            
+            self.skip = 0
+            self.isTotalCounter = 0
+//            self.wallet
             self.setupwalletpointshistory()
         }
         return
@@ -1638,6 +1655,82 @@ extension FetchUserDataViewController {
     }
     
     func setupwalletpointshistory() {
+        var wallet_points_history = [String: Any]()
+        let date = Date()
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        let finalDate = dateFormatter.string(from: date).dateOnly
+        wallet_points_history = [
+            "p_employee_id": "119333",
+            "p_transaction_date" : "2021-07-06",//finalDate,
+            "p_skip" : skip,
+            "p_take": 1
+        ]
+        let params = self.getAPIParameter(service_name: S_WALLET_POINTS_HISTORY, request_body: wallet_points_history)
         
+        NetworkCalls.getwallethistorypoints(params: params) { granted, response in
+            if granted {
+                let json = JSON(response)
+                if let wallet_points = json.dictionary?[_walletHistoryPointData]?.dictionary {
+                    self.count = Int(wallet_points[_count]?.string ?? "0") ?? 0
+                    if self.count <= 0 {
+                        self.isTotalCounter = 0
+                        DispatchQueue.main.async {
+                            self.walletPointsLabel.text = "Synced Wallet History Points"
+                        }
+                        
+                        //get POINTS HISTORY
+                    }
+                    if let point_history = wallet_points[_walletHistoryPoints]?.array {
+                        DispatchQueue.main.async {
+                            self.walletPointsHistoryCounter.isHidden = false
+                            self.walletPointsHistoryCounter.text = "\(self.isTotalCounter)/\(self.count)"
+                        }
+                        AppDelegate.sharedInstance.db?.deleteAll(tableName: db_w_history_point, handler: { _ in
+                            for history in point_history {
+                                do {
+                                    let dictionary = try history.rawData()
+                                    let history_point: WalletHistoryPoint = try JSONDecoder().decode(WalletHistoryPoint.self, from: dictionary)
+                                    self.isTotalCounter += 1
+                                    AppDelegate.sharedInstance.db?.insert_tbl_wallet_history_point(history_point: history_point, handler: { _ in
+                                        
+                                        DispatchQueue.main.async {
+                                            self.walletPointsHistoryCounter.text = "\(self.isTotalCounter)/\(self.count)"
+                                        }
+                                    })
+                                } catch let DecodingError.dataCorrupted(context) {
+                                    print(context)
+                                } catch let DecodingError.keyNotFound(key, context) {
+                                    print("Key '\(key)' not found:", context.debugDescription)
+                                    print("codingPath:", context.codingPath)
+                                } catch let DecodingError.valueNotFound(value, context) {
+                                    print("Value '\(value)' not found:", context.debugDescription)
+                                    print("codingPath:", context.codingPath)
+                                } catch let DecodingError.typeMismatch(type, context)  {
+                                    print("Type '\(type)' mismatch:", context.debugDescription)
+                                    print("codingPath:", context.codingPath)
+                                } catch {
+                                    print("error: ", error)
+                                }
+                            }
+                            if self.isTotalCounter == self.count {
+                                DispatchQueue.main.async {
+                                    self.pointHistoryLabel.text = "Synced Wallet Points History"
+                                    self.loaderViews[8].backgroundColor = UIColor.nativeRedColor()
+                                    self.activityIndicator[8].stopAnimating()
+                                    self.activityIndicator[8].isHidden = true
+                                    self.checkedImageView[8].isHidden = false
+                                }
+                                self.navigateHomeScreen()
+                            } else {
+                                self.setupwalletpointshistory()
+                            }
+                        })
+                    }
+                } else {
+                    
+                }
+            }
+        }
     }
 }

@@ -3189,6 +3189,59 @@ class DBHelper {
         }
         sqlite3_finalize(insertStatement)
     }
+    
+    //WALLET_History_POINTS
+    func read_tbl_wallet_history_point(query: String) -> [tbl_wallet_history_point]? {
+        let queryStatementString = query
+        var queryStatement: OpaquePointer? = nil
+        var wallet_history_points = [tbl_wallet_history_point]()
+
+        if sqlite3_prepare_v2(db, queryStatementString, -1, &queryStatement, nil) == SQLITE_OK {
+            while sqlite3_step(queryStatement) == SQLITE_ROW {
+                let POINT_ID = Int(sqlite3_column_int(queryStatement, 0))
+                let RID = Int(sqlite3_column_int(queryStatement, 1))
+                let ID = Int(sqlite3_column_int(queryStatement, 2))
+                let CAT = Int(sqlite3_column_int(queryStatement, 3))
+                let SUB_CAT = Int(sqlite3_column_int(queryStatement, 4))
+                let EMPLOYEE_ID = String(describing: String(cString: sqlite3_column_text(queryStatement, 5)))
+                let REDEMPTION_DATIME = String(describing: String(cString: sqlite3_column_text(queryStatement, 6)))
+                let REDEMPTION_POINTS = Int(sqlite3_column_int(queryStatement, 7))
+                let REDEMPTION_CODE = String(describing: String(cString: sqlite3_column_text(queryStatement, 8)))
+                let DESCRIPTION = String(describing: String(cString: sqlite3_column_text(queryStatement, 9)))
+                
+                wallet_history_points.append(tbl_wallet_history_point(POINT_ID: POINT_ID, RID: RID, ID: ID, CAT: CAT, SUB_CAT: SUB_CAT, EMPLOYEE_ID: EMPLOYEE_ID, REDEMPTION_DATIME: REDEMPTION_DATIME, REDEMPTION_POINTS: REDEMPTION_POINTS, REDEMPTION_CODE: REDEMPTION_CODE, DESCRIPTION: DESCRIPTION))
+            }
+        } else {
+            print("SELECT statement \(db_w_history_point) could not be prepared")
+        }
+        return wallet_history_points.count > 0 ? wallet_history_points : nil
+    }
+    func insert_tbl_wallet_history_point(history_point: WalletHistoryPoint, handler: @escaping(_ success: Bool) -> Void) {
+        let insertStatementString = "INSERT INTO \(db_w_history_point)(RID, ID, CAT, SUB_CAT, EMPLOYEE_ID, REDEMPTION_DATIME, REDEMPTION_POINTS, REDEMPTION_CODE, DESCRIPTION) VALUES (?,?,?,?,?,?,?,?,?);"
+
+        var insertStatement: OpaquePointer? = nil
+        if sqlite3_prepare_v2(self.db, insertStatementString, -1, &insertStatement, nil) == SQLITE_OK {
+            sqlite3_bind_int(insertStatement, 1, Int32(history_point.rid))
+            sqlite3_bind_int(insertStatement, 2, Int32(history_point.id))
+            sqlite3_bind_int(insertStatement, 3, Int32(history_point.cat))
+            sqlite3_bind_int(insertStatement, 4, Int32(history_point.subCat))
+            sqlite3_bind_text(insertStatement, 5, (history_point.employeeID as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 6, (history_point.redemptionDatime as NSString).utf8String, -1, nil)
+            sqlite3_bind_int(insertStatement, 7, Int32(history_point.redemptionPoints))
+            sqlite3_bind_text(insertStatement, 8, (history_point.redemptionCode as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 9, ((history_point.walletHistoryPointDESCRIPTION ?? "") as NSString).utf8String, -1, nil)
+            if sqlite3_step(insertStatement) == SQLITE_DONE {
+                handler(true)
+            } else {
+                print("\(db_w_history_point): Could not insert row.")
+                handler(false)
+            }
+        } else {
+            handler(false)
+            print("\(db_w_history_point): INSERT statement could not be prepared.")
+        }
+        sqlite3_finalize(insertStatement)
+    }
 }
 
 
