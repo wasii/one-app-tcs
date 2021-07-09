@@ -63,6 +63,10 @@ let MARKATTENDANCE          = "oneapp.markattendance"
 let GETORDERFULFILMET       = "oneapp.getorderfullfilment"
 let UPDATEORDERFULFILMENT   = "oneapp.updateorderfullfilment"
 
+
+//RIDER
+let RIDERSETUP              = "oneapp.riderapp_setup"
+
 //API BACKEND KEYS
 let eAI_MESSAGE             = "eAI_MESSAGE"
 let eAI_BODY                = "eAI_BODY"
@@ -121,6 +125,16 @@ let _attn_out               = "attn_out"
 let _scan_prefix            = "scan_prefix"
 let _orders                 = "orders"
 
+
+//Rider Keys
+let _dial_code              = "dial_code"
+let _rider_detail           = "rider_detail"
+let _receiver_relation      = "receiver_relation"
+let _master_dlvry_status    = "master_dlvry_status"
+let _detail_dlvry_status    = "detail_dlvry_status"
+let _status_group           = "status_group"
+
+
 //Local Storage (Database) tablename keys
 let db_user_module          = "USER_MODULE"
 let db_user_page            = "USER_PAGE"
@@ -170,7 +184,8 @@ let db_lov_control_category = "IMS_CONTROL_CATEGORY_TABLE"
 let db_lov_risk_type        = "IMS_RISK_TABLE"
 let db_lov_control_type     = "IMS_CONTROL_TYPE_TABLE"
 
-
+//Rider
+let db_rider_detail         = ""
 //ERROR MESSAGES
 let NOINTERNETCONNECTION    = "Connect your device with internet first."
 let SOMETHINGWENTWRONG      = "There is something went wrong. Please try again!"

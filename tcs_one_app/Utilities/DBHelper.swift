@@ -2910,6 +2910,92 @@ class DBHelper {
         }
         sqlite3_finalize(insertStatement)
     }
+    
+    //MARK: - Rider Tables
+    func read_tbl_rider_details(query: String) -> [tbl_rider_detail]? {
+        let queryStatementString = query
+        var queryStatement: OpaquePointer? = nil
+        var rider_detail = [tbl_rider_detail]()
+
+        if sqlite3_prepare_v2(db, queryStatementString, -1, &queryStatement, nil) == SQLITE_OK {
+            while sqlite3_step(queryStatement) == SQLITE_ROW {
+                let ID = Int(sqlite3_column_int(queryStatement, 0))
+                let EMP_NO = String(describing: String(cString: sqlite3_column_text(queryStatement, 1)))
+                let EMP_NAM = String(describing: String(cString: sqlite3_column_text(queryStatement, 1)))
+                let AREA_NO = String(describing: String(cString: sqlite3_column_text(queryStatement, 1)))
+                let EMP_TYP_NO = String(describing: String(cString: sqlite3_column_text(queryStatement, 1)))
+                let DESIG = String(describing: String(cString: sqlite3_column_text(queryStatement, 1)))
+                let ADDR1 = String(describing: String(cString: sqlite3_column_text(queryStatement, 1)))
+                let ADDR2 = String(describing: String(cString: sqlite3_column_text(queryStatement, 1)))
+                let ADDR3 = String(describing: String(cString: sqlite3_column_text(queryStatement, 1)))
+                let PHN = String(describing: String(cString: sqlite3_column_text(queryStatement, 1)))
+                let PAGER_NO = String(describing: String(cString: sqlite3_column_text(queryStatement, 1)))
+                let STAT = String(describing: String(cString: sqlite3_column_text(queryStatement, 1)))
+                let STA_NO = String(describing: String(cString: sqlite3_column_text(queryStatement, 1)))
+                let BANK_NO = String(describing: String(cString: sqlite3_column_text(queryStatement, 1)))
+                let ACT_NO = String(describing: String(cString: sqlite3_column_text(queryStatement, 1)))
+                let NTN_NO = String(describing: String(cString: sqlite3_column_text(queryStatement, 1)))
+                let EMP_MGR = String(describing: String(cString: sqlite3_column_text(queryStatement, 1)))
+                let IDCARD = String(describing: String(cString: sqlite3_column_text(queryStatement, 1)))
+                let RUT_TYP = String(describing: String(cString: sqlite3_column_text(queryStatement, 1)))
+                let EMP_CLOSE_CHK = String(describing: String(cString: sqlite3_column_text(queryStatement, 1)))
+                let EMP_OPEN_DATE = String(describing: String(cString: sqlite3_column_text(queryStatement, 1)))
+                let EMP_CLOSE_DATE = String(describing: String(cString: sqlite3_column_text(queryStatement, 1)))
+                let DIV_CODE = String(describing: String(cString: sqlite3_column_text(queryStatement, 1)))
+                let RUT_NO = String(describing: String(cString: sqlite3_column_text(queryStatement, 1)))
+                let MOBILE_NO = String(describing: String(cString: sqlite3_column_text(queryStatement, 1)))
+                let INBOUND_INC_CHK = String(describing: String(cString: sqlite3_column_text(queryStatement, 1)))
+                let OUTBOUND_INC_CHK = String(describing: String(cString: sqlite3_column_text(queryStatement, 1)))
+                let RUT_ADJ_AMOUNT = String(describing: String(cString: sqlite3_column_text(queryStatement, 1)))
+                let EMP_UNVRSL = String(describing: String(cString: sqlite3_column_text(queryStatement, 1)))
+                let HR_EMP_NO = String(describing: String(cString: sqlite3_column_text(queryStatement, 1)))
+                let INC_TRGT = String(describing: String(cString: sqlite3_column_text(queryStatement, 1)))
+                let RUT_CODE_EXP = String(describing: String(cString: sqlite3_column_text(queryStatement, 1)))
+                let EMP_HUB_CODE = String(describing: String(cString: sqlite3_column_text(queryStatement, 1)))
+                let FIELD_STAFF = String(describing: String(cString: sqlite3_column_text(queryStatement, 1)))
+                let FUEL_QUATA = String(describing: String(cString: sqlite3_column_text(queryStatement, 1)))
+                let EMP_SALARY = String(describing: String(cString: sqlite3_column_text(queryStatement, 1)))
+                let DATE_JOINING = String(describing: String(cString: sqlite3_column_text(queryStatement, 1)))
+                let DATE_BIRTH = String(describing: String(cString: sqlite3_column_text(queryStatement, 1)))
+                let PICKUP_HUB = String(describing: String(cString: sqlite3_column_text(queryStatement, 1)))
+                let REMARKS = String(describing: String(cString: sqlite3_column_text(queryStatement, 1)))
+                let LAST_UPDATE_DATE = String(describing: String(cString: sqlite3_column_text(queryStatement, 1)))
+                let HARD_RUT_ALL = String(describing: String(cString: sqlite3_column_text(queryStatement, 1)))
+                let COURIER_COD_AMOUNT_LIMIT = String(describing: String(cString: sqlite3_column_text(queryStatement, 1)))
+                let UPDATED_BY = String(describing: String(cString: sqlite3_column_text(queryStatement, 1)))
+                let UPDATE_ON = String(describing: String(cString: sqlite3_column_text(queryStatement, 1)))
+                let CREATED_ON = String(describing: String(cString: sqlite3_column_text(queryStatement, 1)))
+                let CREATED_BY = String(describing: String(cString: sqlite3_column_text(queryStatement, 1)))
+                let UPDATED_ON = String(describing: String(cString: sqlite3_column_text(queryStatement, 1)))
+                let HUB_CODE = String(describing: String(cString: sqlite3_column_text(queryStatement, 1)))
+                
+                rider_detail.append(tbl_rider_detail(ID: ID, EMP_NO: EMP_NO, EMP_NAM: EMP_NAM, AREA_NO: AREA_NO, EMP_TYP_NO: EMP_TYP_NO, DESIG: DESIG, ADDR1: ADDR1, ADDR2: ADDR2, ADDR3: ADDR3, PHN: PHN, PAGER_NO: PAGER_NO, STAT: STAT, STA_NO: STA_NO, BANK_NO: BANK_NO, ACT_NO: ACT_NO, NTN_NO: NTN_NO, EMP_MGR: EMP_MGR, IDCARD: IDCARD, RUT_TYP: RUT_TYP, EMP_CLOSE_CHK: EMP_CLOSE_CHK, EMP_OPEN_DATE: EMP_OPEN_DATE, EMP_CLOSE_DATE: EMP_CLOSE_DATE, DIV_CODE: DIV_CODE, RUT_NO: RUT_NO, MOBILE_NO: MOBILE_NO, INBOUND_INC_CHK: INBOUND_INC_CHK, OUTBOUND_INC_CHK: OUTBOUND_INC_CHK, RUT_ADJ_AMOUNT: RUT_ADJ_AMOUNT, EMP_UNVRSL: EMP_UNVRSL, HR_EMP_NO: HR_EMP_NO, INC_TRGT: INC_TRGT, RUT_CODE_EXP: RUT_CODE_EXP, EMP_HUB_CODE: EMP_HUB_CODE, FIELD_STAFF: FIELD_STAFF, FUEL_QUATA: FUEL_QUATA, EMP_SALARY: EMP_SALARY, DATE_JOINING: DATE_JOINING, DATE_BIRTH: DATE_BIRTH, PICKUP_HUB: PICKUP_HUB, REMARKS: REMARKS, LAST_UPDATE_DATE: LAST_UPDATE_DATE, HARD_RUT_ALL: HARD_RUT_ALL, COURIER_COD_AMOUNT_LIMIT: COURIER_COD_AMOUNT_LIMIT, UPDATED_BY: UPDATED_BY, UPDATE_ON: UPDATE_ON, CREATED_ON: CREATED_ON, CREATED_BY: CREATED_BY, UPDATED_ON: UPDATED_ON, HUB_CODE: HUB_CODE))
+            }
+        } else {
+            print("SELECT statement \(db_fulfilment_orders) could not be prepared")
+        }
+        return rider_detail.count > 0 ? rider_detail : nil
+    }
+    func read_tbl_rider_details(rider_detail: RiderDetail, handler: @escaping(_ success: Bool) -> Void) {
+        let insertStatementString = "INSERT INTO \(db_fulfilment_orders_temp)(ORDER_ID, STATUS, CN_NUMBER, BASKET_NO, CURRENT_USER) VALUES (?,?,?,?,?);"
+
+        var insertStatement: OpaquePointer? = nil
+        if sqlite3_prepare_v2(self.db, insertStatementString, -1, &insertStatement, nil) == SQLITE_OK {
+            
+//            sqlite3_bind_text(insertStatement, 1, (orders.ORDER_ID as NSString).utf8String, -1, nil)
+            
+            if sqlite3_step(insertStatement) == SQLITE_DONE {
+                handler(true)
+            } else {
+                print("\(db_fulfilment_orders): Could not insert row.")
+                handler(false)
+            }
+        } else {
+            handler(false)
+            print("\(db_fulfilment_orders): INSERT statement could not be prepared.")
+        }
+        sqlite3_finalize(insertStatement)
+    }
 }
 
 
@@ -3450,4 +3536,59 @@ struct tbl_fulfillment_orders_temp {
     var CN_NUMBER: String = ""
     var BASKET_NO: String = ""
     var CURRENT_USER: String = ""
+}
+
+
+
+//MARK: - Rider
+struct tbl_rider_detail {
+    var ID: Int = -1
+    var EMP_NO: String = ""
+    var EMP_NAM: String = ""
+    var AREA_NO: String = ""
+    var EMP_TYP_NO: String = ""
+    var DESIG: String = ""
+    var ADDR1: String = ""
+    var ADDR2: String = ""
+    var ADDR3: String = ""
+    var PHN: String = ""
+    var PAGER_NO: String = ""
+    var STAT: String = ""
+    var STA_NO: String = ""
+    var BANK_NO: String = ""
+    var ACT_NO: String = ""
+    var NTN_NO: String = ""
+    var EMP_MGR: String = ""
+    var IDCARD: String = ""
+    var RUT_TYP: String = ""
+    var EMP_CLOSE_CHK: String = ""
+    var EMP_OPEN_DATE: String = ""
+    var EMP_CLOSE_DATE: String = ""
+    var DIV_CODE: String = ""
+    var RUT_NO: String = ""
+    var MOBILE_NO: String = ""
+    var INBOUND_INC_CHK: String = ""
+    var OUTBOUND_INC_CHK: String = ""
+    var RUT_ADJ_AMOUNT: String = ""
+    var EMP_UNVRSL: String = ""
+    var HR_EMP_NO: String = ""
+    var INC_TRGT: String = ""
+    var RUT_CODE_EXP: String = ""
+    var EMP_HUB_CODE: String = ""
+    var FIELD_STAFF: String = ""
+    var FUEL_QUATA: String = ""
+    var EMP_SALARY: String = ""
+    var DATE_JOINING: String = ""
+    var DATE_BIRTH: String = ""
+    var PICKUP_HUB: String = ""
+    var REMARKS: String = ""
+    var LAST_UPDATE_DATE: String = ""
+    var HARD_RUT_ALL: String = ""
+    var COURIER_COD_AMOUNT_LIMIT: String = ""
+    var UPDATED_BY: String = ""
+    var UPDATE_ON: String = ""
+    var CREATED_ON: String = ""
+    var CREATED_BY: String = ""
+    var UPDATED_ON: String = ""
+    var HUB_CODE: String = ""
 }

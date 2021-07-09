@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		1B02129625A6E27300441E9F /* ConfirmationPopViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B02129525A6E27300441E9F /* ConfirmationPopViewController.swift */; };
+		1B05A155269868E100EE1A29 /* Rider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B05A154269868E100EE1A29 /* Rider.swift */; };
 		1B06C91F268C82E4004FD140 /* RiderPickupUpdateListingPopupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B06C91E268C82E4004FD140 /* RiderPickupUpdateListingPopupViewController.swift */; };
 		1B0C62EB255C100C00DCA76D /* ModulePermissionsTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B0C62E9255C100C00DCA76D /* ModulePermissionsTableCell.swift */; };
 		1B0C62EC255C100C00DCA76D /* ModulePermissionsTableCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1B0C62EA255C100C00DCA76D /* ModulePermissionsTableCell.xib */; };
@@ -198,6 +199,7 @@
 
 /* Begin PBXFileReference section */
 		1B02129525A6E27300441E9F /* ConfirmationPopViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmationPopViewController.swift; sourceTree = "<group>"; };
+		1B05A154269868E100EE1A29 /* Rider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Rider.swift; sourceTree = "<group>"; };
 		1B06C91E268C82E4004FD140 /* RiderPickupUpdateListingPopupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RiderPickupUpdateListingPopupViewController.swift; sourceTree = "<group>"; };
 		1B0C62E9255C100C00DCA76D /* ModulePermissionsTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModulePermissionsTableCell.swift; sourceTree = "<group>"; };
 		1B0C62EA255C100C00DCA76D /* ModulePermissionsTableCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ModulePermissionsTableCell.xib; sourceTree = "<group>"; };
@@ -786,6 +788,7 @@
 				609922952547F43900534577 /* HRNotifications.swift */,
 				1B3BB84C25DBEA69006A29F4 /* TrackingModel.swift */,
 				1B3EDCA9260C94FD00A97984 /* Fulfilment.swift */,
+				1B05A154269868E100EE1A29 /* Rider.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -1210,6 +1213,7 @@
 				1BE523D62679DB1100F5F030 /* IMSDeliveryDetailTableCell.swift in Sources */,
 				1B326588259C95BF001B94C0 /* IMSDashboardViewController.swift in Sources */,
 				1B61B2B225DD20B800CDAAE2 /* RBagDetailsTableCell.swift in Sources */,
+				1B05A155269868E100EE1A29 /* Rider.swift in Sources */,
 				6010F4172540622500CF8597 /* NetworkCalls.swift in Sources */,
 				60E99911253D4F1300BCDAD1 /* PieChartCollectionCell.swift in Sources */,
 				1B3EDC9D260C598C00A97984 /* FulfilmentListingViewController.swift in Sources */,

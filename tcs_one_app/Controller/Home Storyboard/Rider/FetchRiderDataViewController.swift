@@ -7,7 +7,9 @@
 //
 
 import UIKit
+import SwiftyJSON
 
+var DIAL_CODE = ""
 class FetchRiderDataViewController: BaseViewController {
 
     @IBOutlet weak var mainView: UIView!
@@ -28,7 +30,7 @@ class FetchRiderDataViewController: BaseViewController {
         addDoubleNavigationButtons()
         self.makeTopCornersRounded(roundView: self.mainView)
         activityIndicator.forEach { (UIActivityIndicatorView) in
-            UIActivityIndicatorView.isHidden = true
+            UIActivityIndicatorView.startAnimating()
         }
         checkedImageView.forEach { (UIImageView) in
             UIImageView.isHidden = true
@@ -50,6 +52,7 @@ class FetchRiderDataViewController: BaseViewController {
         courierDetail.text = "Syncing Courier Detail"
         activityIndicator[0].isHidden = false
         activityIndicator[0].startAnimating()
+        
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
             self.courierDetail.text = "Synced Courier Detail"
@@ -109,6 +112,48 @@ class FetchRiderDataViewController: BaseViewController {
                         }
                     }
                 }
+            }
+        }
+    }
+    
+    func setupCourierDetails(_ handler: @escaping(Bool)->Void) {
+        guard let token = UserDefaults.standard.string(forKey: USER_ACCESS_TOKEN) else {
+            return
+        }
+        let request_body = [
+            "attendance_request" : [
+                "access_token": token
+            ]
+        ]
+        let params = self.getAPIParameter(service_name: RIDERSETUP, request_body: request_body)
+        NetworkCalls.getridersetup(params: params) { granted, response in
+            if granted {
+                let json = JSON(response)
+                if let dial_code = json.dictionary?[_dial_code]?.string {
+                    DIAL_CODE = dial_code
+                }
+                if let receiver_relation = json.dictionary?[_receiver_relation]?.array {
+                    
+                }
+                if let rider_detail = json.dictionary?[_rider_detail]?.array?.first {
+                    do {
+                        let rawData = try rider_detail.rawData()
+                        let riderDetail: RiderDetail = try JSONDecoder().decode(RiderDetail.self, from: rawData)
+                    } catch let err {
+                        print(err.localizedDescription)
+                    }
+                }
+                if let master_delivery = json.dictionary?[_master_dlvry_status]?.array {
+                    
+                }
+                if let detail_delivery = json.dictionary?[_detail_dlvry_status]?.array {
+                    
+                }
+                if let status_group = json.dictionary?[_status_group]?.array {
+                    
+                }
+            } else {
+                
             }
         }
     }
