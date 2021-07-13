@@ -1239,8 +1239,9 @@ class NetworkCalls: NSObject {
             }
         }.resume()
     }
-    class func getwalletpoints(params: [String:Any], _ handler: @escaping(_ granted: Bool,_ response: Any) -> Void) {
-        let Url = String(format: WALLET_POINTS)
+    class func getwalletsummarypoints(params: [String:Any], _ handler: @escaping(_ granted: Bool,_ response: Any) -> Void) {
+
+        let Url = String(format: WALLET_SUMMARY_POINT)
         guard let serviceUrl = URL(string: Url) else { return }
         var request = URLRequest(url: serviceUrl)
         request.httpMethod = "POST"

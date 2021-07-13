@@ -67,10 +67,14 @@ let UPDATEORDERFULFILMENT   = "oneapp.updateorderfullfilment"
 
 let WALLET_SETUP            = WALLET_ENDPOINT + "dev/v1/wallet/setup"
 let WALLET_GET_TOKEN        = WALLET_ENDPOINT + "dev/v1/wallet/token?clientSecret=\(CLIENTSECRET)"
-let WALLET_POINTS           = WALLET_ENDPOINT + "dev/v1/wallet/points"
+
+let WALLET_DETAIL_POINTS    = WALLET_ENDPOINT + "dev/v1/wallet/detail-points"
 let WALLET_HISTORY_POINT    = WALLET_ENDPOINT + "dev/v1/wallet/history-points"
-let S_WALLET_POINTS         = "WALLET.POINTS"
+let WALLET_SUMMARY_POINT    = WALLET_ENDPOINT + "dev/v1/wallet/summary-points"
+
 let S_WALLET_POINTS_HISTORY = "WALLET.GET.HISTORY.POINTS"
+let S_WALLET_POINTS_SUMMARY = "WALLET.GET.SUMMARY.POINTS"
+
 //API BACKEND KEYS
 let eAI_MESSAGE             = "eAI_MESSAGE"
 let eAI_BODY                = "eAI_BODY"
@@ -133,10 +137,11 @@ let _orders                 = "orders"
 let _walletSetupData        = "walletSetupData"
 let _walletHistoryPoints    = "walletHistoryPoints"
 let _walletPointsData       = "walletPointsData"
-let _pointsSummary          = "PointsSummary"
+let _pointsSummary          = "pointsSummary"
 let _pointSummaryDetails    = "DETAILS"
 let _token                  = "token"
 let _walletHistoryPointData = "walletHistoryPointsData"
+let _walletSummaryPointData = "walletSummaryPointsData"
 
 //Local Storage (Database) tablename keys
 let db_user_module          = "USER_MODULE"

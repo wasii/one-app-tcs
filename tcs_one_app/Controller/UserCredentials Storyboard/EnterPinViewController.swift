@@ -89,6 +89,7 @@ class EnterPinViewController: BaseViewController {
                     if success {
                         DispatchQueue.main.async {
                             CURRENT_USER_LOGGED_IN_ID = self.employeeId_textField.text!
+                            UserDefaults.standard.setValue(CURRENT_USER_LOGGED_IN_ID, forKeyPath: "CurrentUser")
                             self.unFreezeScreen()
                             self.view.hideToastActivity()
                             let controller = self.storyboard?.instantiateViewController(withIdentifier: "FetchUserDataViewController") as! FetchUserDataViewController

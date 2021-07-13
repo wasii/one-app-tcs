@@ -114,20 +114,18 @@ struct PointsSummary: Codable {
 
 // MARK: - Detail
 struct PointSummaryDetail: Codable {
-    let rid: Int
     let employeeID, transactionDate: String
-    let isMature: Int
-    let cnsgNo: String
-    let cat, subCat, points: Int
-
+    let totalShipment, cat, subCat, maturePoints: Int
+    let unMaturePoints, totalPoints: Int
+    
     enum CodingKeys: String, CodingKey {
-        case rid = "RID"
         case employeeID = "EMPLOYEE_ID"
         case transactionDate = "TRANSACTION_DATE"
-        case isMature = "IS_MATURE"
-        case cnsgNo = "CNSG_NO"
+        case totalShipment = "TOTAL_SHIPMENT"
         case cat = "CAT"
         case subCat = "SUB_CAT"
-        case points = "POINTS"
+        case maturePoints = "MATURE_POINTS"
+        case unMaturePoints = "UN_MATURE_POINTS"
+        case totalPoints = "TOTAL_POINTS"
     }
 }
