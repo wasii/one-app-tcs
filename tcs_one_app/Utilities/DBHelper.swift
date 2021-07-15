@@ -3210,8 +3210,9 @@ class DBHelper {
                 let REDEMPTION_POINTS = Int(sqlite3_column_int(queryStatement, 7))
                 let REDEMPTION_CODE = String(describing: String(cString: sqlite3_column_text(queryStatement, 8)))
                 let DESCRIPTION = String(describing: String(cString: sqlite3_column_text(queryStatement, 9)))
+                let CURRENT_USER = String(describing: String(cString: sqlite3_column_text(queryStatement, 10)))
                 
-                wallet_history_points.append(tbl_wallet_history_point(POINT_ID: POINT_ID, RID: RID, ID: ID, CAT: CAT, SUB_CAT: SUB_CAT, EMPLOYEE_ID: EMPLOYEE_ID, REDEMPTION_DATIME: REDEMPTION_DATIME, REDEMPTION_POINTS: REDEMPTION_POINTS, REDEMPTION_CODE: REDEMPTION_CODE, DESCRIPTION: DESCRIPTION))
+                wallet_history_points.append(tbl_wallet_history_point(POINT_ID: POINT_ID, RID: RID, ID: ID, CAT: CAT, SUB_CAT: SUB_CAT, EMPLOYEE_ID: EMPLOYEE_ID, REDEMPTION_DATIME: REDEMPTION_DATIME, REDEMPTION_POINTS: REDEMPTION_POINTS, REDEMPTION_CODE: REDEMPTION_CODE, DESCRIPTION: DESCRIPTION, CURRENT_USER: CURRENT_USER))
             }
         } else {
             print("SELECT statement \(db_w_history_point) could not be prepared")
@@ -3232,6 +3233,7 @@ class DBHelper {
             sqlite3_bind_int(insertStatement, 7, Int32(history_point.redemptionPoints))
             sqlite3_bind_text(insertStatement, 8, (history_point.redemptionCode as NSString).utf8String, -1, nil)
             sqlite3_bind_text(insertStatement, 9, ((history_point.walletHistoryPointDESCRIPTION ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 10, (CURRENT_USER_LOGGED_IN_ID as NSString).utf8String, -1, nil)
             if sqlite3_step(insertStatement) == SQLITE_DONE {
                 handler(true)
             } else {
@@ -3243,6 +3245,31 @@ class DBHelper {
             print("\(db_w_history_point): INSERT statement could not be prepared.")
         }
         sqlite3_finalize(insertStatement)
+    }
+    
+    //wallet_master and wallet_summary_detail
+    func read_tbl_wallet_master_and_summary_detail(query: String) -> [tbl_wallet_master_and_summary_detail]? {
+        let queryStatementString = query
+        var queryStatement: OpaquePointer? = nil
+        var data = [tbl_wallet_master_and_summary_detail]()
+
+        if sqlite3_prepare_v2(db, queryStatementString, -1, &queryStatement, nil) == SQLITE_OK {
+            while sqlite3_step(queryStatement) == SQLITE_ROW {
+                let HEADER_ID = Int(sqlite3_column_int(queryStatement, 0))
+                let HEADER_NAME = String(describing: String(cString: sqlite3_column_text(queryStatement, 1)))
+                let HEADER_DESCRIPTION = String(describing: String(cString: sqlite3_column_text(queryStatement, 2)))
+                let EMPLOYEE_ID = String(describing: String(cString: sqlite3_column_text(queryStatement, 3)))
+                let TRANSACTION_DATE = String(describing: String(cString: sqlite3_column_text(queryStatement, 4)))
+                let MATURE_POINTS = Int(sqlite3_column_int(queryStatement, 5))
+                let UN_MATURE_POINTS = Int(sqlite3_column_int(queryStatement, 6))
+                let TOTAL_POINTS = Int(sqlite3_column_int(queryStatement, 7))
+                
+                data.append(tbl_wallet_master_and_summary_detail(HEADER_ID: HEADER_ID, HEADER_NAME: HEADER_NAME, HEADER_DESCRIPTION: HEADER_DESCRIPTION, EMPLOYEE_ID: EMPLOYEE_ID, TRANSACTION_DATE: TRANSACTION_DATE, MATURE_POINTS: MATURE_POINTS, UNMATURE_POINTS: UN_MATURE_POINTS, TOTAL_POINTS: TOTAL_POINTS))
+            }
+        } else {
+            print("SELECT statement \(db_w_history_point) could not be prepared")
+        }
+        return data.count > 0 ? data : nil
     }
 }
 
@@ -3829,6 +3856,7 @@ struct tbl_wallet_history_point {
     var REDEMPTION_POINTS: Int = -1
     var REDEMPTION_CODE: String = ""
     var DESCRIPTION: String = ""
+    var CURRENT_USER: String = ""
 }
 
 struct tbl_wallet_points_summary {
@@ -3850,5 +3878,17 @@ struct tbl_wallet_point_summary_details {
     var SUB_CAT: Int = -1
     var MATURE_POINTS: Int = -1
     var UN_MATURE_POINTS: Int = -1
+    var TOTAL_POINTS: Int = -1
+}
+
+
+struct tbl_wallet_master_and_summary_detail {
+    var HEADER_ID: Int = -1
+    var HEADER_NAME: String = ""
+    var HEADER_DESCRIPTION: String = ""
+    var EMPLOYEE_ID: String = ""
+    var TRANSACTION_DATE: String = ""
+    var MATURE_POINTS: Int = -1
+    var UNMATURE_POINTS: Int = -1
     var TOTAL_POINTS: Int = -1
 }

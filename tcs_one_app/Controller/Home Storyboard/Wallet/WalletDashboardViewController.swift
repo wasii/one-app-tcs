@@ -242,6 +242,11 @@ class WalletDashboardViewController: BaseViewController {
         if sender.tag != 0 {
             let controller = self.storyboard?.instantiateViewController(withIdentifier: "WalletDetailsViewController") as! WalletDetailsViewController
             controller.points = sender.tag
+            if self.selected_query == "Custom Selection" {
+                controller.startday = self.startday
+                controller.endday   = self.endday
+            }
+            controller.selected_query = self.selected_query
             self.navigationController?.pushViewController(controller, animated: true)
         }
     }

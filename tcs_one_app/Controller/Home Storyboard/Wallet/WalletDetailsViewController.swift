@@ -25,6 +25,7 @@ class WalletDetailsViewController: BaseViewController {
     var endday: String?
     
     var points: Int = 0
+    var tbl_details: [tbl_wallet_master_and_summary_detail]?
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Wallet"
@@ -70,11 +71,34 @@ class WalletDetailsViewController: BaseViewController {
         NotificationCenter.default.removeObserver(self)
     }
     
+    func setupJSON(numberOfDays: Int, startday: String?, endday: String?) {
+        var previousDate = Date()// getPreviousDays(days: -numberOfDays)
+        var weekly = String()
+        var query = ""
+        
+        
+        if startday == nil && endday == nil {
+            previousDate = getPreviousDays(days: -numberOfDays)
+            weekly = previousDate.convertDateToString(date: previousDate)
+            
+            query = "SELECT md.HEADER_ID, md.HEADER_NAME, md.HEADER_DESCRIPTION, psd.employee_id, psd.TRANSACTION_DATE, psd.MATURE_POINTS, psd.UN_MATURE_POINTS, psd.TOTAL_POINTS FROM WALLET_MASTER_DETAILS as md JOIN WALLET_POINT_SUMMARY_DETAILS as psd ON md.HEADER_ID = psd.CAT WHERE TRANSACTION_DATE >= '\(weekly)' AND TRANSACTION_DATE <= '\(getLocalCurrentDate())'"
+            
+        } else {
+            query = "SELECT md.HEADER_ID, md.HEADER_NAME, md.HEADER_DESCRIPTION, psd.employee_id, psd.TRANSACTION_DATE, psd.MATURE_POINTS, psd.UN_MATURE_POINTS, psd.TOTAL_POINTS FROM WALLET_MASTER_DETAILS as md JOIN WALLET_POINT_SUMMARY_DETAILS as psd ON md.HEADER_ID = psd.CAT WHERE TRANSACTION_DATE >= '\(startday!)' AND TRANSACTION_DATE <= '\(endday!)'"
+        }
+        print(query)
+        self.tbl_details = AppDelegate.sharedInstance.db?.read_tbl_wallet_master_and_summary_detail(query: query)?.filter({ data in
+            data.EMPLOYEE_ID == "\(CURRENT_USER_LOGGED_IN_ID)"
+        })
+        DispatchQueue.main.async {
+            self.setupTableViewHeight()
+        }
+    }
     func setupTableViewHeight() {
         var height: CGFloat = 0.0
-//        if let count = self.fulfilment_orders?.count {
-            height = CGFloat((70 * 10) + 150)
-//        }
+        if let count = self.tbl_details?.count {
+            height = CGFloat((count * 70) + 150)
+        }
         self.mainViewHeightConstraint.constant = 280
         switch UIDevice().type {
         case .iPhone5, .iPhone5S, .iPhone5C, .iPhoneSE:
@@ -176,7 +200,7 @@ extension WalletDetailsViewController: DateSelectionDelegate {
         self.endday = nil
         
         self.numberOfDays = numberOfDays
-//        self.setupJSON(numberOfDays: numberOfDays,  startday: startday, endday: endday)
+        self.setupJSON(numberOfDays: numberOfDays,  startday: startday, endday: endday)
     }
     
     func dateSelection(startDate: String, endDate: String, selected_query: String) {
@@ -186,7 +210,7 @@ extension WalletDetailsViewController: DateSelectionDelegate {
         self.startday = startDate
         self.endday   = endDate
         
-//        self.setupJSON(numberOfDays: 0, startday: startDate, endday: endDate)
+        self.setupJSON(numberOfDays: 0, startday: startDate, endday: endDate)
     }
     
     func requestModeSelected(selected_query: String) {}
