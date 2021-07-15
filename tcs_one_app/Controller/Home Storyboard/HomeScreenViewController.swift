@@ -531,6 +531,11 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
                 break
             }
         }
+        for (i,m) in module!.enumerated() {
+            if m.TAGNAME == MODULE_TAG_ATTENDANCE {
+                self.module?.remove(at: i)
+            }
+        }
         if let permission = AppDelegate.sharedInstance.db?.read_tbl_UserPermission(permission: PERMISSION_FulfilmentModule).count {
             if permission == 0 {
                 for (i, m) in module!.enumerated() {

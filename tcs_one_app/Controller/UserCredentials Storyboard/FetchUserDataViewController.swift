@@ -1107,8 +1107,8 @@ extension FetchUserDataViewController {
 //                                self.navigateHomeScreen()
                             }
                         }
-                        return
                     }
+                    return
                 }
                 
                 if let fulfilment_orders = JSON(response).dictionary?[_orders]?.array {
@@ -1598,10 +1598,29 @@ extension FetchUserDataViewController {
                             } catch {
                                 print("error: ", error)
                             }
+                            handler(true)
+                        } else {
+                            DispatchQueue.main.async {
+                                self.view.makeToast(SOMETHINGWENTWRONG)
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                                    self.navigationController?.popViewController(animated: true)
+                                }
+                            }
                         }
-                        handler(true)
                     } else {
-                        
+                        DispatchQueue.main.async {
+                            self.view.makeToast(SOMETHINGWENTWRONG)
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                                self.navigationController?.popViewController(animated: true)
+                            }
+                        }
+                    }
+                }
+            } else {
+                DispatchQueue.main.async {
+                    self.view.makeToast(SOMETHINGWENTWRONG)
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                        self.navigationController?.popViewController(animated: true)
                     }
                 }
             }
@@ -1614,14 +1633,14 @@ extension FetchUserDataViewController {
         var history_points = [String:Any]()
         if lastSyncStatus == nil {
             history_points = [
-                "p_employee_id": "119333",
+                "p_employee_id": "\(CURRENT_USER_LOGGED_IN_ID)",
                 "p_transaction_date": "",
-                "p_skip": 0,
+                "p_skip": self.skip,
                 "p_take": 2
             ]
         } else {
             history_points = [
-                "p_employee_id": "119333",
+                "p_employee_id": "\(CURRENT_USER_LOGGED_IN_ID)",
                 "p_transaction_date": "\(lastSyncStatus!.DATE)",
                 "p_skip": lastSyncStatus!.SKIP,
                 "p_take": 2
@@ -1655,11 +1674,12 @@ extension FetchUserDataViewController {
                                 let data = try history.rawData()
                                 let historyPoints: WalletHistoryPoint = try JSONDecoder().decode(WalletHistoryPoint.self, from: data)
                                 self.isTotalCounter += 1
-                                AppDelegate.sharedInstance.db?.insert_tbl_wallet_history_point(history_point: historyPoints, handler: { _ in
-                                    DispatchQueue.main.async {
-                                        
-                                        self.walletHistoryPointsCounter.text = "\(self.isTotalCounter)/\(self.count)"
-                                    }
+                                AppDelegate.sharedInstance.db?.deleteRowWithMultipleConditions(tbl: db_w_history_point, conditions: "RID = '\(historyPoints.rid)'", { _ in
+                                    AppDelegate.sharedInstance.db?.insert_tbl_wallet_history_point(history_point: historyPoints, handler: { _ in
+                                        DispatchQueue.main.async {
+                                            self.walletHistoryPointsCounter.text = "\(self.isTotalCounter)/\(self.count)"
+                                        }
+                                    })
                                 })
                             } catch let DecodingError.dataCorrupted(context) {
                                 print(context)
@@ -1700,6 +1720,20 @@ extension FetchUserDataViewController {
                             self.setupwallethistorypoints()
                         }
                     }
+                } else {
+                    DispatchQueue.main.async {
+                        self.view.makeToast(SOMETHINGWENTWRONG)
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                            self.navigationController?.popViewController(animated: true)
+                        }
+                    }
+                }
+            } else {
+                DispatchQueue.main.async {
+                    self.view.makeToast(SOMETHINGWENTWRONG)
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                        self.navigationController?.popViewController(animated: true)
+                    }
                 }
             }
         }
@@ -1725,12 +1759,12 @@ extension FetchUserDataViewController {
         var summary_points = [String:Any]()
         if lastSyncStatus == nil {
             summary_points = [
-                "p_employee_id": "119333",
+                "p_employee_id": "\(CURRENT_USER_LOGGED_IN_ID)",
                 "p_transaction_date": ""
             ]
         } else {
             summary_points = [
-                "p_employee_id": "119333",
+                "p_employee_id": "\(CURRENT_USER_LOGGED_IN_ID)",
                 "p_transaction_date": "\(lastSyncStatus!.DATE)"
             ]
         }
@@ -1746,8 +1780,16 @@ extension FetchUserDataViewController {
                                 let data = try summary.rawData()
                                 let summaryPoints: PointsSummary = try JSONDecoder().decode(PointsSummary.self, from: data)
                                 self.isTotalCounter += 1
-                                AppDelegate.sharedInstance.db?.insert_tbl_wallet_point_summary(point_summary: summaryPoints, handler: { _ in
-                                    
+                                AppDelegate.sharedInstance.db?.deleteRowWithMultipleConditions(tbl: db_w_pointSummary, conditions: "TRANSACTION_DATE = '\(summaryPoints.transactionDate)' AND EMPLOYEE_ID = '\(CURRENT_USER_LOGGED_IN_ID)'", { _ in
+                                    AppDelegate.sharedInstance.db?.insert_tbl_wallet_point_summary(point_summary: summaryPoints, handler: { _ in
+                                        if let detail = summaryPoints.pointSummaryDetails.first {
+                                            
+                                            AppDelegate.sharedInstance.db?.deleteRowWithMultipleConditions(tbl: db_w_pointSumDetails, conditions: "TRANSACTION_DATE = '\(summaryPoints.transactionDate)' AND EMPLOYEE_ID = '\(CURRENT_USER_LOGGED_IN_ID)'", { _ in
+                                                AppDelegate.sharedInstance.db?.insert_tbl_wallet_point_summary_detail(summary_detail: detail) { _ in }
+                                            })
+                                            
+                                        }
+                                    })
                                 })
                             } catch let DecodingError.dataCorrupted(context) {
                                 print(context)
@@ -1788,10 +1830,20 @@ extension FetchUserDataViewController {
                         self.navigateHomeScreen()
                     }
                 } else {
-                    
+                    DispatchQueue.main.async {
+                        self.view.makeToast(SOMETHINGWENTWRONG)
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                            self.navigationController?.popViewController(animated: true)
+                        }
+                    }
                 }
             } else {
-                
+                DispatchQueue.main.async {
+                    self.view.makeToast(SOMETHINGWENTWRONG)
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                        self.navigationController?.popViewController(animated: true)
+                    }
+                }
             }
         }
     }

@@ -24,6 +24,7 @@ class WalletDetailsViewController: BaseViewController {
     var startday: String?
     var endday: String?
     
+    var points: Int = 0
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Wallet"

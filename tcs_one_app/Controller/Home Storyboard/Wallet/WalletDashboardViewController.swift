@@ -35,12 +35,15 @@ class WalletDashboardViewController: BaseViewController {
     var startday: String?
     var endday: String?
     
+    var tbl_wallet_points: [tbl_wallet_points_summary]?
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Wallet"
+        self.selected_query = "Weekly"
         self.makeTopCornersRounded(roundView: self.mainView)
         layoutFAB()
         addDoubleNavigationButtons()
+        
     }
     override func viewDidAppear(_ animated: Bool) {
         NotificationCenter.default.addObserver(self, selector: #selector(upload_pending_request), name: .networkRefreshed, object: nil)
@@ -57,7 +60,7 @@ class WalletDashboardViewController: BaseViewController {
                 btn.removeBadge()
             }
         }
-//        setupJSON(numberOfDays: self.numberOfDays, startday: self.startday, endday: self.endday)
+        setupJSON(numberOfDays: self.numberOfDays, startday: self.startday, endday: self.endday)
     }
     @objc func refreshedView(notification: Notification) {
         self.navigationItem.rightBarButtonItems = nil
@@ -72,12 +75,13 @@ class WalletDashboardViewController: BaseViewController {
                 btn.removeBadge()
             }
         }
-//        self.setupJSON(numberOfDays: numberOfDays, startday: startday, endday: endday)
+        self.setupJSON(numberOfDays: numberOfDays, startday: startday, endday: endday)
     }
     override func viewDidDisappear(_ animated: Bool) {
         NotificationCenter.default.removeObserver(self)
     }
     
+    //MARK: Custom Functions
     func layoutFAB() {
         floaty.plusColor = UIColor.white
         floaty.buttonColor = UIColor.nativeRedColor()
@@ -94,11 +98,138 @@ class WalletDashboardViewController: BaseViewController {
         floaty.paddingX = (UIApplication.shared.keyWindow?.safeAreaInsets.right ?? 0) + 25
         floaty.paddingY = (UIApplication.shared.keyWindow?.safeAreaInsets.bottom ?? 0) + 75
         
-        
-//            .sd_setImage(with: URL(string: module_data.MODULEICON), placeholderImage: nil, options: .refreshCached, progress: nil, completed: nil)
         self.view.addSubview(floaty)
     }
     
+    func setupJSON(numberOfDays: Int, startday: String?, endday: String?) {
+        var previousDate = Date()// getPreviousDays(days: -numberOfDays)
+        var weekly = String()
+        var query = ""
+        
+        
+        if startday == nil && endday == nil {
+            previousDate = getPreviousDays(days: -numberOfDays)
+            weekly = previousDate.convertDateToString(date: previousDate)
+            
+            query = "SELECT * FROM \(db_w_pointSummary) WHERE TRANSACTION_DATE >= '\(weekly)' AND TRANSACTION_DATE <= '\(getLocalCurrentDate())' AND EMPLOYEE_ID = '\(CURRENT_USER_LOGGED_IN_ID)'"
+            
+        } else {
+            query = "SELECT * FROM \(db_w_pointSummary) WHERE TRANSACTION_DATE >= '\(startday!)' AND TRANSACTION_DATE <= '\(endday!)' AND EMPLOYEE_ID = '\(CURRENT_USER_LOGGED_IN_ID)'"
+        }
+        self.tbl_wallet_points = AppDelegate.sharedInstance.db?.read_tbl_wallet_point_summary(query: query)
+        print(query)
+        
+        setupStackBarChart()
+        setupCircularView()
+    }
+    private func setupStackBarChart() {
+        barChart.drawBarShadowEnabled = false
+        barChart.drawValueAboveBarEnabled = false
+        barChart.highlightFullBarEnabled = false
+        barChart.pinchZoomEnabled = false
+        barChart.doubleTapToZoomEnabled = false
+
+        let leftAxis = barChart.leftAxis
+        leftAxis.axisMinimum = 0
+
+        barChart.rightAxis.enabled = false
+
+//        barChart.delegate = self
+
+        let xAxis = barChart.xAxis
+
+        xAxis.labelPosition = .top
+        xAxis.granularity = 1.0
+
+        xAxis.labelFont = UIFont.init(name: "Helvetica", size: 10)!
+        barChart.legend.form = .empty
+        var set = BarChartDataSet()
+
+        var xAxisDates = [String]()
+        var barChartEntries = [BarChartDataEntry]()
+        
+        if let points = tbl_wallet_points {
+            for (index,summaryPoints) in points.enumerated() {
+                let mature: Double = Double(summaryPoints.MATURE_POINTS)
+                let unmature: Double = Double(summaryPoints.UNMATURE_POINTS)
+                
+                let yVal : [Double] = [mature, unmature]
+                
+                
+                let dateFormatter = DateFormatter()
+                dateFormatter.dateFormat = "yyyy-MM-dd"
+                let tDate = dateFormatter.date(from: summaryPoints.TRANSACTION_DATE.dateOnly)!.monthAsStringAndDay()
+                xAxisDates.append(tDate)
+                
+                let barchart = BarChartDataEntry(x: Double(index), yValues: yVal, data: tDate)
+                barChartEntries.append(barchart)
+                
+            }
+        }
+
+        let formatt = CustomFormatter()
+        formatt.labels = xAxisDates
+        xAxis.valueFormatter = formatt
+        set = BarChartDataSet(entries: barChartEntries, label: "")
+        set.drawIconsEnabled = false
+        set.colors = [UIColor.inprocessColor(), UIColor.approvedColor()]
+
+        let data = BarChartData(dataSet: set)
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .none
+        formatter.maximumFractionDigits = 0
+        formatter.multiplier = 1.0
+        formatter.zeroSymbol = ""
+        data.setValueFont(.systemFont(ofSize: 1, weight: .light))
+        data.setValueTextColor(.white)
+
+        data.setValueFormatter(DefaultValueFormatter(formatter: formatter))
+        barChart.fitBars = true
+        barChart.data = data
+    }
+    
+    private func setupCircularView() {
+        if let points = tbl_wallet_points {
+            
+            var total = 0
+            var mature = 0
+            var unmature = 0
+            
+            for p in points {
+                total += p.NET_REDEEMABLE
+                mature += p.MATURE_POINTS
+                unmature += p.UNMATURE_POINTS
+            }
+            
+            UIView.animate(withDuration: 0.5, delay: 0.0, options: .curveLinear, animations: {
+                self.totalPointCircularView.maxValue = CGFloat(total)
+                self.totalPointCircularView.value = CGFloat(total)
+                UIView.animate(withDuration: 0.5, delay: 0.1, options: .curveLinear, animations: {
+                    self.redeemPointCircularView.maxValue = CGFloat(total)
+                    self.redeemPointCircularView.value = CGFloat(mature)
+                    UIView.animate(withDuration: 0.5, delay: 0.2, options: .curveLinear, animations: {
+                        self.remainingPointCircularView.maxValue = CGFloat(total)
+                        self.remainingPointCircularView.value = CGFloat(unmature)
+                    }, completion: nil)
+                }, completion: nil)
+            }, completion: nil)
+        } else {
+            UIView.animate(withDuration: 0.5, delay: 0.0, options: .curveLinear, animations: {
+                self.totalPointCircularView.maxValue = CGFloat(0)
+                self.totalPointCircularView.value = CGFloat(0)
+                UIView.animate(withDuration: 0.5, delay: 0.1, options: .curveLinear, animations: {
+                    self.redeemPointCircularView.maxValue = CGFloat(0)
+                    self.redeemPointCircularView.value = CGFloat(0)
+                    UIView.animate(withDuration: 0.5, delay: 0.2, options: .curveLinear, animations: {
+                        self.remainingPointCircularView.maxValue = CGFloat(0)
+                        self.remainingPointCircularView.value = CGFloat(0)
+                    }, completion: nil)
+                }, completion: nil)
+            }, completion: nil)
+        }
+    }
+    
+    //MARK: UIButton Tapped
     @IBAction func historyBttnTapped(_ sender: Any) {
         let controller = self.storyboard?.instantiateViewController(withIdentifier: "WalletHistoryViewController") as! WalletHistoryViewController
         
@@ -108,8 +239,11 @@ class WalletDashboardViewController: BaseViewController {
         sortedImages.forEach { imageview in
             imageview.image = nil
         }
-        let controller = self.storyboard?.instantiateViewController(withIdentifier: "WalletDetailsViewController") as! WalletDetailsViewController
-        self.navigationController?.pushViewController(controller, animated: true)
+        if sender.tag != 0 {
+            let controller = self.storyboard?.instantiateViewController(withIdentifier: "WalletDetailsViewController") as! WalletDetailsViewController
+            controller.points = sender.tag
+            self.navigationController?.pushViewController(controller, animated: true)
+        }
     }
     @IBAction func thisWeekBtnTapped(_ sender: Any) {
         let storyboard = UIStoryboard(name: "Popups", bundle: nil)
@@ -140,7 +274,7 @@ extension WalletDashboardViewController: DateSelectionDelegate {
         self.endday = nil
         
         self.numberOfDays = numberOfDays
-//        self.setupJSON(numberOfDays: numberOfDays,  startday: startday, endday: endday)
+        self.setupJSON(numberOfDays: numberOfDays,  startday: startday, endday: endday)
     }
     
     func dateSelection(startDate: String, endDate: String, selected_query: String) {
@@ -150,7 +284,7 @@ extension WalletDashboardViewController: DateSelectionDelegate {
         self.startday = startDate
         self.endday   = endDate
         
-//        self.setupJSON(numberOfDays: 0, startday: startDate, endday: endDate)
+        self.setupJSON(numberOfDays: 0, startday: startDate, endday: endDate)
     }
     
     func requestModeSelected(selected_query: String) {}

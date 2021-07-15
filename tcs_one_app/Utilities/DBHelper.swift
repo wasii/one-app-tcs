@@ -3128,9 +3128,6 @@ class DBHelper {
             sqlite3_bind_int(insertStatement, 5, Int32(point_summary.redeemPoints))
             sqlite3_bind_int(insertStatement, 6, Int32(point_summary.netRedeemable))
             
-            for detail in point_summary.pointSummaryDetails {
-                self.insert_tbl_wallet_point_summary_detail(summary_detail: detail) { _ in }
-            }
             if sqlite3_step(insertStatement) == SQLITE_DONE {
                 handler(true)
             } else {
