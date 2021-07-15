@@ -506,42 +506,36 @@ extension AttendanceMarkingViewController: CLLocationManagerDelegate {
         guard let locValue:CLLocationCoordinate2D = manager.location?.coordinate else {
             return
         }
-
+        
         self.lat = "\(locValue.latitude)"
         self.lon = "\(locValue.longitude)"
         
-        print("Lat: \(lat) Lon: \(lon)")
-//        print(lon)
         mapView?.mapType = MKMapType.standard
         
         for location in places {
             let officeLocation = CLLocation.init(latitude: location.coordinate.latitude,
                                                  longitude: location.coordinate.longitude)
-
-            let circle = MKCircle(center: officeLocation.coordinate, radius: Double(90) as CLLocationDistance)
-            
-            
-            
-            if locations.first!.distance(from: officeLocation) > circle.radius {
-                self.isUserInsideFence = false
-            }
-            else{
+            if locations.first!.distance(from: officeLocation) <= Double(location.radius) {
+                
                 hub_code = location.hub_code
                 self.isUserInsideFence = true
+                print("UserInside Fence: \(self.isUserInsideFence),, Radius: \(location.radius),,   Distance: \(locations.first!.distance(from: officeLocation))")
+                break
             }
-            
-            if CustomReachability.isConnectedNetwork() {
-                if self.isUserInsideFence {
-                    self.slideView.isHidden = false
-                } else {
-                    self.errorMessage.isHidden = false
-                    self.slideView.isHidden = true
-                }
+            else{
+                self.isUserInsideFence = false
+                print("UserInside Fence: \(self.isUserInsideFence),, Radius: \(location.radius),,   Distance: \(locations.first!.distance(from: officeLocation))")
+            }
+        }
+        if CustomReachability.isConnectedNetwork() {
+            if self.isUserInsideFence {
+                self.slideView.isHidden = false
             } else {
+                self.errorMessage.isHidden = false
                 self.slideView.isHidden = true
             }
-            
-            print("UserInside Fence: \(self.isUserInsideFence)")
+        } else {
+            self.slideView.isHidden = true
         }
     }
     
