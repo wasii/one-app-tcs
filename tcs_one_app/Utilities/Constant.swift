@@ -74,6 +74,7 @@ let WALLET_SUMMARY_POINT    = WALLET_ENDPOINT + "dev/v1/wallet/summary-points"
 
 let S_WALLET_POINTS_HISTORY = "WALLET.GET.HISTORY.POINTS"
 let S_WALLET_POINTS_SUMMARY = "WALLET.GET.SUMMARY.POINTS"
+let S_WALLET_POINTS_DETAILS = "WALLET.GET.DETAIL.POINTS"
 
 //API BACKEND KEYS
 let eAI_MESSAGE             = "eAI_MESSAGE"
@@ -142,6 +143,8 @@ let _pointSummaryDetails    = "DETAILS"
 let _token                  = "token"
 let _walletHistoryPointData = "walletHistoryPointsData"
 let _walletSummaryPointData = "walletSummaryPointsData"
+let _walletDetailPoints     = "walletDetailPoints"
+let _pointsDetail           = "pointsDetail"
 
 //Local Storage (Database) tablename keys
 let db_user_module          = "USER_MODULE"
@@ -200,6 +203,7 @@ let db_w_setup_redemption   = "WALLET_REDEMPTION_SETUP"
 let db_w_pointSummary       = "WALLET_POINTS_SUMMARY"
 let db_w_history_point      = "WALLET_HISTORY_POINTS"
 let db_w_pointSumDetails    = "WALLET_POINT_SUMMARY_DETAILS"
+let db_w_detail_point       = "WALLET_DETAIL_POINTS"
 
 //ERROR MESSAGES
 let NOINTERNETCONNECTION    = "Connect your device with internet first."

@@ -233,6 +233,12 @@ class WalletDashboardViewController: BaseViewController {
     @IBAction func historyBttnTapped(_ sender: Any) {
         let controller = self.storyboard?.instantiateViewController(withIdentifier: "WalletHistoryViewController") as! WalletHistoryViewController
         
+        if self.selected_query == "Custom Selection" {
+            controller.startday = self.startday
+            controller.endday   = self.endday
+        }
+        controller.numberOfDays = self.numberOfDays
+        controller.selected_query = self.selected_query
         self.navigationController?.pushViewController(controller, animated: true)
     }
     @IBAction func sortingBtnTapped(_ sender: UIButton) {
@@ -240,12 +246,23 @@ class WalletDashboardViewController: BaseViewController {
             imageview.image = nil
         }
         if sender.tag != 0 {
+            if sender.tag == 1 {
+                if redeemPointCircularView.value == 0 {
+                    return
+                }
+            } else {
+                if remainingPointCircularView.value == 0 {
+                    return
+                }
+            }
+            
             let controller = self.storyboard?.instantiateViewController(withIdentifier: "WalletDetailsViewController") as! WalletDetailsViewController
             controller.points = sender.tag
             if self.selected_query == "Custom Selection" {
                 controller.startday = self.startday
                 controller.endday   = self.endday
             }
+            controller.numberOfDays = self.numberOfDays
             controller.selected_query = self.selected_query
             self.navigationController?.pushViewController(controller, animated: true)
         }

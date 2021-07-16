@@ -2968,10 +2968,12 @@ class DBHelper {
             while sqlite3_step(queryStatement) == SQLITE_ROW {
                 let ID = Int(sqlite3_column_int(queryStatement, 0))
                 let HEADER_ID = Int(sqlite3_column_int(queryStatement, 1))
-                let INC_CODE = String(describing: String(cString: sqlite3_column_text(queryStatement, 2)))
-                let CODE_DESCRIPTION = String(describing: String(cString: sqlite3_column_text(queryStatement, 3)))
+                let INC_ID = Int(sqlite3_column_int(queryStatement, 2))
+                let INC_CODE = String(describing: String(cString: sqlite3_column_text(queryStatement, 3)))
+                let CODE_DESCRIPTION = String(describing: String(cString: sqlite3_column_text(queryStatement, 4)))
                 
-                query_master.append(tbl_wallet_query_detail(ID: ID, HEADER_ID: HEADER_ID, INC_CODE: INC_CODE, CODE_DESCRIPTION: CODE_DESCRIPTION))
+                query_master.append(tbl_wallet_query_detail(ID: ID, HEADER_ID: HEADER_ID, INC_ID: INC_ID, INC_CODE: INC_CODE, CODE_DESCRIPTION: CODE_DESCRIPTION))
+                
             }
         } else {
             print("SELECT statement \(db_w_query_master) could not be prepared")
@@ -2979,13 +2981,14 @@ class DBHelper {
         return query_master.count > 0 ? query_master : nil
     }
     func insert_tbl_wallet_query_detail(detail: Detail, handler: @escaping(_ success: Bool) -> Void) {
-        let insertStatementString = "INSERT INTO \(db_w_query_detail)(HEADER_ID, INC_CODE, CODE_DESCRIPTION) VALUES (?,?,?);"
+        let insertStatementString = "INSERT INTO \(db_w_query_detail)(HEADER_ID, INC_ID, INC_CODE, CODE_DESCRIPTION) VALUES (?,?,?,?);"
 
         var insertStatement: OpaquePointer? = nil
         if sqlite3_prepare_v2(self.db, insertStatementString, -1, &insertStatement, nil) == SQLITE_OK {
             sqlite3_bind_int(insertStatement, 1, Int32(detail.headerID))
-            sqlite3_bind_text(insertStatement, 2, (detail.incCode as NSString).utf8String, -1, nil)
-            sqlite3_bind_text(insertStatement, 3, (detail.codeDescription as NSString).utf8String, -1, nil)
+            sqlite3_bind_int(insertStatement, 2, Int32(detail.incId))
+            sqlite3_bind_text(insertStatement, 3, (detail.incCode as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 4, (detail.codeDescription as NSString).utf8String, -1, nil)
             
             if sqlite3_step(insertStatement) == SQLITE_DONE {
                 handler(true)
@@ -3220,7 +3223,7 @@ class DBHelper {
         return wallet_history_points.count > 0 ? wallet_history_points : nil
     }
     func insert_tbl_wallet_history_point(history_point: WalletHistoryPoint, handler: @escaping(_ success: Bool) -> Void) {
-        let insertStatementString = "INSERT INTO \(db_w_history_point)(RID, ID, CAT, SUB_CAT, EMPLOYEE_ID, REDEMPTION_DATIME, REDEMPTION_POINTS, REDEMPTION_CODE, DESCRIPTION) VALUES (?,?,?,?,?,?,?,?,?);"
+        let insertStatementString = "INSERT INTO \(db_w_history_point)(RID, ID, CAT, SUB_CAT, EMPLOYEE_ID, REDEMPTION_DATIME, REDEMPTION_POINTS, REDEMPTION_CODE, DESCRIPTION, CURRENT_USER) VALUES (?,?,?,?,?,?,?,?,?,?);"
 
         var insertStatement: OpaquePointer? = nil
         if sqlite3_prepare_v2(self.db, insertStatementString, -1, &insertStatement, nil) == SQLITE_OK {
@@ -3248,28 +3251,80 @@ class DBHelper {
     }
     
     //wallet_master and wallet_summary_detail
-    func read_tbl_wallet_master_and_summary_detail(query: String) -> [tbl_wallet_master_and_summary_detail]? {
+    func read_tbl_wallet_master_and_summary_detail(query: String) -> [tbl_wallet_listing]? {
         let queryStatementString = query
         var queryStatement: OpaquePointer? = nil
-        var data = [tbl_wallet_master_and_summary_detail]()
+        var data = [tbl_wallet_listing]()
 
         if sqlite3_prepare_v2(db, queryStatementString, -1, &queryStatement, nil) == SQLITE_OK {
             while sqlite3_step(queryStatement) == SQLITE_ROW {
-                let HEADER_ID = Int(sqlite3_column_int(queryStatement, 0))
-                let HEADER_NAME = String(describing: String(cString: sqlite3_column_text(queryStatement, 1)))
-                let HEADER_DESCRIPTION = String(describing: String(cString: sqlite3_column_text(queryStatement, 2)))
-                let EMPLOYEE_ID = String(describing: String(cString: sqlite3_column_text(queryStatement, 3)))
-                let TRANSACTION_DATE = String(describing: String(cString: sqlite3_column_text(queryStatement, 4)))
-                let MATURE_POINTS = Int(sqlite3_column_int(queryStatement, 5))
-                let UN_MATURE_POINTS = Int(sqlite3_column_int(queryStatement, 6))
-                let TOTAL_POINTS = Int(sqlite3_column_int(queryStatement, 7))
+                let EMPLOYEE_ID = String(describing: String(cString: sqlite3_column_text(queryStatement, 1)))
+                let TOTAL_SHIPMENT = Int(sqlite3_column_int(queryStatement, 1))
+                let CATEGORY = String(describing: String(cString: sqlite3_column_text(queryStatement, 2)))
+                let CATEGORY_ID = Int(sqlite3_column_int(queryStatement, 3))
+                let SUB_CATEGORY_ID = Int(sqlite3_column_int(queryStatement, 4))
+                let SUB_CATEGORY_NAME = String(describing: String(cString: sqlite3_column_text(queryStatement, 5)))
+                let MATURE_POINTS = Int(sqlite3_column_int(queryStatement, 6))
+                let UN_MATURE_POINTS = Int(sqlite3_column_int(queryStatement, 7))
                 
-                data.append(tbl_wallet_master_and_summary_detail(HEADER_ID: HEADER_ID, HEADER_NAME: HEADER_NAME, HEADER_DESCRIPTION: HEADER_DESCRIPTION, EMPLOYEE_ID: EMPLOYEE_ID, TRANSACTION_DATE: TRANSACTION_DATE, MATURE_POINTS: MATURE_POINTS, UNMATURE_POINTS: UN_MATURE_POINTS, TOTAL_POINTS: TOTAL_POINTS))
+                data.append(tbl_wallet_listing(EMPLOYEE_ID: EMPLOYEE_ID, TOTAL_SHIPMENT: TOTAL_SHIPMENT, CATEGORY_NAME: CATEGORY, CATEGORY_ID: CATEGORY_ID, SUB_CATEGORY_ID: SUB_CATEGORY_ID, SUB_CATEGORY_NAME: SUB_CATEGORY_NAME, MATURE_POINTS: MATURE_POINTS, UNMATURE_POINTS: UN_MATURE_POINTS))
             }
         } else {
             print("SELECT statement \(db_w_history_point) could not be prepared")
         }
         return data.count > 0 ? data : nil
+    }
+    
+    //WALLET_Detail_POINTS
+    func read_tbl_wallet_detail_point(query: String) -> [tbl_wallet_detail_points]? {
+        let queryStatementString = query
+        var queryStatement: OpaquePointer? = nil
+        var wallet_detail_points = [tbl_wallet_detail_points]()
+
+        if sqlite3_prepare_v2(db, queryStatementString, -1, &queryStatement, nil) == SQLITE_OK {
+            while sqlite3_step(queryStatement) == SQLITE_ROW {
+                let ID = Int(sqlite3_column_int(queryStatement, 0))
+                let RID = Int(sqlite3_column_int(queryStatement, 1))
+                let EMPLOYEE_ID = String(describing: String(cString: sqlite3_column_text(queryStatement, 2)))
+                let TRANSACTION_DATE = String(describing: String(cString: sqlite3_column_text(queryStatement, 3)))
+                let IS_MATURE = Int(sqlite3_column_int(queryStatement, 4))
+                let CNSG_NO = String(describing: String(cString: sqlite3_column_text(queryStatement, 5)))
+                let CAT = Int(sqlite3_column_int(queryStatement, 6))
+                let SUB_CAT = Int(sqlite3_column_int(queryStatement, 7))
+                let POINTS = Int(sqlite3_column_int(queryStatement, 8))
+                
+                wallet_detail_points.append(tbl_wallet_detail_points(ID: ID, RID: RID, EMPLOYEE_ID: EMPLOYEE_ID, TRANSACTION_DATE: TRANSACTION_DATE, IS_MATURE: IS_MATURE, CNSG_NO: CNSG_NO, CAT: CAT, SUB_CAT: SUB_CAT, POINTS: POINTS))
+                
+            }
+        } else {
+            print("SELECT statement \(db_w_detail_point) could not be prepared")
+        }
+        return wallet_detail_points.count > 0 ? wallet_detail_points : nil
+    }
+    func insert_tbl_wallet_detail_point(points_detail: PointsDetail, handler: @escaping(_ success: Bool) -> Void) {
+        let insertStatementString = "INSERT INTO \(db_w_detail_point)(RID, EMPLOYEE_ID, TRANSACTION_DATE, IS_MATURE, CNSG_NO, CAT, SUB_CAT, POINTS) VALUES (?,?,?,?,?,?,?,?);"
+
+        var insertStatement: OpaquePointer? = nil
+        if sqlite3_prepare_v2(self.db, insertStatementString, -1, &insertStatement, nil) == SQLITE_OK {
+            sqlite3_bind_int(insertStatement, 1, Int32(points_detail.rid))
+            sqlite3_bind_text(insertStatement, 2, (points_detail.employeeID as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 3, (points_detail.transactionDate as NSString).utf8String, -1, nil)
+            sqlite3_bind_int(insertStatement, 4, Int32(points_detail.isMature))
+            sqlite3_bind_text(insertStatement, 5, (points_detail.cnsgNo as NSString).utf8String, -1, nil)
+            sqlite3_bind_int(insertStatement, 6, Int32(points_detail.cat))
+            sqlite3_bind_int(insertStatement, 7, Int32(points_detail.subCat))
+            sqlite3_bind_int(insertStatement, 8, Int32(points_detail.points))
+            if sqlite3_step(insertStatement) == SQLITE_DONE {
+                handler(true)
+            } else {
+                print("\(db_w_detail_point): Could not insert row.")
+                handler(false)
+            }
+        } else {
+            handler(false)
+            print("\(db_w_detail_point): INSERT statement could not be prepared.")
+        }
+        sqlite3_finalize(insertStatement)
     }
 }
 
@@ -3824,6 +3879,7 @@ struct tbl_wallet_query_master {
 struct tbl_wallet_query_detail {
     var ID: Int = -1
     var HEADER_ID: Int = -1
+    var INC_ID: Int = -1
     var INC_CODE: String = ""
     var CODE_DESCRIPTION: String = ""
 }
@@ -3882,13 +3938,26 @@ struct tbl_wallet_point_summary_details {
 }
 
 
-struct tbl_wallet_master_and_summary_detail {
-    var HEADER_ID: Int = -1
-    var HEADER_NAME: String = ""
-    var HEADER_DESCRIPTION: String = ""
+struct tbl_wallet_listing {
     var EMPLOYEE_ID: String = ""
-    var TRANSACTION_DATE: String = ""
+    var TOTAL_SHIPMENT: Int = -1
+    var CATEGORY_NAME: String = ""
+    var CATEGORY_ID: Int = -1
+    var SUB_CATEGORY_ID: Int = -1
+    var SUB_CATEGORY_NAME: String = ""
     var MATURE_POINTS: Int = -1
     var UNMATURE_POINTS: Int = -1
-    var TOTAL_POINTS: Int = -1
+}
+
+
+struct tbl_wallet_detail_points {
+    var ID: Int = -1
+    var RID: Int = -1
+    var EMPLOYEE_ID: String = ""
+    var TRANSACTION_DATE: String = ""
+    var IS_MATURE: Int = -1
+    var CNSG_NO: String = ""
+    var CAT: Int = -1
+    var SUB_CAT: Int = -1
+    var POINTS: Int = -1
 }

@@ -89,6 +89,7 @@
 		1BA51112267B804100E0E642 /* CustomAlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BA51111267B804100E0E642 /* CustomAlertView.swift */; };
 		1BA7BAC2260DF3FD002D9FA9 /* FulfilmentOrderDetailTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BA7BAC0260DF3FD002D9FA9 /* FulfilmentOrderDetailTableCell.swift */; };
 		1BA7BAC3260DF3FD002D9FA9 /* FulfilmentOrderDetailTableCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1BA7BAC1260DF3FD002D9FA9 /* FulfilmentOrderDetailTableCell.xib */; };
+		1BAFA3C626A14BAC00025BED /* WalletListingTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BAFA3C526A14BAC00025BED /* WalletListingTableCell.swift */; };
 		1BBAEA4D259DA1AA00FBDCB4 /* IMSAllRequestsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BBAEA4C259DA1AA00FBDCB4 /* IMSAllRequestsViewController.swift */; };
 		1BBB7DCA268DA556001EA7D0 /* Wallet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BBB7DC9268DA556001EA7D0 /* Wallet.swift */; };
 		1BC02EFF25FA446800EFAFE9 /* Geotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BC02EFE25FA446800EFAFE9 /* Geotification.swift */; };
@@ -260,6 +261,7 @@
 		1BA51111267B804100E0E642 /* CustomAlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomAlertView.swift; sourceTree = "<group>"; };
 		1BA7BAC0260DF3FD002D9FA9 /* FulfilmentOrderDetailTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FulfilmentOrderDetailTableCell.swift; sourceTree = "<group>"; };
 		1BA7BAC1260DF3FD002D9FA9 /* FulfilmentOrderDetailTableCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FulfilmentOrderDetailTableCell.xib; sourceTree = "<group>"; };
+		1BAFA3C526A14BAC00025BED /* WalletListingTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletListingTableCell.swift; sourceTree = "<group>"; };
 		1BBAEA4C259DA1AA00FBDCB4 /* IMSAllRequestsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMSAllRequestsViewController.swift; sourceTree = "<group>"; };
 		1BBB7DC9268DA556001EA7D0 /* Wallet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Wallet.swift; sourceTree = "<group>"; };
 		1BC02EFE25FA446800EFAFE9 /* Geotification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Geotification.swift; sourceTree = "<group>"; };
@@ -509,6 +511,7 @@
 			children = (
 				1BA51109267B28A400E0E642 /* WalletHistoryTableCell.swift */,
 				1BA5110A267B28A400E0E642 /* WalletHistoryTableCell.xib */,
+				1BAFA3C526A14BAC00025BED /* WalletListingTableCell.swift */,
 			);
 			path = Wallet;
 			sourceTree = "<group>";
@@ -1122,6 +1125,7 @@
 				6082CD502550F4F90037CF54 /* RequestModePopupViewController.swift in Sources */,
 				609922942547ECB000534577 /* AddNewRequest.swift in Sources */,
 				6055E988254B303F009BB6E3 /* UpdateRequestViewController.swift in Sources */,
+				1BAFA3C626A14BAC00025BED /* WalletListingTableCell.swift in Sources */,
 				60F3C7FA2546C7FE00FA80B9 /* Protocols.swift in Sources */,
 				1B3EDCAA260C94FD00A97984 /* Fulfilment.swift in Sources */,
 				1BE523D92679DB1100F5F030 /* IMSDeliveryDetailsTableCell.swift in Sources */,

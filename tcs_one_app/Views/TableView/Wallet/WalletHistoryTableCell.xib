@@ -91,13 +91,13 @@
                             </label>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GTj-nM-Axr">
                                 <rect key="frame" x="271.5" y="100" width="80" height="1"/>
-                                <color key="backgroundColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="backgroundColor" red="0.0" green="0.48627450979999998" blue="0.2236488596" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="80" id="fkD-eC-SfX"/>
                                     <constraint firstAttribute="height" constant="1" id="sx5-u9-7Ap"/>
                                 </constraints>
                             </view>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="rightY" translatesAutoresizingMaskIntoConstraints="NO" id="yd8-Nb-fR3">
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="rightG" translatesAutoresizingMaskIntoConstraints="NO" id="yd8-Nb-fR3">
                                 <rect key="frame" x="356.5" y="88" width="25" height="25"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="25" id="YST-9Q-mDb"/>
@@ -172,13 +172,18 @@
             </tableViewCellContentView>
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <connections>
+                <outlet property="categoryLabel" destination="ZRq-Sm-RIO" id="dg4-7R-ePa"/>
+                <outlet property="dateLabel" destination="vCu-EP-uVk" id="dY5-FE-8sK"/>
+                <outlet property="idLabel" destination="QOY-hh-g8e" id="PfD-0g-uUp"/>
+                <outlet property="pointLabel" destination="8hg-V8-ryI" id="9Ir-Sw-laV"/>
+            </connections>
             <point key="canvasLocation" x="281.15942028985512" y="151.67410714285714"/>
         </tableViewCell>
     </objects>
     <resources>
         <image name="coin-pkr" width="512" height="512"/>
         <image name="rightG" width="32" height="32"/>
-        <image name="rightY" width="32" height="32"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

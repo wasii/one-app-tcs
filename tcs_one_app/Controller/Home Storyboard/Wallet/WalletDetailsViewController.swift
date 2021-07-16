@@ -7,6 +7,9 @@
 //
 
 import UIKit
+import SwiftyJSON
+import QuickLook
+import TPPDF
 
 class WalletDetailsViewController: BaseViewController {
 
@@ -17,6 +20,7 @@ class WalletDetailsViewController: BaseViewController {
     
     
     //MARK: Variables
+    var fileDownloadedURL : URL?
     var selected_query: String?
     var numberOfDays = 7
     
@@ -25,15 +29,16 @@ class WalletDetailsViewController: BaseViewController {
     var endday: String?
     
     var points: Int = 0
-    var tbl_details: [tbl_wallet_master_and_summary_detail]?
+    var tbl_details: [tbl_wallet_listing]?
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Wallet"
+        self.thisWeekBtn.setTitle(selected_query!, for: .normal)
         self.makeTopCornersRounded(roundView: self.mainView)
         addDoubleNavigationButtons()
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-            self.setupTableViewHeight()
-        }
+//        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+//            self.setupTableViewHeight()
+//        }
     }
     override func viewDidAppear(_ animated: Bool) {
         NotificationCenter.default.addObserver(self, selector: #selector(upload_pending_request), name: .networkRefreshed, object: nil)
@@ -50,7 +55,7 @@ class WalletDetailsViewController: BaseViewController {
                 btn.removeBadge()
             }
         }
-//        setupJSON(numberOfDays: self.numberOfDays, startday: self.startday, endday: self.endday)
+        setupJSON(numberOfDays: self.numberOfDays, startday: self.startday, endday: self.endday)
     }
     @objc func refreshedView(notification: Notification) {
         self.navigationItem.rightBarButtonItems = nil
@@ -65,7 +70,7 @@ class WalletDetailsViewController: BaseViewController {
                 btn.removeBadge()
             }
         }
-//        self.setupJSON(numberOfDays: numberOfDays, startday: startday, endday: endday)
+        self.setupJSON(numberOfDays: numberOfDays, startday: startday, endday: endday)
     }
     override func viewDidDisappear(_ animated: Bool) {
         NotificationCenter.default.removeObserver(self)
@@ -81,16 +86,28 @@ class WalletDetailsViewController: BaseViewController {
             previousDate = getPreviousDays(days: -numberOfDays)
             weekly = previousDate.convertDateToString(date: previousDate)
             
-            query = "SELECT md.HEADER_ID, md.HEADER_NAME, md.HEADER_DESCRIPTION, psd.employee_id, psd.TRANSACTION_DATE, psd.MATURE_POINTS, psd.UN_MATURE_POINTS, psd.TOTAL_POINTS FROM WALLET_MASTER_DETAILS as md JOIN WALLET_POINT_SUMMARY_DETAILS as psd ON md.HEADER_ID = psd.CAT WHERE TRANSACTION_DATE >= '\(weekly)' AND TRANSACTION_DATE <= '\(getLocalCurrentDate())'"
+            query = "select EMPLOYEE_ID,SUM(TOTAL_SHIPMENT) as cn,(SELECT HEADER_NAME from WALLET_MASTER_DETAILS where HEADER_ID = CAT) as category,CAT as category_id,SUB_CAT as subcategory_id, (SELECT CODE_DESCRIPTION from WALLET_QUERY_DETAILS where HEADER_ID = CAT AND INC_ID = SUB_CAT) as sub_cat_name , SUM(MATURE_POINTS) as MATURE_POINTS, SUM(UN_MATURE_POINTS) as UN_MATURE_POINTS  from WALLET_POINT_SUMMARY_DETAILS where EMPLOYEE_ID = '\(CURRENT_USER_LOGGED_IN_ID)' AND (TRANSACTION_DATE BETWEEN '\(weekly)' AND '\(getLocalCurrentDate())') GROUP BY CAT"
             
         } else {
-            query = "SELECT md.HEADER_ID, md.HEADER_NAME, md.HEADER_DESCRIPTION, psd.employee_id, psd.TRANSACTION_DATE, psd.MATURE_POINTS, psd.UN_MATURE_POINTS, psd.TOTAL_POINTS FROM WALLET_MASTER_DETAILS as md JOIN WALLET_POINT_SUMMARY_DETAILS as psd ON md.HEADER_ID = psd.CAT WHERE TRANSACTION_DATE >= '\(startday!)' AND TRANSACTION_DATE <= '\(endday!)'"
+            query = "select EMPLOYEE_ID,SUM(TOTAL_SHIPMENT) as cn,(SELECT HEADER_NAME from WALLET_MASTER_DETAILS where HEADER_ID = CAT) as category,CAT as category_id,SUB_CAT as subcategory_id, (SELECT CODE_DESCRIPTION from WALLET_QUERY_DETAILS where HEADER_ID = CAT AND INC_ID = SUB_CAT) as sub_cat_name , SUM(MATURE_POINTS) as MATURE_POINTS, SUM(UN_MATURE_POINTS) as UN_MATURE_POINTS  from WALLET_POINT_SUMMARY_DETAILS where EMPLOYEE_ID = '\(CURRENT_USER_LOGGED_IN_ID)' AND (TRANSACTION_DATE BETWEEN '\(startday!)' AND '\(endday!)') GROUP BY CAT"
+            
+            self.thisWeekBtn.setTitle("\(startday!.dateOnly) TO \(endday!.dateOnly)", for: .normal)
         }
+        
         print(query)
-        self.tbl_details = AppDelegate.sharedInstance.db?.read_tbl_wallet_master_and_summary_detail(query: query)?.filter({ data in
-            data.EMPLOYEE_ID == "\(CURRENT_USER_LOGGED_IN_ID)"
-        })
+        self.tbl_details = AppDelegate.sharedInstance.db?.read_tbl_wallet_master_and_summary_detail(query: query)
+        
+        if points == 1 {
+            self.tbl_details = self.tbl_details?.filter({ details in
+                details.MATURE_POINTS != 0
+            })
+        } else {
+            self.tbl_details = self.tbl_details?.filter({ details in
+                details.UNMATURE_POINTS != 0
+            })
+        }
         DispatchQueue.main.async {
+            self.tableView.reloadData()
             self.setupTableViewHeight()
         }
     }
@@ -174,19 +191,141 @@ class WalletDetailsViewController: BaseViewController {
 
 extension WalletDetailsViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 10
+        if let count = self.tbl_details?.count {
+            return count
+        }
+        return 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "cell") else {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "WalletListingTableCell") as? WalletListingTableCell else {
             fatalError()
         }
-        
+        if let points_data = self.tbl_details {
+            cell.categoryLabel.text = points_data[indexPath.row].CATEGORY_NAME
+            if points == 1 {
+                cell.pointsLabel.text = "\(points_data[indexPath.row].MATURE_POINTS)"
+            } else {
+                cell.pointsLabel.text = "\(points_data[indexPath.row].UNMATURE_POINTS)"
+            }
+            cell.dateLabel.text = ""
+            cell.pdfButton.tag = indexPath.row
+            cell.pdfButton.addTarget(self, action: #selector(OpenPDFTapped(sender:)), for: .touchUpInside)
+        }
         return cell
+    }
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        self.tableView.deselectRow(at: indexPath, animated: true)
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 70
+    }
+    
+    @objc func OpenPDFTapped(sender: UIButton) {
+        if !CustomReachability.isConnectedNetwork() {
+            self.view.makeToast(NOINTERNETCONNECTION)
+            return
+        }
+        self.view.makeToastActivity(.center)
+        self.freezeScreen()
+        var previousDate = Date()// getPreviousDays(days: -numberOfDays)
+        var weekly = String()
+        var request_body = [String:Any]()
+        if startday == nil && endday == nil {
+            previousDate = getPreviousDays(days: -numberOfDays)
+            weekly = previousDate.convertDateToString(date: previousDate)
+            
+            
+            request_body = [
+                "p_employee_id": CURRENT_USER_LOGGED_IN_ID,
+                "p_from_date": weekly.dateOnly,
+                "p_to_date": getLocalCurrentDate().dateOnly,
+                "p_category": self.tbl_details![sender.tag].CATEGORY_ID
+            ]
+            
+        } else {
+            request_body = [
+                "p_employee_id": CURRENT_USER_LOGGED_IN_ID,
+                "p_from_date": startday!.dateOnly,
+                "p_to_date": endday!.dateOnly,
+                "p_category": self.tbl_details![sender.tag].CATEGORY_ID
+            ]
+        }
+        let params = self.getAPIParameter(service_name: S_WALLET_POINTS_DETAILS, request_body: request_body)
+        NetworkCalls.getwalletdetailpoints(params: params) { granted, response in
+            if granted {
+                let data = JSON(response)
+                if let walletDetailPoints = data.dictionary?[_walletDetailPoints] {
+                    if let _pointsDetail = walletDetailPoints[_pointsDetail].array {
+                        AppDelegate.sharedInstance.db?.deleteAll(tableName: db_w_detail_point, handler: { _ in
+                            for pointdetail in _pointsDetail {
+                                do {
+                                    let dictionary = try pointdetail.rawData()
+                                    let detail: PointsDetail = try JSONDecoder().decode(PointsDetail.self, from: dictionary)
+                                    
+                                    AppDelegate.sharedInstance.db?.insert_tbl_wallet_detail_point(points_detail: detail, handler: { _ in })
+                                    
+                                } catch let DecodingError.dataCorrupted(context) {
+                                    print(context)
+                                } catch let DecodingError.keyNotFound(key, context) {
+                                    print("Key '\(key)' not found:", context.debugDescription)
+                                    print("codingPath:", context.codingPath)
+                                } catch let DecodingError.valueNotFound(value, context) {
+                                    print("Value '\(value)' not found:", context.debugDescription)
+                                    print("codingPath:", context.codingPath)
+                                } catch let DecodingError.typeMismatch(type, context)  {
+                                    print("Type '\(type)' mismatch:", context.debugDescription)
+                                    print("codingPath:", context.codingPath)
+                                } catch {
+                                    print("error: ", error)
+                                }
+                            }
+                            self.generatePdf()
+                        })
+                    } else {
+//                        _pointsDetail if let else
+                    }
+                } else {
+                    //walletDetailPoints IF LET ELSE
+                }
+            } else {
+                DispatchQueue.main.async {
+                    self.unFreezeScreen()
+                    self.view.makeToast(SOMETHINGWENTWRONG)
+                }
+            }
+        }
+    }
+    
+    private func generatePdf() {
+        if let point = AppDelegate.sharedInstance.db?.read_tbl_wallet_detail_point(query: "SELECT * FROM \(db_w_detail_point)") {
+            let document = PDFDocument(format: .a4)
+            
+            document.set(.contentCenter, font: Font.boldSystemFont(ofSize: 25.0))
+            document.add(.contentCenter, textObject: PDFSimpleText(text: "TCS One App - Wallet"))
+            
+            
+            
+            let generator = PDFGenerator(document: document)
+            do {
+                let url  = try generator.generateURL(filename: "Example.pdf")
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                    self.unFreezeScreen()
+                    self.view.hideToastActivity()
+                    self.fileDownloadedURL = url
+                    let previewController = QLPreviewController()
+                    previewController.dataSource = self
+                    self.present(previewController, animated: true) {
+                        UIApplication.shared.statusBarStyle = .default
+                    }
+                }
+            } catch let err {
+                err.localizedDescription
+            }
+            
+        }
+        
     }
 }
 
@@ -214,4 +353,14 @@ extension WalletDetailsViewController: DateSelectionDelegate {
     }
     
     func requestModeSelected(selected_query: String) {}
+}
+
+
+extension WalletDetailsViewController : QLPreviewControllerDataSource {
+    func numberOfPreviewItems(in controller: QLPreviewController) -> Int {
+        return 1
+    }
+    func previewController(_ controller: QLPreviewController, previewItemAt index: Int) -> QLPreviewItem {
+        return fileDownloadedURL! as QLPreviewItem
+    }
 }

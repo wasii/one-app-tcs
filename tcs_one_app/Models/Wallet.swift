@@ -36,11 +36,12 @@ struct IncentiveData: Codable {
 
 // MARK: - Detail
 struct Detail: Codable {
-    let headerID: Int
+    let headerID, incId: Int
     let incCode, codeDescription: String
 
     enum CodingKeys: String, CodingKey {
         case headerID = "HEADER_ID"
+        case incId = "INC_ID"
         case incCode = "INC_CODE"
         case codeDescription = "CODE_DESCRIPTION"
     }
@@ -127,5 +128,25 @@ struct PointSummaryDetail: Codable {
         case maturePoints = "MATURE_POINTS"
         case unMaturePoints = "UN_MATURE_POINTS"
         case totalPoints = "TOTAL_POINTS"
+    }
+}
+
+// MARK: - PointsDetail
+struct PointsDetail: Codable {
+    let rid: Int
+    let employeeID, transactionDate: String
+    let isMature: Int
+    let cnsgNo: String
+    let cat, subCat, points: Int
+
+    enum CodingKeys: String, CodingKey {
+        case rid = "RID"
+        case employeeID = "EMPLOYEE_ID"
+        case transactionDate = "TRANSACTION_DATE"
+        case isMature = "IS_MATURE"
+        case cnsgNo = "CNSG_NO"
+        case cat = "CAT"
+        case subCat = "SUB_CAT"
+        case points = "POINTS"
     }
 }
