@@ -26,6 +26,8 @@ class WalletDashboardViewController: BaseViewController {
     @IBOutlet var sortedImages: [UIImageView]!
     @IBOutlet var sortedButton: [UIButton]!
     
+    @IBOutlet weak var xAxisHistory: NSLayoutConstraint!
+    @IBOutlet weak var yAxisConstraint: NSLayoutConstraint!
     
     //MARK: Variables
     var floaty = Floaty()

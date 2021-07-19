@@ -1781,13 +1781,13 @@ extension FetchUserDataViewController {
                                 let summaryPoints: PointsSummary = try JSONDecoder().decode(PointsSummary.self, from: data)
                                 self.isTotalCounter += 1
                                 AppDelegate.sharedInstance.db?.deleteRowWithMultipleConditions(tbl: db_w_pointSummary, conditions: "TRANSACTION_DATE = '\(summaryPoints.transactionDate)' AND EMPLOYEE_ID = '\(CURRENT_USER_LOGGED_IN_ID)'", { _ in
+                                    
+                                    AppDelegate.sharedInstance.db?.deleteRowWithMultipleConditions(tbl: db_w_pointSumDetails, conditions: "TRANSACTION_DATE = '\(summaryPoints.transactionDate)' AND EMPLOYEE_ID = '\(CURRENT_USER_LOGGED_IN_ID)'", { _ in })
+                                    
+                                    
                                     AppDelegate.sharedInstance.db?.insert_tbl_wallet_point_summary(point_summary: summaryPoints, handler: { _ in
-                                        if let detail = summaryPoints.pointSummaryDetails.first {
-                                            
-                                            AppDelegate.sharedInstance.db?.deleteRowWithMultipleConditions(tbl: db_w_pointSumDetails, conditions: "TRANSACTION_DATE = '\(summaryPoints.transactionDate)' AND EMPLOYEE_ID = '\(CURRENT_USER_LOGGED_IN_ID)'", { _ in
-                                                AppDelegate.sharedInstance.db?.insert_tbl_wallet_point_summary_detail(summary_detail: detail) { _ in }
-                                            })
-                                            
+                                        for detail in summaryPoints.pointSummaryDetails {
+                                            AppDelegate.sharedInstance.db?.insert_tbl_wallet_point_summary_detail(summary_detail: detail) { _ in }
                                         }
                                     })
                                 })

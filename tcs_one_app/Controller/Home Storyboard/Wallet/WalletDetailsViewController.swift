@@ -17,6 +17,7 @@ class WalletDetailsViewController: BaseViewController {
     @IBOutlet weak var mainViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var thisWeekBtn: UIButton!
     @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var searchTextField: UITextField!
     
     
     //MARK: Variables
@@ -30,15 +31,15 @@ class WalletDetailsViewController: BaseViewController {
     
     var points: Int = 0
     var tbl_details: [tbl_wallet_listing]?
+    var temp_data: [tbl_wallet_listing]?
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Wallet"
         self.thisWeekBtn.setTitle(selected_query!, for: .normal)
         self.makeTopCornersRounded(roundView: self.mainView)
         addDoubleNavigationButtons()
-//        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-//            self.setupTableViewHeight()
-//        }
+        
+        searchTextField.delegate = self
     }
     override func viewDidAppear(_ animated: Bool) {
         NotificationCenter.default.addObserver(self, selector: #selector(upload_pending_request), name: .networkRefreshed, object: nil)
@@ -106,6 +107,7 @@ class WalletDetailsViewController: BaseViewController {
                 details.UNMATURE_POINTS != 0
             })
         }
+        self.temp_data = self.tbl_details
         DispatchQueue.main.async {
             self.tableView.reloadData()
             self.setupTableViewHeight()
@@ -209,6 +211,11 @@ extension WalletDetailsViewController: UITableViewDataSource, UITableViewDelegat
                 cell.pointsLabel.text = "\(points_data[indexPath.row].UNMATURE_POINTS)"
             }
             cell.dateLabel.text = ""
+            if points == 1 {
+                cell.pdfButton.isHidden = false
+            } else {
+                cell.pdfButton.isHidden = true
+            }
             cell.pdfButton.tag = indexPath.row
             cell.pdfButton.addTarget(self, action: #selector(OpenPDFTapped(sender:)), for: .touchUpInside)
         }
@@ -299,14 +306,92 @@ extension WalletDetailsViewController: UITableViewDataSource, UITableViewDelegat
     }
     
     private func generatePdf() {
-        if let point = AppDelegate.sharedInstance.db?.read_tbl_wallet_detail_point(query: "SELECT * FROM \(db_w_detail_point)") {
+        if var point = AppDelegate.sharedInstance.db?.read_tbl_wallet_detail_point(query: "SELECT * FROM \(db_w_detail_point)") {
             let document = PDFDocument(format: .a4)
             
-            document.set(.contentCenter, font: Font.boldSystemFont(ofSize: 25.0))
-            document.add(.contentCenter, textObject: PDFSimpleText(text: "TCS One App - Wallet"))
+            let headerTable = PDFTable(rows: 1, columns: 1)
+            headerTable.content = [
+                ["TCS One App - Wallet"]
+            ]
+            let headerStyle = PDFTableStyleDefaults.simple
+            let headerPDFCellStyle = PDFTableCellStyle(
+                colors: (
+                    fill: UIColor.nativeRedColor(), text: .white),
+                borders: PDFTableCellBorders(left: PDFLineStyle(type: .full),
+                                             top: PDFLineStyle(type: .full),
+                                             right: PDFLineStyle(type: .full),
+                                             bottom: PDFLineStyle(type: .full)),
+                font: Font.systemFont(ofSize: 29))
             
             
+            headerStyle.columnHeaderCount = 0
+            headerStyle.alternatingContentStyle = headerPDFCellStyle
+            headerStyle.contentStyle = headerPDFCellStyle
+            headerStyle.rowHeaderStyle = headerPDFCellStyle
             
+            
+            headerTable.rows.allRowsAlignment = [.center]
+            headerTable.widths = [1]
+            headerTable.style = headerStyle
+            headerTable.padding = 2.0
+
+            document.add(table: headerTable)
+            
+            let subHeader = PDFTable(rows: 1, columns: 5)
+            subHeader.content = [
+                ["Consignment #", "Date", "Category", "Sub-Category", "Points"]
+            ]
+            let subHeaderStyle = PDFTableStyleDefaults.simple
+            let subHeaderPDFCellStyle = PDFTableCellStyle(
+                colors: (
+                    fill: .darkGray, text: .white),
+                borders: PDFTableCellBorders(left: PDFLineStyle(type: .full),
+                                             top: PDFLineStyle(type: .full),
+                                             right: PDFLineStyle(type: .full),
+                                             bottom: PDFLineStyle(type: .full)),
+                font: Font.systemFont(ofSize: 12))
+            subHeaderStyle.columnHeaderCount = 0
+            subHeaderStyle.alternatingContentStyle = subHeaderPDFCellStyle
+            subHeaderStyle.contentStyle = subHeaderPDFCellStyle
+            subHeaderStyle.rowHeaderStyle = subHeaderPDFCellStyle
+            
+            subHeader.rows.allRowsAlignment = [.center, .center, .center, .center, .center]
+            subHeader.widths = [0.2, 0.2, 0.2, 0.2, 0.2]
+            subHeader.style = subHeaderStyle
+            subHeader.padding = 2.0
+
+            document.add(table: subHeader)
+            point.sort { s1, s2 in
+                s1.TRANSACTION_DATE > s2.TRANSACTION_DATE
+            }
+            for p in point {
+                let subCat = AppDelegate.sharedInstance.db?.read_column(query: "SELECT CODE_DESCRIPTION FROM WALLET_QUERY_DETAILS AS WQD JOIN WALLET_MASTER_DETAILS AS WMD ON  WQD.HEADER_ID = WMD.HEADER_ID WHERE WQD.INC_ID = '\(p.SUB_CAT)'") as? String
+                let cat = AppDelegate.sharedInstance.db?.read_column(query: "SELECT HEADER_NAME FROM WALLET_QUERY_DETAILS AS WQD JOIN WALLET_MASTER_DETAILS AS WMD ON  WQD.HEADER_ID = WMD.HEADER_ID WHERE WQD.INC_ID = '\(p.SUB_CAT)'") as? String
+                let subHeader = PDFTable(rows: 1, columns: 5)
+                subHeader.content = [
+                    ["\(p.CNSG_NO)", "\(p.TRANSACTION_DATE.dateOnly)", "\(cat ?? "")", "\(subCat ?? "")", "\(p.POINTS)"]
+                ]
+                let subHeaderStyle = PDFTableStyleDefaults.simple
+                let subHeaderPDFCellStyle = PDFTableCellStyle(
+                    colors: (
+                        fill: .clear, text: .black),
+                    borders: PDFTableCellBorders(left: PDFLineStyle(type: .full),
+                                                 top: PDFLineStyle(type: .full),
+                                                 right: PDFLineStyle(type: .full),
+                                                 bottom: PDFLineStyle(type: .full)),
+                    font: Font.systemFont(ofSize: 12))
+                subHeaderStyle.columnHeaderCount = 0
+                subHeaderStyle.alternatingContentStyle = subHeaderPDFCellStyle
+                subHeaderStyle.contentStyle = subHeaderPDFCellStyle
+                subHeaderStyle.rowHeaderStyle = subHeaderPDFCellStyle
+                
+                subHeader.rows.allRowsAlignment = [.center, .center, .center, .center, .center]
+                subHeader.widths = [0.2, 0.2, 0.2, 0.2, 0.2]
+                subHeader.style = subHeaderStyle
+                subHeader.padding = 2.0
+
+                document.add(table: subHeader)
+            }
             let generator = PDFGenerator(document: document)
             do {
                 let url  = try generator.generateURL(filename: "Example.pdf")
@@ -362,5 +447,37 @@ extension WalletDetailsViewController : QLPreviewControllerDataSource {
     }
     func previewController(_ controller: QLPreviewController, previewItemAt index: Int) -> QLPreviewItem {
         return fileDownloadedURL! as QLPreviewItem
+    }
+}
+
+
+extension WalletDetailsViewController: UITextFieldDelegate {
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        searchQueryTimer?.invalidate()
+        
+        let currentText = textField.text ?? ""
+        print(currentText)
+        
+        if (currentText as NSString).replacingCharacters(in: range, with: string).count == 0 {
+            
+            self.tbl_details = temp_data
+            
+            self.tableView.reloadData()
+            self.setupTableViewHeight()
+            return true
+        }
+        if (currentText as NSString).replacingCharacters(in: range, with: string).count >= 3 {
+            searchQueryTimer = Timer.scheduledTimer(timeInterval: 0.5, target: self, selector: #selector(performSearch), userInfo: nil, repeats: false)
+        }
+        return true
+    }
+    @objc func performSearch() {
+        
+        self.tbl_details = self.tbl_details?.filter({ (logs) -> Bool in
+            return (logs.SUB_CATEGORY_NAME.lowercased().contains(self.searchTextField.text?.lowercased() ?? "")) || logs.CATEGORY_NAME.lowercased().contains(self.searchTextField.text?.lowercased() ?? "")
+        })
+        
+        self.tableView.reloadData()
+        self.setupTableViewHeight()
     }
 }

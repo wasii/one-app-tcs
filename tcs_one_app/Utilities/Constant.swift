@@ -28,7 +28,7 @@ var RECORD_ID               = 0
 //let UPLOADFILESURL          = "https://oneappapi.tcscourier.com/api/file-upload"
 
 //DEV
-let WALLET_ENDPOINT         = "https://sandbox.tcscourier.com/"
+let WALLET_ENDPOINT         = "https://sandbox.tcscourier.com/dev/v1/wallet/"
 let ENDPOINT                = "https://devapi.tcscourier.com/core/api/main"
 let UPLOADFILESURL          = "https://pwaqaapi.tcscourier.com/api/file-upload"
 
@@ -65,12 +65,12 @@ let MARKATTENDANCE          = "oneapp.markattendance"
 let GETORDERFULFILMET       = "oneapp.getorderfullfilment"
 let UPDATEORDERFULFILMENT   = "oneapp.updateorderfullfilment"
 
-let WALLET_SETUP            = WALLET_ENDPOINT + "dev/v1/wallet/setup"
-let WALLET_GET_TOKEN        = WALLET_ENDPOINT + "dev/v1/wallet/token?clientSecret=\(CLIENTSECRET)"
+let WALLET_SETUP            = WALLET_ENDPOINT + "setup"
+let WALLET_GET_TOKEN        = WALLET_ENDPOINT + "token?clientSecret=\(CLIENTSECRET)"
 
-let WALLET_DETAIL_POINTS    = WALLET_ENDPOINT + "dev/v1/wallet/detail-points"
-let WALLET_HISTORY_POINT    = WALLET_ENDPOINT + "dev/v1/wallet/history-points"
-let WALLET_SUMMARY_POINT    = WALLET_ENDPOINT + "dev/v1/wallet/summary-points"
+let WALLET_DETAIL_POINTS    = WALLET_ENDPOINT + "detail-points"
+let WALLET_HISTORY_POINT    = WALLET_ENDPOINT + "history-points"
+let WALLET_SUMMARY_POINT    = WALLET_ENDPOINT + "summary-points"
 
 let S_WALLET_POINTS_HISTORY = "WALLET.GET.HISTORY.POINTS"
 let S_WALLET_POINTS_SUMMARY = "WALLET.GET.SUMMARY.POINTS"

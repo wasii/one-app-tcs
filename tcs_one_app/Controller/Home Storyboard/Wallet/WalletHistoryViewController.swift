@@ -15,6 +15,7 @@ class WalletHistoryViewController: BaseViewController {
     @IBOutlet weak var lifeEarningLabel: UILabel!
     @IBOutlet weak var lifeRebursementLabel: UILabel!
     @IBOutlet weak var thisWeekBtn: UIButton!
+    @IBOutlet weak var searchTextField: UITextField!
     
     //MARK: Variables
     var fileDownloadedURL : URL?
@@ -26,6 +27,7 @@ class WalletHistoryViewController: BaseViewController {
     var endday: String?
     
     var tbl_history_points: [tbl_wallet_history_point]?
+    var temp_data: [tbl_wallet_history_point]?
     var dateFormat = DateFormatter()
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -37,7 +39,7 @@ class WalletHistoryViewController: BaseViewController {
         self.tableView.rowHeight = 160
         self.tableView.delegate = self
         self.tableView.dataSource = self
-        
+        self.searchTextField.delegate = self
         
         if self.selected_query == "Custom Selection" {
             self.thisWeekBtn.setTitle("\(startday!) TO \(endday!)", for: .normal)
@@ -65,9 +67,6 @@ class WalletHistoryViewController: BaseViewController {
         var weekly = String()
         var query = ""
         
-        self.tbl_history_points = AppDelegate.sharedInstance.db?.read_tbl_wallet_history_point(query: "")
-        
-        
         if startday == nil && endday == nil {
             previousDate = getPreviousDays(days: -numberOfDays)
             weekly = previousDate.convertDateToString(date: previousDate)
@@ -81,6 +80,7 @@ class WalletHistoryViewController: BaseViewController {
         }
         print(query)
         self.tbl_history_points = AppDelegate.sharedInstance.db?.read_tbl_wallet_history_point(query: query)
+        self.temp_data = self.tbl_history_points
         DispatchQueue.main.async {
             self.tableView.reloadData()
         }
@@ -186,4 +186,34 @@ extension WalletHistoryViewController: DateSelectionDelegate {
     }
     
     func requestModeSelected(selected_query: String) {}
+}
+
+
+extension WalletHistoryViewController: UITextFieldDelegate {
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        searchQueryTimer?.invalidate()
+        
+        let currentText = textField.text ?? ""
+        print(currentText)
+        
+        if (currentText as NSString).replacingCharacters(in: range, with: string).count == 0 {
+            
+            self.tbl_history_points = temp_data
+            
+            self.tableView.reloadData()
+            return true
+        }
+        if (currentText as NSString).replacingCharacters(in: range, with: string).count >= 1 {
+            searchQueryTimer = Timer.scheduledTimer(timeInterval: 0.5, target: self, selector: #selector(performSearch), userInfo: nil, repeats: false)
+        }
+        return true
+    }
+    @objc func performSearch() {
+        
+        self.tbl_history_points = self.tbl_history_points?.filter({ (logs) -> Bool in
+            return (logs.DESCRIPTION.lowercased().contains(self.searchTextField.text?.lowercased() ?? "")) || String(logs.REDEMPTION_POINTS).contains(self.searchTextField.text ?? "")
+        })
+        
+        self.tableView.reloadData()
+    }
 }
