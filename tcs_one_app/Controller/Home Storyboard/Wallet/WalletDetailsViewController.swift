@@ -211,11 +211,6 @@ extension WalletDetailsViewController: UITableViewDataSource, UITableViewDelegat
                 cell.pointsLabel.text = "\(points_data[indexPath.row].UNMATURE_POINTS)"
             }
             cell.dateLabel.text = ""
-            if points == 1 {
-                cell.pdfButton.isHidden = false
-            } else {
-                cell.pdfButton.isHidden = true
-            }
             cell.pdfButton.tag = indexPath.row
             cell.pdfButton.addTarget(self, action: #selector(OpenPDFTapped(sender:)), for: .touchUpInside)
         }
@@ -291,10 +286,16 @@ extension WalletDetailsViewController: UITableViewDataSource, UITableViewDelegat
                             self.generatePdf()
                         })
                     } else {
-//                        _pointsDetail if let else
+                        DispatchQueue.main.async {
+                            self.unFreezeScreen()
+                            self.view.makeToast(SOMETHINGWENTWRONG)
+                        }
                     }
                 } else {
-                    //walletDetailPoints IF LET ELSE
+                    DispatchQueue.main.async {
+                        self.unFreezeScreen()
+                        self.view.makeToast(SOMETHINGWENTWRONG)
+                    }
                 }
             } else {
                 DispatchQueue.main.async {
@@ -307,6 +308,18 @@ extension WalletDetailsViewController: UITableViewDataSource, UITableViewDelegat
     
     private func generatePdf() {
         if var point = AppDelegate.sharedInstance.db?.read_tbl_wallet_detail_point(query: "SELECT * FROM \(db_w_detail_point)") {
+            
+            var filteredPoints: [tbl_wallet_detail_points]?
+            if points == 1 {
+                filteredPoints = point.filter({ p in
+                    p.IS_MATURE == 1
+                })
+            } else {
+                filteredPoints = point.filter({ p in
+                    p.IS_MATURE == 0
+                })
+            }
+            
             let document = PDFDocument(format: .a4)
             
             let headerTable = PDFTable(rows: 1, columns: 1)
@@ -364,34 +377,37 @@ extension WalletDetailsViewController: UITableViewDataSource, UITableViewDelegat
             point.sort { s1, s2 in
                 s1.TRANSACTION_DATE > s2.TRANSACTION_DATE
             }
-            for p in point {
-                let subCat = AppDelegate.sharedInstance.db?.read_column(query: "SELECT CODE_DESCRIPTION FROM WALLET_QUERY_DETAILS AS WQD JOIN WALLET_MASTER_DETAILS AS WMD ON  WQD.HEADER_ID = WMD.HEADER_ID WHERE WQD.INC_ID = '\(p.SUB_CAT)'") as? String
-                let cat = AppDelegate.sharedInstance.db?.read_column(query: "SELECT HEADER_NAME FROM WALLET_QUERY_DETAILS AS WQD JOIN WALLET_MASTER_DETAILS AS WMD ON  WQD.HEADER_ID = WMD.HEADER_ID WHERE WQD.INC_ID = '\(p.SUB_CAT)'") as? String
-                let subHeader = PDFTable(rows: 1, columns: 5)
-                subHeader.content = [
-                    ["\(p.CNSG_NO)", "\(p.TRANSACTION_DATE.dateOnly)", "\(cat ?? "")", "\(subCat ?? "")", "\(p.POINTS)"]
-                ]
-                let subHeaderStyle = PDFTableStyleDefaults.simple
-                let subHeaderPDFCellStyle = PDFTableCellStyle(
-                    colors: (
-                        fill: .clear, text: .black),
-                    borders: PDFTableCellBorders(left: PDFLineStyle(type: .full),
-                                                 top: PDFLineStyle(type: .full),
-                                                 right: PDFLineStyle(type: .full),
-                                                 bottom: PDFLineStyle(type: .full)),
-                    font: Font.systemFont(ofSize: 12))
-                subHeaderStyle.columnHeaderCount = 0
-                subHeaderStyle.alternatingContentStyle = subHeaderPDFCellStyle
-                subHeaderStyle.contentStyle = subHeaderPDFCellStyle
-                subHeaderStyle.rowHeaderStyle = subHeaderPDFCellStyle
-                
-                subHeader.rows.allRowsAlignment = [.center, .center, .center, .center, .center]
-                subHeader.widths = [0.2, 0.2, 0.2, 0.2, 0.2]
-                subHeader.style = subHeaderStyle
-                subHeader.padding = 2.0
+            if let fp = filteredPoints {
+                for p in fp {
+                    let subCat = AppDelegate.sharedInstance.db?.read_column(query: "SELECT CODE_DESCRIPTION FROM WALLET_QUERY_DETAILS AS WQD JOIN WALLET_MASTER_DETAILS AS WMD ON  WQD.HEADER_ID = WMD.HEADER_ID WHERE WQD.INC_ID = '\(p.SUB_CAT)'") as? String
+                    let cat = AppDelegate.sharedInstance.db?.read_column(query: "SELECT HEADER_NAME FROM WALLET_QUERY_DETAILS AS WQD JOIN WALLET_MASTER_DETAILS AS WMD ON  WQD.HEADER_ID = WMD.HEADER_ID WHERE WQD.INC_ID = '\(p.SUB_CAT)'") as? String
+                    let subHeader = PDFTable(rows: 1, columns: 5)
+                    subHeader.content = [
+                        ["\(p.CNSG_NO)", "\(p.TRANSACTION_DATE.dateOnly)", "\(cat ?? "")", "\(subCat ?? "")", "\(p.POINTS)"]
+                    ]
+                    let subHeaderStyle = PDFTableStyleDefaults.simple
+                    let subHeaderPDFCellStyle = PDFTableCellStyle(
+                        colors: (
+                            fill: .clear, text: .black),
+                        borders: PDFTableCellBorders(left: PDFLineStyle(type: .full),
+                                                     top: PDFLineStyle(type: .full),
+                                                     right: PDFLineStyle(type: .full),
+                                                     bottom: PDFLineStyle(type: .full)),
+                        font: Font.systemFont(ofSize: 12))
+                    subHeaderStyle.columnHeaderCount = 0
+                    subHeaderStyle.alternatingContentStyle = subHeaderPDFCellStyle
+                    subHeaderStyle.contentStyle = subHeaderPDFCellStyle
+                    subHeaderStyle.rowHeaderStyle = subHeaderPDFCellStyle
+                    
+                    subHeader.rows.allRowsAlignment = [.center, .center, .center, .center, .center]
+                    subHeader.widths = [0.2, 0.2, 0.2, 0.2, 0.2]
+                    subHeader.style = subHeaderStyle
+                    subHeader.padding = 2.0
 
-                document.add(table: subHeader)
+                    document.add(table: subHeader)
+                }
             }
+            
             let generator = PDFGenerator(document: document)
             do {
                 let url  = try generator.generateURL(filename: "Example.pdf")

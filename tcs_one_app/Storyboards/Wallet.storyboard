@@ -623,7 +623,7 @@
                                                                             <nil key="highlightedColor"/>
                                                                         </label>
                                                                         <stackView opaque="NO" contentMode="scaleToFill" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="lmf-FQ-Vbm">
-                                                                            <rect key="frame" x="330" y="7.5" width="34" height="40"/>
+                                                                            <rect key="frame" x="280" y="7.5" width="84" height="40"/>
                                                                             <subviews>
                                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="125" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="okh-3E-CrF">
                                                                                     <rect key="frame" x="0.0" y="0.0" width="34" height="40"/>
@@ -631,8 +631,8 @@
                                                                                     <color key="textColor" red="1" green="0.52156862749999999" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                                     <nil key="highlightedColor"/>
                                                                                 </label>
-                                                                                <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Sen-l5-kKd">
-                                                                                    <rect key="frame" x="0.0" y="0.0" width="40" height="40"/>
+                                                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Sen-l5-kKd">
+                                                                                    <rect key="frame" x="44" y="0.0" width="40" height="40"/>
                                                                                     <constraints>
                                                                                         <constraint firstAttribute="height" constant="40" id="cxc-uj-YAD"/>
                                                                                         <constraint firstAttribute="width" secondItem="Sen-l5-kKd" secondAttribute="height" id="e6K-68-wQ3"/>
