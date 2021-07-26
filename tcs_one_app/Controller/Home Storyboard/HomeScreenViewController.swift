@@ -524,21 +524,11 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
         return pieChartView
     }
     func setupUserModules() {
-        let isRider = AppDelegate.sharedInstance.db?.read_tbl_UserProfile().first?.RIDER_ALLOW ?? "0"
         module = AppDelegate.sharedInstance.db?.read_tbl_UserModule(query: "Select * from \(db_user_module) GROUP BY SERVER_ID_PK")
         for (i, m) in module!.enumerated() {
             if m.TAGNAME == MODULE_TAG_CLS {
                 self.module?.remove(at: i)
                 break
-            }
-        }
-        
-        for (i,m) in module!.enumerated() {
-            if m.TAGNAME == MODULE_TAG_RIDER {
-                if isRider == "0" {
-                    self.module?.remove(at: i)
-                    break
-                }
             }
         }
         for (i,m) in module!.enumerated() {
