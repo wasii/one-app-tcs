@@ -198,7 +198,7 @@ class WalletDashboardViewController: BaseViewController {
             var unmature = 0
             
             for p in points {
-                total += p.NET_REDEEMABLE
+                total += p.MATURE_POINTS +  p.UNMATURE_POINTS
                 mature += p.MATURE_POINTS
                 unmature += p.UNMATURE_POINTS
             }

@@ -1636,14 +1636,14 @@ extension FetchUserDataViewController {
                 "p_employee_id": "\(CURRENT_USER_LOGGED_IN_ID)",
                 "p_transaction_date": "",
                 "p_skip": self.skip,
-                "p_take": 2
+                "p_take": 80
             ]
         } else {
             history_points = [
                 "p_employee_id": "\(CURRENT_USER_LOGGED_IN_ID)",
                 "p_transaction_date": "\(lastSyncStatus!.DATE)",
                 "p_skip": lastSyncStatus!.SKIP,
-                "p_take": 2
+                "p_take": 80
             ]
         }
         
@@ -1701,7 +1701,7 @@ extension FetchUserDataViewController {
                                 Helper.updateLastSyncStatus(APIName: S_WALLET_POINTS_HISTORY,
                                                             date: syncDate, //MARK: Change Date
                                                             skip: self.skip,
-                                                            take: 2,
+                                                            take: 80,
                                                             total_records: self.count)
                                 self.count = 0
                                 self.skip = 0
@@ -1716,7 +1716,7 @@ extension FetchUserDataViewController {
                                 self.walletHistoryPointsCounter.isHidden = false
                                 self.walletHistoryPointsCounter.text = "\(self.isTotalCounter)/\(self.count)"
                             }
-                            self.skip += 2
+                            self.skip += 80
                             self.setupwallethistorypoints()
                         }
                     }

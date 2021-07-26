@@ -52,7 +52,7 @@ class WalletHistoryViewController: BaseViewController {
             var earning = 0
             var reimburse = 0
             for d in data {
-                earning += d.NET_REDEEMABLE
+                earning += d.MATURE_POINTS + d.UNMATURE_POINTS
                 reimburse += d.REDEEM_POINTS
             }
             
