@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -462,69 +462,11 @@
             </objects>
             <point key="canvasLocation" x="-1114" y="1038"/>
         </scene>
-        <!--User Info View Controller-->
-        <scene sceneID="CvV-ub-2qw">
-            <objects>
-                <viewController id="Q1c-JG-qeP" customClass="UserInfoViewController" customModule="One_App" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="nW5-ok-8fi">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <viewLayoutGuide key="safeArea" id="Xow-JL-nAF"/>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                    </view>
-                    <navigationItem key="navigationItem" id="KLI-Ic-aOu"/>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="NC4-ZE-0Yl" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-204" y="1702"/>
-        </scene>
-        <!--Item 2-->
-        <scene sceneID="UhY-Br-EmR">
-            <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="JvG-V8-oze" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Item 2" id="g9g-9S-dUY"/>
-                    <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" largeTitles="YES" id="kvP-4b-r8n">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="96"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                        <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        <textAttributes key="titleTextAttributes">
-                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        </textAttributes>
-                        <textAttributes key="largeTitleTextAttributes">
-                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        </textAttributes>
-                    </navigationBar>
-                    <nil name="viewControllers"/>
-                    <connections>
-                        <segue destination="Q1c-JG-qeP" kind="relationship" relationship="rootViewController" id="fK3-Wt-CHP"/>
-                    </connections>
-                </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="A81-8r-8sZ" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-1116" y="1702"/>
-        </scene>
-        <!--User Info View Controller-->
-        <scene sceneID="ba5-PE-3gP">
-            <objects>
-                <viewController id="FUJ-pO-KIB" customClass="UserInfoViewController" customModule="One_App" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="JgG-LD-i9M">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <viewLayoutGuide key="safeArea" id="gkP-4Z-FI9"/>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                    </view>
-                    <navigationItem key="navigationItem" id="Krt-hv-FlM"/>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="iDG-Wf-ACH" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-204" y="1702"/>
-        </scene>
-        <!--User Info-->
+        <!--Attendance-->
         <scene sceneID="yI0-oe-e6T">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="Dmb-26-XnR" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="User Info" image="user" id="URU-WC-WFO"/>
+                    <tabBarItem key="tabBarItem" title="Attendance" image="attendance-tabbar" id="URU-WC-WFO"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" largeTitles="YES" id="pLb-4C-fJc">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="96"/>
@@ -539,76 +481,38 @@
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <connections>
-                        <segue destination="FUJ-pO-KIB" kind="relationship" relationship="rootViewController" id="CsR-Bo-UOm"/>
+                        <segue destination="5xN-uR-NTK" kind="relationship" relationship="rootViewController" id="hP5-DW-OeZ"/>
                     </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="qPm-Px-lMa" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1116" y="1702"/>
+            <point key="canvasLocation" x="-1116" y="1747"/>
         </scene>
-        <!--Logout View Controller-->
-        <scene sceneID="Pvu-nV-g1N">
+        <!--AttendanceMarkingViewController-->
+        <scene sceneID="Qe0-PH-Eoz">
             <objects>
-                <viewController id="pNK-mw-3wp" customClass="LogoutViewController" customModule="One_App" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="6eo-fc-7nw">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <viewLayoutGuide key="safeArea" id="eGp-oP-j7h"/>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                    </view>
-                    <navigationItem key="navigationItem" id="d1K-xV-ZGw"/>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="1tD-Vz-hVb" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <viewControllerPlaceholder storyboardName="Attendance" referencedIdentifier="AttendanceMarkingViewController" id="5xN-uR-NTK" sceneMemberID="viewController">
+                    <navigationItem key="navigationItem" id="oax-od-856"/>
+                </viewControllerPlaceholder>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="SC8-el-aCq" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-204" y="2679"/>
+            <point key="canvasLocation" x="-274" y="1746"/>
         </scene>
-        <!--Item 2-->
-        <scene sceneID="PDV-fH-BLf">
+        <!--WalletDashboardViewController-->
+        <scene sceneID="ykI-YN-O3O">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="Yg4-UT-Q3l" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Item 2" id="iOa-N6-kmg"/>
-                    <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" largeTitles="YES" id="xcS-iE-ylE">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="96"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                        <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        <textAttributes key="titleTextAttributes">
-                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        </textAttributes>
-                        <textAttributes key="largeTitleTextAttributes">
-                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        </textAttributes>
-                    </navigationBar>
-                    <nil name="viewControllers"/>
-                    <connections>
-                        <segue destination="pNK-mw-3wp" kind="relationship" relationship="rootViewController" id="qlL-yU-c6C"/>
-                    </connections>
-                </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="lfD-Qp-btI" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <viewControllerPlaceholder storyboardName="Wallet" referencedIdentifier="WalletDashboardViewController" id="g3N-qJ-xvz" sceneMemberID="viewController">
+                    <navigationItem key="navigationItem" id="h7c-B5-FeS"/>
+                </viewControllerPlaceholder>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="CFo-f6-ENo" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1116" y="2679"/>
+            <point key="canvasLocation" x="-323" y="2677"/>
         </scene>
-        <!--View Controller-->
-        <scene sceneID="uhJ-jP-Bah">
-            <objects>
-                <viewController id="K8B-4f-h11" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="aKl-fj-WZs">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <viewLayoutGuide key="safeArea" id="t2Z-vh-mQk"/>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                    </view>
-                    <navigationItem key="navigationItem" id="Pgq-tg-dxW"/>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="9tR-Kc-7sq" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-204" y="2679"/>
-        </scene>
-        <!--Logout-->
+        <!--Wallet-->
         <scene sceneID="q3M-L3-bM2">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="SNw-xr-igU" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Logout" image="logout" id="rBs-m3-Zkc"/>
+                    <tabBarItem key="tabBarItem" title="Wallet" image="wallet-tabbar" id="rBs-m3-Zkc"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" largeTitles="YES" id="tYX-Ac-o2n">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="96"/>
@@ -623,12 +527,12 @@
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <connections>
-                        <segue destination="K8B-4f-h11" kind="relationship" relationship="rootViewController" id="PJ0-oZ-MUK"/>
+                        <segue destination="g3N-qJ-xvz" kind="relationship" relationship="rootViewController" id="94e-AM-8Ey"/>
                     </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="meI-5j-2kt" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1116" y="2679"/>
+            <point key="canvasLocation" x="-1154" y="2678"/>
         </scene>
     </scenes>
     <designables>
@@ -638,11 +542,11 @@
     </designables>
     <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
     <resources>
+        <image name="attendance-tabbar" width="27.5" height="30.5"/>
         <image name="home" width="27.5" height="30.5"/>
-        <image name="logout" width="27.5" height="30.5"/>
         <image name="mail" width="27.5" height="30.5"/>
         <image name="mesg" width="27.5" height="30.5"/>
-        <image name="user" width="27.5" height="30.5"/>
+        <image name="wallet-tabbar" width="27.5" height="30.5"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

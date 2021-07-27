@@ -49,7 +49,7 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
         super.viewDidLoad()
         self.title = "Dashboard"
         
-        addSingleNavigationButton()
+        addHomeNavigationButton()
         self.makeTopCornersRounded(roundView: self.mainView)
         
         
@@ -103,9 +103,9 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
                 let lon = (location.LONGITUDE as NSString).doubleValue
                 let crd = CLLocationCoordinate2D(latitude: lat, longitude: lon)
                 
-                let radius : CLLocationDistance = 75
-                let entry = Geotification(coordinate: crd, radius: radius, identifier: location.HUB_CODE, note: "Welcome to TCS", eventType: .onEntry)
-                let exit  = Geotification(coordinate: crd, radius: radius, identifier: location.HUB_CODE, note: "See you tomorrow", eventType: .onExit)
+                let radius : CLLocationDistance = CLLocationDistance(CGFloat(location.RADIUS))
+                let entry = Geotification(coordinate: crd, radius: radius, identifier: UUID().uuidString, note: "Welcome to TCS", eventType: .onEntry)
+                let exit  = Geotification(coordinate: crd, radius: radius, identifier: UUID().uuidString, note: "See you tomorrow", eventType: .onExit)
                 
                 add(entry)
                 add(exit)
@@ -529,6 +529,11 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
             if m.TAGNAME == MODULE_TAG_CLS {
                 self.module?.remove(at: i)
                 break
+            }
+        }
+        for (i,m) in module!.enumerated() {
+            if m.TAGNAME == MODULE_TAG_ATTENDANCE {
+                self.module?.remove(at: i)
             }
         }
         if let permission = AppDelegate.sharedInstance.db?.read_tbl_UserPermission(permission: PERMISSION_FulfilmentModule).count {

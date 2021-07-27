@@ -9,10 +9,9 @@
 import UIKit
 
 class DashboardViewController: UITabBarController, UITabBarControllerDelegate {
-
     override func viewDidLoad() {
         super.viewDidLoad()
-//        UITabBar.appearance().selectionIndicatorImage = UIImage().makeImageWithColorAndSize(color: UIColor.nativeRedColor(), size: CGSize(width: self.tabBar.frame.width/5, height: self.tabBar.frame.height))
+//        UITabBar.appearance().selectionIndicatorImage = UIImage().makeImageWithColorAndSize(color: UIColor.clear, size: CGSize(width: self.tabBar.frame.width/5, height: 90))
         self.delegate = self
     }
     func tabBarController(_ tabBarController: UITabBarController, shouldSelect viewController: UIViewController) -> Bool {
@@ -22,35 +21,31 @@ class DashboardViewController: UITabBarController, UITabBarControllerDelegate {
                 return true
             }
             if let _ = viewController.children[0] as? MessageViewController {
-//                self.showAlert()
                 return false
             }
             if let _ = viewController.children[0] as? MailViewController {
-//                self.showAlert()
                 return false
             }
-            if let _ = viewController.children[0] as? UserInfoViewController {
-                self.showAlert()
-                return false
+            if let _ = viewController.children[0] as? AttendanceMarkingViewController {
+                return true
             }
-            
-            if let _ = viewController.children[0] as? UIViewController {
-                let storyboard = UIStoryboard(name: "Popups", bundle: nil)
-                let controller = storyboard.instantiateViewController(withIdentifier: "LogoutPopupViewController") as! LogoutPopupViewController
-                
-                if #available(iOS 13.0, *) {
-                    controller.modalPresentationStyle = .overFullScreen
-                }
-                
-                controller.modalTransitionStyle = .crossDissolve
-                
-                Helper.topMostController().present(controller, animated: true, completion: nil)
-                return false
+            if let _ = viewController.children[0] as? WalletDashboardViewController {
+                return true
             }
         }
         return true
     }
-    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        switch UIDevice().type {
+        case .iPhone12, .iPhone12Pro, .iPhone12ProMax, .iPhone12Mini:
+            tabBar.frame.size.height = 95
+            tabBar.frame.origin.y = view.frame.height - 95
+            break
+        default:
+            break
+        }
+    }
     func showAlert() {
         let comingsoon = self.storyboard?.instantiateViewController(withIdentifier: "ComingSoonViewController") as! ComingSoonViewController
         comingsoon.modalTransitionStyle = .crossDissolve

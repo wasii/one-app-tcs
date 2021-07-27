@@ -12,7 +12,7 @@ import DatePickerDialog
 import MapKit
 
 class AttendanceMarkingViewController: BaseViewController, MKMapViewDelegate {
-
+    
     @IBOutlet weak var timeInImage: UIImageView!
     @IBOutlet weak var timeOutImage: UIImageView!
     @IBOutlet weak var mainView: UIView!
@@ -206,15 +206,15 @@ class AttendanceMarkingViewController: BaseViewController, MKMapViewDelegate {
                             print("12 hours format")
                             let dateFormatter = DateFormatter()
                             dateFormatter.dateFormat = "h:mm a"
-
+                            
                             let timeInDate = dateFormatter.date(from: user_attendace!.timeIn)
                             let timeOutDate = dateFormatter.date(from: user_attendace!.timeOut)
-
+                            
                             let calendar = Calendar.current
                             let dateComponents = calendar.dateComponents([Calendar.Component.hour, Calendar.Component.minute], from: timeInDate!, to: timeOutDate!)
-
+                            
                             let hours = dateComponents.hour ?? 0
-
+                            
                             if hours >= 9 {
                                 self.timeOutImage.image = UIImage(named: "out-array-green")
                             } else {
@@ -239,9 +239,9 @@ class AttendanceMarkingViewController: BaseViewController, MKMapViewDelegate {
                             
                             let calendar = Calendar.current
                             let dateComponents = calendar.dateComponents([Calendar.Component.hour, Calendar.Component.minute], from: timeInDate, to: timeOutDate)
-
+                            
                             let hours = dateComponents.hour ?? 0
-
+                            
                             if hours >= 9 {
                                 self.timeOutImage.image = UIImage(named: "out-array-green")
                             } else {
@@ -318,11 +318,11 @@ class AttendanceMarkingViewController: BaseViewController, MKMapViewDelegate {
                     let arrPoints = polygon.points()
                     // create cgpath
                     for i in 0..<polygon.pointCount {
-
+                        
                         let polygonMapPoint: MKMapPoint = arrPoints[i]
                         let polygonCoordinate = polygonMapPoint.coordinate
                         let polygonPoint = self.mapView?.convert(polygonCoordinate, toPointTo: self.mapView)
-
+                        
                         if (i == 0){
                             polygonPath.move(to: CGPoint(x: polygonPoint!.x, y: polygonPoint!.y))
                         }
@@ -444,7 +444,7 @@ extension AttendanceMarkingViewController: MTSlideToOpenDelegate {
     }
     
     func alert() {
-        let alert = UIAlertController(title: "Alert!", message: "Turn on your location to mark you attendnace", preferredStyle: .alert)
+        let alert = UIAlertController(title: "Alert!", message: "Turn on your location to mark your attendance", preferredStyle: .alert)
         let okAction = UIAlertAction(title: "Open Settings", style: .default) { _ in
             UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!, options: [:], completionHandler: nil)
         }
@@ -460,27 +460,27 @@ extension AttendanceMarkingViewController: MTSlideToOpenDelegate {
 
 
 extension AttendanceMarkingViewController: CLLocationManagerDelegate {
-//    func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
-//        let status = CLLocationManager.authorizationStatus()
-//        switch status {
-//        case .authorizedAlways, .authorizedWhenInUse:
-//            self.isLocationOff = true
-//            locationManager.startUpdatingLocation()
-//            break
-//        case .denied, .restricted, .notDetermined:
-//            self.isLocationOff = false
-//            self.isUserInsideFence = false
-//            DispatchQueue.main.async {
-//                self.slideView.viewWithTag(1000)?.removeFromSuperview()
-//                self.slideView.isHidden = true
-//                self.alert()
-//            }
-//            print("location access denied")
-//            break
-//        default:
-//            locationManager.requestWhenInUseAuthorization()
-//        }
-//    }
+    //    func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
+    //        let status = CLLocationManager.authorizationStatus()
+    //        switch status {
+    //        case .authorizedAlways, .authorizedWhenInUse:
+    //            self.isLocationOff = true
+    //            locationManager.startUpdatingLocation()
+    //            break
+    //        case .denied, .restricted, .notDetermined:
+    //            self.isLocationOff = false
+    //            self.isUserInsideFence = false
+    //            DispatchQueue.main.async {
+    //                self.slideView.viewWithTag(1000)?.removeFromSuperview()
+    //                self.slideView.isHidden = true
+    //                self.alert()
+    //            }
+    //            print("location access denied")
+    //            break
+    //        default:
+    //            locationManager.requestWhenInUseAuthorization()
+    //        }
+    //    }
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
         let status = CLLocationManager.authorizationStatus()
         switch status {

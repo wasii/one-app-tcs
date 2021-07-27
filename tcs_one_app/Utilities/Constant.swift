@@ -11,10 +11,11 @@ let ACTIVE                  = "ACTIVE"
 let BACKGROUND              = "BACKGROUND"
 let INACTIVE                = "INACTIVE"
 let API_KEY                 = "5E4D0F6D8E12D8EC5EA3BBB11B63B2F88E39A7561F25EC67CCB440F782FD0360"
-
+let CLIENTSECRET            = "Tcs@wallet3001"
+var BEARER_TOKEN            = ""
 //let BROADCAST_KEY           = "broadcastiosdev"
-//let BROADCAST_KEY           = "broadcastiosqa"
-let BROADCAST_KEY           = "broadcastios"
+let BROADCAST_KEY           = "broadcastiosqa"
+//let BROADCAST_KEY           = "broadcastios"
 
 let IS_NEW_DATABASE: Bool   = true
 var NOTIFICATION_COUNT      = 0
@@ -23,12 +24,13 @@ var RECORD_ID               = 0
 //API ENDPOINTS
 
 //PRODUCTION
-let ENDPOINT                = "https://prodapi.tcscourier.com/core/api/main/"
-let UPLOADFILESURL          = "https://oneappapi.tcscourier.com/api/file-upload"
+//let ENDPOINT                = "https://prodapi.tcscourier.com/core/api/main/"
+//let UPLOADFILESURL          = "https://oneappapi.tcscourier.com/api/file-upload"
 
 //DEV
-//let ENDPOINT                = "https://devapi.tcscourier.com/core/api/main"
-//let UPLOADFILESURL          = "https://pwaqaapi.tcscourier.com/api/file-upload"
+let WALLET_ENDPOINT         = "https://sandbox.tcscourier.com/qa/v1/wallet/"
+let ENDPOINT                = "https://devapi.tcscourier.com/qacore/api/main"
+let UPLOADFILESURL          = "https://pwaqaapi.tcscourier.com/api/file-upload"
 
 let LOGIN                   = "oneapp.login"
 let PIN_VALIDATE            = "oneapp.pinvalidate"
@@ -62,6 +64,17 @@ let MARKATTENDANCE          = "oneapp.markattendance"
 //FULFILMENT
 let GETORDERFULFILMET       = "oneapp.getorderfullfilment"
 let UPDATEORDERFULFILMENT   = "oneapp.updateorderfullfilment"
+
+let WALLET_SETUP            = WALLET_ENDPOINT + "setup"
+let WALLET_GET_TOKEN        = WALLET_ENDPOINT + "token?clientSecret=\(CLIENTSECRET)"
+
+let WALLET_DETAIL_POINTS    = WALLET_ENDPOINT + "detail-points"
+let WALLET_HISTORY_POINT    = WALLET_ENDPOINT + "history-points"
+let WALLET_SUMMARY_POINT    = WALLET_ENDPOINT + "summary-points"
+
+let S_WALLET_POINTS_HISTORY = "WALLET.GET.HISTORY.POINTS"
+let S_WALLET_POINTS_SUMMARY = "WALLET.GET.SUMMARY.POINTS"
+let S_WALLET_POINTS_DETAILS = "WALLET.GET.DETAIL.POINTS"
 
 //API BACKEND KEYS
 let eAI_MESSAGE             = "eAI_MESSAGE"
@@ -121,6 +134,18 @@ let _attn_out               = "attn_out"
 let _scan_prefix            = "scan_prefix"
 let _orders                 = "orders"
 
+//Wallet_Keys
+let _walletSetupData        = "walletSetupData"
+let _walletHistoryPoints    = "walletHistoryPoints"
+let _walletPointsData       = "walletPointsData"
+let _pointsSummary          = "pointsSummary"
+let _pointSummaryDetails    = "DETAILS"
+let _token                  = "token"
+let _walletHistoryPointData = "walletHistoryPointsData"
+let _walletSummaryPointData = "walletSummaryPointsData"
+let _walletDetailPoints     = "walletDetailPoints"
+let _pointsDetail           = "pointsDetail"
+
 //Local Storage (Database) tablename keys
 let db_user_module          = "USER_MODULE"
 let db_user_page            = "USER_PAGE"
@@ -170,6 +195,15 @@ let db_lov_control_category = "IMS_CONTROL_CATEGORY_TABLE"
 let db_lov_risk_type        = "IMS_RISK_TABLE"
 let db_lov_control_type     = "IMS_CONTROL_TYPE_TABLE"
 
+// Wallet
+let db_w_query_master       = "WALLET_MASTER_DETAILS"
+let db_w_query_detail       = "WALLET_QUERY_DETAILS"
+let db_w_pointtypes         = "WALLET_POINTTYPES"
+let db_w_setup_redemption   = "WALLET_REDEMPTION_SETUP"
+let db_w_pointSummary       = "WALLET_POINTS_SUMMARY"
+let db_w_history_point      = "WALLET_HISTORY_POINTS"
+let db_w_pointSumDetails    = "WALLET_POINT_SUMMARY_DETAILS"
+let db_w_detail_point       = "WALLET_DETAIL_POINTS"
 
 //ERROR MESSAGES
 let NOINTERNETCONNECTION    = "Connect your device with internet first."

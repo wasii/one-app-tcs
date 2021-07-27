@@ -18,9 +18,10 @@ class FetchUserDataViewController: BaseViewController {
     @IBOutlet weak var hrNotification_Label: UILabel!
     @IBOutlet weak var attecndance_label: UILabel!
     @IBOutlet weak var fulfilment_label: UILabel!
+    @IBOutlet weak var wallet_label: UILabel!
     
     @IBOutlet weak var mainView: UIView!
-
+    
     @IBOutlet var loaderViews: [UIView]!
     
     @IBOutlet var activityIndicator: [UIActivityIndicatorView]!
@@ -30,6 +31,11 @@ class FetchUserDataViewController: BaseViewController {
     @IBOutlet weak var notification_counter: UILabel!
     @IBOutlet weak var order_counter: UILabel!
     
+    
+    @IBOutlet weak var walletHistoryPoints: UILabel!
+    @IBOutlet weak var walletHistoryPointsCounter: UILabel!
+    
+    @IBOutlet weak var walletSummaryPoints: UILabel!
     
     @IBOutlet weak var version: UILabel!
     @IBOutlet weak var build: UILabel!
@@ -44,8 +50,8 @@ class FetchUserDataViewController: BaseViewController {
     var HR_Request = [HrRequest]()
     var HR_Notification_Request = [HRNotificationRequest]()
     var count = 0
-
-
+    
+    
     var skip = 0
     var access_token = ""
     var isPresented = false
@@ -58,13 +64,13 @@ class FetchUserDataViewController: BaseViewController {
         self.title = "Fetching Data"
         self.hrSetupData_Label.text = "Syncing HR"
         self.makeTopCornersRounded(roundView: self.mainView)
-//        AppDelegate.sharedInstance.db?.deleteAll(tableName: db_fulfilment_orders_temp, handler: { _ in })
+        //        AppDelegate.sharedInstance.db?.deleteAll(tableName: db_fulfilment_orders_temp, handler: { _ in })
         version.text = "Version: " + Bundle.main.releaseVersionNumber!
         build.text = "Build: " + Bundle.main.buildVersionNumber!
         notification_counter.isHidden = true
         self.counter.isHidden = true
         activityIndicator.forEach { (UIActivityIndicatorView) in
-            UIActivityIndicatorView.isHidden = true
+            UIActivityIndicatorView.startAnimating()
         }
         checkedImageView.forEach { (UIImageView) in
             UIImageView.isHidden = true
@@ -77,11 +83,11 @@ class FetchUserDataViewController: BaseViewController {
             }
         } else {
             self.view.makeToast(NOINTERNETCONNECTION)
-//            if isPresented {
-//                DispatchQueue.main.asyncAfter(deadline: .now() + 2.5, execute: {
-//                    self.dismiss(animated: true, completion: nil)
-//                })
-//            }
+            //            if isPresented {
+            //                DispatchQueue.main.asyncAfter(deadline: .now() + 2.5, execute: {
+            //                    self.dismiss(animated: true, completion: nil)
+            //                })
+            //            }
             return
         }
     }
@@ -91,16 +97,16 @@ class FetchUserDataViewController: BaseViewController {
         //1: SETUPS
         //2: HRLOGSRequest
         //3: NOTIFICATION SYNC
-
-//        if !Reachability.isConnectedNetwork() {
-//            self.view.makeToast(NOINTERNETCONNECTION)
-//            return
-//        }
+        
+        //        if !Reachability.isConnectedNetwork() {
+        //            self.view.makeToast(NOINTERNETCONNECTION)
+        //            return
+        //        }
         guard let access_token = UserDefaults.standard.string(forKey: USER_ACCESS_TOKEN) else {
             self.navigationController?.popViewController(animated: true)
             return
         }
-
+        
         self.access_token = access_token
         activityIndicator[0].isHidden = false
         activityIndicator[0].startAnimating()
@@ -117,22 +123,22 @@ class FetchUserDataViewController: BaseViewController {
         let params = self.getAPIParameter(service_name: SETUP, request_body: setup_body)
         NetworkCalls.setup(params: params) { (success, response) in
             if success {
-//                DispatchQueue.main.async {
-//                    self.hrSetupData_Label.text = "Successfully Synced HR"
-//                    //show success for view 1
-//                    self.loaderViews[0].backgroundColor = UIColor.nativeRedColor()
-//                    self.activityIndicator[0].stopAnimating()
-//                    self.activityIndicator[0].isHidden = true
-//                    self.checkedImageView[0].isHidden = false
-//                    //start animation for view 2
-//                    self.activityIndicator[2].isHidden = false
-//                    self.activityIndicator[2].startAnimating()
-//
-//                    self.getHrRequest()
-                    //MARK: oneapp.gethrrequest
-//                    self.getHrRequest()
-
-//                }
+                //                DispatchQueue.main.async {
+                //                    self.hrSetupData_Label.text = "Successfully Synced HR"
+                //                    //show success for view 1
+                //                    self.loaderViews[0].backgroundColor = UIColor.nativeRedColor()
+                //                    self.activityIndicator[0].stopAnimating()
+                //                    self.activityIndicator[0].isHidden = true
+                //                    self.checkedImageView[0].isHidden = false
+                //                    //start animation for view 2
+                //                    self.activityIndicator[2].isHidden = false
+                //                    self.activityIndicator[2].startAnimating()
+                //
+                //                    self.getHrRequest()
+                //MARK: oneapp.gethrrequest
+                //                    self.getHrRequest()
+                
+                //                }
                 DispatchQueue.main.async {
                     self.hrSetupData_Label.text = "Successfully Synced HR"
                     self.imsSetupView.isHidden = false
@@ -167,7 +173,7 @@ class FetchUserDataViewController: BaseViewController {
                                 }
                             }
                         }
-
+                        
                     } else {
                         DispatchQueue.main.async {
                             self.loaderViews[0].backgroundColor = UIColor.nativeRedColor()
@@ -223,10 +229,10 @@ class FetchUserDataViewController: BaseViewController {
     func setup(json: JSON, _ handler: @escaping(_ success: Bool)->Void) {
         if let sync_date = json.dictionary?[_sync_date] {
             Helper.updateLastSyncStatus(APIName: SETUP,
-                                      date: sync_date.stringValue,
-                                      skip: 0,
-                                      take: 0,
-                                      total_records: 0)
+                                        date: sync_date.stringValue,
+                                        skip: 0,
+                                        take: 0,
+                                        total_records: 0)
         }
         var remark = [Remarks]()
         if let data = json.dictionary?[_remarks] {
@@ -257,7 +263,7 @@ class FetchUserDataViewController: BaseViewController {
                 print("error: ", error)
             }
         }
-
+        
         var querymatrix = [QueryMatrix]()
         if let data = json.dictionary?[_query_matrix] {
             do {
@@ -430,8 +436,8 @@ class FetchUserDataViewController: BaseViewController {
             var Lov_Master = [LovMaster]()
             for master in lov_master {
                 do {
-                let dictionary = try master.rawData()
-                Lov_Master.append(try JSONDecoder().decode(LovMaster.self, from: dictionary))
+                    let dictionary = try master.rawData()
+                    Lov_Master.append(try JSONDecoder().decode(LovMaster.self, from: dictionary))
                 } catch let DecodingError.dataCorrupted(context) {
                     print(context)
                 } catch let DecodingError.keyNotFound(key, context) {
@@ -457,7 +463,7 @@ class FetchUserDataViewController: BaseViewController {
             var Lov_Detail = [LovDetail]()
             for detail in lov_detail {
                 do {
-                let dictionary = try detail.rawData()
+                    let dictionary = try detail.rawData()
                     Lov_Detail.append(try JSONDecoder().decode(LovDetail.self, from: dictionary))
                 } catch let DecodingError.dataCorrupted(context) {
                     print(context)
@@ -484,7 +490,7 @@ class FetchUserDataViewController: BaseViewController {
             var Lov_Subdetail = [LovSubdetail]()
             for subdetail in lov_subdetail {
                 do {
-                let dictionary = try subdetail.rawData()
+                    let dictionary = try subdetail.rawData()
                     Lov_Subdetail.append(try JSONDecoder().decode(LovSubdetail.self, from: dictionary))
                 } catch let DecodingError.dataCorrupted(context) {
                     print(context)
@@ -511,7 +517,7 @@ class FetchUserDataViewController: BaseViewController {
             var Lov_Area = [Area]()
             for subdetail in area {
                 do {
-                let dictionary = try subdetail.rawData()
+                    let dictionary = try subdetail.rawData()
                     Lov_Area.append(try JSONDecoder().decode(Area.self, from: dictionary))
                 } catch let DecodingError.dataCorrupted(context) {
                     print(context)
@@ -538,7 +544,7 @@ class FetchUserDataViewController: BaseViewController {
             var Lov_City = [City]()
             for city in city {
                 do {
-                let dictionary = try city.rawData()
+                    let dictionary = try city.rawData()
                     Lov_City.append(try JSONDecoder().decode(City.self, from: dictionary))
                 } catch let DecodingError.dataCorrupted(context) {
                     print(context)
@@ -565,7 +571,7 @@ class FetchUserDataViewController: BaseViewController {
             var Lov_AreaSecurity = [AreaSecurity]()
             for areaSecurity in area_security {
                 do {
-                let dictionary = try areaSecurity.rawData()
+                    let dictionary = try areaSecurity.rawData()
                     Lov_AreaSecurity.append(try JSONDecoder().decode(AreaSecurity.self, from: dictionary))
                 } catch let DecodingError.dataCorrupted(context) {
                     print(context)
@@ -592,7 +598,7 @@ class FetchUserDataViewController: BaseViewController {
             var Lov_Department = [Department]()
             for lov_department in department {
                 do {
-                let dictionary = try lov_department.rawData()
+                    let dictionary = try lov_department.rawData()
                     Lov_Department.append(try JSONDecoder().decode(Department.self, from: dictionary))
                 } catch let DecodingError.dataCorrupted(context) {
                     print(context)
@@ -619,7 +625,7 @@ class FetchUserDataViewController: BaseViewController {
             var Lov_IncidentType = [IncidentType]()
             for lov_incidenttype in incident_type {
                 do {
-                let dictionary = try lov_incidenttype.rawData()
+                    let dictionary = try lov_incidenttype.rawData()
                     Lov_IncidentType.append(try JSONDecoder().decode(IncidentType.self, from: dictionary))
                 } catch let DecodingError.dataCorrupted(context) {
                     print(context)
@@ -646,7 +652,7 @@ class FetchUserDataViewController: BaseViewController {
             var Lov_Classification = [Classification]()
             for lov_incidenttype in classification {
                 do {
-                let dictionary = try lov_incidenttype.rawData()
+                    let dictionary = try lov_incidenttype.rawData()
                     Lov_Classification.append(try JSONDecoder().decode(Classification.self, from: dictionary))
                 } catch let DecodingError.dataCorrupted(context) {
                     print(context)
@@ -673,7 +679,7 @@ class FetchUserDataViewController: BaseViewController {
             var Lov_RecoveryType = [RecoveryType]()
             for recovery in recovery_type {
                 do {
-                let dictionary = try recovery.rawData()
+                    let dictionary = try recovery.rawData()
                     Lov_RecoveryType.append(try JSONDecoder().decode(RecoveryType.self, from: dictionary))
                 } catch let DecodingError.dataCorrupted(context) {
                     print(context)
@@ -700,7 +706,7 @@ class FetchUserDataViewController: BaseViewController {
             var hrStatus = [HrStatus]()
             for hrstatus in hr_status {
                 do {
-                let dictionary = try hrstatus.rawData()
+                    let dictionary = try hrstatus.rawData()
                     hrStatus.append(try JSONDecoder().decode(HrStatus.self, from: dictionary))
                 } catch let DecodingError.dataCorrupted(context) {
                     print(context)
@@ -727,7 +733,7 @@ class FetchUserDataViewController: BaseViewController {
             var controlCategory = [ControlCategory]()
             for controlcategory in control_category {
                 do {
-                let dictionary = try controlcategory.rawData()
+                    let dictionary = try controlcategory.rawData()
                     controlCategory.append(try JSONDecoder().decode(ControlCategory.self, from: dictionary))
                 } catch let DecodingError.dataCorrupted(context) {
                     print(context)
@@ -754,7 +760,7 @@ class FetchUserDataViewController: BaseViewController {
             var riskType = [RiskType]()
             for risktype in risk_type {
                 do {
-                let dictionary = try risktype.rawData()
+                    let dictionary = try risktype.rawData()
                     riskType.append(try JSONDecoder().decode(RiskType.self, from: dictionary))
                 } catch let DecodingError.dataCorrupted(context) {
                     print(context)
@@ -781,7 +787,7 @@ class FetchUserDataViewController: BaseViewController {
             var controlType = [ControlType]()
             for controltype in control_type {
                 do {
-                let dictionary = try controltype.rawData()
+                    let dictionary = try controltype.rawData()
                     controlType.append(try JSONDecoder().decode(ControlType.self, from: dictionary))
                 } catch let DecodingError.dataCorrupted(context) {
                     print(context)
@@ -824,23 +830,23 @@ class FetchUserDataViewController: BaseViewController {
                                 let dictionary = try locations.rawData()
                                 let att_location = try JSONDecoder().decode(AttLocations.self, from: dictionary)
                                 AppDelegate.sharedInstance.db?.insert_tbl_att_locations(att_location: att_location)
-//                                if twentyCounter == 8 {
-//                                    if att_location.locCode == "HOF" {
-//                                        AppDelegate.sharedInstance.db?.insert_tbl_att_locations(att_location: att_location)
-//                                        twentyCounter = twentyCounter + 1
-//                                    }
-//                                } else if twentyCounter == 9 {
-//                                    if att_location.locCode == "X01103" {
-//                                        AppDelegate.sharedInstance.db?.insert_tbl_att_locations(att_location: att_location)
-//                                        twentyCounter = twentyCounter + 1
-//                                    }
-//                                } else if twentyCounter == 10 {
-//                                    handler()
-//                                    return
-//                                } else {
-//                                    AppDelegate.sharedInstance.db?.insert_tbl_att_locations(att_location: att_location)
-//                                    twentyCounter = twentyCounter + 1
-//                                }
+                                //                                if twentyCounter == 8 {
+                                //                                    if att_location.locCode == "HOF" {
+                                //                                        AppDelegate.sharedInstance.db?.insert_tbl_att_locations(att_location: att_location)
+                                //                                        twentyCounter = twentyCounter + 1
+                                //                                    }
+                                //                                } else if twentyCounter == 9 {
+                                //                                    if att_location.locCode == "X01103" {
+                                //                                        AppDelegate.sharedInstance.db?.insert_tbl_att_locations(att_location: att_location)
+                                //                                        twentyCounter = twentyCounter + 1
+                                //                                    }
+                                //                                } else if twentyCounter == 10 {
+                                //                                    handler()
+                                //                                    return
+                                //                                } else {
+                                //                                    AppDelegate.sharedInstance.db?.insert_tbl_att_locations(att_location: att_location)
+                                //                                    twentyCounter = twentyCounter + 1
+                                //                                }
                             } catch let DecodingError.dataCorrupted(context) {
                                 print(context)
                             } catch let DecodingError.keyNotFound(key, context) {
@@ -868,7 +874,7 @@ class FetchUserDataViewController: BaseViewController {
     @objc func getHrRequest() {
         var hr_request = [String: [String:Any]]()
         let lastSyncStatus = AppDelegate.sharedInstance.db?.readLastSyncStatus(tableName: db_last_sync_status,
-                                                   condition: "SYNC_KEY = '\(GET_HR_REQUEST)' AND CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)'")
+                                                                               condition: "SYNC_KEY = '\(GET_HR_REQUEST)' AND CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)'")
         
         print(lastSyncStatus)
         if lastSyncStatus == nil {
@@ -929,10 +935,10 @@ class FetchUserDataViewController: BaseViewController {
                             
                             DispatchQueue.main.async {
                                 Helper.updateLastSyncStatus(APIName: GET_HR_REQUEST,
-                                                          date: sync_date,
-                                                          skip: self.skip,
-                                                          take: 80,
-                                                          total_records: self.count)
+                                                            date: sync_date,
+                                                            skip: self.skip,
+                                                            take: 80,
+                                                            total_records: self.count)
                                 self.count = 0
                                 self.skip = 0
                                 self.isTotalCounter = 0
@@ -1044,7 +1050,7 @@ extension FetchUserDataViewController {
     func getFulfilment() {
         var fulfilment = [String: [String:Any]]()
         let lastSyncStatus = AppDelegate.sharedInstance.db?.readLastSyncStatus(tableName: db_last_sync_status,
-                                                   condition: "SYNC_KEY = '\(GETORDERFULFILMET)' AND CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)'")
+                                                                               condition: "SYNC_KEY = '\(GETORDERFULFILMET)' AND CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)'")
         
         print(lastSyncStatus)
         if lastSyncStatus == nil {
@@ -1077,10 +1083,32 @@ extension FetchUserDataViewController {
                         self.activityIndicator[5].isHidden = true
                         self.checkedImageView[5].isHidden = false
                         
-                        
-                        self.navigateHomeScreen()
-                        return
+                        self.activityIndicator[6].isHidden = false
+                        self.activityIndicator[6].startAnimating()
+                        self.wallet_label.text = "Syncing Wallet Setup"
+                        self.setupWallet { wallet_success in
+                            if wallet_success {
+                                DispatchQueue.main.async {
+                                    self.wallet_label.text = "Synced Wallet Setup"
+                                    self.loaderViews[6].backgroundColor = UIColor.nativeRedColor()
+                                    self.activityIndicator[6].stopAnimating()
+                                    self.activityIndicator[6].isHidden = true
+                                    self.checkedImageView[6].isHidden = false
+                                    
+                                    self.activityIndicator[7].isHidden = false
+                                    self.activityIndicator[7].startAnimating()
+                                    
+                                    self.count = 0
+                                    self.skip = 0
+                                    self.isTotalCounter = 0
+                                    
+                                    self.setupwallethistorypoints()
+                                }
+//                                self.navigateHomeScreen()
+                            }
+                        }
                     }
+                    return
                 }
                 
                 if let fulfilment_orders = JSON(response).dictionary?[_orders]?.array {
@@ -1106,18 +1134,42 @@ extension FetchUserDataViewController {
                         if self.isTotalCounter  >= self.count {
                             DispatchQueue.main.async {
                                 Helper.updateLastSyncStatus(APIName: GETORDERFULFILMET,
-                                                          date: sync_date,
-                                                          skip: self.skip,
-                                                          take: 80,
-                                                          total_records: self.count)
+                                                            date: sync_date,
+                                                            skip: self.skip,
+                                                            take: 80,
+                                                            total_records: self.count)
                                 DispatchQueue.main.async {
                                     self.fulfilment_label.text = "Synced Fulfilment Orders Log"
                                     self.loaderViews[5].backgroundColor = UIColor.nativeRedColor()
                                     self.activityIndicator[5].stopAnimating()
                                     self.activityIndicator[5].isHidden = true
                                     self.checkedImageView[5].isHidden = false
+                                    
+                                    self.activityIndicator[6].isHidden = false
+                                    self.activityIndicator[6].startAnimating()
+                                    self.wallet_label.text = "Syncing Wallet Setup"
+                                    self.setupWallet { wallet_success in
+                                        if wallet_success {
+                                            DispatchQueue.main.async {
+                                                self.wallet_label.text = "Synced Wallet Setup"
+                                                self.loaderViews[6].backgroundColor = UIColor.nativeRedColor()
+                                                self.activityIndicator[6].stopAnimating()
+                                                self.activityIndicator[6].isHidden = true
+                                                self.checkedImageView[6].isHidden = false
+                                                
+                                                self.activityIndicator[7].isHidden = false
+                                                self.activityIndicator[7].startAnimating()
+                                                
+                                                self.count = 0
+                                                self.skip = 0
+                                                self.isTotalCounter = 0
+                                                
+                                                self.setupwallethistorypoints()
+                                            }
+                                        }
+//                                        self.navigateHomeScreen()
+                                    }
                                 }
-                                self.navigateHomeScreen()
                             }
                         } else {
                             DispatchQueue.main.async {
@@ -1148,10 +1200,34 @@ extension FetchUserDataViewController {
                         self.activityIndicator[5].isHidden = true
                         self.checkedImageView[5].isHidden = false
                         self.fulfilment_label.text = "Synced Fulfilment Orders Log"
+                        
+                        self.activityIndicator[6].isHidden = false
+                        self.activityIndicator[6].startAnimating()
+                        self.wallet_label.text = "Syncing Wallet Setup"
+                        self.setupWallet { wallet_success in
+                            if wallet_success {
+                                DispatchQueue.main.async {
+                                    self.wallet_label.text = "Synced Wallet Setup"
+                                    self.loaderViews[6].backgroundColor = UIColor.nativeRedColor()
+                                    self.activityIndicator[6].stopAnimating()
+                                    self.activityIndicator[6].isHidden = true
+                                    self.checkedImageView[6].isHidden = false
+                                    
+                                    self.activityIndicator[7].isHidden = false
+                                    self.activityIndicator[7].startAnimating()
+                                    
+                                    self.count = 0
+                                    self.skip = 0
+                                    self.isTotalCounter = 0
+                                    
+                                    self.setupwallethistorypoints()
+                                }
+//                                self.navigateHomeScreen()
+                            }
+                        }
                     }
-                    self.navigateHomeScreen()
                 }
-
+                
             } else {
                 DispatchQueue.main.async {
                     self.navigationController?.popViewController(animated: true)
@@ -1175,7 +1251,7 @@ extension FetchUserDataViewController {
             
             var hr_notification = [String: [String:Any]]()
             let lastSyncStatus = AppDelegate.sharedInstance.db?.readLastSyncStatus(tableName: db_last_sync_status,
-                                                       condition: "SYNC_KEY = '\(GET_HR_NOTIFICATION)' AND CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)'")
+                                                                                   condition: "SYNC_KEY = '\(GET_HR_NOTIFICATION)' AND CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)'")
             if lastSyncStatus == nil {
                 hr_notification = [
                     "hr_request": [
@@ -1232,7 +1308,30 @@ extension FetchUserDataViewController {
                                             self.getFulfilment()
                                             return
                                         } else {
-                                            self.navigateHomeScreen()
+                                            self.activityIndicator[6].isHidden = false
+                                            self.activityIndicator[6].startAnimating()
+                                            self.wallet_label.text = "Syncing Wallet Setup"
+                                            self.setupWallet { wallet_success in
+                                                if wallet_success {
+                                                    DispatchQueue.main.async {
+                                                        self.wallet_label.text = "Synced Wallet Setup"
+                                                        self.loaderViews[6].backgroundColor = UIColor.nativeRedColor()
+                                                        self.activityIndicator[6].stopAnimating()
+                                                        self.activityIndicator[6].isHidden = true
+                                                        self.checkedImageView[6].isHidden = false
+                                                        
+                                                        self.activityIndicator[7].isHidden = false
+                                                        self.activityIndicator[7].startAnimating()
+                                                        
+                                                        self.count = 0
+                                                        self.skip = 0
+                                                        self.isTotalCounter = 0
+                                                        
+                                                        self.setupwallethistorypoints()
+                                                    }
+//                                                    self.navigateHomeScreen()
+                                                }
+                                            }
                                             return
                                         }
                                     }
@@ -1265,10 +1364,10 @@ extension FetchUserDataViewController {
                             if self.isTotalCounter  >= self.count {
                                 DispatchQueue.main.async {
                                     Helper.updateLastSyncStatus(APIName: GET_HR_NOTIFICATION,
-                                                              date: sync_date,
-                                                              skip: self.skip,
-                                                              take: 80,
-                                                              total_records: self.count)
+                                                                date: sync_date,
+                                                                skip: self.skip,
+                                                                take: 80,
+                                                                total_records: self.count)
                                     DispatchQueue.main.async {
                                         self.loaderViews[3].backgroundColor = UIColor.nativeRedColor()
                                         self.activityIndicator[3].stopAnimating()
@@ -1300,7 +1399,30 @@ extension FetchUserDataViewController {
                                                     self.getFulfilment()
                                                     return
                                                 } else {
-                                                    self.navigateHomeScreen()
+                                                    self.activityIndicator[6].isHidden = false
+                                                    self.activityIndicator[6].startAnimating()
+                                                    self.wallet_label.text = "Syncing Wallet Setup"
+                                                    self.setupWallet { wallet_success in
+                                                        if wallet_success {
+                                                            DispatchQueue.main.async {
+                                                                self.wallet_label.text = "Synced Wallet Setup"
+                                                                self.loaderViews[6].backgroundColor = UIColor.nativeRedColor()
+                                                                self.activityIndicator[6].stopAnimating()
+                                                                self.activityIndicator[6].isHidden = true
+                                                                self.checkedImageView[6].isHidden = false
+                                                                
+                                                                self.activityIndicator[7].isHidden = false
+                                                                self.activityIndicator[7].startAnimating()
+                                                                
+                                                                self.count = 0
+                                                                self.skip = 0
+                                                                self.isTotalCounter = 0
+                                                                
+                                                                self.setupwallethistorypoints()
+                                                            }
+//                                                            self.navigateHomeScreen()
+                                                        }
+                                                    }
                                                     return
                                                 }
                                             }
@@ -1362,14 +1484,36 @@ extension FetchUserDataViewController {
                                         self.getFulfilment()
                                         return
                                     } else {
-                                        self.navigateHomeScreen()
-                                        return
+                                        self.activityIndicator[6].isHidden = false
+                                        self.activityIndicator[6].startAnimating()
+                                        self.wallet_label.text = "Syncing Wallet Setup"
+                                        self.setupWallet { wallet_success in
+                                            if wallet_success {
+                                                DispatchQueue.main.async {
+                                                    self.wallet_label.text = "Synced Wallet Setup"
+                                                    self.loaderViews[6].backgroundColor = UIColor.nativeRedColor()
+                                                    self.activityIndicator[6].stopAnimating()
+                                                    self.activityIndicator[6].isHidden = true
+                                                    self.checkedImageView[6].isHidden = false
+                                                    
+                                                    self.activityIndicator[7].isHidden = false
+                                                    self.activityIndicator[7].startAnimating()
+                                                    
+                                                    self.count = 0
+                                                    self.skip = 0
+                                                    self.isTotalCounter = 0
+                                                    
+                                                    self.setupwallethistorypoints()
+                                                }
+//                                                self.navigateHomeScreen()
+                                            }
+                                        }
                                     }
                                 }
                             }
                         }
                     }
-
+                    
                 } else {
                     DispatchQueue.main.async {
                         self.navigationController?.popViewController(animated: true)
@@ -1407,6 +1551,300 @@ extension FetchUserDataViewController {
                 return
             }
             print(err.localizedDescription)
+        }
+    }
+    
+    //MARK: Wallet Setup
+    func setupWallet(_ handler: @escaping(Bool)->Void) {
+        NetworkCalls.getwallettoken { granted in
+            if granted {
+                NetworkCalls.setupwallet { granted, response in
+                    if granted {
+                        let json = JSON(response)
+                        if let o = json.dictionary?[_walletSetupData] {
+                            do {
+                                let rawdata = try o.rawData()
+                                let model = try JSONDecoder().decode(WalletSetupData.self, from: rawdata)
+                                AppDelegate.sharedInstance.db?.deleteAll(tableName: db_w_query_detail, handler: { _ in
+                                    for incentiveData in model.incentiveData {
+                                        AppDelegate.sharedInstance.db?.deleteAll(tableName: db_w_query_master, handler: { _ in
+                                            AppDelegate.sharedInstance.db?.insert_tbl_wallet_query_master(incentiveData: incentiveData, handler: { _ in })
+                                        })
+                                    }
+                                    AppDelegate.sharedInstance.db?.deleteAll(tableName: db_w_pointtypes, handler: { _ in
+                                        for pointType in model.pointType {
+                                            
+                                            AppDelegate.sharedInstance.db?.insert_tbl_wallet_point_type(pointType: pointType, handler: { _ in })
+                                            
+                                        }
+                                    })
+                                    AppDelegate.sharedInstance.db?.deleteAll(tableName: db_w_setup_redemption, handler: { _ in
+                                        for setupRedemption in model.redemptionSetup {
+                                            AppDelegate.sharedInstance.db?.insert_tbl_wallet_setup(redemptionSetup: setupRedemption, handler: { _ in })
+                                        }
+                                    })
+                                })
+                            } catch let DecodingError.dataCorrupted(context) {
+                                print(context)
+                            } catch let DecodingError.keyNotFound(key, context) {
+                                print("Key '\(key)' not found:", context.debugDescription)
+                                print("codingPath:", context.codingPath)
+                            } catch let DecodingError.valueNotFound(value, context) {
+                                print("Value '\(value)' not found:", context.debugDescription)
+                                print("codingPath:", context.codingPath)
+                            } catch let DecodingError.typeMismatch(type, context)  {
+                                print("Type '\(type)' mismatch:", context.debugDescription)
+                                print("codingPath:", context.codingPath)
+                            } catch {
+                                print("error: ", error)
+                            }
+                            handler(true)
+                        } else {
+                            DispatchQueue.main.async {
+                                self.view.makeToast(SOMETHINGWENTWRONG)
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                                    self.navigationController?.popViewController(animated: true)
+                                }
+                            }
+                        }
+                    } else {
+                        DispatchQueue.main.async {
+                            self.view.makeToast(SOMETHINGWENTWRONG)
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                                self.navigationController?.popViewController(animated: true)
+                            }
+                        }
+                    }
+                }
+            } else {
+                DispatchQueue.main.async {
+                    self.view.makeToast(SOMETHINGWENTWRONG)
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                        self.navigationController?.popViewController(animated: true)
+                    }
+                }
+            }
+        }
+    }
+    
+    func setupwallethistorypoints() {
+        let lastSyncStatus = AppDelegate.sharedInstance.db?.readLastSyncStatus(tableName: db_last_sync_status,
+                                                                               condition: "SYNC_KEY = '\(S_WALLET_POINTS_HISTORY)' AND CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)'")
+        var history_points = [String:Any]()
+        if lastSyncStatus == nil {
+            history_points = [
+                "p_employee_id": "\(CURRENT_USER_LOGGED_IN_ID)",
+                "p_transaction_date": "",
+                "p_skip": self.skip,
+                "p_take": 80
+            ]
+        } else {
+            history_points = [
+                "p_employee_id": "\(CURRENT_USER_LOGGED_IN_ID)",
+                "p_transaction_date": "\(lastSyncStatus!.DATE)",
+                "p_skip": lastSyncStatus!.SKIP,
+                "p_take": 80
+            ]
+        }
+        
+        
+        let params = self.getAPIParameters(service_name: S_WALLET_POINTS_HISTORY, request_body: history_points)
+        NetworkCalls.getwallethistorypoints(params: params) { granted, response in
+            if granted {
+                let json = JSON(response)
+                if let walletHistoryPointsData = json.dictionary?[_walletHistoryPointData] {
+                    self.count = Int(walletHistoryPointsData[_count].string ?? "0") ?? 0
+                    let syncDate = walletHistoryPointsData[_sync_date].string ?? "2021-07-13"
+                    if self.count <= 0 {
+                        self.isTotalCounter = 0
+                        DispatchQueue.main.async {
+                            self.walletHistoryPoints.text = "Synced Wallet History Points"
+                        }
+                        self.setupwalletsummarypoints()
+                        return
+                        //get POINTS Summary
+                    }
+                    if let walletHistoryPoints = walletHistoryPointsData[_walletHistoryPoints].array {
+                        DispatchQueue.main.async {
+                            self.walletHistoryPointsCounter.isHidden = false
+                            self.walletHistoryPointsCounter.text = "\(self.isTotalCounter)/\(self.count)"
+                        }
+                        for history in walletHistoryPoints {
+                            do {
+                                let data = try history.rawData()
+                                let historyPoints: WalletHistoryPoint = try JSONDecoder().decode(WalletHistoryPoint.self, from: data)
+                                self.isTotalCounter += 1
+                                AppDelegate.sharedInstance.db?.deleteRowWithMultipleConditions(tbl: db_w_history_point, conditions: "RID = '\(historyPoints.rid)'", { _ in
+                                    AppDelegate.sharedInstance.db?.insert_tbl_wallet_history_point(history_point: historyPoints, handler: { _ in
+                                        DispatchQueue.main.async {
+                                            self.walletHistoryPointsCounter.text = "\(self.isTotalCounter)/\(self.count)"
+                                        }
+                                    })
+                                })
+                            } catch let DecodingError.dataCorrupted(context) {
+                                print(context)
+                            } catch let DecodingError.keyNotFound(key, context) {
+                                print("Key '\(key)' not found:", context.debugDescription)
+                                print("codingPath:", context.codingPath)
+                            } catch let DecodingError.valueNotFound(value, context) {
+                                print("Value '\(value)' not found:", context.debugDescription)
+                                print("codingPath:", context.codingPath)
+                            } catch let DecodingError.typeMismatch(type, context)  {
+                                print("Type '\(type)' mismatch:", context.debugDescription)
+                                print("codingPath:", context.codingPath)
+                            } catch {
+                                print("error: ", error)
+                            }
+                        }
+                        if self.count == self.isTotalCounter {
+                            DispatchQueue.main.async {
+                                Helper.updateLastSyncStatus(APIName: S_WALLET_POINTS_HISTORY,
+                                                            date: syncDate, //MARK: Change Date
+                                                            skip: self.skip,
+                                                            take: 80,
+                                                            total_records: self.count)
+                                self.count = 0
+                                self.skip = 0
+                                self.isTotalCounter = 0
+                                DispatchQueue.main.async {
+                                    self.walletHistoryPoints.text = "Synced Wallet History Points"
+                                    self.setupwalletsummarypoints()
+                                }
+                            }
+                        } else {
+                            DispatchQueue.main.async {
+                                self.walletHistoryPointsCounter.isHidden = false
+                                self.walletHistoryPointsCounter.text = "\(self.isTotalCounter)/\(self.count)"
+                            }
+                            self.skip += 80
+                            self.setupwallethistorypoints()
+                        }
+                    }
+                } else {
+                    DispatchQueue.main.async {
+                        self.view.makeToast(SOMETHINGWENTWRONG)
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                            self.navigationController?.popViewController(animated: true)
+                        }
+                    }
+                }
+            } else {
+                DispatchQueue.main.async {
+                    self.view.makeToast(SOMETHINGWENTWRONG)
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                        self.navigationController?.popViewController(animated: true)
+                    }
+                }
+            }
+        }
+    }
+    
+    func setupwalletsummarypoints() {
+        DispatchQueue.main.async {
+            self.loaderViews[7].backgroundColor = UIColor.nativeRedColor()
+            self.activityIndicator[7].stopAnimating()
+            self.activityIndicator[7].isHidden = true
+            self.checkedImageView[7].isHidden = false
+            
+            self.activityIndicator[8].isHidden = false
+            self.activityIndicator[8].startAnimating()
+            
+            self.count = 0
+            self.skip = 0
+            self.isTotalCounter = 0
+        }
+        
+        let lastSyncStatus = AppDelegate.sharedInstance.db?.readLastSyncStatus(tableName: db_last_sync_status,
+                                                                               condition: "SYNC_KEY = '\(S_WALLET_POINTS_SUMMARY)' AND CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)'")
+        var summary_points = [String:Any]()
+        if lastSyncStatus == nil {
+            summary_points = [
+                "p_employee_id": "\(CURRENT_USER_LOGGED_IN_ID)",
+                "p_transaction_date": ""
+            ]
+        } else {
+            summary_points = [
+                "p_employee_id": "\(CURRENT_USER_LOGGED_IN_ID)",
+                "p_transaction_date": "\(lastSyncStatus!.DATE)"
+            ]
+        }
+        let params = self.getAPIParameters(service_name: S_WALLET_POINTS_SUMMARY, request_body: summary_points)
+        NetworkCalls.getwalletsummarypoints(params: params) { granted, response in
+            if granted {
+                let json = JSON(response)
+                if let _walletSummaryPointData = json.dictionary?[_walletSummaryPointData] {
+                    let syncDate = _walletSummaryPointData[_sync_date].string ?? "2021-07-13"
+                    if let pointsSummary = _walletSummaryPointData[_pointsSummary].array {
+                        for summary in pointsSummary {
+                            do {
+                                let data = try summary.rawData()
+                                let summaryPoints: PointsSummary = try JSONDecoder().decode(PointsSummary.self, from: data)
+                                self.isTotalCounter += 1
+                                AppDelegate.sharedInstance.db?.deleteRowWithMultipleConditions(tbl: db_w_pointSummary, conditions: "TRANSACTION_DATE = '\(summaryPoints.transactionDate)' AND EMPLOYEE_ID = '\(CURRENT_USER_LOGGED_IN_ID)'", { _ in
+                                    
+                                    AppDelegate.sharedInstance.db?.deleteRowWithMultipleConditions(tbl: db_w_pointSumDetails, conditions: "TRANSACTION_DATE = '\(summaryPoints.transactionDate)' AND EMPLOYEE_ID = '\(CURRENT_USER_LOGGED_IN_ID)'", { _ in })
+                                    
+                                    
+                                    AppDelegate.sharedInstance.db?.insert_tbl_wallet_point_summary(point_summary: summaryPoints, handler: { _ in
+                                        for detail in summaryPoints.pointSummaryDetails {
+                                            AppDelegate.sharedInstance.db?.insert_tbl_wallet_point_summary_detail(summary_detail: detail) { _ in }
+                                        }
+                                    })
+                                })
+                            } catch let DecodingError.dataCorrupted(context) {
+                                print(context)
+                            } catch let DecodingError.keyNotFound(key, context) {
+                                print("Key '\(key)' not found:", context.debugDescription)
+                                print("codingPath:", context.codingPath)
+                            } catch let DecodingError.valueNotFound(value, context) {
+                                print("Value '\(value)' not found:", context.debugDescription)
+                                print("codingPath:", context.codingPath)
+                            } catch let DecodingError.typeMismatch(type, context)  {
+                                print("Type '\(type)' mismatch:", context.debugDescription)
+                                print("codingPath:", context.codingPath)
+                            } catch {
+                                print("error: ", error)
+                            }
+                        }
+                        Helper.updateLastSyncStatus(APIName: S_WALLET_POINTS_SUMMARY,
+                                                    date: syncDate,
+                                                    skip: 0,
+                                                    take: 0,
+                                                    total_records: 0)
+                        DispatchQueue.main.async {
+                            self.walletSummaryPoints.text = "Synced Wallet Summary Points"
+                            self.loaderViews[8].backgroundColor = UIColor.nativeRedColor()
+                            self.activityIndicator[8].stopAnimating()
+                            self.activityIndicator[8].isHidden = true
+                            self.checkedImageView[8].isHidden = false
+                        }
+                        self.navigateHomeScreen()
+                    } else {
+                        DispatchQueue.main.async {
+                            self.walletSummaryPoints.text = "Synced Wallet Summary Points"
+                            self.loaderViews[8].backgroundColor = UIColor.nativeRedColor()
+                            self.activityIndicator[8].stopAnimating()
+                            self.activityIndicator[8].isHidden = true
+                            self.checkedImageView[8].isHidden = false
+                        }
+                        self.navigateHomeScreen()
+                    }
+                } else {
+                    DispatchQueue.main.async {
+                        self.view.makeToast(SOMETHINGWENTWRONG)
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                            self.navigationController?.popViewController(animated: true)
+                        }
+                    }
+                }
+            } else {
+                DispatchQueue.main.async {
+                    self.view.makeToast(SOMETHINGWENTWRONG)
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                        self.navigationController?.popViewController(animated: true)
+                    }
+                }
+            }
         }
     }
 }
