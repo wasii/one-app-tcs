@@ -76,6 +76,10 @@ let S_WALLET_POINTS_HISTORY = "WALLET.GET.HISTORY.POINTS"
 let S_WALLET_POINTS_SUMMARY = "WALLET.GET.SUMMARY.POINTS"
 let S_WALLET_POINTS_DETAILS = "WALLET.GET.DETAIL.POINTS"
 
+
+//RIDER
+let RIDERSETUP              = "oneapp.riderapp_setup"
+
 //API BACKEND KEYS
 let eAI_MESSAGE             = "eAI_MESSAGE"
 let eAI_BODY                = "eAI_BODY"
@@ -146,6 +150,16 @@ let _walletSummaryPointData = "walletSummaryPointsData"
 let _walletDetailPoints     = "walletDetailPoints"
 let _pointsDetail           = "pointsDetail"
 
+
+//Rider Keys
+let _dial_code              = "dial_code"
+let _rider_detail           = "rider_detail"
+let _receiver_relation      = "receiver_relation"
+let _master_dlvry_status    = "master_dlvry_status"
+let _detail_dlvry_status    = "detail_dlvry_status"
+let _status_group           = "status_group"
+
+
 //Local Storage (Database) tablename keys
 let db_user_module          = "USER_MODULE"
 let db_user_page            = "USER_PAGE"
@@ -205,6 +219,8 @@ let db_w_history_point      = "WALLET_HISTORY_POINTS"
 let db_w_pointSumDetails    = "WALLET_POINT_SUMMARY_DETAILS"
 let db_w_detail_point       = "WALLET_DETAIL_POINTS"
 
+//Rider
+let db_rider_detail         = ""
 //ERROR MESSAGES
 let NOINTERNETCONNECTION    = "Connect your device with internet first."
 let SOMETHINGWENTWRONG      = "There is something went wrong. Please try again!"
@@ -364,6 +380,7 @@ let MODULE_TAG_FULFILMENT = "FULFILMENT"
 let MODULE_TAG_ATTENDANCE = "ATTENDANCE"
 let MODULE_TAG_CLS = "CLS"
 let MODULE_TAG_TRACK = "TRACK"
+let MODULE_TAG_RIDER = "RIDER"
 
 let DOC = "application/msword";
 let DOCX = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";

@@ -742,7 +742,16 @@ extension HomeScreenViewController: UICollectionViewDelegate, UICollectionViewDa
             let controller = storyboard.instantiateViewController(withIdentifier: "AttendanceMarkingViewController") as! AttendanceMarkingViewController
             self.navigationController?.pushViewController(controller, animated: true)
             break
-            
+        case "Rider":
+            let storyboard = UIStoryboard(name: "Rider", bundle: nil)
+            let nav = storyboard.instantiateViewController(withIdentifier: "riderNav") as! UINavigationController
+            (nav.children.first as! FetchRiderDataViewController).delegate = self
+            nav.modalTransitionStyle = .crossDissolve
+            if #available(iOS 13.0, *) {
+                nav.modalPresentationStyle = .overFullScreen
+            }
+            Helper.topMostController().present(nav, animated: true, completion: nil)
+            break
         default:
             break
         }
@@ -810,5 +819,15 @@ extension HomeScreenViewController:  CLLocationManagerDelegate {
     }
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         print("Location Manager failed with the following error: \(error)")
+    }
+}
+
+
+
+extension HomeScreenViewController: MoveToRiderScreen {
+    func moveToRiderScreen() {
+        let storyboard = UIStoryboard(name: "Rider", bundle: nil)
+        let controller = storyboard.instantiateViewController(withIdentifier: "RiderDashboardViewController") as! RiderDashboardViewController
+        self.navigationController?.pushViewController(controller, animated: true)
     }
 }

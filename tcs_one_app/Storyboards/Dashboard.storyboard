@@ -439,6 +439,7 @@
         <!--Item 2-->
         <scene sceneID="0dL-Pt-ull">
             <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="mcD-OZ-o1C" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="5QR-j0-Smm" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Item 2" id="p8r-LD-tgT"/>
                     <toolbarItems/>
@@ -458,7 +459,6 @@
                         <segue destination="B2l-Hz-0rS" kind="relationship" relationship="rootViewController" id="0nF-iF-oi3"/>
                     </connections>
                 </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="mcD-OZ-o1C" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-1114" y="1038"/>
         </scene>

@@ -515,6 +515,7 @@ extension AttendanceMarkingViewController: CLLocationManagerDelegate {
         for location in places {
             let officeLocation = CLLocation.init(latitude: location.coordinate.latitude,
                                                  longitude: location.coordinate.longitude)
+<<<<<<< HEAD
             if locations.first!.distance(from: officeLocation) <= Double(location.radius) {
                 
                 hub_code = location.hub_code
@@ -526,6 +527,24 @@ extension AttendanceMarkingViewController: CLLocationManagerDelegate {
                 self.isUserInsideFence = false
                 print("UserInside Fence: \(self.isUserInsideFence),, Radius: \(location.radius),,   Distance: \(locations.first!.distance(from: officeLocation))")
             }
+=======
+            
+            let circle = MKCircle(center: officeLocation.coordinate, radius: Double(location.radius) as CLLocationDistance)
+            
+            
+            
+            if locations.first!.distance(from: officeLocation) > circle.radius {
+                self.isUserInsideFence = false
+                print("UserInside Fence: \(self.isUserInsideFence)")
+            }
+            else{
+                hub_code = location.hub_code
+                self.isUserInsideFence = true
+                print("UserInside Fence: \(self.isUserInsideFence)")
+                break
+            }
+            
+>>>>>>> rider
         }
         if CustomReachability.isConnectedNetwork() {
             if self.isUserInsideFence {

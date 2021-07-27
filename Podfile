@@ -42,4 +42,8 @@ pod 'Firebase/Messaging'
 pod 'ExpandableCell'
 pod 'ExpyTableView'
 pod 'BarcodeScanner'
+
+
+pod 'GoogleMaps'
+pod "SwiftSignatureView"
 end

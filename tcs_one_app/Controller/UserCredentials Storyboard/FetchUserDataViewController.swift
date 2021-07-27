@@ -22,6 +22,7 @@ class FetchUserDataViewController: BaseViewController {
     
     @IBOutlet weak var mainView: UIView!
     
+
     @IBOutlet var loaderViews: [UIView]!
     
     @IBOutlet var activityIndicator: [UIActivityIndicatorView]!
@@ -64,13 +65,12 @@ class FetchUserDataViewController: BaseViewController {
         self.title = "Fetching Data"
         self.hrSetupData_Label.text = "Syncing HR"
         self.makeTopCornersRounded(roundView: self.mainView)
-        //        AppDelegate.sharedInstance.db?.deleteAll(tableName: db_fulfilment_orders_temp, handler: { _ in })
         version.text = "Version: " + Bundle.main.releaseVersionNumber!
         build.text = "Build: " + Bundle.main.buildVersionNumber!
         notification_counter.isHidden = true
         self.counter.isHidden = true
         activityIndicator.forEach { (UIActivityIndicatorView) in
-            UIActivityIndicatorView.startAnimating()
+            UIActivityIndicatorView.isHidden = true
         }
         checkedImageView.forEach { (UIImageView) in
             UIImageView.isHidden = true
@@ -83,11 +83,11 @@ class FetchUserDataViewController: BaseViewController {
             }
         } else {
             self.view.makeToast(NOINTERNETCONNECTION)
-            //            if isPresented {
-            //                DispatchQueue.main.asyncAfter(deadline: .now() + 2.5, execute: {
-            //                    self.dismiss(animated: true, completion: nil)
-            //                })
-            //            }
+//            if isPresented {
+//                DispatchQueue.main.asyncAfter(deadline: .now() + 2.5, execute: {
+//                    self.dismiss(animated: true, completion: nil)
+//                })
+//            }
             return
         }
     }
@@ -97,16 +97,15 @@ class FetchUserDataViewController: BaseViewController {
         //1: SETUPS
         //2: HRLOGSRequest
         //3: NOTIFICATION SYNC
-        
-        //        if !Reachability.isConnectedNetwork() {
-        //            self.view.makeToast(NOINTERNETCONNECTION)
-        //            return
-        //        }
+
+//        if !Reachability.isConnectedNetwork() {
+//            self.view.makeToast(NOINTERNETCONNECTION)
+//            return
+//        }
         guard let access_token = UserDefaults.standard.string(forKey: USER_ACCESS_TOKEN) else {
             self.navigationController?.popViewController(animated: true)
             return
         }
-        
         self.access_token = access_token
         activityIndicator[0].isHidden = false
         activityIndicator[0].startAnimating()
@@ -123,22 +122,6 @@ class FetchUserDataViewController: BaseViewController {
         let params = self.getAPIParameter(service_name: SETUP, request_body: setup_body)
         NetworkCalls.setup(params: params) { (success, response) in
             if success {
-                //                DispatchQueue.main.async {
-                //                    self.hrSetupData_Label.text = "Successfully Synced HR"
-                //                    //show success for view 1
-                //                    self.loaderViews[0].backgroundColor = UIColor.nativeRedColor()
-                //                    self.activityIndicator[0].stopAnimating()
-                //                    self.activityIndicator[0].isHidden = true
-                //                    self.checkedImageView[0].isHidden = false
-                //                    //start animation for view 2
-                //                    self.activityIndicator[2].isHidden = false
-                //                    self.activityIndicator[2].startAnimating()
-                //
-                //                    self.getHrRequest()
-                //MARK: oneapp.gethrrequest
-                //                    self.getHrRequest()
-                
-                //                }
                 DispatchQueue.main.async {
                     self.hrSetupData_Label.text = "Successfully Synced HR"
                     self.imsSetupView.isHidden = false
@@ -173,7 +156,6 @@ class FetchUserDataViewController: BaseViewController {
                                 }
                             }
                         }
-                        
                     } else {
                         DispatchQueue.main.async {
                             self.loaderViews[0].backgroundColor = UIColor.nativeRedColor()
@@ -263,7 +245,6 @@ class FetchUserDataViewController: BaseViewController {
                 print("error: ", error)
             }
         }
-        
         var querymatrix = [QueryMatrix]()
         if let data = json.dictionary?[_query_matrix] {
             do {
