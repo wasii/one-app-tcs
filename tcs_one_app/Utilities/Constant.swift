@@ -13,8 +13,8 @@ let INACTIVE                = "INACTIVE"
 let API_KEY                 = "5E4D0F6D8E12D8EC5EA3BBB11B63B2F88E39A7561F25EC67CCB440F782FD0360"
 let CLIENTSECRET            = "Tcs@wallet3001"
 var BEARER_TOKEN            = ""
-let BROADCAST_KEY           = "broadcastiosdev"
-//let BROADCAST_KEY           = "broadcastiosqa"
+//let BROADCAST_KEY           = "broadcastiosdev"
+let BROADCAST_KEY           = "broadcastiosqa"
 //let BROADCAST_KEY           = "broadcastios"
 
 let IS_NEW_DATABASE: Bool   = true
@@ -28,8 +28,8 @@ var RECORD_ID               = 0
 //let UPLOADFILESURL          = "https://oneappapi.tcscourier.com/api/file-upload"
 
 //DEV
-let WALLET_ENDPOINT         = "https://sandbox.tcscourier.com/dev/v1/wallet/"
-let ENDPOINT                = "https://devapi.tcscourier.com/core/api/main"
+let WALLET_ENDPOINT         = "https://sandbox.tcscourier.com/qa/v1/wallet/"
+let ENDPOINT                = "https://devapi.tcscourier.com/qacore/api/main"
 let UPLOADFILESURL          = "https://pwaqaapi.tcscourier.com/api/file-upload"
 
 let LOGIN                   = "oneapp.login"
