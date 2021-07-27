@@ -1362,11 +1362,35 @@ class NetworkCalls: NSObject {
     }
     
     //Rider Setup
+    class func getridertoken(_ handler: @escaping(Bool)->Void) {
+        let Url = String(format: RIDER_GET_TOKEN)
+        guard let serviceUrl = URL(string: Url) else { return }
+        var request = URLRequest(url: serviceUrl)
+        request.httpMethod = "GET"
+        request.setValue("Application/json", forHTTPHeaderField: "Content-Type")
+        
+        let session = URLSession.shared
+        session.dataTask(with: request) { (data, response, error) in
+            if let data = data {
+                let json = JSON(data)
+                if let bearer_token = json.dictionary?[_token]?.string {
+                    RIDER_BEARER_TOKEN = bearer_token
+                    handler(true)
+                    return
+                } else {
+                    handler(false)
+                }
+            } else {
+                handler(false)
+            }
+        }.resume()
+    }
     class func getridersetup(params: [String:Any], handler: @escaping(_ granted: Bool,_ response: Any) -> Void) {
-        let Url = String(format: ENDPOINT)
+        let Url = String(format: RIDERSETUP)
         guard let serviceUrl = URL(string: Url) else { return }
         var request = URLRequest(url: serviceUrl)
         request.httpMethod = "POST"
+        request.setValue("Bearer \(RIDER_BEARER_TOKEN)", forHTTPHeaderField: "Authorization")
         request.setValue("Application/json", forHTTPHeaderField: "Content-Type")
         guard let httpBody = try? JSONSerialization.data(withJSONObject: params, options: []) else {
             return
@@ -1396,6 +1420,8 @@ class NetworkCalls: NSObject {
                     if success.dictionary?[_code] == "0208" {
                         handler(false, "Already Reported.")
                     }
+                } else {
+                    handler(false, SOMETHINGWENTWRONG)
                 }
             } else {
                 handler(false, SOMETHINGWENTWRONG)

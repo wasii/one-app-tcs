@@ -3328,6 +3328,72 @@ class DBHelper {
     }
     
     //MARK: - Rider Tables
+    func insert_tbl_rider_details(RiderDetail: RiderDetail, _ handler: @escaping(Bool)->Void) {
+        let insertStatementString = "INSERT INTO \(db_rider_detail)(EMP_NO, EMP_NAM, AREA_NO, EMP_TYP_NO, DESIG, ADDR1, ADDR2, ADDR3, PHN, PAGER_NO, STAT, STA_NO, BANK_NO, ACT_NO, NTN_NO, EMP_MGR, IDCARD, RUT_TYP, EMP_CLOSE_CHK, EMP_OPEN_DATE, EMP_CLOSE_DATE, DIV_CODE, RUT_NO, MOBILE_NO, INBOUND_INC_CHK, OUTBOUND_INC_CHK, RUT_ADJ_AMOUNT, EMP_UNVRSL, HR_EMP_NO,INC_TRGT, RUT_CODE_EXP, EMP_HUB_CODE, FIELD_STAFF, FUEL_QUATA, EMP_SALARY, DATE_JOINING, DATE_BIRTH, PICKUP_HUB, REMARKS,LAST_UPDATE_DATE, HARD_RUT_ALL, COURIER_COD_AMOUNT_LIMIT, UPDATED_BY, UPDATE_ON, CREATED_ON, CREATED_BY, UPDATED_ON, HUB_CODE) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);"
+
+        var insertStatement: OpaquePointer? = nil
+        if sqlite3_prepare_v2(self.db, insertStatementString, -1, &insertStatement, nil) == SQLITE_OK {
+            sqlite3_bind_text(insertStatement, 1, ((RiderDetail.empNo ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 2, ((RiderDetail.empNam ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 3, ((RiderDetail.areaNo ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 4, ((RiderDetail.empTypNo ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 5, ((RiderDetail.desig ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 6, ((RiderDetail.addr1 ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 7, ((RiderDetail.addr2 ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 8, ((RiderDetail.addr3 ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 9, ((RiderDetail.phn ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 10, ((RiderDetail.pagerNo ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 11, ((RiderDetail.stat ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 12, ((RiderDetail.staNo ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 13, ((RiderDetail.bankNo ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 14, ((RiderDetail.actNo ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 15, ((RiderDetail.ntnNo ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 16, ((RiderDetail.empMgr ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 17, ((RiderDetail.idcard ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 18, ((RiderDetail.rutTyp ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 19, ((RiderDetail.empCloseChk ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 20, ((RiderDetail.empOpenDate ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 21, ((RiderDetail.empCloseDate ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 22, ((RiderDetail.divCode ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 23, ((RiderDetail.rutNo ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 24, ((RiderDetail.mobileNo ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 25, ((RiderDetail.inboundIncChk ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 26, ((RiderDetail.outboundIncChk ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 27, ((RiderDetail.rutAdjAmount ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 28, ((RiderDetail.empUnvrsl ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 29, ((RiderDetail.hrEmpNo ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 30, ((RiderDetail.incTrgt ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 31, ((RiderDetail.rutCodeExp ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 32, ((RiderDetail.empHubCode ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 33, ((RiderDetail.fieldStaff ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 34, ((RiderDetail.fuelQuata ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 35, ((RiderDetail.empSalary ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 36, ((RiderDetail.dateJoining ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 37, ((RiderDetail.dateBirth ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 38, ((RiderDetail.pickupHub ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 39, ((RiderDetail.remarks ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 40, ((RiderDetail.lastUpdateDate ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 41, ((RiderDetail.hardRutAll ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 42, ((RiderDetail.courierCodAmountLimit ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 43, ((RiderDetail.updatedBy ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 44, ((RiderDetail.updateOn ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 45, ((RiderDetail.createdOn ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 46, ((RiderDetail.createdBy ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 47, ((RiderDetail.updateOn ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 48, ((RiderDetail.hubCode ?? "") as NSString).utf8String, -1, nil)
+            
+            if sqlite3_step(insertStatement) == SQLITE_DONE {
+                handler(true)
+            } else {
+                print("\(db_rider_detail): Could not insert row.")
+                handler(false)
+            }
+        } else {
+            handler(false)
+            print("\(db_rider_detail): INSERT statement could not be prepared.")
+        }
+        sqlite3_finalize(insertStatement)
+    }
     func read_tbl_rider_details(query: String) -> [tbl_rider_detail]? {
         let queryStatementString = query
         var queryStatement: OpaquePointer? = nil
@@ -3388,7 +3454,7 @@ class DBHelper {
                 rider_detail.append(tbl_rider_detail(ID: ID, EMP_NO: EMP_NO, EMP_NAM: EMP_NAM, AREA_NO: AREA_NO, EMP_TYP_NO: EMP_TYP_NO, DESIG: DESIG, ADDR1: ADDR1, ADDR2: ADDR2, ADDR3: ADDR3, PHN: PHN, PAGER_NO: PAGER_NO, STAT: STAT, STA_NO: STA_NO, BANK_NO: BANK_NO, ACT_NO: ACT_NO, NTN_NO: NTN_NO, EMP_MGR: EMP_MGR, IDCARD: IDCARD, RUT_TYP: RUT_TYP, EMP_CLOSE_CHK: EMP_CLOSE_CHK, EMP_OPEN_DATE: EMP_OPEN_DATE, EMP_CLOSE_DATE: EMP_CLOSE_DATE, DIV_CODE: DIV_CODE, RUT_NO: RUT_NO, MOBILE_NO: MOBILE_NO, INBOUND_INC_CHK: INBOUND_INC_CHK, OUTBOUND_INC_CHK: OUTBOUND_INC_CHK, RUT_ADJ_AMOUNT: RUT_ADJ_AMOUNT, EMP_UNVRSL: EMP_UNVRSL, HR_EMP_NO: HR_EMP_NO, INC_TRGT: INC_TRGT, RUT_CODE_EXP: RUT_CODE_EXP, EMP_HUB_CODE: EMP_HUB_CODE, FIELD_STAFF: FIELD_STAFF, FUEL_QUATA: FUEL_QUATA, EMP_SALARY: EMP_SALARY, DATE_JOINING: DATE_JOINING, DATE_BIRTH: DATE_BIRTH, PICKUP_HUB: PICKUP_HUB, REMARKS: REMARKS, LAST_UPDATE_DATE: LAST_UPDATE_DATE, HARD_RUT_ALL: HARD_RUT_ALL, COURIER_COD_AMOUNT_LIMIT: COURIER_COD_AMOUNT_LIMIT, UPDATED_BY: UPDATED_BY, UPDATE_ON: UPDATE_ON, CREATED_ON: CREATED_ON, CREATED_BY: CREATED_BY, UPDATED_ON: UPDATED_ON, HUB_CODE: HUB_CODE))
             }
         } else {
-            print("SELECT statement \(db_fulfilment_orders) could not be prepared")
+            print("SELECT statement \(db_rider_detail) could not be prepared")
         }
         return rider_detail.count > 0 ? rider_detail : nil
     }

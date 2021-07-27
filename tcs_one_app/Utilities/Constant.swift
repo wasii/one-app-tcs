@@ -12,9 +12,11 @@ let BACKGROUND              = "BACKGROUND"
 let INACTIVE                = "INACTIVE"
 let API_KEY                 = "5E4D0F6D8E12D8EC5EA3BBB11B63B2F88E39A7561F25EC67CCB440F782FD0360"
 let CLIENTSECRET            = "Tcs@wallet3001"
+let RIDERCLIENTSECRET       = "Tcs@rider3002"
 var BEARER_TOKEN            = ""
-//let BROADCAST_KEY           = "broadcastiosdev"
-let BROADCAST_KEY           = "broadcastiosqa"
+var RIDER_BEARER_TOKEN      = ""
+let BROADCAST_KEY           = "broadcastiosdev"
+//let BROADCAST_KEY           = "broadcastiosqa"
 //let BROADCAST_KEY           = "broadcastios"
 
 let IS_NEW_DATABASE: Bool   = true
@@ -28,8 +30,9 @@ var RECORD_ID               = 0
 //let UPLOADFILESURL          = "https://oneappapi.tcscourier.com/api/file-upload"
 
 //DEV
-let WALLET_ENDPOINT         = "https://sandbox.tcscourier.com/qa/v1/wallet/"
-let ENDPOINT                = "https://devapi.tcscourier.com/qacore/api/main"
+let WALLET_ENDPOINT         = "https://sandbox.tcscourier.com/dev/v1/wallet/"
+let RIDER_ENDPOINT          = "https://sandbox.tcscourier.com/dev/v1/rider/"
+let ENDPOINT                = "https://devapi.tcscourier.com/core/api/main"
 let UPLOADFILESURL          = "https://pwaqaapi.tcscourier.com/api/file-upload"
 
 let LOGIN                   = "oneapp.login"
@@ -78,7 +81,9 @@ let S_WALLET_POINTS_DETAILS = "WALLET.GET.DETAIL.POINTS"
 
 
 //RIDER
-let RIDERSETUP              = "oneapp.riderapp_setup"
+let S_RIDER_SETUP           = "RIDER.SETUP"
+let RIDERSETUP              = RIDER_ENDPOINT + "setup"
+let RIDER_GET_TOKEN         = RIDER_ENDPOINT + "token?clientSecret=\(RIDERCLIENTSECRET)"
 
 //API BACKEND KEYS
 let eAI_MESSAGE             = "eAI_MESSAGE"
@@ -152,12 +157,16 @@ let _pointsDetail           = "pointsDetail"
 
 
 //Rider Keys
-let _dial_code              = "dial_code"
-let _rider_detail           = "rider_detail"
-let _receiver_relation      = "receiver_relation"
-let _master_dlvry_status    = "master_dlvry_status"
-let _detail_dlvry_status    = "detail_dlvry_status"
-let _status_group           = "status_group"
+let _riderSetupData         = "riderSetupData"
+let _dial_code              = "dialCode"
+let _rider_detail           = "riderDetails"
+let _receiver_relation      = "receiverRelation"
+let _master_dlvry_status    = "masterDeliveryStatus"
+let _detail_dlvry_status    = "detailDeliveryStatus"
+let _status_group           = "statusGroup"
+let _appMasterResponse      = "appMasterResponse"
+let _appDetailResponse      = "appDetailResponse"
+let _reportToLov            = "reportToLov"
 
 
 //Local Storage (Database) tablename keys
@@ -220,7 +229,15 @@ let db_w_pointSumDetails    = "WALLET_POINT_SUMMARY_DETAILS"
 let db_w_detail_point       = "WALLET_DETAIL_POINTS"
 
 //Rider
-let db_rider_detail         = ""
+let db_rider_detail         = "RIDER_DETAILS"
+let db_receiver_relation    = "RIDER_RECEIVER_RELATION"
+let db_rider_master_dlvry   = "RIDER_MASTER_DELIVERY"
+let db_rider_detail_dlvry   = "RIDER_DETAIL_DELIVERY"
+let db_rider_status_group   = "RIDER_STATUS_GROUP"
+let db_app_master_response  = "RIDER_APP_MASTER_RESPONSE"
+let db_app_detail_response  = "RIDER_APP_DETAIL_RESPONSE"
+let db_report_to_lov        = "RIDER_REPORT_TO_LOVE"
+
 //ERROR MESSAGES
 let NOINTERNETCONNECTION    = "Connect your device with internet first."
 let SOMETHINGWENTWRONG      = "There is something went wrong. Please try again!"

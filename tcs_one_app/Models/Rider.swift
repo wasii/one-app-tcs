@@ -10,31 +10,31 @@ import Foundation
 
 // MARK: - RiderDetail
 struct RiderDetail: Codable {
-    let empNo, empNam, areaNo, empTypNo: String
-    let desig, addr1, addr2, addr3: String
-    let phn, pagerNo: String
+    let empNo, empNam, areaNo, empTypNo: String?
+    let desig, addr1, addr2, addr3: String?
+    let phn, pagerNo: String?
     let stat: String?
-    let staNo: String
+    let staNo: String?
     let bankNo: String?
-    let actNo, ntnNo, empMgr, idcard: String
+    let actNo, ntnNo, empMgr, idcard: String?
     let rutTyp: String?
-    let empCloseChk, empOpenDate: String
+    let empCloseChk, empOpenDate: String?
     let empCloseDate: String?
-    let divCode, rutNo, mobileNo: String
+    let divCode, rutNo, mobileNo: String?
     let inboundIncChk: String?
-    let outboundIncChk: String
+    let outboundIncChk: String?
     let rutAdjAmount: String?
-    let empUnvrsl: String
+    let empUnvrsl: String?
     let hrEmpNo, incTrgt, rutCodeExp: String?
-    let empHubCode, fieldStaff: String
+    let empHubCode, fieldStaff: String?
     let fuelQuata, empSalary: String?
-    let dateJoining, dateBirth, pickupHub: String
+    let dateJoining, dateBirth, pickupHub: String?
     let remarks: String?
-    let lastUpdateDate: String
+    let lastUpdateDate: String?
     let hardRutAll, courierCodAmountLimit: String?
-    let updatedBy, updateOn: String
+    let updatedBy, updateOn: String?
     let createdOn, createdBy, updatedOn: String?
-    let hubCode: String
+    let hubCode: String?
 
     enum CodingKeys: String, CodingKey {
         case empNo = "EMP_NO"
