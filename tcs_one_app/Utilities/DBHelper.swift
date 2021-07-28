@@ -2549,11 +2549,8 @@ class DBHelper {
         
         if sqlite3_prepare_v2(db, queryStatementString, -1, &queryStatement, nil) == SQLITE_OK {
             while sqlite3_step(queryStatement) == SQLITE_ROW {
-                let id = Int(sqlite3_column_int(queryStatement, 0))
-                
                 let application = String(describing: String(cString: sqlite3_column_text(queryStatement, 1)))
                 let count = Int(sqlite3_column_int(queryStatement, 2))
-                
                 loginCount.append(LoginCount(application: application, countXEmpno: count))
             }
         } else {
@@ -3403,53 +3400,53 @@ class DBHelper {
             while sqlite3_step(queryStatement) == SQLITE_ROW {
                 let ID = Int(sqlite3_column_int(queryStatement, 0))
                 let EMP_NO = String(describing: String(cString: sqlite3_column_text(queryStatement, 1)))
-                let EMP_NAM = String(describing: String(cString: sqlite3_column_text(queryStatement, 1)))
-                let AREA_NO = String(describing: String(cString: sqlite3_column_text(queryStatement, 1)))
-                let EMP_TYP_NO = String(describing: String(cString: sqlite3_column_text(queryStatement, 1)))
-                let DESIG = String(describing: String(cString: sqlite3_column_text(queryStatement, 1)))
-                let ADDR1 = String(describing: String(cString: sqlite3_column_text(queryStatement, 1)))
-                let ADDR2 = String(describing: String(cString: sqlite3_column_text(queryStatement, 1)))
-                let ADDR3 = String(describing: String(cString: sqlite3_column_text(queryStatement, 1)))
-                let PHN = String(describing: String(cString: sqlite3_column_text(queryStatement, 1)))
-                let PAGER_NO = String(describing: String(cString: sqlite3_column_text(queryStatement, 1)))
-                let STAT = String(describing: String(cString: sqlite3_column_text(queryStatement, 1)))
-                let STA_NO = String(describing: String(cString: sqlite3_column_text(queryStatement, 1)))
-                let BANK_NO = String(describing: String(cString: sqlite3_column_text(queryStatement, 1)))
-                let ACT_NO = String(describing: String(cString: sqlite3_column_text(queryStatement, 1)))
-                let NTN_NO = String(describing: String(cString: sqlite3_column_text(queryStatement, 1)))
-                let EMP_MGR = String(describing: String(cString: sqlite3_column_text(queryStatement, 1)))
-                let IDCARD = String(describing: String(cString: sqlite3_column_text(queryStatement, 1)))
-                let RUT_TYP = String(describing: String(cString: sqlite3_column_text(queryStatement, 1)))
-                let EMP_CLOSE_CHK = String(describing: String(cString: sqlite3_column_text(queryStatement, 1)))
-                let EMP_OPEN_DATE = String(describing: String(cString: sqlite3_column_text(queryStatement, 1)))
-                let EMP_CLOSE_DATE = String(describing: String(cString: sqlite3_column_text(queryStatement, 1)))
-                let DIV_CODE = String(describing: String(cString: sqlite3_column_text(queryStatement, 1)))
-                let RUT_NO = String(describing: String(cString: sqlite3_column_text(queryStatement, 1)))
-                let MOBILE_NO = String(describing: String(cString: sqlite3_column_text(queryStatement, 1)))
-                let INBOUND_INC_CHK = String(describing: String(cString: sqlite3_column_text(queryStatement, 1)))
-                let OUTBOUND_INC_CHK = String(describing: String(cString: sqlite3_column_text(queryStatement, 1)))
-                let RUT_ADJ_AMOUNT = String(describing: String(cString: sqlite3_column_text(queryStatement, 1)))
-                let EMP_UNVRSL = String(describing: String(cString: sqlite3_column_text(queryStatement, 1)))
-                let HR_EMP_NO = String(describing: String(cString: sqlite3_column_text(queryStatement, 1)))
-                let INC_TRGT = String(describing: String(cString: sqlite3_column_text(queryStatement, 1)))
-                let RUT_CODE_EXP = String(describing: String(cString: sqlite3_column_text(queryStatement, 1)))
-                let EMP_HUB_CODE = String(describing: String(cString: sqlite3_column_text(queryStatement, 1)))
-                let FIELD_STAFF = String(describing: String(cString: sqlite3_column_text(queryStatement, 1)))
-                let FUEL_QUATA = String(describing: String(cString: sqlite3_column_text(queryStatement, 1)))
-                let EMP_SALARY = String(describing: String(cString: sqlite3_column_text(queryStatement, 1)))
-                let DATE_JOINING = String(describing: String(cString: sqlite3_column_text(queryStatement, 1)))
-                let DATE_BIRTH = String(describing: String(cString: sqlite3_column_text(queryStatement, 1)))
-                let PICKUP_HUB = String(describing: String(cString: sqlite3_column_text(queryStatement, 1)))
-                let REMARKS = String(describing: String(cString: sqlite3_column_text(queryStatement, 1)))
-                let LAST_UPDATE_DATE = String(describing: String(cString: sqlite3_column_text(queryStatement, 1)))
-                let HARD_RUT_ALL = String(describing: String(cString: sqlite3_column_text(queryStatement, 1)))
-                let COURIER_COD_AMOUNT_LIMIT = String(describing: String(cString: sqlite3_column_text(queryStatement, 1)))
-                let UPDATED_BY = String(describing: String(cString: sqlite3_column_text(queryStatement, 1)))
-                let UPDATE_ON = String(describing: String(cString: sqlite3_column_text(queryStatement, 1)))
-                let CREATED_ON = String(describing: String(cString: sqlite3_column_text(queryStatement, 1)))
-                let CREATED_BY = String(describing: String(cString: sqlite3_column_text(queryStatement, 1)))
-                let UPDATED_ON = String(describing: String(cString: sqlite3_column_text(queryStatement, 1)))
-                let HUB_CODE = String(describing: String(cString: sqlite3_column_text(queryStatement, 1)))
+                let EMP_NAM = String(describing: String(cString: sqlite3_column_text(queryStatement, 2)))
+                let AREA_NO = String(describing: String(cString: sqlite3_column_text(queryStatement, 3)))
+                let EMP_TYP_NO = String(describing: String(cString: sqlite3_column_text(queryStatement, 4)))
+                let DESIG = String(describing: String(cString: sqlite3_column_text(queryStatement, 5)))
+                let ADDR1 = String(describing: String(cString: sqlite3_column_text(queryStatement, 6)))
+                let ADDR2 = String(describing: String(cString: sqlite3_column_text(queryStatement, 7)))
+                let ADDR3 = String(describing: String(cString: sqlite3_column_text(queryStatement, 8)))
+                let PHN = String(describing: String(cString: sqlite3_column_text(queryStatement, 9)))
+                let PAGER_NO = String(describing: String(cString: sqlite3_column_text(queryStatement, 10)))
+                let STAT = String(describing: String(cString: sqlite3_column_text(queryStatement, 11)))
+                let STA_NO = String(describing: String(cString: sqlite3_column_text(queryStatement, 12)))
+                let BANK_NO = String(describing: String(cString: sqlite3_column_text(queryStatement, 13)))
+                let ACT_NO = String(describing: String(cString: sqlite3_column_text(queryStatement, 14)))
+                let NTN_NO = String(describing: String(cString: sqlite3_column_text(queryStatement, 15)))
+                let EMP_MGR = String(describing: String(cString: sqlite3_column_text(queryStatement, 16)))
+                let IDCARD = String(describing: String(cString: sqlite3_column_text(queryStatement, 17)))
+                let RUT_TYP = String(describing: String(cString: sqlite3_column_text(queryStatement, 18)))
+                let EMP_CLOSE_CHK = String(describing: String(cString: sqlite3_column_text(queryStatement, 19)))
+                let EMP_OPEN_DATE = String(describing: String(cString: sqlite3_column_text(queryStatement, 20)))
+                let EMP_CLOSE_DATE = String(describing: String(cString: sqlite3_column_text(queryStatement, 21)))
+                let DIV_CODE = String(describing: String(cString: sqlite3_column_text(queryStatement, 22)))
+                let RUT_NO = String(describing: String(cString: sqlite3_column_text(queryStatement, 23)))
+                let MOBILE_NO = String(describing: String(cString: sqlite3_column_text(queryStatement, 24)))
+                let INBOUND_INC_CHK = String(describing: String(cString: sqlite3_column_text(queryStatement, 25)))
+                let OUTBOUND_INC_CHK = String(describing: String(cString: sqlite3_column_text(queryStatement, 26)))
+                let RUT_ADJ_AMOUNT = String(describing: String(cString: sqlite3_column_text(queryStatement, 27)))
+                let EMP_UNVRSL = String(describing: String(cString: sqlite3_column_text(queryStatement, 28)))
+                let HR_EMP_NO = String(describing: String(cString: sqlite3_column_text(queryStatement, 29)))
+                let INC_TRGT = String(describing: String(cString: sqlite3_column_text(queryStatement, 30)))
+                let RUT_CODE_EXP = String(describing: String(cString: sqlite3_column_text(queryStatement, 31)))
+                let EMP_HUB_CODE = String(describing: String(cString: sqlite3_column_text(queryStatement, 32)))
+                let FIELD_STAFF = String(describing: String(cString: sqlite3_column_text(queryStatement, 33)))
+                let FUEL_QUATA = String(describing: String(cString: sqlite3_column_text(queryStatement, 34)))
+                let EMP_SALARY = String(describing: String(cString: sqlite3_column_text(queryStatement, 35)))
+                let DATE_JOINING = String(describing: String(cString: sqlite3_column_text(queryStatement, 36)))
+                let DATE_BIRTH = String(describing: String(cString: sqlite3_column_text(queryStatement, 37)))
+                let PICKUP_HUB = String(describing: String(cString: sqlite3_column_text(queryStatement, 38)))
+                let REMARKS = String(describing: String(cString: sqlite3_column_text(queryStatement, 39)))
+                let LAST_UPDATE_DATE = String(describing: String(cString: sqlite3_column_text(queryStatement, 40)))
+                let HARD_RUT_ALL = String(describing: String(cString: sqlite3_column_text(queryStatement, 41)))
+                let COURIER_COD_AMOUNT_LIMIT = String(describing: String(cString: sqlite3_column_text(queryStatement, 42)))
+                let UPDATED_BY = String(describing: String(cString: sqlite3_column_text(queryStatement, 43)))
+                let UPDATE_ON = String(describing: String(cString: sqlite3_column_text(queryStatement, 44)))
+                let CREATED_ON = String(describing: String(cString: sqlite3_column_text(queryStatement, 45)))
+                let CREATED_BY = String(describing: String(cString: sqlite3_column_text(queryStatement, 46)))
+                let UPDATED_ON = String(describing: String(cString: sqlite3_column_text(queryStatement, 47)))
+                let HUB_CODE = String(describing: String(cString: sqlite3_column_text(queryStatement, 48)))
                 
                 rider_detail.append(tbl_rider_detail(ID: ID, EMP_NO: EMP_NO, EMP_NAM: EMP_NAM, AREA_NO: AREA_NO, EMP_TYP_NO: EMP_TYP_NO, DESIG: DESIG, ADDR1: ADDR1, ADDR2: ADDR2, ADDR3: ADDR3, PHN: PHN, PAGER_NO: PAGER_NO, STAT: STAT, STA_NO: STA_NO, BANK_NO: BANK_NO, ACT_NO: ACT_NO, NTN_NO: NTN_NO, EMP_MGR: EMP_MGR, IDCARD: IDCARD, RUT_TYP: RUT_TYP, EMP_CLOSE_CHK: EMP_CLOSE_CHK, EMP_OPEN_DATE: EMP_OPEN_DATE, EMP_CLOSE_DATE: EMP_CLOSE_DATE, DIV_CODE: DIV_CODE, RUT_NO: RUT_NO, MOBILE_NO: MOBILE_NO, INBOUND_INC_CHK: INBOUND_INC_CHK, OUTBOUND_INC_CHK: OUTBOUND_INC_CHK, RUT_ADJ_AMOUNT: RUT_ADJ_AMOUNT, EMP_UNVRSL: EMP_UNVRSL, HR_EMP_NO: HR_EMP_NO, INC_TRGT: INC_TRGT, RUT_CODE_EXP: RUT_CODE_EXP, EMP_HUB_CODE: EMP_HUB_CODE, FIELD_STAFF: FIELD_STAFF, FUEL_QUATA: FUEL_QUATA, EMP_SALARY: EMP_SALARY, DATE_JOINING: DATE_JOINING, DATE_BIRTH: DATE_BIRTH, PICKUP_HUB: PICKUP_HUB, REMARKS: REMARKS, LAST_UPDATE_DATE: LAST_UPDATE_DATE, HARD_RUT_ALL: HARD_RUT_ALL, COURIER_COD_AMOUNT_LIMIT: COURIER_COD_AMOUNT_LIMIT, UPDATED_BY: UPDATED_BY, UPDATE_ON: UPDATE_ON, CREATED_ON: CREATED_ON, CREATED_BY: CREATED_BY, UPDATED_ON: UPDATED_ON, HUB_CODE: HUB_CODE))
             }
@@ -3458,25 +3455,403 @@ class DBHelper {
         }
         return rider_detail.count > 0 ? rider_detail : nil
     }
-    func read_tbl_rider_details(rider_detail: RiderDetail, handler: @escaping(_ success: Bool) -> Void) {
-        let insertStatementString = "INSERT INTO \(db_fulfilment_orders_temp)(ORDER_ID, STATUS, CN_NUMBER, BASKET_NO, CURRENT_USER) VALUES (?,?,?,?,?);"
+    
+    //receiver_relation
+    func insert_tbl_rider_receiver_relation(ReceiverRelation: ReceiverRelation, handler: @escaping(_ success: Bool) -> Void) {
+        let insertStatementString = "INSERT INTO \(db_receiver_relation)(R_ID, R_RELATION) VALUES (?,?);"
 
         var insertStatement: OpaquePointer? = nil
         if sqlite3_prepare_v2(self.db, insertStatementString, -1, &insertStatement, nil) == SQLITE_OK {
-            
-//            sqlite3_bind_text(insertStatement, 1, (orders.ORDER_ID as NSString).utf8String, -1, nil)
+            sqlite3_bind_int(insertStatement, 1, Int32(ReceiverRelation.id ?? 0))
+            sqlite3_bind_text(insertStatement, 2, ((ReceiverRelation.rRelation ?? "") as NSString).utf8String, -1, nil)
             
             if sqlite3_step(insertStatement) == SQLITE_DONE {
                 handler(true)
             } else {
-                print("\(db_fulfilment_orders): Could not insert row.")
+                print("\(db_receiver_relation): Could not insert row.")
                 handler(false)
             }
         } else {
             handler(false)
-            print("\(db_fulfilment_orders): INSERT statement could not be prepared.")
+            print("\(db_receiver_relation): INSERT statement could not be prepared.")
         }
         sqlite3_finalize(insertStatement)
+    }
+    func read_tbl_rider_receiver_relation(query: String) -> [tbl_rider_receiver_relation]? {
+        let queryStatementString = query
+        var queryStatement: OpaquePointer? = nil
+        var receiver_relation = [tbl_rider_receiver_relation]()
+
+        if sqlite3_prepare_v2(db, queryStatementString, -1, &queryStatement, nil) == SQLITE_OK {
+            while sqlite3_step(queryStatement) == SQLITE_ROW {
+                let ID = Int(sqlite3_column_int(queryStatement, 0))
+                let R_ID = Int(sqlite3_column_int(queryStatement, 1))
+                let R_RELATION = String(describing: String(cString: sqlite3_column_text(queryStatement, 2)))
+                receiver_relation.append(tbl_rider_receiver_relation(ID: ID, R_ID: R_ID, R_RELATION: R_RELATION))
+            }
+        } else {
+            print("SELECT statement \(db_receiver_relation) could not be prepared")
+        }
+        return receiver_relation.count > 0 ? receiver_relation : nil
+    }
+    
+    //rider_master_dlvry
+    func insert_tbl_rider_master_delivery(RiderMasterDelivery: RiderMasterDelivery, handler: @escaping(_ success: Bool) -> Void) {
+        let insertStatementString = "INSERT INTO \(db_rider_master_dlvry)(SERVER_ID_PK, DLVRY_STAT_NO, DSCRP, STAT, ALLOW_SHOW, IMG_REQUIRED, SIGN_REGUIRED, REATTEMPT, STAT_GROUP) VALUES (?,?,?,?,?,?,?,?,?);"
+
+        var insertStatement: OpaquePointer? = nil
+        if sqlite3_prepare_v2(self.db, insertStatementString, -1, &insertStatement, nil) == SQLITE_OK {
+            sqlite3_bind_int(insertStatement, 1, Int32(RiderMasterDelivery.id ?? 0))
+            sqlite3_bind_text(insertStatement, 2, ((RiderMasterDelivery.dlvryStatNo ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 3, ((RiderMasterDelivery.dscrp ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 4, ((RiderMasterDelivery.stat ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 5, ((RiderMasterDelivery.allowShow ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 6, ((RiderMasterDelivery.imgRequired ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 7, ((RiderMasterDelivery.signReguired ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 8, ((RiderMasterDelivery.reattempt ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 9, ((RiderMasterDelivery.statGroup ?? "") as NSString).utf8String, -1, nil)
+            
+            if sqlite3_step(insertStatement) == SQLITE_DONE {
+                handler(true)
+            } else {
+                print("\(db_rider_master_dlvry): Could not insert row.")
+                handler(false)
+            }
+        } else {
+            handler(false)
+            print("\(db_rider_master_dlvry): INSERT statement could not be prepared.")
+        }
+        sqlite3_finalize(insertStatement)
+    }
+    func read_tbl_rider_master_delivery(query: String) -> [tbl_rider_master_delivery]? {
+        let queryStatementString = query
+        var queryStatement: OpaquePointer? = nil
+        var master_delivery = [tbl_rider_master_delivery]()
+
+        if sqlite3_prepare_v2(db, queryStatementString, -1, &queryStatement, nil) == SQLITE_OK {
+            while sqlite3_step(queryStatement) == SQLITE_ROW {
+                let ID = Int(sqlite3_column_int(queryStatement, 0))
+                let SERVER_ID_PK = Int(sqlite3_column_int(queryStatement, 1))
+                let DLVRY_STAT_NO = String(describing: String(cString: sqlite3_column_text(queryStatement, 2)))
+                let DSCRP = String(describing: String(cString: sqlite3_column_text(queryStatement, 3)))
+                let STAT = String(describing: String(cString: sqlite3_column_text(queryStatement, 4)))
+                let ALLOW_SHOW = String(describing: String(cString: sqlite3_column_text(queryStatement, 5)))
+                let IMG_REQUIRED = String(describing: String(cString: sqlite3_column_text(queryStatement, 6)))
+                let SIGN_REGUIRED = String(describing: String(cString: sqlite3_column_text(queryStatement, 7)))
+                let REATTEMPT = String(describing: String(cString: sqlite3_column_text(queryStatement, 8)))
+                let STAT_GROUP = String(describing: String(cString: sqlite3_column_text(queryStatement, 9)))
+                master_delivery.append(tbl_rider_master_delivery(ID: ID, SERVER_ID_PK: SERVER_ID_PK, DLVRY_STAT_NO: DLVRY_STAT_NO, DSCRP: DSCRP, STAT: STAT, ALLOW_SHOW: ALLOW_SHOW, IMG_REQUIRED: IMG_REQUIRED, SIGN_REGUIRED: SIGN_REGUIRED, REATTEMPT: REATTEMPT, STAT_GROUP: STAT_GROUP))
+            }
+        } else {
+            print("SELECT statement \(db_rider_master_dlvry) could not be prepared")
+        }
+        return master_delivery.count > 0 ? master_delivery : nil
+    }
+    
+    //rider_detail_delivery
+    func insert_tbl_rider_detail_delivery(RiderDetailDelivery: RiderDetailDelivery, handler: @escaping(_ success: Bool) -> Void) {
+        let insertStatementString = "INSERT INTO \(db_rider_detail_dlvry)(SERVER_ID_PK, DLVRY_STAT_NO, DSCRP, CHILD_STAT_NO, MASTER_DSCRP, HHT_ALLOW) VALUES (?,?,?,?,?,?);"
+
+        var insertStatement: OpaquePointer? = nil
+        if sqlite3_prepare_v2(self.db, insertStatementString, -1, &insertStatement, nil) == SQLITE_OK {
+            sqlite3_bind_int(insertStatement, 1, Int32(RiderDetailDelivery.id ?? 0))
+            sqlite3_bind_text(insertStatement, 2, ((RiderDetailDelivery.dlvryStatNo ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 3, ((RiderDetailDelivery.dscrp ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 4, ((RiderDetailDelivery.childStatNo ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 5, ((RiderDetailDelivery.masterDscrp ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 6, ((RiderDetailDelivery.hhtAllow ?? "") as NSString).utf8String, -1, nil)
+            
+            if sqlite3_step(insertStatement) == SQLITE_DONE {
+                handler(true)
+            } else {
+                print("\(db_rider_detail_dlvry): Could not insert row.")
+                handler(false)
+            }
+        } else {
+            handler(false)
+            print("\(db_rider_detail_dlvry): INSERT statement could not be prepared.")
+        }
+        sqlite3_finalize(insertStatement)
+    }
+    func read_tbl_rider_detail_delivery(query: String) -> [tbl_rider_detail_delivery]? {
+        let queryStatementString = query
+        var queryStatement: OpaquePointer? = nil
+        var detail_delivery = [tbl_rider_detail_delivery]()
+
+        if sqlite3_prepare_v2(db, queryStatementString, -1, &queryStatement, nil) == SQLITE_OK {
+            while sqlite3_step(queryStatement) == SQLITE_ROW {
+                let ID = Int(sqlite3_column_int(queryStatement, 0))
+                let SERVER_ID_PK = Int(sqlite3_column_int(queryStatement, 1))
+                let DLVRY_STAT_NO = String(describing: String(cString: sqlite3_column_text(queryStatement, 2)))
+                let DSCRP = String(describing: String(cString: sqlite3_column_text(queryStatement, 3)))
+                let CHILD_STAT_NO = String(describing: String(cString: sqlite3_column_text(queryStatement, 4)))
+                let MASTER_DSCRP = String(describing: String(cString: sqlite3_column_text(queryStatement, 5)))
+                let HHT_ALLOW = String(describing: String(cString: sqlite3_column_text(queryStatement, 6)))
+                detail_delivery.append(tbl_rider_detail_delivery(ID: ID, SERVER_ID_PK: SERVER_ID_PK, DLVRY_STAT_NO: DLVRY_STAT_NO, DSCRP: DSCRP, CHILD_STAT_NO: CHILD_STAT_NO, MASTER_DSCRP: MASTER_DSCRP, HHT_ALLOW: HHT_ALLOW))
+            }
+        } else {
+            print("SELECT statement \(db_rider_detail_dlvry) could not be prepared")
+        }
+        return detail_delivery.count > 0 ? detail_delivery : nil
+    }
+    
+    //status_group
+    func insert_tbl_rider_status_group(RiderStatusGroup: RiderStatusGroup, handler: @escaping(_ success: Bool) -> Void) {
+        let insertStatementString = "INSERT INTO \(db_rider_status_group)(SERVER_ID_PK, DESCP, RELATION_REQUIRED) VALUES (?,?,?);"
+
+        var insertStatement: OpaquePointer? = nil
+        if sqlite3_prepare_v2(self.db, insertStatementString, -1, &insertStatement, nil) == SQLITE_OK {
+            sqlite3_bind_int(insertStatement, 1, Int32(RiderStatusGroup.statGroup ?? 0))
+            sqlite3_bind_text(insertStatement, 2, ((RiderStatusGroup.descp ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_int(insertStatement, 3, Int32(RiderStatusGroup.relationRequired ?? 0))
+            
+            if sqlite3_step(insertStatement) == SQLITE_DONE {
+                handler(true)
+            } else {
+                print("\(db_rider_status_group): Could not insert row.")
+                handler(false)
+            }
+        } else {
+            handler(false)
+            print("\(db_rider_status_group): INSERT statement could not be prepared.")
+        }
+        sqlite3_finalize(insertStatement)
+    }
+    func read_tbl_rider_status_group(query: String) -> [tbl_rider_status_group]? {
+        let queryStatementString = query
+        var queryStatement: OpaquePointer? = nil
+        var status_group = [tbl_rider_status_group]()
+
+        if sqlite3_prepare_v2(db, queryStatementString, -1, &queryStatement, nil) == SQLITE_OK {
+            while sqlite3_step(queryStatement) == SQLITE_ROW {
+                let ID = Int(sqlite3_column_int(queryStatement, 0))
+                let SERVER_ID_PK = Int(sqlite3_column_int(queryStatement, 1))
+                let DSCRP = String(describing: String(cString: sqlite3_column_text(queryStatement, 2)))
+                let RELATION_REQUIRED = Int(sqlite3_column_int(queryStatement, 3))
+                status_group.append(tbl_rider_status_group(ID: ID, SERVER_ID_PK: SERVER_ID_PK, DSCRP: DSCRP, RELATION_REQUIRED: RELATION_REQUIRED))
+            }
+        } else {
+            print("SELECT statement \(db_rider_status_group) could not be prepared")
+        }
+        return status_group.count > 0 ? status_group : nil
+    }
+    
+    //app_master_response
+    func insert_tbl_rider_app_master_response(AppMasterResponse: AppMasterResponse, handler: @escaping(_ success: Bool) -> Void) {
+        let insertStatementString = "INSERT INTO \(db_app_master_response)(COND_ID, OBJ_FIELD_NAME, CHECK_VALUE, VALUE_TYPE, OPERATOR, GROUP_NAME, COND_INDEX, EVENT_NAME, ACTION, IS_ACTIVE) VALUES (?,?,?,?,?,?,?,?,?,?);"
+
+        var insertStatement: OpaquePointer? = nil
+        if sqlite3_prepare_v2(self.db, insertStatementString, -1, &insertStatement, nil) == SQLITE_OK {
+            sqlite3_bind_int(insertStatement, 1, Int32(AppMasterResponse.condID ?? 0))
+            sqlite3_bind_text(insertStatement, 2, ((AppMasterResponse.objFieldName ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 3, ((AppMasterResponse.checkValue ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 4, ((AppMasterResponse.valueType ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 5, ((AppMasterResponse.detailOperator ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 6, ((AppMasterResponse.groupName ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_int(insertStatement, 7, Int32(AppMasterResponse.condIndex ?? 0))
+            sqlite3_bind_text(insertStatement, 8, ((AppMasterResponse.eventName ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 9, ((AppMasterResponse.action ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_int(insertStatement, 10, Int32(AppMasterResponse.isActive ?? 0))
+            if sqlite3_step(insertStatement) == SQLITE_DONE {
+                handler(true)
+            } else {
+                print("\(db_app_master_response): Could not insert row.")
+                handler(false)
+            }
+        } else {
+            handler(false)
+            print("\(db_app_master_response): INSERT statement could not be prepared.")
+        }
+        sqlite3_finalize(insertStatement)
+    }
+    func read_tbl_rider_app_master_response(query: String) -> [tbl_rider_app_master_response]? {
+        let queryStatementString = query
+        var queryStatement: OpaquePointer? = nil
+        var app_master_response = [tbl_rider_app_master_response]()
+
+        if sqlite3_prepare_v2(db, queryStatementString, -1, &queryStatement, nil) == SQLITE_OK {
+            while sqlite3_step(queryStatement) == SQLITE_ROW {
+                let ID = Int(sqlite3_column_int(queryStatement, 0))
+                let COND_ID = Int(sqlite3_column_int(queryStatement, 1))
+                let OBJ_FIELD_NAME = String(describing: String(cString: sqlite3_column_text(queryStatement, 2)))
+                let CHECK_VALUE = String(describing: String(cString: sqlite3_column_text(queryStatement, 3)))
+                let VALUE_TYPE = String(describing: String(cString: sqlite3_column_text(queryStatement, 4)))
+                let OPERATOR = String(describing: String(cString: sqlite3_column_text(queryStatement, 5)))
+                let GROUP_NAME = String(describing: String(cString: sqlite3_column_text(queryStatement, 6)))
+                let COND_INDEX = Int(sqlite3_column_int(queryStatement, 7))
+                let EVENT_NAME = String(describing: String(cString: sqlite3_column_text(queryStatement, 8)))
+                let ACTION = String(describing: String(cString: sqlite3_column_text(queryStatement, 9)))
+                let IS_ACTIVE = Int(sqlite3_column_int(queryStatement, 10))
+                
+                app_master_response.append(tbl_rider_app_master_response(ID: ID, COND_ID: COND_ID, OBJ_FIELD_NAME: OBJ_FIELD_NAME, CHECK_VALUE: CHECK_VALUE, VALUE_TYPE: VALUE_TYPE, OPERATOR: OPERATOR, GROUP_NAME: GROUP_NAME, COND_INDEX: COND_INDEX, EVENT_NAME: EVENT_NAME, ACTION: ACTION, IS_ACTIVE: IS_ACTIVE))
+            }
+        } else {
+            print("SELECT statement \(db_app_master_response) could not be prepared")
+        }
+        return app_master_response.count > 0 ? app_master_response : nil
+    }
+    
+    //app_detail_response
+    func insert_tbl_rider_app_detail_response(AppDetailResponse: AppDetailResponse, handler: @escaping(_ success: Bool) -> Void) {
+        let insertStatementString = "INSERT INTO \(db_app_detail_response)(COND_DETL_ID, DELIVERY_STATUS, COND_ID) VALUES (?,?,?);"
+
+        var insertStatement: OpaquePointer? = nil
+        if sqlite3_prepare_v2(self.db, insertStatementString, -1, &insertStatement, nil) == SQLITE_OK {
+            sqlite3_bind_int(insertStatement, 1, Int32(AppDetailResponse.condDetlID ?? 0))
+            sqlite3_bind_text(insertStatement, 2, ((AppDetailResponse.deliveryStatus ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_int(insertStatement, 3, Int32(AppDetailResponse.condID ?? 0))
+            
+            if sqlite3_step(insertStatement) == SQLITE_DONE {
+                handler(true)
+            } else {
+                print("\(db_app_detail_response): Could not insert row.")
+                handler(false)
+            }
+        } else {
+            handler(false)
+            print("\(db_app_detail_response): INSERT statement could not be prepared.")
+        }
+        sqlite3_finalize(insertStatement)
+    }
+    func read_tbl_rider_app_detail_response(query: String) -> [tbl_rider_app_detail_response]? {
+        let queryStatementString = query
+        var queryStatement: OpaquePointer? = nil
+        var app_detail_response = [tbl_rider_app_detail_response]()
+
+        if sqlite3_prepare_v2(db, queryStatementString, -1, &queryStatement, nil) == SQLITE_OK {
+            while sqlite3_step(queryStatement) == SQLITE_ROW {
+                let ID = Int(sqlite3_column_int(queryStatement, 0))
+                let COND_DETL_ID = Int(sqlite3_column_int(queryStatement, 1))
+                let DELIVERY_STATUS = String(describing: String(cString: sqlite3_column_text(queryStatement, 2)))
+                let COND_ID = Int(sqlite3_column_int(queryStatement, 3))
+                app_detail_response.append(tbl_rider_app_detail_response(ID: ID, COND_DETL_ID: COND_DETL_ID, DELIVERY_STATUS: DELIVERY_STATUS, COND_ID: COND_ID))
+            }
+        } else {
+            print("SELECT statement \(db_app_detail_response) could not be prepared")
+        }
+        return app_detail_response.count > 0 ? app_detail_response : nil
+    }
+    
+    //report_to_lov
+    func insert_tbl_rider_report_to_lov(ReportToLov: ReportToLov, handler: @escaping(_ success: Bool) -> Void) {
+        let insertStatementString = "INSERT INTO \(db_report_to_lov)(RTT_ID, RTT_DSCRP, CREATED_DATE, USER_ID) VALUES (?,?,?,?);"
+
+        var insertStatement: OpaquePointer? = nil
+        if sqlite3_prepare_v2(self.db, insertStatementString, -1, &insertStatement, nil) == SQLITE_OK {
+            sqlite3_bind_int(insertStatement, 1, Int32(ReportToLov.rttID ?? 0))
+            sqlite3_bind_text(insertStatement, 2, ((ReportToLov.rttDscrp ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 3, ((ReportToLov.createdDate ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 4, ((ReportToLov.userID ?? "") as NSString).utf8String, -1, nil)
+            
+            if sqlite3_step(insertStatement) == SQLITE_DONE {
+                handler(true)
+            } else {
+                print("\(db_report_to_lov): Could not insert row.")
+                handler(false)
+            }
+        } else {
+            handler(false)
+            print("\(db_report_to_lov): INSERT statement could not be prepared.")
+        }
+        sqlite3_finalize(insertStatement)
+    }
+    func read_tbl_rider_report_to_lov(query: String) -> [tbl_rider_report_to_lov]? {
+        let queryStatementString = query
+        var queryStatement: OpaquePointer? = nil
+        var report_to_lov = [tbl_rider_report_to_lov]()
+
+        if sqlite3_prepare_v2(db, queryStatementString, -1, &queryStatement, nil) == SQLITE_OK {
+            while sqlite3_step(queryStatement) == SQLITE_ROW {
+                let ID = Int(sqlite3_column_int(queryStatement, 0))
+                let RTT_ID = Int(sqlite3_column_int(queryStatement, 1))
+                let RTT_DSCRP = String(describing: String(cString: sqlite3_column_text(queryStatement, 2)))
+                let CREATED_DATE = String(describing: String(cString: sqlite3_column_text(queryStatement, 2)))
+                let USER_ID = String(describing: String(cString: sqlite3_column_text(queryStatement, 2)))
+                report_to_lov.append(tbl_rider_report_to_lov(ID: ID, RTT_ID: RTT_ID, RTT_DSCRP: RTT_DSCRP, CREATED_DATE: CREATED_DATE, USER_ID: USER_ID))
+            }
+        } else {
+            print("SELECT statement \(db_report_to_lov) could not be prepared")
+        }
+        return report_to_lov.count > 0 ? report_to_lov : nil
+    }
+    
+    //rider delivery sheet
+    func insert_tbl_rider_delivery_sheet(DeliverySheet: RiderDeliverySheet, handler: @escaping(_ success: Bool) -> Void) {
+        let insertStatementString = "INSERT INTO \(db_rider_delivery_sheet)(SHEETNO, DLVRY_DAT, CN, DELIVERYSTATUS,SHIPPERNAME,CONSIGNEENAME,SRL_NO,DLVRD_BY,CUS_PHN,CUS_FAX,PIECES,WEIGHT,COD_AMT,HTC,VRSTATUS,RSSTATUS,VENDOR_SHIPMENT_TYPE,CNSGEE_LAT,CNSGEE_LNG,VENDOR_CODE,NIC_NO,SYNC_DATE,SYNC_STATUS) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);"
+        var insertStatement: OpaquePointer? = nil
+        if sqlite3_prepare_v2(self.db, insertStatementString, -1, &insertStatement, nil) == SQLITE_OK {
+            sqlite3_bind_text(insertStatement, 1, ((DeliverySheet.sheetno ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 2, ((DeliverySheet.dlvryDAT ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 3, ((DeliverySheet.cn ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 4, ((DeliverySheet.deliverystatus ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 5, ((DeliverySheet.shippername ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 6, ((DeliverySheet.consigneename ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 7, ((DeliverySheet.srlNo ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 8, ((DeliverySheet.dlvrdBy ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 9, ((DeliverySheet.cusPhn ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 10, ((DeliverySheet.cusFax ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_int(insertStatement, 11, Int32(DeliverySheet.pieces ?? 0))
+            sqlite3_bind_text(insertStatement, 12, ("\((DeliverySheet.weight ?? 0.0))" as NSString).utf8String, -1, nil)
+            sqlite3_bind_int(insertStatement, 13, Int32(DeliverySheet.codAmt ?? 0))
+            sqlite3_bind_text(insertStatement, 14, ((DeliverySheet.htc ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 15, ((DeliverySheet.vrstatus ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 16, ((DeliverySheet.rsstatus ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 17, ((DeliverySheet.vendorShipmentType ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 18, ((DeliverySheet.cnsgeeLat ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 19, ((DeliverySheet.cnsgeeLng ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 20, ((DeliverySheet.vendorCode ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 21, ((DeliverySheet.nicNo ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 22, ((DeliverySheet.syncDate ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_int(insertStatement, 23, Int32(DeliverySheet.synsStatus ?? 0))
+            if sqlite3_step(insertStatement) == SQLITE_DONE {
+                handler(true)
+            } else {
+                print("\(db_rider_delivery_sheet): Could not insert row.")
+                handler(false)
+            }
+        } else {
+            handler(false)
+            print("\(db_rider_delivery_sheet): INSERT statement could not be prepared.")
+        }
+        sqlite3_finalize(insertStatement)
+    }
+    func read_tbl_rider_delivery_sheet(query: String) -> [tbl_rider_delivery_sheet]? {
+        let queryStatementString = query
+        var queryStatement: OpaquePointer? = nil
+        var delivery_sheet = [tbl_rider_delivery_sheet]()
+
+        if sqlite3_prepare_v2(db, queryStatementString, -1, &queryStatement, nil) == SQLITE_OK {
+            while sqlite3_step(queryStatement) == SQLITE_ROW {
+                let ID = Int(sqlite3_column_int(queryStatement, 0))
+                let SHEETNO = String(describing: String(cString: sqlite3_column_text(queryStatement, 1)))
+                let DLVRY_DAT = String(describing: String(cString: sqlite3_column_text(queryStatement, 2)))
+                let CN = String(describing: String(cString: sqlite3_column_text(queryStatement, 3)))
+                let DELIVERYSTATUS = String(describing: String(cString: sqlite3_column_text(queryStatement, 4)))
+                let SHIPPERNAME = String(describing: String(cString: sqlite3_column_text(queryStatement, 5)))
+                let CONSIGNEENAME = String(describing: String(cString: sqlite3_column_text(queryStatement, 6)))
+                let SRL_NO = String(describing: String(cString: sqlite3_column_text(queryStatement, 7)))
+                let DLVRD_BY = String(describing: String(cString: sqlite3_column_text(queryStatement, 8)))
+                let CUS_PHN = String(describing: String(cString: sqlite3_column_text(queryStatement, 9)))
+                let CUS_FAX = String(describing: String(cString: sqlite3_column_text(queryStatement, 10)))
+                let PIECES = String(describing: String(cString: sqlite3_column_text(queryStatement, 11)))
+                let WEIGHT = String(describing: String(cString: sqlite3_column_text(queryStatement, 12)))
+                let COD_AMT = Int(sqlite3_column_int(queryStatement, 13))
+                let HTC = String(describing: String(cString: sqlite3_column_text(queryStatement, 14)))
+                let VRSTATUS = String(describing: String(cString: sqlite3_column_text(queryStatement, 15)))
+                let RSSTATUS = String(describing: String(cString: sqlite3_column_text(queryStatement, 16)))
+                let VENDOR_SHIPMENT_TYPE = String(describing: String(cString: sqlite3_column_text(queryStatement, 17)))
+                let CNSGEE_LAT = String(describing: String(cString: sqlite3_column_text(queryStatement, 18)))
+                let CNSGEE_LNG = String(describing: String(cString: sqlite3_column_text(queryStatement, 19)))
+                let VENDOR_CODE = String(describing: String(cString: sqlite3_column_text(queryStatement, 20)))
+                let NIC_NO = String(describing: String(cString: sqlite3_column_text(queryStatement, 21)))
+                let SYNC_DATE = String(describing: String(cString: sqlite3_column_text(queryStatement, 22)))
+                let SYNC_STATUS = Int(sqlite3_column_int(queryStatement, 23))
+                delivery_sheet.append(tbl_rider_delivery_sheet(ID: ID, SHEETNO: SHEETNO, DLVRY_DAT: DLVRY_DAT, CN: CN, DELIVERYSTATUS: DELIVERYSTATUS, SHIPPERNAME: SHIPPERNAME, CONSIGNEENAME: CONSIGNEENAME, SRL_NO: SRL_NO, DLVRD_BY: DLVRD_BY, CUS_PHN: CUS_PHN, CUS_FAX: CUS_FAX, PIECES: PIECES, WEIGHT: WEIGHT, COD_AMT: COD_AMT, HTC: HTC, VRSTATUS: VRSTATUS, RSSTATUS: RSSTATUS, VENDOR_SHIPMENT_TYPE: VENDOR_SHIPMENT_TYPE, CNSGEE_LAT: CNSGEE_LAT, CNSGEE_LNG: CNSGEE_LNG, VENDOR_CODE: VENDOR_CODE, NIC_NO: NIC_NO, SYNC_DATE: SYNC_DATE, SYNC_STATUS: SYNC_STATUS))
+            }
+        } else {
+            print("SELECT statement \(db_rider_delivery_sheet) could not be prepared")
+        }
+        return delivery_sheet.count > 0 ? delivery_sheet : nil
     }
 }
 
@@ -4167,4 +4542,105 @@ struct tbl_rider_detail {
     var CREATED_BY: String = ""
     var UPDATED_ON: String = ""
     var HUB_CODE: String = ""
+}
+
+struct tbl_rider_receiver_relation {
+    var ID: Int = 0
+    var R_ID: Int = 0
+    var R_RELATION: String = ""
+}
+
+struct tbl_rider_master_delivery {
+    var ID: Int = 0
+    var SERVER_ID_PK: Int = 0
+    var DLVRY_STAT_NO: String = ""
+    var DSCRP: String = ""
+    var STAT: String = ""
+    var ALLOW_SHOW: String = ""
+    var IMG_REQUIRED: String = ""
+    var SIGN_REGUIRED: String = ""
+    var REATTEMPT: String = ""
+    var STAT_GROUP: String = ""
+}
+struct tbl_rider_detail_delivery {
+    var ID: Int = 0
+    var SERVER_ID_PK: Int = 0
+    var DLVRY_STAT_NO: String = ""
+    var DSCRP: String = ""
+    var CHILD_STAT_NO: String = ""
+    var MASTER_DSCRP: String = ""
+    var HHT_ALLOW: String = ""
+}
+
+struct tbl_rider_status_group {
+    var ID: Int = 0
+    var SERVER_ID_PK: Int = 0
+    var DSCRP: String = ""
+    var RELATION_REQUIRED: Int = 0
+}
+
+struct tbl_rider_app_master_response {
+    var ID: Int = 0
+    var COND_ID: Int = 0
+    var OBJ_FIELD_NAME: String = ""
+    var CHECK_VALUE: String = ""
+    var VALUE_TYPE: String = ""
+    var OPERATOR: String = ""
+    var GROUP_NAME: String = ""
+    var COND_INDEX: Int = 0
+    var EVENT_NAME: String = ""
+    var ACTION: String = ""
+    var IS_ACTIVE: Int = 0
+}
+
+struct tbl_rider_app_detail_response {
+    var ID: Int = 0
+    var COND_DETL_ID: Int = 0
+    var DELIVERY_STATUS: String = ""
+    var COND_ID: Int = 0
+}
+
+struct tbl_rider_report_to_lov {
+    var ID: Int = 0
+    var RTT_ID: Int = 0
+    var RTT_DSCRP: String = ""
+    var CREATED_DATE: String = ""
+    var USER_ID: String = ""
+}
+
+//Rider Deilvery Sheet
+struct tbl_rider_delivery_sheet {
+    var ID: Int = 0
+    var SHEETNO: String = ""
+    var DLVRY_DAT: String = ""
+    var CN: String = ""
+    var DELIVERYSTATUS: String = ""
+    var SHIPPERNAME: String = ""
+    var CONSIGNEENAME: String = ""
+    var SRL_NO: String = ""
+    var DLVRD_BY: String = ""
+    var CUS_PHN: String = ""
+    var CUS_FAX: String = ""
+    var PIECES: String = ""
+    var WEIGHT: String = ""
+    var COD_AMT: Int = 0
+    var HTC: String = ""
+    var VRSTATUS: String = ""
+    var RSSTATUS: String = ""
+    var VENDOR_SHIPMENT_TYPE: String = ""
+    var CNSGEE_LAT: String = ""
+    var CNSGEE_LNG: String = ""
+    var VENDOR_CODE: String = ""
+    var NIC_NO: String = ""
+    var SYNC_DATE: String = ""
+    var SYNC_STATUS: Int = 0
+}
+//Rider Deilvery Sheet Detail
+struct tbl_rider_delivery_sheet_detail {
+    var ID: Int = 0
+    var CN: String = ""
+    var FIELD_NAME: String = ""
+    var LABEL_NAME: String = ""
+    var IS_REQUIRED: String = ""
+    var CHAR_LENGTH: String = ""
 }

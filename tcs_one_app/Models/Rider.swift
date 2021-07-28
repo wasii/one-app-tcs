@@ -91,8 +91,8 @@ struct RiderDetail: Codable {
 
 // MARK: - RiderDetail
 struct ReceiverRelation: Codable {
-    let id: Int
-    let rRelation: String
+    let id: Int?
+    let rRelation: String?
 
     enum CodingKeys: String, CodingKey {
         case id = "ID"
@@ -102,10 +102,10 @@ struct ReceiverRelation: Codable {
 
 //MARK: - RiderMasterDelivery
 struct RiderMasterDelivery: Codable {
-    let id: Int
-    let dlvryStatNo, dscrp, stat: String
+    let id: Int?
+    let dlvryStatNo, dscrp, stat: String?
     let allowShow: String?
-    let imgRequired, signReguired, reattempt, statGroup: String
+    let imgRequired, signReguired, reattempt, statGroup: String?
 
     enum CodingKeys: String, CodingKey {
         case id = "ID"
@@ -122,10 +122,10 @@ struct RiderMasterDelivery: Codable {
 
 //MARK: - RiderDetailDelivery
 struct RiderDetailDelivery: Codable {
-    let id: Int
-    let dlvryStatNo, dscrp, childStatNo: String
+    let id: Int?
+    let dlvryStatNo, dscrp, childStatNo: String?
     let masterDscrp: String?
-    let hhtAllow: String
+    let hhtAllow: String?
 
     enum CodingKeys: String, CodingKey {
         case id = "ID"
@@ -140,13 +140,121 @@ struct RiderDetailDelivery: Codable {
 
 //MARK: - Status Group
 struct RiderStatusGroup: Codable {
-    let statGroup: Int
-    let descp: String
-    let relationRequired: Int
+    let statGroup: Int?
+    let descp: String?
+    let relationRequired: Int?
 
     enum CodingKeys: String, CodingKey {
         case statGroup = "STAT_GROUP"
         case descp = "DESCP"
         case relationRequired = "RELATION_REQUIRED"
+    }
+}
+
+//MARK: - AppMasterResponse
+struct AppMasterResponse: Codable {
+    let condID: Int?
+    let objFieldName, checkValue, valueType, detailOperator: String?
+    let groupName: String?
+    let condIndex: Int?
+    let eventName, action: String?
+    let isActive: Int?
+
+    enum CodingKeys: String, CodingKey {
+        case condID = "COND_ID"
+        case objFieldName = "OBJ_FIELD_NAME"
+        case checkValue = "CHECK_VALUE"
+        case valueType = "VALUE_TYPE"
+        case detailOperator = "OPERATOR"
+        case groupName = "GROUP_NAME"
+        case condIndex = "COND_INDEX"
+        case eventName = "EVENT_NAME"
+        case action = "ACTION"
+        case isActive = "IS_ACTIVE"
+    }
+}
+
+// MARK: - AppDetailResponse
+struct AppDetailResponse: Codable {
+    let condDetlID: Int?
+    let deliveryStatus: String?
+    let condID: Int?
+
+    enum CodingKeys: String, CodingKey {
+        case condDetlID = "COND_DETL_ID"
+        case deliveryStatus = "DELIVERY_STATUS"
+        case condID = "COND_ID"
+    }
+}
+
+// MARK: - ReportToLov
+struct ReportToLov: Codable {
+    let rttID: Int?
+    let rttDscrp, createdDate: String?
+    let userID: String?
+
+    enum CodingKeys: String, CodingKey {
+        case rttID = "RTT_ID"
+        case rttDscrp = "RTT_DSCRP"
+        case createdDate = "CREATED_DATE"
+        case userID = "USER_ID"
+    }
+}
+
+// MARK: - RiderDeliverySheet
+struct RiderDeliverySheet: Codable {
+    let sheetno, dlvryDAT, cn: String?
+    let deliverystatus: String?
+    let shippername, consigneename: String?
+    let srlNo, dlvrdBy: String?
+    let cusPhn, cusFax: String?
+    let pieces: Int?
+    let weight: Double?
+    let codAmt: Int?
+    let htc, vrstatus, rsstatus, vendorShipmentType: String?
+    let cnsgeeLat, cnsgeeLng: String?
+    let vendorCode, nicNo, syncDate: String?
+    let syncStatus: Int = 0
+    let riderDeliveryDetail: [RiderDeliveryDetail]?
+
+    enum CodingKeys: String, CodingKey {
+        case sheetno = "SHEETNO"
+        case dlvryDAT = "DLVRY_DAT"
+        case cn = "CN"
+        case deliverystatus = "DELIVERYSTATUS"
+        case shippername = "SHIPPERNAME"
+        case consigneename = "CONSIGNEENAME"
+        case srlNo = "SRL_NO"
+        case dlvrdBy = "DLVRD_BY"
+        case cusPhn = "CUS_PHN"
+        case cusFax = "CUS_FAX"
+        case pieces = "PIECES"
+        case weight = "WEIGHT"
+        case codAmt = "COD_AMT"
+        case htc = "HTC"
+        case vrstatus = "VRSTATUS"
+        case rsstatus = "RSSTATUS"
+        case vendorShipmentType = "VENDOR_SHIPMENT_TYPE"
+        case cnsgeeLat = "CNSGEE_LAT"
+        case cnsgeeLng = "CNSGEE_LNG"
+        case vendorCode = "VENDOR_CODE"
+        case nicNo = "NIC_NO"
+        case syncDate = "SYNC_DATE"
+        case syncStatus = "SYNC_STATUS"
+        case riderDeliveryDetail = "DETAILS"
+    }
+}
+
+// MARK: - Detail
+struct RiderDeliveryDetail: Codable {
+    let cn, fieldName, labelName, isRequired: String?
+    let charLength: String?
+
+    enum CodingKeys: String, CodingKey {
+        case cn = "CN"
+        case fieldName = "FIELD_NAME"
+        case labelName = "LABEL_NAME"
+        case isRequired = "IS_REQUIRED"
+        case charLength = "CHAR_LENGTH"
     }
 }

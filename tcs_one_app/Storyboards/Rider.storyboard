@@ -21,12 +21,12 @@
                                 <rect key="frame" x="0.0" y="140" width="414" height="756"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="15" translatesAutoresizingMaskIntoConstraints="NO" id="6Hm-KJ-GXh">
-                                        <rect key="frame" x="15" y="20" width="384" height="260"/>
+                                        <rect key="frame" x="15" y="20" width="384" height="95"/>
                                         <subviews>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wKK-uR-2PI" userLabel="Courier Detail" customClass="CustomView" customModule="One_App" customModuleProvider="target">
                                                 <rect key="frame" x="0.0" y="0.0" width="384" height="40"/>
                                                 <subviews>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Syncing Courier Detail" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RDM-tU-Ggb">
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Syncing Rider Detail" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RDM-tU-Ggb">
                                                         <rect key="frame" x="8" y="11.5" width="333" height="17"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                         <color key="textColor" systemColor="systemGrayColor"/>
@@ -90,8 +90,8 @@
                                                     </userDefinedRuntimeAttribute>
                                                 </userDefinedRuntimeAttributes>
                                             </view>
-                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="DZC-oa-SGx" userLabel="Delivery Status" customClass="CustomView" customModule="One_App" customModuleProvider="target">
-                                                <rect key="frame" x="0.0" y="55" width="384" height="40"/>
+                                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="DZC-oa-SGx" userLabel="Delivery Status" customClass="CustomView" customModule="One_App" customModuleProvider="target">
+                                                <rect key="frame" x="0.0" y="47.5" width="384" height="40"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Syncing Delivery Status" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nWq-o4-wHl">
                                                         <rect key="frame" x="8" y="11.5" width="333" height="17"/>
@@ -158,7 +158,7 @@
                                                 </userDefinedRuntimeAttributes>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Uoq-pc-ICm" userLabel="Delivery Status" customClass="CustomView" customModule="One_App" customModuleProvider="target">
-                                                <rect key="frame" x="0.0" y="110" width="384" height="40"/>
+                                                <rect key="frame" x="0.0" y="55" width="384" height="40"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Syncing Delivery Sheet" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RIf-HJ-HMK">
                                                         <rect key="frame" x="8" y="11.5" width="333" height="17"/>
@@ -224,8 +224,8 @@
                                                     </userDefinedRuntimeAttribute>
                                                 </userDefinedRuntimeAttributes>
                                             </view>
-                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="YQl-B3-1Qa" userLabel="Pickup" customClass="CustomView" customModule="One_App" customModuleProvider="target">
-                                                <rect key="frame" x="0.0" y="165" width="384" height="40"/>
+                                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="YQl-B3-1Qa" userLabel="Pickup" customClass="CustomView" customModule="One_App" customModuleProvider="target">
+                                                <rect key="frame" x="0.0" y="95" width="384" height="40"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Syncing Pickup" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Lll-a2-eBo">
                                                         <rect key="frame" x="8" y="11.5" width="333" height="17"/>
@@ -291,8 +291,8 @@
                                                     </userDefinedRuntimeAttribute>
                                                 </userDefinedRuntimeAttributes>
                                             </view>
-                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="iK0-1h-NVN" userLabel="Pickup Sheet" customClass="CustomView" customModule="One_App" customModuleProvider="target">
-                                                <rect key="frame" x="0.0" y="220" width="384" height="40"/>
+                                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="iK0-1h-NVN" userLabel="Pickup Sheet" customClass="CustomView" customModule="One_App" customModuleProvider="target">
+                                                <rect key="frame" x="0.0" y="95" width="384" height="40"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Syncing Pickup Sheet" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cWX-GF-cjJ">
                                                         <rect key="frame" x="8" y="11.5" width="333" height="17"/>
