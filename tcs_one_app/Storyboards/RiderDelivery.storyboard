@@ -35,6 +35,9 @@
                                             <constraint firstAttribute="width" secondItem="bv9-Qk-0VR" secondAttribute="height" id="ztl-PZ-9Lt"/>
                                         </constraints>
                                         <state key="normal" image="qr-code"/>
+                                        <connections>
+                                            <action selector="scanQRTapped:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="wXP-Mp-X4a"/>
+                                        </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="s07-Bc-8zO">
                                         <rect key="frame" x="295" y="41.333333333333329" width="30" height="27.666666666666671"/>
@@ -44,6 +47,9 @@
                                         </constraints>
                                         <color key="tintColor" red="0.87058823529999996" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                         <state key="normal" backgroundImage="magnifyingglass" catalog="system"/>
+                                        <connections>
+                                            <action selector="searchBtnTapped:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="M8k-YL-APA"/>
+                                        </connections>
                                     </button>
                                     <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="niK-Xl-F7L">
                                         <rect key="frame" x="10" y="100" width="370" height="690"/>
@@ -837,6 +843,68 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dZB-rd-fO5" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1276" y="76.911544227886068"/>
+        </scene>
+        <!--Rider Scanner View Controller-->
+        <scene sceneID="88y-qN-dXM">
+            <objects>
+                <viewController storyboardIdentifier="RiderScannerViewController" id="lFN-as-JLk" customClass="RiderScannerViewController" customModule="One_App" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="Sge-7f-crS">
+                        <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="MXx-Zt-XMN">
+                                <rect key="frame" x="0.0" y="44" width="390" height="800"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aYL-1R-NpT">
+                                <rect key="frame" x="0.0" y="44" width="58.666666666666664" height="800"/>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GoZ-aA-bCA">
+                                <rect key="frame" x="331.66666666666669" y="44" width="58.333333333333314" height="800"/>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GhO-bt-BGe">
+                                <rect key="frame" x="58.666666666666657" y="590.66666666666663" width="273" height="253.33333333333337"/>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LY0-GT-Osn">
+                                <rect key="frame" x="58.666666666666657" y="44.000000000000014" width="273" height="253.33333333333337"/>
+                            </view>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="hQx-6Y-78h"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="GhO-bt-BGe" firstAttribute="height" secondItem="Sge-7f-crS" secondAttribute="height" multiplier="0.3" id="4OD-dE-ASj"/>
+                            <constraint firstItem="MXx-Zt-XMN" firstAttribute="top" secondItem="hQx-6Y-78h" secondAttribute="top" id="55N-xe-QTj"/>
+                            <constraint firstItem="aYL-1R-NpT" firstAttribute="width" secondItem="Sge-7f-crS" secondAttribute="width" multiplier="0.15" id="B7x-83-5Qd"/>
+                            <constraint firstItem="LY0-GT-Osn" firstAttribute="top" secondItem="hQx-6Y-78h" secondAttribute="top" id="FfX-Eq-aCD"/>
+                            <constraint firstAttribute="bottom" secondItem="GhO-bt-BGe" secondAttribute="bottom" id="G0g-sB-pFk"/>
+                            <constraint firstItem="hQx-6Y-78h" firstAttribute="trailing" secondItem="GoZ-aA-bCA" secondAttribute="trailing" id="Nf2-am-JKP"/>
+                            <constraint firstItem="GoZ-aA-bCA" firstAttribute="width" secondItem="Sge-7f-crS" secondAttribute="width" multiplier="0.15" id="PyL-In-d7O"/>
+                            <constraint firstItem="aYL-1R-NpT" firstAttribute="leading" secondItem="hQx-6Y-78h" secondAttribute="leading" id="Qzp-Ra-GHa"/>
+                            <constraint firstItem="GoZ-aA-bCA" firstAttribute="leading" secondItem="LY0-GT-Osn" secondAttribute="trailing" id="RZf-QV-XtS"/>
+                            <constraint firstItem="LY0-GT-Osn" firstAttribute="height" secondItem="Sge-7f-crS" secondAttribute="height" multiplier="0.3" id="cd7-lu-8BW"/>
+                            <constraint firstItem="GoZ-aA-bCA" firstAttribute="leading" secondItem="GhO-bt-BGe" secondAttribute="trailing" id="cmb-zD-kFk"/>
+                            <constraint firstItem="aYL-1R-NpT" firstAttribute="top" secondItem="hQx-6Y-78h" secondAttribute="top" id="crw-EZ-d7V"/>
+                            <constraint firstAttribute="bottom" secondItem="aYL-1R-NpT" secondAttribute="bottom" id="dmD-EH-4A9"/>
+                            <constraint firstItem="MXx-Zt-XMN" firstAttribute="leading" secondItem="hQx-6Y-78h" secondAttribute="leading" id="ijU-E4-8Nx"/>
+                            <constraint firstAttribute="bottom" secondItem="GoZ-aA-bCA" secondAttribute="bottom" id="ilP-zy-SYf"/>
+                            <constraint firstItem="hQx-6Y-78h" firstAttribute="trailing" secondItem="MXx-Zt-XMN" secondAttribute="trailing" id="kzL-X9-uqt"/>
+                            <constraint firstItem="GhO-bt-BGe" firstAttribute="leading" secondItem="aYL-1R-NpT" secondAttribute="trailing" id="osl-1L-thL"/>
+                            <constraint firstAttribute="bottom" secondItem="MXx-Zt-XMN" secondAttribute="bottom" id="svc-RL-SHj"/>
+                            <constraint firstItem="GoZ-aA-bCA" firstAttribute="top" secondItem="hQx-6Y-78h" secondAttribute="top" id="tl8-Zv-QSg"/>
+                            <constraint firstItem="LY0-GT-Osn" firstAttribute="leading" secondItem="aYL-1R-NpT" secondAttribute="trailing" id="zco-Af-oOb"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="cameraView" destination="MXx-Zt-XMN" id="8gL-ry-Awr"/>
+                        <outlet property="v1" destination="aYL-1R-NpT" id="QCh-10-hfY"/>
+                        <outlet property="v2" destination="LY0-GT-Osn" id="cdn-y1-4ew"/>
+                        <outlet property="v3" destination="GoZ-aA-bCA" id="Xmr-ql-Uyx"/>
+                        <outlet property="v4" destination="GhO-bt-BGe" id="Q9O-zE-bfX"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="7uZ-uc-w1B" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1964.6153846153845" y="76.777251184834114"/>
         </scene>
     </scenes>
     <resources>

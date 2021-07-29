@@ -93,6 +93,7 @@
 		1B7F0D0B267CB0DF0060F405 /* Rider.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1B7F0D0A267CB0DF0060F405 /* Rider.storyboard */; };
 		1B7F0D0E267CB3350060F405 /* FetchRiderDataViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B7F0D0D267CB3350060F405 /* FetchRiderDataViewController.swift */; };
 		1B7F0D10267CB9BA0060F405 /* RiderDashboardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B7F0D0F267CB9BA0060F405 /* RiderDashboardViewController.swift */; };
+		1B92362E26B2AB6700606374 /* RiderScannerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B92362D26B2AB6700606374 /* RiderScannerViewController.swift */; };
 		1B96C0A325E8D3020059775C /* NewRequestLeadershipAwazViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B96C0A225E8D3020059775C /* NewRequestLeadershipAwazViewController.swift */; };
 		1B9E6C812562779D006529C3 /* GrievanceViewClosedRequestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B9E6C802562779D006529C3 /* GrievanceViewClosedRequestViewController.swift */; };
 		1BA5110B267B28A400E0E642 /* WalletHistoryTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BA51109267B28A400E0E642 /* WalletHistoryTableCell.swift */; };
@@ -286,6 +287,7 @@
 		1B7F0D0A267CB0DF0060F405 /* Rider.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Rider.storyboard; sourceTree = "<group>"; };
 		1B7F0D0D267CB3350060F405 /* FetchRiderDataViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchRiderDataViewController.swift; sourceTree = "<group>"; };
 		1B7F0D0F267CB9BA0060F405 /* RiderDashboardViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RiderDashboardViewController.swift; sourceTree = "<group>"; };
+		1B92362D26B2AB6700606374 /* RiderScannerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RiderScannerViewController.swift; sourceTree = "<group>"; };
 		1B96C0A225E8D3020059775C /* NewRequestLeadershipAwazViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewRequestLeadershipAwazViewController.swift; sourceTree = "<group>"; };
 		1B9E6C802562779D006529C3 /* GrievanceViewClosedRequestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GrievanceViewClosedRequestViewController.swift; sourceTree = "<group>"; };
 		1BA51109267B28A400E0E642 /* WalletHistoryTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletHistoryTableCell.swift; sourceTree = "<group>"; };
@@ -575,6 +577,7 @@
 				1BD43C582680775B00627A32 /* DeliveryModule */,
 				1B7F0D0D267CB3350060F405 /* FetchRiderDataViewController.swift */,
 				1B7F0D0F267CB9BA0060F405 /* RiderDashboardViewController.swift */,
+				1B92362D26B2AB6700606374 /* RiderScannerViewController.swift */,
 			);
 			path = Rider;
 			sourceTree = "<group>";
@@ -1220,6 +1223,7 @@
 				1BE523D62679DB1100F5F030 /* IMSDeliveryDetailTableCell.swift in Sources */,
 				1B326588259C95BF001B94C0 /* IMSDashboardViewController.swift in Sources */,
 				1B61B2B225DD20B800CDAAE2 /* RBagDetailsTableCell.swift in Sources */,
+				1B92362E26B2AB6700606374 /* RiderScannerViewController.swift in Sources */,
 				1B05A155269868E100EE1A29 /* Rider.swift in Sources */,
 				6010F4172540622500CF8597 /* NetworkCalls.swift in Sources */,
 				60E99911253D4F1300BCDAD1 /* PieChartCollectionCell.swift in Sources */,

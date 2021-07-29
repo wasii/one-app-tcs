@@ -36,6 +36,7 @@ class FetchRiderDataViewController: BaseViewController {
             UIImageView.image = UIImageView.image?.withRenderingMode(.alwaysTemplate)
             UIImageView.tintColor = UIColor.white
         }
+        
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
             self.setupJSON { success in
                 DispatchQueue.main.async {
@@ -70,8 +71,25 @@ class FetchRiderDataViewController: BaseViewController {
                     
                     self.activityIndicator[1].isHidden = false
                     self.activityIndicator[1].startAnimating()
+                    
+                    self.SetupDeliverySheets { sheet_granted in
+                        if sheet_granted {
+                            DispatchQueue.main.async {
+                                self.deliverySheet.text = "Synced Delivery Sheet"
+                                self.loaderView[1].backgroundColor = UIColor.nativeRedColor()
+                                self.activityIndicator[1].stopAnimating()
+                                self.activityIndicator[1].isHidden = true
+                                self.checkedImageView[1].isHidden = false
+                            }
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: {
+                                handler(true)
+                            })
+                        } else {
+                            handler(false)
+                        }
+                    }
+                    
                 }
-                handler(true)
             } else {
                 handler(false)
             }
@@ -339,21 +357,44 @@ class FetchRiderDataViewController: BaseViewController {
                                                 AppDelegate.sharedInstance.db?.insert_tbl_rider_delivery_sheet(DeliverySheet: riderDeliverySheet, handler: { _ in
                                                     if let details = riderDeliverySheet.riderDeliveryDetail {
                                                         for d in details {
-                                                            AppDelegate.sharedInstance.db?.deleteRowWithMultipleConditions(tbl: db_delivery_sheet_detail, conditions: "\(d.)", <#T##handler: (Bool) -> Void##(Bool) -> Void#>)
+                                                            AppDelegate.sharedInstance.db?.deleteRowWithMultipleConditions(tbl: db_delivery_sheet_detail, conditions: "CN = \(d.cn!)", { _ in
+                                                                SHEET_NO = riderDeliverySheet.sheetno!
+                                                                AppDelegate.sharedInstance.db?.insert_tbl_rider_delivery_sheet_detail(RiderDeliveryDetail: d, handler: { _ in })
+                                                            })
                                                         }
                                                     }
                                                 })
                                             })
                                         } else {
                                             if sheet.first?.SYNC_STATUS != 0 {
-                                                AppDelegate.sharedInstance.db?.deleteRowWithMultipleConditions(tbl: db_rider_delivery_sheet, conditions: "SHEETNO = '\(riderDeliverySheet.sheetno!)' AND CN = '\(riderDeliverySheet.cn!)'", { _ in
-                                                    AppDelegate.sharedInstance.db?.insert_tbl_rider_delivery_sheet(DeliverySheet: riderDeliverySheet, handler: { _ in
-                                                    })
+                                                SHEET_NO = riderDeliverySheet.sheetno!
+                                                let columns = "SHEETNO, DLVRY_DAT, CN, DELIVERYSTATUS, SHIPPERNAME, CONSIGNEENAME, SRL_NO, DLVRD_BY, CUS_PHN, CUS_FAX, PIECES, WEIGHT, COD_AMT, HTC, VRSTATUS, RSSTATUS, VENDOR_SHIPMENT_TYPE, CNSGEE_LAT, CNSGEE_LNG, VENDOR_CODE, NIC_NO"
+                                                
+                                                let values = "\(riderDeliverySheet.sheetno!), \(riderDeliverySheet.dlvryDAT!), \(riderDeliverySheet.cn!), \(riderDeliverySheet.deliverystatus!), \(riderDeliverySheet.shippername!), \(riderDeliverySheet.consigneename!), SRL_NO, \(riderDeliverySheet.dlvrdBy!), \(riderDeliverySheet.cusPhn!), \(riderDeliverySheet.cusFax!), \(riderDeliverySheet.pieces!), \(riderDeliverySheet.weight!), \(riderDeliverySheet.codAmt!), \(riderDeliverySheet.htc!), \(riderDeliverySheet.vrstatus!), \(riderDeliverySheet.rsstatus!), \(riderDeliverySheet.vendorShipmentType!), \(riderDeliverySheet.cnsgeeLat!), \(riderDeliverySheet.cnsgeeLng!), \(riderDeliverySheet.vendorCode!), \(riderDeliverySheet.nicNo!)"
+                                                let condition = "CN = '\(riderDeliverySheet.cn!)' and SHEETNO = '\(riderDeliverySheet.sheetno!)'"
+                                                AppDelegate.sharedInstance.db?.update_tbl_delivery_details(columnName: columns, updateValue: values, onCondition: condition, { _ in
                                                 })
+                                                
+                                                if riderDeliverySheet.deliverystatus == "" {
+                                                    let column = "SYNC_DATE, SYNC_STATUS, UPDATED_TIME, IMAGE, CHILD_STATUS"
+                                                    let values = "'', 0, '', '', ''"
+                                                    let condition = "CN = '\(riderDeliverySheet.cn!)' and SHEETNO = '\(riderDeliverySheet.sheetno!)'"
+                                                    AppDelegate.sharedInstance.db?.update_tbl_delivery_details(columnName: column, updateValue: values, onCondition: condition, { _ in
+                                                    })
+                                                }
                                             }
                                         }
                                     } else {
-                                        AppDelegate.sharedInstance.db?.insert_tbl_rider_delivery_sheet(DeliverySheet: riderDeliverySheet, handler: { _ in })
+                                        AppDelegate.sharedInstance.db?.insert_tbl_rider_delivery_sheet(DeliverySheet: riderDeliverySheet, handler: { _ in
+                                            if let details = riderDeliverySheet.riderDeliveryDetail {
+                                                for d in details {
+                                                    AppDelegate.sharedInstance.db?.deleteRowWithMultipleConditions(tbl: db_delivery_sheet_detail, conditions: "CN = \(d.cn!)", { _ in
+                                                        SHEET_NO = riderDeliverySheet.sheetno!
+                                                        AppDelegate.sharedInstance.db?.insert_tbl_rider_delivery_sheet_detail(RiderDeliveryDetail: d, handler: { _ in })
+                                                    })
+                                                }
+                                            }
+                                        })
                                     }
                                 } else {
                                     continue
