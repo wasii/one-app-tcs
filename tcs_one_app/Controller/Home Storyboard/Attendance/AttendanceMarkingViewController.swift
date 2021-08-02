@@ -419,7 +419,7 @@ extension AttendanceMarkingViewController: MTSlideToOpenDelegate {
                 if self.isLocationOff {
                     self.view.makeToast("Out of Fence")
                 } else {
-                    alert()
+                    locationAlert()
                 }
                 
                 sender.resetStateWithAnimation(false)
@@ -435,52 +435,17 @@ extension AttendanceMarkingViewController: MTSlideToOpenDelegate {
                 if self.isLocationOff {
                     self.view.makeToast("Out of Fence")
                 } else {
-                    alert()
+                    locationAlert()
                 }
                 
                 sender.resetStateWithAnimation(false)
             }
         }
     }
-    
-    func alert() {
-        let alert = UIAlertController(title: "Alert!", message: "Turn on your location to mark your attendance", preferredStyle: .alert)
-        let okAction = UIAlertAction(title: "Open Settings", style: .default) { _ in
-            UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!, options: [:], completionHandler: nil)
-        }
-        let cancelAction = UIAlertAction(title: "Cancel", style: .destructive, handler: nil)
-        
-        alert.addAction(cancelAction)
-        alert.addAction(okAction)
-        
-        
-        self.present(alert, animated: true, completion: nil)
-    }
 }
 
 
 extension AttendanceMarkingViewController: CLLocationManagerDelegate {
-    //    func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
-    //        let status = CLLocationManager.authorizationStatus()
-    //        switch status {
-    //        case .authorizedAlways, .authorizedWhenInUse:
-    //            self.isLocationOff = true
-    //            locationManager.startUpdatingLocation()
-    //            break
-    //        case .denied, .restricted, .notDetermined:
-    //            self.isLocationOff = false
-    //            self.isUserInsideFence = false
-    //            DispatchQueue.main.async {
-    //                self.slideView.viewWithTag(1000)?.removeFromSuperview()
-    //                self.slideView.isHidden = true
-    //                self.alert()
-    //            }
-    //            print("location access denied")
-    //            break
-    //        default:
-    //            locationManager.requestWhenInUseAuthorization()
-    //        }
-    //    }
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
         let status = CLLocationManager.authorizationStatus()
         switch status {
@@ -494,7 +459,7 @@ extension AttendanceMarkingViewController: CLLocationManagerDelegate {
             DispatchQueue.main.async {
                 self.slideView.viewWithTag(1000)?.removeFromSuperview()
                 self.slideView.isHidden = true
-                self.alert()
+                self.locationAlert()
             }
             print("location access denied")
             break

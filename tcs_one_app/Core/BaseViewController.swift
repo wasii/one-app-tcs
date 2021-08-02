@@ -713,4 +713,18 @@ class BaseViewController: UIViewController {
         let generator = UINotificationFeedbackGenerator()
         generator.notificationOccurred(type)
     }
+    
+    func locationAlert() {
+        let alert = UIAlertController(title: "Alert!", message: "Turn on your location to mark your attendance", preferredStyle: .alert)
+        let okAction = UIAlertAction(title: "Open Settings", style: .default) { _ in
+            UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!, options: [:], completionHandler: nil)
+        }
+        let cancelAction = UIAlertAction(title: "Cancel", style: .destructive, handler: nil)
+        
+        alert.addAction(cancelAction)
+        alert.addAction(okAction)
+        
+        
+        self.present(alert, animated: true, completion: nil)
+    }
 }

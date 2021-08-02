@@ -212,7 +212,7 @@ struct RiderDeliverySheet: Codable {
     let weight: Double?
     let codAmt: Int?
     let htc, vrstatus, rsstatus, vendorShipmentType: String?
-    let cnsgeeLat, cnsgeeLng: String?
+    let cnsgeeLat, cnsgeeLng: Double?
     let vendorCode, nicNo, syncDate: String?
     let syncStatus: Int = 0
     let riderDeliveryDetail: [RiderDeliveryDetail]?
@@ -256,5 +256,32 @@ struct RiderDeliveryDetail: Codable {
         case labelName = "LABEL_NAME"
         case isRequired = "IS_REQUIRED"
         case charLength = "CHAR_LENGTH"
+    }
+}
+
+
+// MARK: - DeliveryMaster
+struct BinInfo: Codable {
+    let dlvryShtNo, dlvryDAT: String?
+    let dlvrdBy: String?
+    let dlvryRut, staNo, userid, slot: String?
+    let prodNo, systemID, createdOn: String?
+    let eodStatus, refid: String?
+    let binDscrp: String?
+
+    enum CodingKeys: String, CodingKey {
+        case dlvryShtNo = "DLVRY_SHT_NO"
+        case dlvryDAT = "DLVRY_DAT"
+        case dlvrdBy = "DLVRD_BY"
+        case dlvryRut = "DLVRY_RUT"
+        case staNo = "STA_NO"
+        case userid = "USERID"
+        case slot = "SLOT"
+        case prodNo = "PROD_NO"
+        case systemID = "SYSTEM_ID"
+        case createdOn = "CREATED_ON"
+        case eodStatus = "EOD_STATUS"
+        case refid = "REFID"
+        case binDscrp = "BIN_DSCRP"
     }
 }

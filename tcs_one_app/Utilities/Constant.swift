@@ -85,9 +85,11 @@ let S_WALLET_POINTS_DETAILS = "WALLET.GET.DETAIL.POINTS"
 //RIDER
 let S_RIDER_SETUP           = "RIDER.SETUP"
 let S_DELIVERY_SHEET        = "RIDER.GET.DELIVERY"
+let S_BIN_INFO              = "RIDER.BIN.INFO"
 let RIDERSETUP              = RIDER_ENDPOINT + "setup"
 let RIDER_GET_TOKEN         = RIDER_ENDPOINT + "token?clientSecret=\(RIDERCLIENTSECRET)"
 let RIDER_DELIVERY_SHEET    = RIDER_ENDPOINT + "delivery"
+let RIDER_BIN_INFO          = RIDER_ENDPOINT + "bin-info"
 
 //API BACKEND KEYS
 let eAI_MESSAGE             = "eAI_MESSAGE"
@@ -175,6 +177,9 @@ let _reportToLov            = "reportToLov"
 let _riderDeliveryData      = "riderDeliveryData"
 let _deliverySheet          = "deliverySheet"
 
+let _riderBinInfoData       = "riderBinInfoData"
+let _deliveryMaster         = "deliveryMaster"
+
 
 //Local Storage (Database) tablename keys
 let db_user_module          = "USER_MODULE"
@@ -246,6 +251,7 @@ let db_app_detail_response  = "RIDER_APP_DETAIL_RESPONSE"
 let db_report_to_lov        = "RIDER_REPORT_TO_LOV"
 let db_rider_delivery_sheet = "RIDER_DELIVERY_SHEET"
 let db_delivery_sheet_detail = "RIDER_DELIVERY_SHEET_DETAIL"
+let db_rider_bin_info       = "RIDER_BIN_INFO"
 
 //ERROR MESSAGES
 let NOINTERNETCONNECTION    = "Connect your device with internet first."

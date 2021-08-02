@@ -91,10 +91,20 @@ extension RiderDeliveryDashboardViewController: UITableViewDelegate, UITableView
     
     @objc func googlePinTapped(sender: UIButton) {
         let controller = self.storyboard?.instantiateViewController(withIdentifier: "RiderGoogleLocationViewController") as! RiderGoogleLocationViewController
+        controller.delivery_sheets = self.delivery_sheets![sender.tag]
         self.navigationController?.pushViewController(controller, animated: true)
     }
     @objc func callBtnTapped(sender: UIButton) {
-        let cusPhn = self.delivery_sheets![sender.tag].CUS_PHN
+        var cusPhn = self.delivery_sheets![sender.tag].CUS_PHN
+        if cusPhn.first == "+" {
+            cusPhn = cusPhn.replacingOccurrences(of: "+92", with: "0")
+        } else if cusPhn.first == "9" {
+            cusPhn.removeFirst()
+            cusPhn.removeFirst()
+            cusPhn = "0" + cusPhn
+        } else if cusPhn.first != "0" {
+            cusPhn = "0" + cusPhn
+        }
         if let url = URL(string: "tel://\(RIDER_DIAL_CODE)\(cusPhn)") {
             UIApplication.shared.open(url, options: [:], completionHandler: nil)
         }

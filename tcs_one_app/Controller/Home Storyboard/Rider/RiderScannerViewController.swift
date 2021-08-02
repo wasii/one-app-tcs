@@ -42,7 +42,12 @@ class RiderScannerViewController: BaseViewController, AVCaptureMetadataOutputObj
     var detail_sheet: [tbl_rider_delivery_sheet]?
     override func viewDidLoad() {
         super.viewDidLoad()
-        let blurEffect = UIBlurEffect(style: UIBlurEffect.Style.dark)
+        setupAnimations()
+        setupCameraView()
+        avPlayer = AVAudioPlayer()
+    }
+    private func setupAnimations() {
+        let blurEffect = UIBlurEffect(style: UIBlurEffect.Style.light)
         let blurEffectView1 = UIVisualEffectView(effect: blurEffect)
         let blurEffectView2 = UIVisualEffectView(effect: blurEffect)
         let blurEffectView3 = UIVisualEffectView(effect: blurEffect)
@@ -52,14 +57,19 @@ class RiderScannerViewController: BaseViewController, AVCaptureMetadataOutputObj
         blurEffectView2.frame = v2.bounds
         blurEffectView3.frame = v3.bounds
         blurEffectView4.frame = v4.bounds
-//        blurEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         
-        v1.addSubview(blurEffectView1)
-        v2.addSubview(blurEffectView2)
-        v3.addSubview(blurEffectView3)
-        v4.addSubview(blurEffectView4)
-        setupCameraView()
-        avPlayer = AVAudioPlayer()
+        UIView.animate(withDuration: 0.2, delay: 0.2, options: .curveEaseIn) {
+            self.v1.addSubview(blurEffectView1)
+            self.v2.addSubview(blurEffectView2)
+            self.v3.addSubview(blurEffectView3)
+            self.v4.addSubview(blurEffectView4)
+            self.view.layoutIfNeeded()
+        } completion: { _ in }
+
+        
+    }
+    override func viewDidAppear(_ animated: Bool) {
+        
     }
     private func setupCameraView() {
         self.captureDevice = AVCaptureDevice.default(for: .video)
@@ -173,7 +183,81 @@ class RiderScannerViewController: BaseViewController, AVCaptureMetadataOutputObj
         if let data = AppDelegate.sharedInstance.db?.read_tbl_rider_delivery_sheet(query: query) {
             
         } else {
-            //verify bin info API
+            //MARK: - verify bin info API
+            if !CustomReachability.isConnectedNetwork() {
+                self.view.makeToast(NOINTERNETCONNECTION)
+                return
+            }
+            self.view.makeToastActivity(.center)
+            self.freezeScreen()
+            let request_body = [
+                "access_token" : UserDefaults.standard.string(forKey: USER_ACCESS_TOKEN)!,
+                "bin_code": code
+            ]
+            let params = self.getAPIParameter(service_name: S_BIN_INFO, request_body: request_body)
+            NetworkCalls.getriderbininfo(params: params) { granted, response in
+                if granted {
+                    //MARK: - show pop with 2Button(Fetch, Cancel) with LISTING
+                    let json = JSON(response).dictionary
+                    if let _riderBinInfoData = json?[_riderBinInfoData]?.dictionary {
+                        if let _deliveryMaster = _riderBinInfoData[_deliveryMaster]?.array {
+                            AppDelegate.sharedInstance.db?.deleteRowWithMultipleConditions(tbl: db_rider_bin_info, conditions: "BIN_DSCRP = '\(code)'", { _ in
+                                for dm in _deliveryMaster {
+                                    do {
+                                        let rawData = try dm.rawData()
+                                        let bin_info: BinInfo = try JSONDecoder().decode(BinInfo.self, from: rawData)
+                                        
+                                        AppDelegate.sharedInstance.db?.insert_tbl_rider_bin_info(bin_info: bin_info, handler: { _ in })
+                                    } catch let DecodingError.dataCorrupted(context) {
+                                        print(context)
+                                    } catch let DecodingError.keyNotFound(key, context) {
+                                        print("Key '\(key)' not found:", context.debugDescription)
+                                        print("codingPath:", context.codingPath)
+                                    } catch let DecodingError.valueNotFound(value, context) {
+                                        print("Value '\(value)' not found:", context.debugDescription)
+                                        print("codingPath:", context.codingPath)
+                                    } catch let DecodingError.typeMismatch(type, context)  {
+                                        print("Type '\(type)' mismatch:", context.debugDescription)
+                                        print("codingPath:", context.codingPath)
+                                    } catch {
+                                        print("error: ", error)
+                                    }
+                                }
+                                DispatchQueue.main.async {
+                                    self.captureSession?.stopRunning()
+                                    self.view.hideToastActivity()
+                                    self.unFreezeScreen()
+                                    let storyboard = UIStoryboard(name: "Popups", bundle: nil)
+                                    let controller = storyboard.instantiateViewController(withIdentifier: "RiderBinInfoViewController") as! RiderBinInfoViewController
+                                    controller.modalTransitionStyle = .crossDissolve
+                                    controller.bin = code
+                                    controller.delegate = self
+                                    if #available(iOS 13, *) {
+                                        controller.modalPresentationStyle = .overFullScreen
+                                    }
+                                    Helper.topMostController().present(controller, animated: true, completion: nil)
+                                }
+                            })
+                        } else {
+                            // delivery master IF LET
+                        }
+                    } else {
+                        //rider bin info data IF LET
+                        DispatchQueue.main.async {
+                            self.view.hideToastActivity()
+                            self.unFreezeScreen()
+                        }
+                    }
+                } else {
+                    //granted IF
+                    DispatchQueue.main.async {
+                        self.view.hideToastActivity()
+                        self.unFreezeScreen()
+                        self.lastCapturedCode = nil
+                    }
+                }
+            }
+            
             
             //if success
                 //then show pop with 2Button(Fetch, Cancel)
@@ -181,4 +265,50 @@ class RiderScannerViewController: BaseViewController, AVCaptureMetadataOutputObj
                         // if 0200 -> call again GET.DELIVERY API without BIN
         }
     }
+}
+
+
+extension RiderScannerViewController: BinInfoDelegate {
+    func fetchBinInfo() {
+        if !CustomReachability.isConnectedNetwork() {
+            self.view.makeToast(NOINTERNETCONNECTION)
+            return
+        }
+        guard let token = UserDefaults.standard.string(forKey: USER_ACCESS_TOKEN) else {
+            return
+        }
+        var request_body = [
+            "access_token": token,
+            "bin_code": "\(self.lastCapturedCode ?? "")",
+            "ds_no": ""
+        ]
+        let params = self.getAPIParameter(service_name: S_DELIVERY_SHEET, request_body: request_body)
+        RiderCalls.SetupDeliverySheets(params: params) { sheet_granted in
+            if sheet_granted {
+                request_body = [
+                    "access_token": token,
+                    "bin_code": "",
+                    "ds_no": ""
+                ]
+                let params = self.getAPIParameter(service_name: S_DELIVERY_SHEET, request_body: request_body)
+                RiderCalls.SetupDeliverySheets(params: params) { granted in
+                    DispatchQueue.main.async {
+                        self.dismiss(animated: true) {
+                            if granted {
+                                
+                            }
+                        }
+                    }
+                }
+            } else {
+                
+            }
+        }
+    }
+    
+    func cancel() {
+        self.captureSession?.startRunning()
+    }
+    
+    
 }

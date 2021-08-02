@@ -77,3 +77,7 @@ protocol UpdateIncidentInvestigation {
 protocol MoveToRiderScreen {
     func moveToRiderScreen()
 }
+protocol BinInfoDelegate {
+    func fetchBinInfo()
+    func cancel()
+}
