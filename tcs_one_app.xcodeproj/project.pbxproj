@@ -23,6 +23,8 @@
 		1B1691BB257253C10007B3B0 /* checked-fill-icon.svg in Resources */ = {isa = PBXBuildFile; fileRef = 1B1691BA257253C10007B3B0 /* checked-fill-icon.svg */; };
 		1B1862EA25B2CA1000F18059 /* FilesAccordingRemarksViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B1862E925B2CA1000F18059 /* FilesAccordingRemarksViewController.swift */; };
 		1B1B5F3D25B1C5E9006A9B51 /* HRFilesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B1B5F3C25B1C5E9006A9B51 /* HRFilesViewController.swift */; };
+		1B1B6F1026B81AB4000DBDF1 /* RiderVerifyProcess.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1B1B6F0F26B81AB4000DBDF1 /* RiderVerifyProcess.storyboard */; };
+		1B1B6F1326B822F8000DBDF1 /* VerifyProcessDashboardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B1B6F1226B822F8000DBDF1 /* VerifyProcessDashboardViewController.swift */; };
 		1B1C0B692583DBB500AAAAE9 /* NewRequestsListingTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B1C0B672583DBB500AAAAE9 /* NewRequestsListingTableCell.swift */; };
 		1B1C0B6A2583DBB500AAAAE9 /* NewRequestsListingTableCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1B1C0B682583DBB500AAAAE9 /* NewRequestsListingTableCell.xib */; };
 		1B1C4294255738A300F881B6 /* NewChartListingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B1C4293255738A300F881B6 /* NewChartListingViewController.swift */; };
@@ -220,6 +222,8 @@
 		1B1691BA257253C10007B3B0 /* checked-fill-icon.svg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "checked-fill-icon.svg"; sourceTree = "<group>"; };
 		1B1862E925B2CA1000F18059 /* FilesAccordingRemarksViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilesAccordingRemarksViewController.swift; sourceTree = "<group>"; };
 		1B1B5F3C25B1C5E9006A9B51 /* HRFilesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HRFilesViewController.swift; sourceTree = "<group>"; };
+		1B1B6F0F26B81AB4000DBDF1 /* RiderVerifyProcess.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = RiderVerifyProcess.storyboard; sourceTree = "<group>"; };
+		1B1B6F1226B822F8000DBDF1 /* VerifyProcessDashboardViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerifyProcessDashboardViewController.swift; sourceTree = "<group>"; };
 		1B1C0B672583DBB500AAAAE9 /* NewRequestsListingTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewRequestsListingTableCell.swift; sourceTree = "<group>"; };
 		1B1C0B682583DBB500AAAAE9 /* NewRequestsListingTableCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NewRequestsListingTableCell.xib; sourceTree = "<group>"; };
 		1B1C4293255738A300F881B6 /* NewChartListingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewChartListingViewController.swift; sourceTree = "<group>"; };
@@ -448,6 +452,14 @@
 			path = "svg icons";
 			sourceTree = "<group>";
 		};
+		1B1B6F1126B822E1000DBDF1 /* Verify Process */ = {
+			isa = PBXGroup;
+			children = (
+				1B1B6F1226B822F8000DBDF1 /* VerifyProcessDashboardViewController.swift */,
+			);
+			path = "Verify Process";
+			sourceTree = "<group>";
+		};
 		1B3EDC95260C530D00A97984 /* Fullfilment */ = {
 			isa = PBXGroup;
 			children = (
@@ -594,6 +606,7 @@
 		1B7F0D0C267CB0E80060F405 /* Rider */ = {
 			isa = PBXGroup;
 			children = (
+				1B1B6F1126B822E1000DBDF1 /* Verify Process */,
 				1BBF880326931A100004402B /* HistoryModule */,
 				1B6EAAD72681F18100941863 /* PickupModule */,
 				1BD43C582680775B00627A32 /* DeliveryModule */,
@@ -906,6 +919,7 @@
 				1B7F0D0A267CB0DF0060F405 /* Rider.storyboard */,
 				1BD43C5B268077AE00627A32 /* RiderDelivery.storyboard */,
 				1B6EAAD52681EFEF00941863 /* RiderPickup.storyboard */,
+				1B1B6F0F26B81AB4000DBDF1 /* RiderVerifyProcess.storyboard */,
 			);
 			path = Storyboards;
 			sourceTree = "<group>";
@@ -1090,6 +1104,7 @@
 				60E99918253D548200BCDAD1 /* ModulesCollectionCell.xib in Resources */,
 				60E99912253D4F1300BCDAD1 /* PieChartCollectionCell.xib in Resources */,
 				60E9990A253D4DF000BCDAD1 /* Dashboard.storyboard in Resources */,
+				1B1B6F1026B81AB4000DBDF1 /* RiderVerifyProcess.storyboard in Resources */,
 				1B61B2B325DD20B800CDAAE2 /* RBagDetailsTableCell.xib in Resources */,
 				1B3EDC97260C532E00A97984 /* Fullfillment.storyboard in Resources */,
 				1B1691B82572524C0007B3B0 /* right-arrow-filled.svg in Resources */,
@@ -1202,6 +1217,7 @@
 				1BA5110E267B31F900E0E642 /* WalletHistoryViewController.swift in Sources */,
 				60E9991D253D719500BCDAD1 /* HRHelpDeskViewController.swift in Sources */,
 				609C606625387CCD0051CF28 /* Helper.swift in Sources */,
+				1B1B6F1326B822F8000DBDF1 /* VerifyProcessDashboardViewController.swift in Sources */,
 				606D6403254974BC00F67B77 /* ConnectionManager.swift in Sources */,
 				1B1862EA25B2CA1000F18059 /* FilesAccordingRemarksViewController.swift in Sources */,
 				1B3BB84D25DBEA69006A29F4 /* TrackingModel.swift in Sources */,

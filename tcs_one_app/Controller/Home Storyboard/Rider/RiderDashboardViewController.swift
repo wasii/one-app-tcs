@@ -52,11 +52,11 @@ extension RiderDashboardViewController: UICollectionViewDataSource, UICollection
             break
         case 4:
             cell.moduleTitle.text = "Given To"
-            cell.imageView.image = UIImage(named: "history")
+            cell.imageView.image = UIImage(named: "given_to")
             break
         case 5:
             cell.moduleTitle.text = "Verify Process"
-            cell.imageView.image = UIImage(named: "history")
+            cell.imageView.image = UIImage(named: "verify_process")
             break
         default:
             break
@@ -74,6 +74,13 @@ extension RiderDashboardViewController: UICollectionViewDataSource, UICollection
         }
         if indexPath.row == 1 {
             let storyboard = UIStoryboard(name: "RiderDelivery", bundle: nil)
+            let controller = storyboard.instantiateViewController(withIdentifier: "RiderDeliveryDashboardViewController") as! RiderDeliveryDashboardViewController
+            
+            self.navigationController?.pushViewController(controller, animated: true)
+            return
+        }
+        if indexPath.row == 5 {
+            let storyboard = UIStoryboard(name: "RiderVerifyProcess", bundle: nil)
             let controller = storyboard.instantiateViewController(withIdentifier: "RiderDeliveryDashboardViewController") as! RiderDeliveryDashboardViewController
             
             self.navigationController?.pushViewController(controller, animated: true)

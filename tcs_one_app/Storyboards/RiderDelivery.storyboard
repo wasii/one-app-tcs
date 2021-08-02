@@ -154,6 +154,9 @@
                                                     <constraint firstAttribute="height" constant="35" id="fmY-SU-BuP"/>
                                                 </constraints>
                                                 <state key="normal" image="call-outline"/>
+                                                <connections>
+                                                    <action selector="callBtnTapped:" destination="JBZ-cb-YnC" eventType="touchUpInside" id="het-kX-Jwq"/>
+                                                </connections>
                                             </button>
                                         </subviews>
                                         <color key="backgroundColor" red="0.94901960784313721" green="0.95294117647058818" blue="0.95686274509803915" alpha="1" colorSpace="calibratedRGB"/>
