@@ -4003,6 +4003,132 @@ class DBHelper {
         }
         return bin_info.count > 0 ? bin_info : nil
     }
+    
+    //rider verify process
+    func insert_tbl_rider_verify_process(verify_process: VerifyProcess, handler: @escaping(_ success: Bool) -> Void) {
+        let insertStatementString = "INSERT INTO \(db_rider_verify_process)(CN, SHEETNO, VERIFY, REPORT_TO, SYNC, SYNC_DATE) VALUES (?,?,?,?,?,?);"
+        var insertStatement: OpaquePointer? = nil
+        if sqlite3_prepare_v2(self.db, insertStatementString, -1, &insertStatement, nil) == SQLITE_OK {
+            sqlite3_bind_text(insertStatement, 1, ((verify_process.CN ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 2, ((verify_process.SHEETNO ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 3, ((verify_process.VERIFY ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 4, ((verify_process.REPORT_TO ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_int(insertStatement, 5, Int32(verify_process.SYNC ?? 0))
+            sqlite3_bind_text(insertStatement, 6, ((verify_process.SYNC_DATE ?? "") as NSString).utf8String, -1, nil)
+            if sqlite3_step(insertStatement) == SQLITE_DONE {
+                handler(true)
+            } else {
+                print("\(db_rider_bin_info): Could not insert row.")
+                handler(false)
+            }
+        } else {
+            handler(false)
+            print("\(db_rider_bin_info): INSERT statement could not be prepared.")
+        }
+        sqlite3_finalize(insertStatement)
+    }
+    func read_tbl_rider_verify_process(code: String) -> [tbl_rider_verify_table]? {
+        let queryStatementString = "SELECT * FROM \(db_rider_verify_process) WHERE CN = '\(code)'"
+        var queryStatement: OpaquePointer? = nil
+        var verify_info = [tbl_rider_verify_table]()
+
+        if sqlite3_prepare_v2(db, queryStatementString, -1, &queryStatement, nil) == SQLITE_OK {
+            while sqlite3_step(queryStatement) == SQLITE_ROW {
+                let ID = Int(sqlite3_column_int(queryStatement, 0))
+                let CN = String(describing: String(cString: sqlite3_column_text(queryStatement, 1)))
+                let SHEETNO = String(describing: String(cString: sqlite3_column_text(queryStatement, 2)))
+                let VERIFY = String(describing: String(cString: sqlite3_column_text(queryStatement, 3)))
+                let REPORT_TO = String(describing: String(cString: sqlite3_column_text(queryStatement, 4)))
+                let SYNC = Int(sqlite3_column_int(queryStatement, 5))
+                let SYNC_DATE = String(describing: String(cString: sqlite3_column_text(queryStatement, 6)))
+                    
+                verify_info.append(tbl_rider_verify_table(ID: ID, CN: CN, SHEETNO: SHEETNO, VERIFY: VERIFY, REPORT_TO: REPORT_TO, SYNC: SYNC, SYNC_DATE: SYNC_DATE))
+            }
+        } else {
+            print("SELECT statement \(db_rider_verify_process) could not be prepared")
+        }
+        return verify_info.count > 0 ? verify_info : nil
+    }
+    
+    //READ TBL_DELIVERY_SHEET AND VERIFY PROCESS
+    func read_tbl_rider_delivery_and_verify_process(delivered_by: String) -> [tbl_Delivery_Verify]? {
+        let queryStatementString = "SELECT * FROM \(db_rider_delivery_sheet) AS RM LEFT JOIN \(db_rider_verify_process) AS RCM ON RM.CN = RCM.CN WHERE DLVRD_BY = '\(delivered_by)'"
+        var queryStatement: OpaquePointer? = nil
+        var verify_info = [tbl_Delivery_Verify]()
+
+        if sqlite3_prepare_v2(db, queryStatementString, -1, &queryStatement, nil) == SQLITE_OK {
+            while sqlite3_step(queryStatement) == SQLITE_ROW {
+                let ID = Int(sqlite3_column_int(queryStatement, 0))
+                let SHEETNO = String(describing: String(cString: sqlite3_column_text(queryStatement, 1)))
+                let DLVRY_DAT = String(describing: String(cString: sqlite3_column_text(queryStatement, 2)))
+                let CN = String(describing: String(cString: sqlite3_column_text(queryStatement, 3)))
+                let DELIVERYSTATUS = String(describing: String(cString: sqlite3_column_text(queryStatement, 4)))
+                let SHIPPERNAME = String(describing: String(cString: sqlite3_column_text(queryStatement, 5)))
+                let CONSIGNEENAME = String(describing: String(cString: sqlite3_column_text(queryStatement, 6)))
+                let SRL_NO = String(describing: String(cString: sqlite3_column_text(queryStatement, 7)))
+                let DLVRD_BY = String(describing: String(cString: sqlite3_column_text(queryStatement, 8)))
+                let CUS_PHN = String(describing: String(cString: sqlite3_column_text(queryStatement, 9)))
+                let CUS_FAX = String(describing: String(cString: sqlite3_column_text(queryStatement, 10)))
+                let PIECES = String(describing: String(cString: sqlite3_column_text(queryStatement, 11)))
+                let WEIGHT = String(describing: String(cString: sqlite3_column_text(queryStatement, 12)))
+                let COD_AMT = Int(sqlite3_column_int(queryStatement, 13))
+                let HTC = String(describing: String(cString: sqlite3_column_text(queryStatement, 14)))
+                let VRSTATUS = String(describing: String(cString: sqlite3_column_text(queryStatement, 15)))
+                let RSSTATUS = String(describing: String(cString: sqlite3_column_text(queryStatement, 16)))
+                let VENDOR_SHIPMENT_TYPE = String(describing: String(cString: sqlite3_column_text(queryStatement, 17)))
+                let CNSGEE_LAT = String(describing: String(cString: sqlite3_column_text(queryStatement, 18)))
+                let CNSGEE_LNG = String(describing: String(cString: sqlite3_column_text(queryStatement, 19)))
+                let VENDOR_CODE = String(describing: String(cString: sqlite3_column_text(queryStatement, 20)))
+                let NIC_NO = String(describing: String(cString: sqlite3_column_text(queryStatement, 21)))
+                let SYNC_DATE = String(describing: String(cString: sqlite3_column_text(queryStatement, 22)))
+                let SYNC_STATUS = Int(sqlite3_column_int(queryStatement, 23))
+                
+                var UPDATE_TIME = ""
+                if let _ = sqlite3_column_text(queryStatement, 24) {
+                    UPDATE_TIME = String(describing: String(cString: sqlite3_column_text(queryStatement, 24)))
+                }
+                
+                var IMAGE = ""
+                if let _ = sqlite3_column_text(queryStatement, 25) {
+                    IMAGE = String(describing: String(cString: sqlite3_column_text(queryStatement, 25)))
+                }
+                var CHILD_STATUS = ""
+                if let _ = sqlite3_column_text(queryStatement, 26) {
+                    CHILD_STATUS = String(describing: String(cString: sqlite3_column_text(queryStatement, 26)))
+                }
+                
+                let id = Int(sqlite3_column_int(queryStatement, 27))
+                
+                var cn = ""
+                if let _ = sqlite3_column_text(queryStatement, 28) {
+                    cn = String(describing: String(cString: sqlite3_column_text(queryStatement, 28)))
+                }
+                var sheetNo = ""
+                if let _ = sqlite3_column_text(queryStatement, 29) {
+                    sheetNo = String(describing: String(cString: sqlite3_column_text(queryStatement, 29)))
+                }
+                var verify = ""
+                if let _ = sqlite3_column_text(queryStatement, 30) {
+                    verify = String(describing: String(cString: sqlite3_column_text(queryStatement, 30)))
+                }
+                var reportTo = ""
+                if let _ = sqlite3_column_text(queryStatement, 31) {
+                    reportTo = String(describing: String(cString: sqlite3_column_text(queryStatement, 31)))
+                }
+                let sync = Int(sqlite3_column_int(queryStatement, 32))
+                
+                var sync_date = ""
+                if let _ = sqlite3_column_text(queryStatement, 33) {
+                    sync_date = String(describing: String(cString: sqlite3_column_text(queryStatement, 33)))
+                }
+                
+                verify_info.append(tbl_Delivery_Verify(ID: ID, SHEETNO: SHEETNO, DLVRY_DAT: DLVRY_DAT, CN: CN, DELIVERYSTATUS: DELIVERYSTATUS, SHIPPERNAME: SHIPPERNAME, CONSIGNEENAME: CONSIGNEENAME, SRL_NO: SRL_NO, DLVRD_BY: DLVRD_BY, CUS_PHN: CUS_PHN, CUS_FAX: CUS_FAX, PIECES: PIECES, WEIGHT: WEIGHT, COD_AMT: COD_AMT, HTC: HTC, VRSTATUS: VRSTATUS, RSSTATUS: RSSTATUS, VENDOR_SHIPMENT_TYPE: VENDOR_SHIPMENT_TYPE, CNSGEE_LAT: CNSGEE_LAT, CNSGEE_LNG: CNSGEE_LNG, VENDOR_CODE: VENDOR_CODE, NIC_NO: NIC_NO, SYNC_DATE: SYNC_DATE, SYNC_STATUS: SYNC_STATUS, IMAGE: IMAGE, CHILD_STATUS: CHILD_STATUS, UPDATE_TIME: UPDATE_TIME, id: id, cn: cn, sheetNo: sheetNo, verify: verify, report_to: reportTo, sync: sync, sync_date: sync_date))
+            }
+        } else {
+            print("SELECT statement \(db_rider_verify_process) could not be prepared")
+        }
+        return verify_info.count > 0 ? verify_info : nil
+    }
 }
 
 
@@ -4816,4 +4942,52 @@ struct tbl_rider_bin_info {
     var EOD_STATUS: String = ""
     var REFID: String = ""
     var BIN_DSCRP: String = ""
+}
+
+struct tbl_rider_verify_table {
+    var ID: Int = 0
+    var CN: String = ""
+    var SHEETNO: String = ""
+    var VERIFY: String = ""
+    var REPORT_TO: String = ""
+    var SYNC: Int = 0
+    var SYNC_DATE: String = ""
+}
+
+
+struct tbl_Delivery_Verify {
+    var ID: Int = 0
+    var SHEETNO: String = ""
+    var DLVRY_DAT: String = ""
+    var CN: String = ""
+    var DELIVERYSTATUS: String = ""
+    var SHIPPERNAME: String = ""
+    var CONSIGNEENAME: String = ""
+    var SRL_NO: String = ""
+    var DLVRD_BY: String = ""
+    var CUS_PHN: String = ""
+    var CUS_FAX: String = ""
+    var PIECES: String = ""
+    var WEIGHT: String = ""
+    var COD_AMT: Int = 0
+    var HTC: String = ""
+    var VRSTATUS: String = ""
+    var RSSTATUS: String = ""
+    var VENDOR_SHIPMENT_TYPE: String = ""
+    var CNSGEE_LAT: String = ""
+    var CNSGEE_LNG: String = ""
+    var VENDOR_CODE: String = ""
+    var NIC_NO: String = ""
+    var SYNC_DATE: String = ""
+    var SYNC_STATUS: Int = 0
+    var IMAGE: String = ""
+    var CHILD_STATUS: String = ""
+    var UPDATE_TIME: String = ""
+    var id: Int = 0
+    var cn: String = ""
+    var sheetNo: String = ""
+    var verify: String = ""
+    var report_to: String = ""
+    var sync: Int = 0
+    var sync_date: String = ""
 }

@@ -41,7 +41,7 @@ class RiderPickupUpdateListingViewController: BaseViewController, AVCaptureMetad
                                 AVMetadataObject.ObjectType.qr,
                                 AVMetadataObject.ObjectType.aztec]
     
-    let bgColor = UIColor(red: 221.0/255, green: 255.0/255.0, blue: 215.0/255.0, alpha: 1)
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Rider"
@@ -169,7 +169,7 @@ extension RiderPickupUpdateListingViewController: UITableViewDataSource, UITable
         }
         
         if (indexPath.row % 2) == 0 {
-            cell.mainView.bgColor = bgColor
+            cell.mainView.bgColor = UIColor.riderlistingBgColor()
             cell.mainView.borderColor = UIColor.approvedColor()
             cell.OptionsStackView.isHidden = false
             cell.StatusLabel.text = "Picked"

@@ -252,6 +252,7 @@ let db_report_to_lov        = "RIDER_REPORT_TO_LOV"
 let db_rider_delivery_sheet = "RIDER_DELIVERY_SHEET"
 let db_delivery_sheet_detail = "RIDER_DELIVERY_SHEET_DETAIL"
 let db_rider_bin_info       = "RIDER_BIN_INFO"
+let db_rider_verify_process = "RIDER_VERIFY"
 
 //ERROR MESSAGES
 let NOINTERNETCONNECTION    = "Connect your device with internet first."

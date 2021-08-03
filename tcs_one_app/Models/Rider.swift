@@ -285,3 +285,12 @@ struct BinInfo: Codable {
         case binDscrp = "BIN_DSCRP"
     }
 }
+
+struct VerifyProcess {
+    var CN: String?
+    var SHEETNO: String?
+    var VERIFY: String?
+    var REPORT_TO: String?
+    var SYNC: Int?
+    var SYNC_DATE: String?
+}

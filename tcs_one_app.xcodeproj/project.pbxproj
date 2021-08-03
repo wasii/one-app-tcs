@@ -101,6 +101,8 @@
 		1B92362E26B2AB6700606374 /* RiderScannerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B92362D26B2AB6700606374 /* RiderScannerViewController.swift */; };
 		1B96C0A325E8D3020059775C /* NewRequestLeadershipAwazViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B96C0A225E8D3020059775C /* NewRequestLeadershipAwazViewController.swift */; };
 		1B9E6C812562779D006529C3 /* GrievanceViewClosedRequestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B9E6C802562779D006529C3 /* GrievanceViewClosedRequestViewController.swift */; };
+		1BA4572126B90B98002E0B96 /* VerifyProcessTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BA4571F26B90B98002E0B96 /* VerifyProcessTableCell.swift */; };
+		1BA4572226B90B98002E0B96 /* VerifyProcessTableCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1BA4572026B90B98002E0B96 /* VerifyProcessTableCell.xib */; };
 		1BA5110B267B28A400E0E642 /* WalletHistoryTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BA51109267B28A400E0E642 /* WalletHistoryTableCell.swift */; };
 		1BA5110C267B28A400E0E642 /* WalletHistoryTableCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1BA5110A267B28A400E0E642 /* WalletHistoryTableCell.xib */; };
 		1BA5110E267B31F900E0E642 /* WalletHistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BA5110D267B31F900E0E642 /* WalletHistoryViewController.swift */; };
@@ -300,6 +302,8 @@
 		1B92362D26B2AB6700606374 /* RiderScannerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RiderScannerViewController.swift; sourceTree = "<group>"; };
 		1B96C0A225E8D3020059775C /* NewRequestLeadershipAwazViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewRequestLeadershipAwazViewController.swift; sourceTree = "<group>"; };
 		1B9E6C802562779D006529C3 /* GrievanceViewClosedRequestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GrievanceViewClosedRequestViewController.swift; sourceTree = "<group>"; };
+		1BA4571F26B90B98002E0B96 /* VerifyProcessTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerifyProcessTableCell.swift; sourceTree = "<group>"; };
+		1BA4572026B90B98002E0B96 /* VerifyProcessTableCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = VerifyProcessTableCell.xib; sourceTree = "<group>"; };
 		1BA51109267B28A400E0E642 /* WalletHistoryTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletHistoryTableCell.swift; sourceTree = "<group>"; };
 		1BA5110A267B28A400E0E642 /* WalletHistoryTableCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WalletHistoryTableCell.xib; sourceTree = "<group>"; };
 		1BA5110D267B31F900E0E642 /* WalletHistoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletHistoryViewController.swift; sourceTree = "<group>"; };
@@ -591,6 +595,8 @@
 			isa = PBXGroup;
 			children = (
 				1B724DAD26B3EDE500584AFF /* BinInfoTableCell.swift */,
+				1BA4571F26B90B98002E0B96 /* VerifyProcessTableCell.swift */,
+				1BA4572026B90B98002E0B96 /* VerifyProcessTableCell.xib */,
 			);
 			path = Delivery;
 			sourceTree = "<group>";
@@ -1123,6 +1129,7 @@
 				1BFB374725F9D6E20073CC53 /* Attendance.storyboard in Resources */,
 				1B6B04A4256660CD00CDEF66 /* GrievacneDownloadsTableCell.xib in Resources */,
 				60C34FE02539830E00495944 /* Home.storyboard in Resources */,
+				1BA4572226B90B98002E0B96 /* VerifyProcessTableCell.xib in Resources */,
 				1B11D07E262EB37000C137A3 /* RequestListingTableCell.xib in Resources */,
 				609C605B25387B900051CF28 /* UserCredentials.storyboard in Resources */,
 				1B47F9A025A5F18300FC74A4 /* IncidentInvestigationTableCell.xib in Resources */,
@@ -1310,6 +1317,7 @@
 				1BE523CD2679DA9400F5F030 /* IMSConsignmentDetailsViewController.swift in Sources */,
 				60EE11B5254B263400ACB45B /* MailViewController.swift in Sources */,
 				605CE773254196E000509434 /* User.swift in Sources */,
+				1BA4572126B90B98002E0B96 /* VerifyProcessTableCell.swift in Sources */,
 				1B6EAADD2682015500941863 /* RiderPickupUpdateListingViewController.swift in Sources */,
 				60E9991F253D7D9900BCDAD1 /* NewRequestViewController.swift in Sources */,
 				1BF25A5325E7D507008CE34F /* ChairmenListingViewController.swift in Sources */,

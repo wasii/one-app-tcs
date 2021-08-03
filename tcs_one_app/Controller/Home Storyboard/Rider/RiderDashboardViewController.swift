@@ -81,7 +81,7 @@ extension RiderDashboardViewController: UICollectionViewDataSource, UICollection
         }
         if indexPath.row == 5 {
             let storyboard = UIStoryboard(name: "RiderVerifyProcess", bundle: nil)
-            let controller = storyboard.instantiateViewController(withIdentifier: "RiderDeliveryDashboardViewController") as! RiderDeliveryDashboardViewController
+            let controller = storyboard.instantiateViewController(withIdentifier: "VerifyProcessDashboardViewController") as! VerifyProcessDashboardViewController
             
             self.navigationController?.pushViewController(controller, animated: true)
             return

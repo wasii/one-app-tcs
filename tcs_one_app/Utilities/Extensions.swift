@@ -24,6 +24,9 @@ extension UIColor {
         return UIColor.init(red: 19.0/255.0, green: 156.0/255.0, blue: 225.0/255.0, alpha: 1)
     }
     
+    class func riderlistingBgColor() -> UIColor {
+        return UIColor(red: 221.0/255, green: 255.0/255.0, blue: 215.0/255.0, alpha: 1)
+    }
     convenience init(hexString: String, alpha: CGFloat = 1.0) {
         let hexString: String = hexString.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
         let scanner = Scanner(string: hexString)
