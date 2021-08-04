@@ -79,6 +79,17 @@ extension RiderDashboardViewController: UICollectionViewDataSource, UICollection
             self.navigationController?.pushViewController(controller, animated: true)
             return
         }
+        if indexPath.row == 4 {
+            let storyboard = UIStoryboard(name: "Popups", bundle: nil)
+            let controller = storyboard.instantiateViewController(withIdentifier: "RiderGivenToPopupViewController") as! RiderGivenToPopupViewController
+            
+            if #available(iOS 13, *) {
+                controller.modalPresentationStyle = .overFullScreen
+            }
+            controller.modalTransitionStyle = .crossDissolve
+            controller.delegate = self
+            Helper.topMostController().present(controller, animated: true, completion: nil)
+        }
         if indexPath.row == 5 {
             let storyboard = UIStoryboard(name: "RiderVerifyProcess", bundle: nil)
             let controller = storyboard.instantiateViewController(withIdentifier: "VerifyProcessDashboardViewController") as! VerifyProcessDashboardViewController
@@ -107,3 +118,15 @@ extension RiderDashboardViewController: UICollectionViewDataSource, UICollection
     }
 }
 
+
+
+extension RiderDashboardViewController: RiderGivenToDelegate {
+    func didSelectHandOver() {
+        let storyboard = UIStoryboard(name: "RiderGivenTo", bundle: nil)
+        let controller = storyboard.instantiateViewController(withIdentifier: "GivenToDashboardViewController") as! GivenToDashboardViewController
+        self.navigationController?.pushViewController(controller, animated: true)
+    }
+    func didSelectTakeOver() {
+        
+    }
+}

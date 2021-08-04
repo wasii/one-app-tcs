@@ -46,6 +46,9 @@ class VerifyProcessDashboardViewController: BaseViewController, AVCaptureMetadat
     var delivery_sheets: [tbl_Delivery_Verify]?
     var verifiedCount: Int = 0
     
+    var selectedCn = String()
+    var selectedSheet = String()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Rider"
@@ -81,8 +84,16 @@ class VerifyProcessDashboardViewController: BaseViewController, AVCaptureMetadat
                     sheet.verify == "Verify"
                 }.count
                 
-                self.totalVerify.text = "Total Verify: \(self.verifiedCount)"
-                self.totalUnverify.text = "Total Unverify: \(count - self.verifiedCount)"
+                if self.verifiedCount < 10 {
+                    self.totalVerify.text = "Total Verify: 0\(self.verifiedCount)"
+                } else {
+                    self.totalVerify.text = "Total Verify: \(self.verifiedCount)"
+                }
+                if (count - self.verifiedCount) < 10 {
+                    self.totalUnverify.text = "Total Unverify: 0\(count - self.verifiedCount)"
+                } else {
+                    self.totalUnverify.text = "Total Unverify: \(count - self.verifiedCount)"
+                }
                 self.tableViewHeightConstraint.constant = CGFloat(80 * count)
                 self.tableView.reloadData()
             }
@@ -224,28 +235,95 @@ extension VerifyProcessDashboardViewController: UITableViewDelegate, UITableView
             
             cell.ReportTo.isHidden = true
             
+            cell.EditBtn.tag = indexPath.row
+            cell.EditBtn.addTarget(self, action: #selector(EditBtnTapped(sender:)), for: .touchUpInside)
+            
             if data.verify == "Verify" {
                 cell.VerifyLabel.text = "Verify"
                 cell.VerifyLabel.textColor = UIColor.approvedColor()
                 cell.MainView.bgColor = UIColor.riderlistingBgColor()
-                if data.report_to == "" {
-                    cell.ReportTo.isHidden = true
-                } else {
-                    cell.ReportTo.text = data.report_to
-                    cell.ReportTo.isHidden = false
-                }
             } else {
                 cell.MainView.bgColor = UIColor.white
                 cell.VerifyLabel.text = "Unverify"
                 cell.VerifyLabel.textColor = UIColor.nativeRedColor()
             }
+            if data.report_to == "" {
+                cell.ReportTo.isHidden = true
+            } else {
+                cell.ReportTo.text = data.report_to
+                cell.ReportTo.isHidden = false
+            }
         }
-        
         return cell
+    }
+    
+    @objc private func EditBtnTapped(sender: UIButton) {
+        let storyboard = UIStoryboard(name: "Popups", bundle: nil)
+        let controller = storyboard.instantiateViewController(withIdentifier: "RiderReportToPopupViewController") as! RiderReportToPopupViewController
+        
+        if #available(iOS 13, *) {
+            controller.modalPresentationStyle = .overFullScreen
+        }
+        controller.modalTransitionStyle = .crossDissolve
+        controller.delegate = self
+        self.selectedCn = self.delivery_sheets![sender.tag].CN
+        self.selectedSheet = self.delivery_sheets![sender.tag].SHEETNO
+        Helper.topMostController().present(controller, animated: true, completion: nil)
     }
 }
 
-
+extension VerifyProcessDashboardViewController: ReportToDelegate {
+    func didSelectReportTo(report_to: tbl_rider_report_to_lov) {
+        var isverify = 0
+        for (i, d) in self.delivery_sheets!.enumerated() {
+            if d.CN == self.selectedCn {
+                self.delivery_sheets![i].report_to = report_to.RTT_DSCRP
+                
+                if self.delivery_sheets![i].verify == "Verify" {
+                    isverify = 1
+                } else {
+                    isverify = 0
+                }
+                
+                self.tableView.reloadData()
+                break
+            }
+        }
+        guard  let token = UserDefaults.standard.string(forKey: USER_ACCESS_TOKEN) else {
+            self.view.makeToast("Session Expired")
+            return
+        }
+        let request_body = [
+            "access_token": token,
+            "scan_list" : [
+                [
+                    "cnno": self.selectedCn,
+                    "sheet_no": self.selectedSheet,
+                    "reason": report_to.RTT_DSCRP,
+                    "isverify": isverify
+                ]
+            ]
+        ] as [String:Any]
+        let params = self.getAPIParameter(service_name: S_RIDER_REQUEST_DISPUTE, request_body: request_body)
+        NetworkCalls.postriderrequestdispute(params: params) { granted, _ in
+            if granted {
+                let columns = ["REPORT_TO"]
+                let values  = [report_to.RTT_DSCRP]
+                let conditions = "CN = '\(self.selectedCn)' AND SHEETNO = '\(self.selectedSheet)'"
+                AppDelegate.sharedInstance.db?.updateTables(tableName: db_rider_verify_process, columnName: columns, updateValue: values, onCondition: conditions, { _ in
+                    DispatchQueue.main.async {
+                        self.tableView.reloadData()
+                    }
+                })
+            } else {
+                DispatchQueue.main.async {
+                    self.view.makeToast(SOMETHINGWENTWRONG)
+                }
+            }
+        }
+        //API HIT
+    }
+}
 extension VerifyProcessDashboardViewController: UITextFieldDelegate {
     
 }

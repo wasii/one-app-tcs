@@ -73,11 +73,19 @@ protocol UpdateIncidentInvestigation {
     func updateIncidentInvestigation(ticket: tbl_Hr_Request_Logs)
 }
 
-
+//MARK: - Rider Delegates
 protocol MoveToRiderScreen {
     func moveToRiderScreen()
 }
 protocol BinInfoDelegate {
     func fetchBinInfo()
     func cancel()
+}
+protocol ReportToDelegate {
+    func didSelectReportTo(report_to: tbl_rider_report_to_lov)
+}
+
+protocol RiderGivenToDelegate {
+    func didSelectHandOver()
+    func didSelectTakeOver()
 }

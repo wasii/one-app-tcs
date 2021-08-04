@@ -3765,9 +3765,9 @@ class DBHelper {
                 let ID = Int(sqlite3_column_int(queryStatement, 0))
                 let RTT_ID = Int(sqlite3_column_int(queryStatement, 1))
                 let RTT_DSCRP = String(describing: String(cString: sqlite3_column_text(queryStatement, 2)))
-                let CREATED_DATE = String(describing: String(cString: sqlite3_column_text(queryStatement, 2)))
-                let USER_ID = String(describing: String(cString: sqlite3_column_text(queryStatement, 2)))
-                report_to_lov.append(tbl_rider_report_to_lov(ID: ID, RTT_ID: RTT_ID, RTT_DSCRP: RTT_DSCRP, CREATED_DATE: CREATED_DATE, USER_ID: USER_ID))
+                let CREATED_DATE = String(describing: String(cString: sqlite3_column_text(queryStatement, 3)))
+                let USER_ID = String(describing: String(cString: sqlite3_column_text(queryStatement, 4)))
+                report_to_lov.append(tbl_rider_report_to_lov(ID: ID, RTT_ID: RTT_ID, RTT_DSCRP: RTT_DSCRP, CREATED_DATE: CREATED_DATE, USER_ID: USER_ID, isSelected: false))
             }
         } else {
             print("SELECT statement \(db_report_to_lov) could not be prepared")
@@ -4882,6 +4882,7 @@ struct tbl_rider_report_to_lov {
     var RTT_DSCRP: String = ""
     var CREATED_DATE: String = ""
     var USER_ID: String = ""
+    var isSelected: Bool = false
 }
 
 //Rider Deilvery Sheet

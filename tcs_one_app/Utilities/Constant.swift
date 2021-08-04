@@ -86,10 +86,15 @@ let S_WALLET_POINTS_DETAILS = "WALLET.GET.DETAIL.POINTS"
 let S_RIDER_SETUP           = "RIDER.SETUP"
 let S_DELIVERY_SHEET        = "RIDER.GET.DELIVERY"
 let S_BIN_INFO              = "RIDER.BIN.INFO"
+let S_RIDER_REQUEST_DISPUTE = "RIDER.REQUEST.DISPUTE"
+let S_RIDER_GENERATE_QRCODE = "RIDER.REQUEST.GENERATE.GIVENTO"
+
 let RIDERSETUP              = RIDER_ENDPOINT + "setup"
 let RIDER_GET_TOKEN         = RIDER_ENDPOINT + "token?clientSecret=\(RIDERCLIENTSECRET)"
 let RIDER_DELIVERY_SHEET    = RIDER_ENDPOINT + "delivery"
 let RIDER_BIN_INFO          = RIDER_ENDPOINT + "bin-info"
+let RIDER_REQUEST_DISPUTE   = RIDER_ENDPOINT + "reportCN"
+let RIDER_GENERATE_GIVENTO  = RIDER_ENDPOINT + "generateGTCode"
 
 //API BACKEND KEYS
 let eAI_MESSAGE             = "eAI_MESSAGE"
@@ -179,7 +184,7 @@ let _deliverySheet          = "deliverySheet"
 
 let _riderBinInfoData       = "riderBinInfoData"
 let _deliveryMaster         = "deliveryMaster"
-
+let _qrCode                 = "qrCode"
 
 //Local Storage (Database) tablename keys
 let db_user_module          = "USER_MODULE"
