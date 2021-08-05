@@ -4129,6 +4129,47 @@ class DBHelper {
         }
         return verify_info.count > 0 ? verify_info : nil
     }
+    
+    func insert_tbl_rider_qrcodes(qrCode: QRCodes, handler: @escaping(_ success: Bool) -> Void) {
+        let insertStatementString = "INSERT INTO \(db_rider_qrcodes)(QRCODE, CN, SHEETNO, CURRENT_USER) VALUES (?,?,?,?);"
+        var insertStatement: OpaquePointer? = nil
+        if sqlite3_prepare_v2(self.db, insertStatementString, -1, &insertStatement, nil) == SQLITE_OK {
+            sqlite3_bind_text(insertStatement, 1, (qrCode.QRCODE as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 2, (qrCode.CN as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 3, (qrCode.SHEETNO as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 4, (qrCode.CURRENT_USER as NSString).utf8String, -1, nil)
+            if sqlite3_step(insertStatement) == SQLITE_DONE {
+                handler(true)
+            } else {
+                print("\(db_rider_qrcodes): Could not insert row.")
+                handler(false)
+            }
+        } else {
+            handler(false)
+            print("\(db_rider_qrcodes): INSERT statement could not be prepared.")
+        }
+        sqlite3_finalize(insertStatement)
+    }
+    func read_tbl_rider_qrcodes(qrCode: String) -> [tbl_rider_qrcodes]? {
+        let queryStatementString = "SELECT * FROM \(db_rider_qrcodes) WHERE QRCODE = '\(qrCode)'"
+        var queryStatement: OpaquePointer? = nil
+        var qrcode_list = [tbl_rider_qrcodes]()
+
+        if sqlite3_prepare_v2(db, queryStatementString, -1, &queryStatement, nil) == SQLITE_OK {
+            while sqlite3_step(queryStatement) == SQLITE_ROW {
+                let ID = Int(sqlite3_column_int(queryStatement, 0))
+                let QRCODE = String(describing: String(cString: sqlite3_column_text(queryStatement, 1)))
+                let CN = String(describing: String(cString: sqlite3_column_text(queryStatement, 2)))
+                let SHEETNO = String(describing: String(cString: sqlite3_column_text(queryStatement, 3)))
+                let CURRENT_USER = String(describing: String(cString: sqlite3_column_text(queryStatement, 4)))
+                
+                qrcode_list.append(tbl_rider_qrcodes(ID: ID, QRCODE: QRCODE, CN: CN, SHEETNO: SHEETNO, CURRENT_USER: CURRENT_USER))
+            }
+        } else {
+            print("SELECT statement \(db_rider_verify_process) could not be prepared")
+        }
+        return qrcode_list.count > 0 ? qrcode_list : nil
+    }
 }
 
 
@@ -4991,4 +5032,12 @@ struct tbl_Delivery_Verify {
     var report_to: String = ""
     var sync: Int = 0
     var sync_date: String = ""
+}
+
+struct tbl_rider_qrcodes {
+    var ID: Int = 0
+    var QRCODE: String = ""
+    var CN: String = ""
+    var SHEETNO: String = ""
+    var CURRENT_USER: String = ""
 }

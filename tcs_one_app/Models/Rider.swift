@@ -294,3 +294,10 @@ struct VerifyProcess {
     var SYNC: Int?
     var SYNC_DATE: String?
 }
+
+struct QRCodes {
+    var QRCODE: String = ""
+    var CN: String = ""
+    var SHEETNO: String = ""
+    var CURRENT_USER: String = ""
+}

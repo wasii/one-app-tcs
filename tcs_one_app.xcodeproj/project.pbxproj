@@ -53,6 +53,7 @@
 		1B590C64255818E300C413AA /* WatchAllRequestsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B590C63255818E300C413AA /* WatchAllRequestsViewController.swift */; };
 		1B5970B0256553CF00FF8CA0 /* AddAttachmentsTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B5970AE256553CF00FF8CA0 /* AddAttachmentsTableCell.swift */; };
 		1B5970B1256553CF00FF8CA0 /* AddAttachmentsTableCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1B5970AF256553CF00FF8CA0 /* AddAttachmentsTableCell.xib */; };
+		1B5BCEB326BBBC8C00F38AF0 /* RiderQRCodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B5BCEB226BBBC8C00F38AF0 /* RiderQRCodeViewController.swift */; };
 		1B5EAA7C255E636A00F49D09 /* GrievanceHelpDeskViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B5EAA7B255E636A00F49D09 /* GrievanceHelpDeskViewController.swift */; };
 		1B5EAA7F255E63CB00F49D09 /* GrievanceStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1B5EAA7E255E63CB00F49D09 /* GrievanceStoryboard.storyboard */; };
 		1B5EAA83255EA4A600F49D09 /* GrievanceHelpDeskRequestsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B5EAA82255EA4A600F49D09 /* GrievanceHelpDeskRequestsViewController.swift */; };
@@ -259,6 +260,7 @@
 		1B590C63255818E300C413AA /* WatchAllRequestsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchAllRequestsViewController.swift; sourceTree = "<group>"; };
 		1B5970AE256553CF00FF8CA0 /* AddAttachmentsTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddAttachmentsTableCell.swift; sourceTree = "<group>"; };
 		1B5970AF256553CF00FF8CA0 /* AddAttachmentsTableCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AddAttachmentsTableCell.xib; sourceTree = "<group>"; };
+		1B5BCEB226BBBC8C00F38AF0 /* RiderQRCodeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RiderQRCodeViewController.swift; sourceTree = "<group>"; };
 		1B5EAA7B255E636A00F49D09 /* GrievanceHelpDeskViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GrievanceHelpDeskViewController.swift; sourceTree = "<group>"; };
 		1B5EAA7E255E63CB00F49D09 /* GrievanceStoryboard.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = GrievanceStoryboard.storyboard; sourceTree = "<group>"; };
 		1B5EAA82255EA4A600F49D09 /* GrievanceHelpDeskRequestsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GrievanceHelpDeskRequestsViewController.swift; sourceTree = "<group>"; };
@@ -1022,6 +1024,7 @@
 				1B724DAF26B3EEB800584AFF /* RiderBinInfoViewController.swift */,
 				1B5FCA7626BA68E100653DEF /* RiderReportToPopupViewController.swift */,
 				1B5FCA7A26BA9D1400653DEF /* RiderGivenToPopupViewController.swift */,
+				1B5BCEB226BBBC8C00F38AF0 /* RiderQRCodeViewController.swift */,
 			);
 			path = "Popups Storyboard";
 			sourceTree = "<group>";
@@ -1267,6 +1270,7 @@
 				1B5FCA7B26BA9D1400653DEF /* RiderGivenToPopupViewController.swift in Sources */,
 				1B3202F92578C70B0034803F /* ImagePickerManager.swift in Sources */,
 				1B02129625A6E27300441E9F /* ConfirmationPopViewController.swift in Sources */,
+				1B5BCEB326BBBC8C00F38AF0 /* RiderQRCodeViewController.swift in Sources */,
 				1BE523E1267A325100F5F030 /* WalletDetailsViewController.swift in Sources */,
 				1B14F16A25656DE500C4EA51 /* AddMemoPopupViewController.swift in Sources */,
 				60E99917253D548200BCDAD1 /* ModulesCollectionCell.swift in Sources */,

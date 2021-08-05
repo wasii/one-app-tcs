@@ -88,6 +88,7 @@ let S_DELIVERY_SHEET        = "RIDER.GET.DELIVERY"
 let S_BIN_INFO              = "RIDER.BIN.INFO"
 let S_RIDER_REQUEST_DISPUTE = "RIDER.REQUEST.DISPUTE"
 let S_RIDER_GENERATE_QRCODE = "RIDER.REQUEST.GENERATE.GIVENTO"
+let S_RIDER_NOTIFICATION    = "RIDER.NOTIFICATION"
 
 let RIDERSETUP              = RIDER_ENDPOINT + "setup"
 let RIDER_GET_TOKEN         = RIDER_ENDPOINT + "token?clientSecret=\(RIDERCLIENTSECRET)"
@@ -95,6 +96,7 @@ let RIDER_DELIVERY_SHEET    = RIDER_ENDPOINT + "delivery"
 let RIDER_BIN_INFO          = RIDER_ENDPOINT + "bin-info"
 let RIDER_REQUEST_DISPUTE   = RIDER_ENDPOINT + "reportCN"
 let RIDER_GENERATE_GIVENTO  = RIDER_ENDPOINT + "generateGTCode"
+let RIDER_RECEIVE_GT_CODE   = RIDER_ENDPOINT + "receive_gt_by_code"
 
 //API BACKEND KEYS
 let eAI_MESSAGE             = "eAI_MESSAGE"
@@ -185,6 +187,7 @@ let _deliverySheet          = "deliverySheet"
 let _riderBinInfoData       = "riderBinInfoData"
 let _deliveryMaster         = "deliveryMaster"
 let _qrCode                 = "qrCode"
+let _deliverysheet          = "deliverysheet"
 
 //Local Storage (Database) tablename keys
 let db_user_module          = "USER_MODULE"
@@ -258,6 +261,7 @@ let db_rider_delivery_sheet = "RIDER_DELIVERY_SHEET"
 let db_delivery_sheet_detail = "RIDER_DELIVERY_SHEET_DETAIL"
 let db_rider_bin_info       = "RIDER_BIN_INFO"
 let db_rider_verify_process = "RIDER_VERIFY"
+let db_rider_qrcodes        = "RIDER_QRCODES"
 
 //ERROR MESSAGES
 let NOINTERNETCONNECTION    = "Connect your device with internet first."

@@ -40,6 +40,8 @@ class RiderScannerViewController: BaseViewController, AVCaptureMetadataOutputObj
     
     var avPlayer: AVAudioPlayer?
     var detail_sheet: [tbl_rider_delivery_sheet]?
+    var isGivenTo: Bool = false
+    var givenToDelegate: RiderGivenToDelegate?
     override func viewDidLoad() {
         super.viewDidLoad()
         setupAnimations()
@@ -179,90 +181,96 @@ class RiderScannerViewController: BaseViewController, AVCaptureMetadataOutputObj
     
     
     private func scanBarCode(code: String) {
-        let query = "SELECT * FROM \(db_delivery_sheet_detail) WHERE CN = '\(code)'"
-        if let data = AppDelegate.sharedInstance.db?.read_tbl_rider_delivery_sheet(query: query) {
-            
-        } else {
-            //MARK: - verify bin info API
-            if !CustomReachability.isConnectedNetwork() {
-                self.view.makeToast(NOINTERNETCONNECTION)
-                return
+        if isGivenTo {
+            self.dismiss(animated: true) {
+                self.givenToDelegate?.didTakeOverReturns(code: code)
             }
-            self.view.makeToastActivity(.center)
-            self.freezeScreen()
-            let request_body = [
-                "access_token" : UserDefaults.standard.string(forKey: USER_ACCESS_TOKEN)!,
-                "bin_code": code
-            ]
-            let params = self.getAPIParameter(service_name: S_BIN_INFO, request_body: request_body)
-            NetworkCalls.getriderbininfo(params: params) { granted, response in
-                if granted {
-                    //MARK: - show pop with 2Button(Fetch, Cancel) with LISTING
-                    let json = JSON(response).dictionary
-                    if let _riderBinInfoData = json?[_riderBinInfoData]?.dictionary {
-                        if let _deliveryMaster = _riderBinInfoData[_deliveryMaster]?.array {
-                            AppDelegate.sharedInstance.db?.deleteRowWithMultipleConditions(tbl: db_rider_bin_info, conditions: "BIN_DSCRP = '\(code)'", { _ in
-                                for dm in _deliveryMaster {
-                                    do {
-                                        let rawData = try dm.rawData()
-                                        let bin_info: BinInfo = try JSONDecoder().decode(BinInfo.self, from: rawData)
-                                        
-                                        AppDelegate.sharedInstance.db?.insert_tbl_rider_bin_info(bin_info: bin_info, handler: { _ in })
-                                    } catch let DecodingError.dataCorrupted(context) {
-                                        print(context)
-                                    } catch let DecodingError.keyNotFound(key, context) {
-                                        print("Key '\(key)' not found:", context.debugDescription)
-                                        print("codingPath:", context.codingPath)
-                                    } catch let DecodingError.valueNotFound(value, context) {
-                                        print("Value '\(value)' not found:", context.debugDescription)
-                                        print("codingPath:", context.codingPath)
-                                    } catch let DecodingError.typeMismatch(type, context)  {
-                                        print("Type '\(type)' mismatch:", context.debugDescription)
-                                        print("codingPath:", context.codingPath)
-                                    } catch {
-                                        print("error: ", error)
+        } else {
+            let query = "SELECT * FROM \(db_delivery_sheet_detail) WHERE CN = '\(code)'"
+            if let data = AppDelegate.sharedInstance.db?.read_tbl_rider_delivery_sheet(query: query) {
+                
+            } else {
+                //MARK: - verify bin info API
+                if !CustomReachability.isConnectedNetwork() {
+                    self.view.makeToast(NOINTERNETCONNECTION)
+                    return
+                }
+                self.view.makeToastActivity(.center)
+                self.freezeScreen()
+                let request_body = [
+                    "access_token" : UserDefaults.standard.string(forKey: USER_ACCESS_TOKEN)!,
+                    "bin_code": code
+                ]
+                let params = self.getAPIParameter(service_name: S_BIN_INFO, request_body: request_body)
+                NetworkCalls.getriderbininfo(params: params) { granted, response in
+                    if granted {
+                        //MARK: - show pop with 2Button(Fetch, Cancel) with LISTING
+                        let json = JSON(response).dictionary
+                        if let _riderBinInfoData = json?[_riderBinInfoData]?.dictionary {
+                            if let _deliveryMaster = _riderBinInfoData[_deliveryMaster]?.array {
+                                AppDelegate.sharedInstance.db?.deleteRowWithMultipleConditions(tbl: db_rider_bin_info, conditions: "BIN_DSCRP = '\(code)'", { _ in
+                                    for dm in _deliveryMaster {
+                                        do {
+                                            let rawData = try dm.rawData()
+                                            let bin_info: BinInfo = try JSONDecoder().decode(BinInfo.self, from: rawData)
+                                            
+                                            AppDelegate.sharedInstance.db?.insert_tbl_rider_bin_info(bin_info: bin_info, handler: { _ in })
+                                        } catch let DecodingError.dataCorrupted(context) {
+                                            print(context)
+                                        } catch let DecodingError.keyNotFound(key, context) {
+                                            print("Key '\(key)' not found:", context.debugDescription)
+                                            print("codingPath:", context.codingPath)
+                                        } catch let DecodingError.valueNotFound(value, context) {
+                                            print("Value '\(value)' not found:", context.debugDescription)
+                                            print("codingPath:", context.codingPath)
+                                        } catch let DecodingError.typeMismatch(type, context)  {
+                                            print("Type '\(type)' mismatch:", context.debugDescription)
+                                            print("codingPath:", context.codingPath)
+                                        } catch {
+                                            print("error: ", error)
+                                        }
                                     }
-                                }
-                                DispatchQueue.main.async {
-                                    self.captureSession?.stopRunning()
-                                    self.view.hideToastActivity()
-                                    self.unFreezeScreen()
-                                    let storyboard = UIStoryboard(name: "Popups", bundle: nil)
-                                    let controller = storyboard.instantiateViewController(withIdentifier: "RiderBinInfoViewController") as! RiderBinInfoViewController
-                                    controller.modalTransitionStyle = .crossDissolve
-                                    controller.bin = code
-                                    controller.delegate = self
-                                    if #available(iOS 13, *) {
-                                        controller.modalPresentationStyle = .overFullScreen
+                                    DispatchQueue.main.async {
+                                        self.captureSession?.stopRunning()
+                                        self.view.hideToastActivity()
+                                        self.unFreezeScreen()
+                                        let storyboard = UIStoryboard(name: "Popups", bundle: nil)
+                                        let controller = storyboard.instantiateViewController(withIdentifier: "RiderBinInfoViewController") as! RiderBinInfoViewController
+                                        controller.modalTransitionStyle = .crossDissolve
+                                        controller.bin = code
+                                        controller.delegate = self
+                                        if #available(iOS 13, *) {
+                                            controller.modalPresentationStyle = .overFullScreen
+                                        }
+                                        Helper.topMostController().present(controller, animated: true, completion: nil)
                                     }
-                                    Helper.topMostController().present(controller, animated: true, completion: nil)
-                                }
-                            })
+                                })
+                            } else {
+                                // delivery master IF LET
+                            }
                         } else {
-                            // delivery master IF LET
+                            //rider bin info data IF LET
+                            DispatchQueue.main.async {
+                                self.view.hideToastActivity()
+                                self.unFreezeScreen()
+                            }
                         }
                     } else {
-                        //rider bin info data IF LET
+                        //granted IF
                         DispatchQueue.main.async {
                             self.view.hideToastActivity()
                             self.unFreezeScreen()
+                            self.lastCapturedCode = nil
                         }
                     }
-                } else {
-                    //granted IF
-                    DispatchQueue.main.async {
-                        self.view.hideToastActivity()
-                        self.unFreezeScreen()
-                        self.lastCapturedCode = nil
-                    }
                 }
+                
+                
+                //if success
+                    //then show pop with 2Button(Fetch, Cancel)
+                        // if FETCH tapped -> Call GET.DELIVERY API with BIN and TOKEN
+                            // if 0200 -> call again GET.DELIVERY API without BIN
             }
-            
-            
-            //if success
-                //then show pop with 2Button(Fetch, Cancel)
-                    // if FETCH tapped -> Call GET.DELIVERY API with BIN and TOKEN
-                        // if 0200 -> call again GET.DELIVERY API without BIN
         }
     }
 }

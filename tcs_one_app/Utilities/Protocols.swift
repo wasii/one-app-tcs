@@ -88,4 +88,6 @@ protocol ReportToDelegate {
 protocol RiderGivenToDelegate {
     func didSelectHandOver()
     func didSelectTakeOver()
+    
+    func didTakeOverReturns(code: String)
 }

@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SwiftyJSON
 
 class RiderDashboardViewController: BaseViewController {
 
@@ -127,6 +128,72 @@ extension RiderDashboardViewController: RiderGivenToDelegate {
         self.navigationController?.pushViewController(controller, animated: true)
     }
     func didSelectTakeOver() {
+        let storyboard = UIStoryboard(name: "RiderDelivery", bundle: nil)
+        let controller = storyboard.instantiateViewController(withIdentifier: "RiderScannerViewController") as! RiderScannerViewController
         
+        if #available(iOS 13, *) {
+            controller.modalPresentationStyle = .overFullScreen
+        }
+        controller.modalTransitionStyle = .crossDissolve
+        controller.isGivenTo = true
+        controller.givenToDelegate = self
+        Helper.topMostController().present(controller, animated: true, completion: nil)
+    }
+    func didTakeOverReturns(code: String) {
+        if !CustomReachability.isConnectedNetwork() {
+            self.view.makeToast(NOINTERNETCONNECTION)
+            return
+        }
+        
+        self.view.makeToastActivity(.center)
+        self.freezeScreen()
+        let request_body = [
+            "access_token": UserDefaults.standard.string(forKey: USER_ACCESS_TOKEN)!,
+            "qrcode": code
+        ]
+        let params = self.getAPIParameter(service_name: S_RIDER_NOTIFICATION, request_body: request_body)
+        NetworkCalls.postriderqrcode(params: params) { notification_granted, notification_response in
+            if notification_granted {
+                DispatchQueue.main.async {
+                    if let delivery_sheet = JSON(notification_response).string {
+                        let request_body = [
+                            "access_token": UserDefaults.standard.string(forKey: USER_ACCESS_TOKEN)!,
+                            "bin_code": "",
+                            "ds_no": "\(delivery_sheet)"
+                        ]
+                        let params = self.getAPIParameter(service_name: S_DELIVERY_SHEET, request_body: request_body)
+                        RiderCalls.SetupDeliverySheets(params: params) { delivery_sheet_granted in
+                            if delivery_sheet_granted {
+                                DispatchQueue.main.async {
+                                    self.view.hideToastActivity()
+                                    self.unFreezeScreen()
+                                    let storyboard = UIStoryboard(name: "RiderDelivery", bundle: nil)
+                                    let controller = storyboard.instantiateViewController(withIdentifier: "RiderDeliveryDashboardViewController") as! RiderDeliveryDashboardViewController
+                                    self.navigationController?.pushViewController(controller, animated: true)
+                                }
+                            } else {
+                                DispatchQueue.main.async {
+                                    self.view.hideToastActivity()
+                                    self.unFreezeScreen()
+                                    self.view.makeToast(SOMETHINGWENTWRONG)
+                                }
+                            }
+                        }
+                    } else {
+                        self.view.hideToastActivity()
+                        self.unFreezeScreen()
+                        self.view.makeToast(SOMETHINGWENTWRONG)
+                    }
+                }
+            } else {
+                DispatchQueue.main.async {
+                    self.view.hideToastActivity()
+                    self.unFreezeScreen()
+                    self.view.makeToast(SOMETHINGWENTWRONG)
+                }
+            }
+        }
     }
 }
+
+

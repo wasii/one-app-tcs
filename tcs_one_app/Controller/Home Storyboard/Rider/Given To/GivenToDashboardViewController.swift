@@ -11,6 +11,7 @@ import AVFoundation
 import AVKit
 import MaterialComponents.MaterialTextControls_OutlinedTextFields
 import SwiftyJSON
+import MapKit
 
 class GivenToDashboardViewController: BaseViewController, AVCaptureMetadataOutputObjectsDelegate {
 
@@ -46,6 +47,12 @@ class GivenToDashboardViewController: BaseViewController, AVCaptureMetadataOutpu
     
     var verifiedCount: Int = 0
     var deliver_sheet: [tbl_rider_delivery_sheet]?
+    
+    var lat: Double = 0.0
+    var lon: Double = 0.0
+    var isLocationOff = false
+    var clAuthorizatinStatus: CLAuthorizationStatus?
+    var isDataFetched = false
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Rider"
@@ -64,23 +71,31 @@ class GivenToDashboardViewController: BaseViewController, AVCaptureMetadataOutpu
         searchTextfield.setOutlineColor(UIColor.nativeRedColor(), for: .normal)
         searchTextfield.setOutlineColor(UIColor.nativeRedColor(), for: .editing)
         searchTextfield.delegate = self
+        
+        locationManager.delegate = self
+        // 2
+        locationManager.requestAlwaysAuthorization()
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        locationManager.requestAlwaysAuthorization()
+        locationManager.startUpdatingLocation()
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        let query = "SELECT * FROM \(db_rider_delivery_sheet) WHERE DLVRD_BY = '\(CURRENT_USER_LOGGED_IN_ID)' AND DELIVERYSTATUS = ''"
-        self.deliver_sheet = AppDelegate.sharedInstance.db?.read_tbl_rider_delivery_sheet(query: query)
-        DispatchQueue.main.async {
-            self.tableView.reloadData()
-            if let count = self.deliver_sheet?.count {
-                UIView.animate(withDuration: 0.3) {
-                    self.tableViewHeightConstraint.constant = CGFloat(count * 80)
-                    self.view.layoutIfNeeded()
+    private func setupJSON() {
+        if !isDataFetched {
+            self.isDataFetched = true
+            let query = "SELECT * FROM \(db_rider_delivery_sheet) WHERE DLVRD_BY = '\(CURRENT_USER_LOGGED_IN_ID)' AND DELIVERYSTATUS = ''"
+            self.deliver_sheet = AppDelegate.sharedInstance.db?.read_tbl_rider_delivery_sheet(query: query)
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+                if let count = self.deliver_sheet?.count {
+                    UIView.animate(withDuration: 0.3) {
+                        self.tableViewHeightConstraint.constant = CGFloat(count * 80)
+                        self.view.layoutIfNeeded()
+                    }
                 }
-                
             }
         }
     }
-    
     private func setupCameraView() {
         self.captureDevice = AVCaptureDevice.default(for: .video)
         
@@ -232,18 +247,40 @@ class GivenToDashboardViewController: BaseViewController, AVCaptureMetadataOutpu
                 }
                 let request_body = [
                     "access_token" : UserDefaults.standard.string(forKey: USER_ACCESS_TOKEN)!,
-                    "lat": "",
-                    "lng": "",
+                    "lat": "\(self.lat)",
+                    "lng": "\(self.lon)",
                     "cn_list" : cnList
                 ] as [String:Any]
                 let params = self.getAPIParameter(service_name: S_RIDER_GENERATE_QRCODE, request_body: request_body)
                 NetworkCalls.getriderqrcode(params: params) { granted, response in
                     if granted {
-                        let qrCode = JSON(response).string ?? ""
-                        
                         DispatchQueue.main.async {
                             self.view.hideToastActivity()
                             self.unFreezeScreen()
+                            if let qrCode = JSON(response).string {
+                                for cnlist in cnList {
+                                    let cn = cnlist["cnno"] as? String
+                                    let sheetno = cnlist["sheet_no"] as? String
+                                    
+                                    let condition = "CN = '\(cn ?? "")' AND SHEETNO = '\(sheetno ?? "")' AND QRCODE = '\(qrCode)' AND CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)'"
+                                    AppDelegate.sharedInstance.db?.deleteRowWithMultipleConditions(tbl: db_rider_qrcodes, conditions: condition, { _ in
+                                        let qrCode = QRCodes(QRCODE: qrCode, CN: cn ?? "", SHEETNO: sheetno ?? "", CURRENT_USER: CURRENT_USER_LOGGED_IN_ID)
+                                        
+                                        
+                                    })
+                                }
+                                let qrCodeImage = self.generateQRCode(from: qrCode)
+                                let storyboard = UIStoryboard(name: "Popups", bundle: nil)
+                                let controller = storyboard.instantiateViewController(withIdentifier: "RiderQRCodeViewController") as! RiderQRCodeViewController
+                                if #available(iOS 13, *) {
+                                    controller.modalPresentationStyle = .overFullScreen
+                                }
+                                controller.modalTransitionStyle = .crossDissolve
+                                controller.image = qrCodeImage
+                                Helper.topMostController().present(controller, animated: true, completion: nil)
+                            } else {
+                                self.view.makeToast(SOMETHINGWENTWRONG)
+                            }
                         }
                     } else {
                         DispatchQueue.main.async {
@@ -302,5 +339,35 @@ extension GivenToDashboardViewController: UITextFieldDelegate {
         if textField.text!.count <= 0 {
             textField.text = constant
         }
+    }
+}
+
+extension GivenToDashboardViewController: CLLocationManagerDelegate {
+    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+        let status = CLLocationManager.authorizationStatus()
+        switch status {
+        case .authorizedAlways, .authorizedWhenInUse:
+            self.isLocationOff = false
+            locationManager.startUpdatingLocation()
+            break
+        case .denied, .restricted, .notDetermined:
+            self.isLocationOff = true
+            DispatchQueue.main.async {
+                self.locationAlert()
+            }
+            print("location access denied")
+            break
+        default:
+            locationManager.requestWhenInUseAuthorization()
+        }
+    }
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        guard let locValue:CLLocationCoordinate2D = manager.location?.coordinate else {
+            return
+        }
+        
+        self.lat = locValue.latitude
+        self.lon = locValue.longitude
+        self.setupJSON()
     }
 }
