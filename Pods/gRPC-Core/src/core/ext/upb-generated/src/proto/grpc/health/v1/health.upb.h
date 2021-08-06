@@ -20,6 +20,11 @@
   #include  "upb/decode.h"
 #endif
 #if COCOAPODS==1
+  #include  "third_party/upb/upb/decode_fast.h"
+#else
+  #include  "upb/decode_fast.h"
+#endif
+#if COCOAPODS==1
   #include  "third_party/upb/upb/encode.h"
 #else
   #include  "upb/encode.h"
@@ -60,6 +65,12 @@ UPB_INLINE grpc_health_v1_HealthCheckRequest *grpc_health_v1_HealthCheckRequest_
   grpc_health_v1_HealthCheckRequest *ret = grpc_health_v1_HealthCheckRequest_new(arena);
   return (ret && upb_decode(buf, size, ret, &grpc_health_v1_HealthCheckRequest_msginit, arena)) ? ret : NULL;
 }
+UPB_INLINE grpc_health_v1_HealthCheckRequest *grpc_health_v1_HealthCheckRequest_parse_ex(const char *buf, size_t size,
+                           upb_arena *arena, int options) {
+  grpc_health_v1_HealthCheckRequest *ret = grpc_health_v1_HealthCheckRequest_new(arena);
+  return (ret && _upb_decode(buf, size, ret, &grpc_health_v1_HealthCheckRequest_msginit, arena, options))
+      ? ret : NULL;
+}
 UPB_INLINE char *grpc_health_v1_HealthCheckRequest_serialize(const grpc_health_v1_HealthCheckRequest *msg, upb_arena *arena, size_t *len) {
   return upb_encode(msg, &grpc_health_v1_HealthCheckRequest_msginit, arena, len);
 }
@@ -79,6 +90,12 @@ UPB_INLINE grpc_health_v1_HealthCheckResponse *grpc_health_v1_HealthCheckRespons
                         upb_arena *arena) {
   grpc_health_v1_HealthCheckResponse *ret = grpc_health_v1_HealthCheckResponse_new(arena);
   return (ret && upb_decode(buf, size, ret, &grpc_health_v1_HealthCheckResponse_msginit, arena)) ? ret : NULL;
+}
+UPB_INLINE grpc_health_v1_HealthCheckResponse *grpc_health_v1_HealthCheckResponse_parse_ex(const char *buf, size_t size,
+                           upb_arena *arena, int options) {
+  grpc_health_v1_HealthCheckResponse *ret = grpc_health_v1_HealthCheckResponse_new(arena);
+  return (ret && _upb_decode(buf, size, ret, &grpc_health_v1_HealthCheckResponse_msginit, arena, options))
+      ? ret : NULL;
 }
 UPB_INLINE char *grpc_health_v1_HealthCheckResponse_serialize(const grpc_health_v1_HealthCheckResponse *msg, upb_arena *arena, size_t *len) {
   return upb_encode(msg, &grpc_health_v1_HealthCheckResponse_msginit, arena, len);

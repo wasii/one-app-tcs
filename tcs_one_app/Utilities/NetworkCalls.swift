@@ -1661,6 +1661,38 @@ class NetworkCalls: NSObject {
             }
         }.resume()
     }
+    //MARK: - RIDER CREATE NOTIFICATION
+    class func postnotification(params: [String:Any], handler: @escaping(Bool) -> Void) {
+        let Url = String(format: RIDER_RECEIVE_GT_CODE)
+        guard let serviceUrl = URL(string: Url) else { return }
+        var request = URLRequest(url: serviceUrl)
+        request.httpMethod = "POST"
+        request.setValue(SERVER_KEY, forHTTPHeaderField: "Authorization")
+        request.setValue("Application/json", forHTTPHeaderField: "Content-Type")
+        guard let httpBody = try? JSONSerialization.data(withJSONObject: params, options: []) else {
+            return
+        }
+        request.httpBody = httpBody
+        
+        let session = URLSession.shared
+        session.dataTask(with: request) { (data, response, error) in
+            if let data = data {
+                let json = JSON(data)
+                if let success = json.dictionary?["success"]?.int {
+                    //SUCCESS
+                    if success == 1 {
+                        handler(true)
+                    } else {
+                        handler(false)
+                    }
+                } else {
+                    handler(false)
+                }
+            } else {
+                handler(false)
+            }
+        }.resume()
+    }
 }
 
 

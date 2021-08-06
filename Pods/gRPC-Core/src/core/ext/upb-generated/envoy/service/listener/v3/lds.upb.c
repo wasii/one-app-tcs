@@ -28,16 +28,6 @@
   #include  "google/api/annotations.upb.h"
 #endif
 #if COCOAPODS==1
-  #include  "src/core/ext/upb-generated/google/protobuf/duration.upb.h"
-#else
-  #include  "google/protobuf/duration.upb.h"
-#endif
-#if COCOAPODS==1
-  #include  "src/core/ext/upb-generated/google/protobuf/wrappers.upb.h"
-#else
-  #include  "google/protobuf/wrappers.upb.h"
-#endif
-#if COCOAPODS==1
   #include  "src/core/ext/upb-generated/envoy/annotations/resource.upb.h"
 #else
   #include  "envoy/annotations/resource.upb.h"
@@ -52,11 +42,6 @@
 #else
   #include  "udpa/annotations/versioning.upb.h"
 #endif
-#if COCOAPODS==1
-  #include  "src/core/ext/upb-generated/validate/validate.upb.h"
-#else
-  #include  "validate/validate.upb.h"
-#endif
 
 #if COCOAPODS==1
   #include  "third_party/upb/upb/port_def.inc"
@@ -67,7 +52,7 @@
 const upb_msglayout envoy_service_listener_v3_LdsDummy_msginit = {
   NULL,
   NULL,
-  UPB_SIZE(0, 0), 0, false,
+  UPB_SIZE(0, 0), 0, false, 255,
 };
 
 #if COCOAPODS==1

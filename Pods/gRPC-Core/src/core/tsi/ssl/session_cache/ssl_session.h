@@ -23,8 +23,6 @@
 
 #include <grpc/slice.h>
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wmodule-import-in-extern-c"
 extern "C" {
 #if COCOAPODS==1
   #include <openssl_grpc/ssl.h>
@@ -32,7 +30,6 @@ extern "C" {
   #include <openssl/ssl.h>
 #endif
 }
-#pragma clang diagnostic pop
 
 #include "src/core/lib/gprpp/ref_counted.h"
 

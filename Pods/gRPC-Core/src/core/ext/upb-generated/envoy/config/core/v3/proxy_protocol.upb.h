@@ -20,6 +20,11 @@
   #include  "upb/decode.h"
 #endif
 #if COCOAPODS==1
+  #include  "third_party/upb/upb/decode_fast.h"
+#else
+  #include  "upb/decode_fast.h"
+#endif
+#if COCOAPODS==1
   #include  "third_party/upb/upb/encode.h"
 #else
   #include  "upb/encode.h"
@@ -54,6 +59,12 @@ UPB_INLINE envoy_config_core_v3_ProxyProtocolConfig *envoy_config_core_v3_ProxyP
                         upb_arena *arena) {
   envoy_config_core_v3_ProxyProtocolConfig *ret = envoy_config_core_v3_ProxyProtocolConfig_new(arena);
   return (ret && upb_decode(buf, size, ret, &envoy_config_core_v3_ProxyProtocolConfig_msginit, arena)) ? ret : NULL;
+}
+UPB_INLINE envoy_config_core_v3_ProxyProtocolConfig *envoy_config_core_v3_ProxyProtocolConfig_parse_ex(const char *buf, size_t size,
+                           upb_arena *arena, int options) {
+  envoy_config_core_v3_ProxyProtocolConfig *ret = envoy_config_core_v3_ProxyProtocolConfig_new(arena);
+  return (ret && _upb_decode(buf, size, ret, &envoy_config_core_v3_ProxyProtocolConfig_msginit, arena, options))
+      ? ret : NULL;
 }
 UPB_INLINE char *envoy_config_core_v3_ProxyProtocolConfig_serialize(const envoy_config_core_v3_ProxyProtocolConfig *msg, upb_arena *arena, size_t *len) {
   return upb_encode(msg, &envoy_config_core_v3_ProxyProtocolConfig_msginit, arena, len);

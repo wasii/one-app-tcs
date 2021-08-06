@@ -11,6 +11,7 @@ let ACTIVE                  = "ACTIVE"
 let BACKGROUND              = "BACKGROUND"
 let INACTIVE                = "INACTIVE"
 let API_KEY                 = "5E4D0F6D8E12D8EC5EA3BBB11B63B2F88E39A7561F25EC67CCB440F782FD0360"
+let SERVER_KEY              = "key=AAAA_p6JmSw:APA91bEDk1_wFN5ytgXFk4n4ahxCi4wMdjvpjPjGbrGhUMkc9yKxn8Q6P8qLPm4fByZYunUPE8EGX13fRPvy30seFiGmc6DQyR-udU-U1ocx8bop5P4kuAabRaEZDHuzPfwaHgBpZl_P"
 let CLIENTSECRET            = "Tcs@wallet3001"
 let RIDERCLIENTSECRET       = "Tcs@rider3002"
 var BEARER_TOKEN            = ""
@@ -95,8 +96,9 @@ let RIDER_GET_TOKEN         = RIDER_ENDPOINT + "token?clientSecret=\(RIDERCLIENT
 let RIDER_DELIVERY_SHEET    = RIDER_ENDPOINT + "delivery"
 let RIDER_BIN_INFO          = RIDER_ENDPOINT + "bin-info"
 let RIDER_REQUEST_DISPUTE   = RIDER_ENDPOINT + "reportCN"
-let RIDER_GENERATE_GIVENTO  = RIDER_ENDPOINT + "generateGTCode"
-let RIDER_RECEIVE_GT_CODE   = RIDER_ENDPOINT + "receive_gt_by_code"
+let RIDER_GENERATE_GIVENTO  = RIDER_ENDPOINT + "generate-gtcode"
+let RIDER_RECEIVE_GT_CODE   = RIDER_ENDPOINT + "receive-gtcode"
+let FCM_NOTIFICATION        = "https://fcm.googleapis.com/fcm/send"
 
 //API BACKEND KEYS
 let eAI_MESSAGE             = "eAI_MESSAGE"
@@ -267,6 +269,12 @@ let db_rider_qrcodes        = "RIDER_QRCODES"
 let NOINTERNETCONNECTION    = "Connect your device with internet first."
 let SOMETHINGWENTWRONG      = "There is something went wrong. Please try again!"
 let REVERTBACK              = "REVERTBACK"
+
+//CUSTOM NOTIFICATION MESSAGES
+let ERRORWHILEQRCODE        = "Error while fetching QRCode."
+let ERRORWHILEDELIVERYSHEET = "Error while fetching Delivery Sheet."
+let SUCCESSWHILEQRCODE      = "Success while fetching QRCode."
+let SUCCESSWHILEDELIVERSHEET = "Success while fetching Delivery Sheet."
 
 public enum Model : String {
     

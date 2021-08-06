@@ -35,7 +35,7 @@ static const upb_msglayout_field google_protobuf_Struct__fields[1] = {
 const upb_msglayout google_protobuf_Struct_msginit = {
   &google_protobuf_Struct_submsgs[0],
   &google_protobuf_Struct__fields[0],
-  UPB_SIZE(4, 8), 1, false,
+  UPB_SIZE(8, 8), 1, false, 255,
 };
 
 static const upb_msglayout *const google_protobuf_Struct_FieldsEntry_submsgs[1] = {
@@ -50,7 +50,7 @@ static const upb_msglayout_field google_protobuf_Struct_FieldsEntry__fields[2] =
 const upb_msglayout google_protobuf_Struct_FieldsEntry_msginit = {
   &google_protobuf_Struct_FieldsEntry_submsgs[0],
   &google_protobuf_Struct_FieldsEntry__fields[0],
-  UPB_SIZE(16, 32), 2, false,
+  UPB_SIZE(16, 32), 2, false, 255,
 };
 
 static const upb_msglayout *const google_protobuf_Value_submsgs[2] = {
@@ -70,7 +70,7 @@ static const upb_msglayout_field google_protobuf_Value__fields[6] = {
 const upb_msglayout google_protobuf_Value_msginit = {
   &google_protobuf_Value_submsgs[0],
   &google_protobuf_Value__fields[0],
-  UPB_SIZE(16, 32), 6, false,
+  UPB_SIZE(16, 32), 6, false, 255,
 };
 
 static const upb_msglayout *const google_protobuf_ListValue_submsgs[1] = {
@@ -84,7 +84,7 @@ static const upb_msglayout_field google_protobuf_ListValue__fields[1] = {
 const upb_msglayout google_protobuf_ListValue_msginit = {
   &google_protobuf_ListValue_submsgs[0],
   &google_protobuf_ListValue__fields[0],
-  UPB_SIZE(4, 8), 1, false,
+  UPB_SIZE(8, 8), 1, false, 255,
 };
 
 #if COCOAPODS==1

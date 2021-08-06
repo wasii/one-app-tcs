@@ -56,7 +56,7 @@ extension RiderDashboardViewController: UICollectionViewDataSource, UICollection
             cell.imageView.image = UIImage(named: "given_to")
             break
         case 5:
-            cell.moduleTitle.text = "Verify Process"
+            cell.moduleTitle.text = "Verify"
             cell.imageView.image = UIImage(named: "verify_process")
             break
         default:
@@ -115,7 +115,7 @@ extension RiderDashboardViewController: UICollectionViewDataSource, UICollection
         let yourWidth = CGFloat(85)
 //        let yourHeight = collectionView.bounds.width / 4.0
         
-        return CGSize(width: yourWidth, height: 120)
+        return CGSize(width: yourWidth, height: 103)
     }
 }
 
@@ -149,7 +149,7 @@ extension RiderDashboardViewController: RiderGivenToDelegate {
         self.freezeScreen()
         let request_body = [
             "access_token": UserDefaults.standard.string(forKey: USER_ACCESS_TOKEN)!,
-            "qrcode": code
+            "qrcode": String(code.split(separator: " ").first ?? "")
         ]
         let params = self.getAPIParameter(service_name: S_RIDER_NOTIFICATION, request_body: request_body)
         NetworkCalls.postriderqrcode(params: params) { notification_granted, notification_response in
@@ -164,36 +164,73 @@ extension RiderDashboardViewController: RiderGivenToDelegate {
                         let params = self.getAPIParameter(service_name: S_DELIVERY_SHEET, request_body: request_body)
                         RiderCalls.SetupDeliverySheets(params: params) { delivery_sheet_granted in
                             if delivery_sheet_granted {
-                                DispatchQueue.main.async {
-                                    self.view.hideToastActivity()
-                                    self.unFreezeScreen()
-                                    let storyboard = UIStoryboard(name: "RiderDelivery", bundle: nil)
-                                    let controller = storyboard.instantiateViewController(withIdentifier: "RiderDeliveryDashboardViewController") as! RiderDeliveryDashboardViewController
-                                    self.navigationController?.pushViewController(controller, animated: true)
+                                let body = [
+                                    "status":"SUCCESS",
+                                    "message": SUCCESSWHILEDELIVERSHEET,
+                                    "givenTo" : "Giver to \(CURRENT_USER_LOGGED_IN_ID)",
+                                    "code": code
+                                ]
+                                let params = self.setupNotificationBody(body: body)
+                                NetworkCalls.postnotification(params: params) { _ in
+                                    DispatchQueue.main.async {
+                                        self.view.hideToastActivity()
+                                        self.unFreezeScreen()
+                                        let storyboard = UIStoryboard(name: "RiderDelivery", bundle: nil)
+                                        let controller = storyboard.instantiateViewController(withIdentifier: "RiderDeliveryDashboardViewController") as! RiderDeliveryDashboardViewController
+                                        self.navigationController?.pushViewController(controller, animated: true)
+                                    }
                                 }
+                                
                             } else {
-                                DispatchQueue.main.async {
-                                    self.view.hideToastActivity()
-                                    self.unFreezeScreen()
-                                    self.view.makeToast(SOMETHINGWENTWRONG)
+                                let body = [
+                                    "status":"ERROR",
+                                    "message": ERRORWHILEDELIVERYSHEET,
+                                    "givenTo" : "",
+                                    "code": ""
+                                ]
+                                let params = self.setupNotificationBody(body: body)
+                                NetworkCalls.postnotification(params: params) { _ in
+                                    DispatchQueue.main.async {
+                                        self.view.hideToastActivity()
+                                        self.unFreezeScreen()
+                                        self.view.makeToast(SOMETHINGWENTWRONG)
+                                    }
                                 }
                             }
                         }
                     } else {
+                        let body = [
+                            "status":"ERROR",
+                            "message": ERRORWHILEQRCODE,
+                            "givenTo" : "",
+                            "code": ""
+                        ]
+                        let params = self.setupNotificationBody(body: body)
+                        NetworkCalls.postnotification(params: params) { _ in
+                            DispatchQueue.main.async {
+                                self.view.hideToastActivity()
+                                self.unFreezeScreen()
+                                self.view.makeToast(SOMETHINGWENTWRONG)
+                            }
+                        }
+                    }
+                }
+            } else {
+                let body = [
+                    "status":"ERROR",
+                    "message": ERRORWHILEQRCODE,
+                    "givenTo" : "",
+                    "code": ""
+                ]
+                let params = self.setupNotificationBody(body: body)
+                NetworkCalls.postnotification(params: params) { _ in
+                    DispatchQueue.main.async {
                         self.view.hideToastActivity()
                         self.unFreezeScreen()
                         self.view.makeToast(SOMETHINGWENTWRONG)
                     }
                 }
-            } else {
-                DispatchQueue.main.async {
-                    self.view.hideToastActivity()
-                    self.unFreezeScreen()
-                    self.view.makeToast(SOMETHINGWENTWRONG)
-                }
             }
         }
     }
 }
-
-

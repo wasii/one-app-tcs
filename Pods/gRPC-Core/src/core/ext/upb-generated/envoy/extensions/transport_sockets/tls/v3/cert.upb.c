@@ -18,11 +18,6 @@
   #include  "envoy/extensions/transport_sockets/tls/v3/cert.upb.h"
 #endif
 #if COCOAPODS==1
-  #include  "src/core/ext/upb-generated/udpa/annotations/status.upb.h"
-#else
-  #include  "udpa/annotations/status.upb.h"
-#endif
-#if COCOAPODS==1
   #include  "src/core/ext/upb-generated/envoy/extensions/transport_sockets/tls/v3/common.upb.h"
 #else
   #include  "envoy/extensions/transport_sockets/tls/v3/common.upb.h"

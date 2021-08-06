@@ -742,4 +742,21 @@ class BaseViewController: UIViewController {
         }
         return nil
     }
+    
+    //MARK: - Create Notification
+    func setupNotificationBody(body: [String:Any]) -> [String:Any] {
+        guard let fcmToken = FIREBASETOKEN else {
+            return ["":""]
+        }
+        return [
+            "to": fcmToken,
+            "notification" : [
+                "body" : "Given To",
+                "title": "One App Rider"
+            ],
+            "data" : [
+                "body" : body
+            ]
+        ]
+    }
 }

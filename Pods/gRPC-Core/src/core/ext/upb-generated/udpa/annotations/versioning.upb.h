@@ -20,6 +20,11 @@
   #include  "upb/decode.h"
 #endif
 #if COCOAPODS==1
+  #include  "third_party/upb/upb/decode_fast.h"
+#else
+  #include  "upb/decode_fast.h"
+#endif
+#if COCOAPODS==1
   #include  "third_party/upb/upb/encode.h"
 #else
   #include  "upb/encode.h"
@@ -49,6 +54,12 @@ UPB_INLINE udpa_annotations_VersioningAnnotation *udpa_annotations_VersioningAnn
                         upb_arena *arena) {
   udpa_annotations_VersioningAnnotation *ret = udpa_annotations_VersioningAnnotation_new(arena);
   return (ret && upb_decode(buf, size, ret, &udpa_annotations_VersioningAnnotation_msginit, arena)) ? ret : NULL;
+}
+UPB_INLINE udpa_annotations_VersioningAnnotation *udpa_annotations_VersioningAnnotation_parse_ex(const char *buf, size_t size,
+                           upb_arena *arena, int options) {
+  udpa_annotations_VersioningAnnotation *ret = udpa_annotations_VersioningAnnotation_new(arena);
+  return (ret && _upb_decode(buf, size, ret, &udpa_annotations_VersioningAnnotation_msginit, arena, options))
+      ? ret : NULL;
 }
 UPB_INLINE char *udpa_annotations_VersioningAnnotation_serialize(const udpa_annotations_VersioningAnnotation *msg, upb_arena *arena, size_t *len) {
   return upb_encode(msg, &udpa_annotations_VersioningAnnotation_msginit, arena, len);

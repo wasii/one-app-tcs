@@ -20,6 +20,11 @@
   #include  "upb/decode.h"
 #endif
 #if COCOAPODS==1
+  #include  "third_party/upb/upb/decode_fast.h"
+#else
+  #include  "upb/decode_fast.h"
+#endif
+#if COCOAPODS==1
   #include  "third_party/upb/upb/encode.h"
 #else
   #include  "upb/encode.h"
@@ -49,6 +54,12 @@ UPB_INLINE google_protobuf_Empty *google_protobuf_Empty_parse(const char *buf, s
                         upb_arena *arena) {
   google_protobuf_Empty *ret = google_protobuf_Empty_new(arena);
   return (ret && upb_decode(buf, size, ret, &google_protobuf_Empty_msginit, arena)) ? ret : NULL;
+}
+UPB_INLINE google_protobuf_Empty *google_protobuf_Empty_parse_ex(const char *buf, size_t size,
+                           upb_arena *arena, int options) {
+  google_protobuf_Empty *ret = google_protobuf_Empty_new(arena);
+  return (ret && _upb_decode(buf, size, ret, &google_protobuf_Empty_msginit, arena, options))
+      ? ret : NULL;
 }
 UPB_INLINE char *google_protobuf_Empty_serialize(const google_protobuf_Empty *msg, upb_arena *arena, size_t *len) {
   return upb_encode(msg, &google_protobuf_Empty_msginit, arena, len);

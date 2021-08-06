@@ -245,6 +245,11 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
             return
         }
         let userInfo = JSON(notification.request.content.userInfo)
+        if userInfo.dictionary?["aps"]?.dictionary?["alert"]?.dictionary?["title"] == "One App Rider" {
+            NotificationCenter.default.post(Notification.init(name: .logoutUser))
+            
+            return
+        }
         if userInfo.dictionary?["aps"]?.dictionary?["alert"]?.dictionary?["title"] == "User logout" {
             NotificationCenter.default.post(Notification.init(name: .logoutUser))
             UserDefaults.standard.removeObject(forKey: "CurrentUser")

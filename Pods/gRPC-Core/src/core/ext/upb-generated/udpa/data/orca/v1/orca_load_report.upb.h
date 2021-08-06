@@ -20,6 +20,11 @@
   #include  "upb/decode.h"
 #endif
 #if COCOAPODS==1
+  #include  "third_party/upb/upb/decode_fast.h"
+#else
+  #include  "upb/decode_fast.h"
+#endif
+#if COCOAPODS==1
   #include  "third_party/upb/upb/encode.h"
 #else
   #include  "upb/encode.h"
@@ -55,6 +60,12 @@ UPB_INLINE udpa_data_orca_v1_OrcaLoadReport *udpa_data_orca_v1_OrcaLoadReport_pa
                         upb_arena *arena) {
   udpa_data_orca_v1_OrcaLoadReport *ret = udpa_data_orca_v1_OrcaLoadReport_new(arena);
   return (ret && upb_decode(buf, size, ret, &udpa_data_orca_v1_OrcaLoadReport_msginit, arena)) ? ret : NULL;
+}
+UPB_INLINE udpa_data_orca_v1_OrcaLoadReport *udpa_data_orca_v1_OrcaLoadReport_parse_ex(const char *buf, size_t size,
+                           upb_arena *arena, int options) {
+  udpa_data_orca_v1_OrcaLoadReport *ret = udpa_data_orca_v1_OrcaLoadReport_new(arena);
+  return (ret && _upb_decode(buf, size, ret, &udpa_data_orca_v1_OrcaLoadReport_msginit, arena, options))
+      ? ret : NULL;
 }
 UPB_INLINE char *udpa_data_orca_v1_OrcaLoadReport_serialize(const udpa_data_orca_v1_OrcaLoadReport *msg, upb_arena *arena, size_t *len) {
   return upb_encode(msg, &udpa_data_orca_v1_OrcaLoadReport_msginit, arena, len);

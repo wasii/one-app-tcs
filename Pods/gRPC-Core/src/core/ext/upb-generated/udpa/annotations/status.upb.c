@@ -30,14 +30,14 @@
 #endif
 
 static const upb_msglayout_field udpa_annotations_StatusAnnotation__fields[2] = {
-  {1, UPB_SIZE(8, 8), 0, 0, 8, 1},
+  {1, UPB_SIZE(4, 4), 0, 0, 8, 1},
   {2, UPB_SIZE(0, 0), 0, 0, 14, 1},
 };
 
 const upb_msglayout udpa_annotations_StatusAnnotation_msginit = {
   NULL,
   &udpa_annotations_StatusAnnotation__fields[0],
-  UPB_SIZE(16, 16), 2, false,
+  UPB_SIZE(8, 8), 2, false, 255,
 };
 
 #if COCOAPODS==1

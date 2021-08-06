@@ -27,7 +27,7 @@
 const upb_msglayout google_protobuf_Empty_msginit = {
   NULL,
   NULL,
-  UPB_SIZE(0, 0), 0, false,
+  UPB_SIZE(0, 0), 0, false, 255,
 };
 
 #if COCOAPODS==1

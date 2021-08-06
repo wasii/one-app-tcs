@@ -230,6 +230,10 @@ class GivenToDashboardViewController: BaseViewController, AVCaptureMetadataOutpu
     }
     
     @IBAction func submitBtnTapped(_ sender: Any) {
+        if !CustomReachability.isConnectedNetwork() {
+            self.view.makeToast(NOINTERNETCONNECTION)
+            return
+        }
         var cnList = [[String:Any]]()
         if let list = self.deliver_sheet?.filter({ d in
             d.DELIVERYSTATUS != ""
@@ -265,11 +269,10 @@ class GivenToDashboardViewController: BaseViewController, AVCaptureMetadataOutpu
                                     let condition = "CN = '\(cn ?? "")' AND SHEETNO = '\(sheetno ?? "")' AND QRCODE = '\(qrCode)' AND CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)'"
                                     AppDelegate.sharedInstance.db?.deleteRowWithMultipleConditions(tbl: db_rider_qrcodes, conditions: condition, { _ in
                                         let qrCode = QRCodes(QRCODE: qrCode, CN: cn ?? "", SHEETNO: sheetno ?? "", CURRENT_USER: CURRENT_USER_LOGGED_IN_ID)
-                                        
-                                        
+                                        AppDelegate.sharedInstance.db?.insert_tbl_rider_qrcodes(qrCode: qrCode, handler: { _ in })
                                     })
                                 }
-                                let qrCodeImage = self.generateQRCode(from: qrCode)
+                                let qrCodeImage = self.generateQRCode(from: qrCode + " " + FIREBASETOKEN!)
                                 let storyboard = UIStoryboard(name: "Popups", bundle: nil)
                                 let controller = storyboard.instantiateViewController(withIdentifier: "RiderQRCodeViewController") as! RiderQRCodeViewController
                                 if #available(iOS 13, *) {
@@ -286,6 +289,7 @@ class GivenToDashboardViewController: BaseViewController, AVCaptureMetadataOutpu
                         DispatchQueue.main.async {
                             self.view.hideToastActivity()
                             self.unFreezeScreen()
+                            self.view.makeToast(SOMETHINGWENTWRONG)
                         }
                     }
                 }

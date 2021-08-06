@@ -126,8 +126,9 @@ BSSL_NAMESPACE_BEGIN
 
 SSL_HANDSHAKE::SSL_HANDSHAKE(SSL *ssl_arg)
     : ssl(ssl_arg),
+      ech_present(false),
+      ech_is_inner_present(false),
       scts_requested(false),
-      needs_psk_binder(false),
       handshake_finalized(false),
       accept_psk_mode(false),
       cert_request(false),
@@ -144,11 +145,19 @@ SSL_HANDSHAKE::SSL_HANDSHAKE(SSL *ssl_arg)
       ticket_expected(false),
       extended_master_secret(false),
       pending_private_key_op(false),
-      grease_seeded(false),
       handback(false),
+      hints_requested(false),
       cert_compression_negotiated(false),
-      apply_jdk11_workaround(false) {
+      apply_jdk11_workaround(false),
+      can_release_private_key(false),
+      channel_id_negotiated(false) {
   assert(ssl);
+
+  // Draw entropy for all GREASE values at once. This avoids calling
+  // |RAND_bytes| repeatedly and makes the values consistent within a
+  // connection. The latter is so the second ClientHello matches after
+  // HelloRetryRequest and so supported_groups and key_shares are consistent.
+  RAND_bytes(grease_seed, sizeof(grease_seed));
 }
 
 SSL_HANDSHAKE::~SSL_HANDSHAKE() {
@@ -160,6 +169,28 @@ void SSL_HANDSHAKE::ResizeSecrets(size_t hash_len) {
     abort();
   }
   hash_len_ = hash_len;
+}
+
+bool SSL_HANDSHAKE::GetClientHello(SSLMessage *out_msg,
+                                   SSL_CLIENT_HELLO *out_client_hello) {
+  if (!ech_client_hello_buf.empty()) {
+    // If the backing buffer is non-empty, the ClientHelloInner has been set.
+    out_msg->is_v2_hello = false;
+    out_msg->type = SSL3_MT_CLIENT_HELLO;
+    out_msg->raw = CBS(ech_client_hello_buf);
+    out_msg->body = MakeConstSpan(ech_client_hello_buf).subspan(4);
+  } else if (!ssl->method->get_message(ssl, out_msg)) {
+    // The message has already been read, so this cannot fail.
+    OPENSSL_PUT_ERROR(SSL, ERR_R_INTERNAL_ERROR);
+    return false;
+  }
+
+  if (!ssl_client_hello_init(ssl, out_client_hello, out_msg->body)) {
+    OPENSSL_PUT_ERROR(SSL, SSL_R_CLIENTHELLO_PARSE_FAILED);
+    ssl_send_alert(ssl, SSL3_AL_FATAL, SSL_AD_DECODE_ERROR);
+    return false;
+  }
+  return true;
 }
 
 UniquePtr<SSL_HANDSHAKE> ssl_handshake_new(SSL *ssl) {
@@ -408,21 +439,25 @@ enum ssl_verify_result_t ssl_reverify_peer_cert(SSL_HANDSHAKE *hs,
   return ret;
 }
 
-uint16_t ssl_get_grease_value(SSL_HANDSHAKE *hs,
-                              enum ssl_grease_index_t index) {
-  // Draw entropy for all GREASE values at once. This avoids calling
-  // |RAND_bytes| repeatedly and makes the values consistent within a
-  // connection. The latter is so the second ClientHello matches after
-  // HelloRetryRequest and so supported_groups and key_shares are consistent.
-  if (!hs->grease_seeded) {
-    RAND_bytes(hs->grease_seed, sizeof(hs->grease_seed));
-    hs->grease_seeded = true;
-  }
-
+static uint16_t grease_index_to_value(const SSL_HANDSHAKE *hs,
+                                      enum ssl_grease_index_t index) {
   // This generates a random value of the form 0xωaωa, for all 0 ≤ ω < 16.
   uint16_t ret = hs->grease_seed[index];
   ret = (ret & 0xf0) | 0x0a;
   ret |= ret << 8;
+  return ret;
+}
+
+uint16_t ssl_get_grease_value(const SSL_HANDSHAKE *hs,
+                              enum ssl_grease_index_t index) {
+  uint16_t ret = grease_index_to_value(hs, index);
+  if (index == ssl_grease_extension2 &&
+      ret == grease_index_to_value(hs, ssl_grease_extension1)) {
+    // The two fake extensions must not have the same value. GREASE values are
+    // of the form 0x1a1a, 0x2a2a, 0x3a3a, etc., so XOR to generate a different
+    // one.
+    ret ^= 0x1010;
+  }
   return ret;
 }
 
@@ -494,9 +529,8 @@ bool ssl_send_finished(SSL_HANDSHAKE *hs) {
   }
 
   // Log the master secret, if logging is enabled.
-  if (!ssl_log_secret(
-          ssl, "CLIENT_RANDOM",
-          MakeConstSpan(session->master_key, session->master_key_length))) {
+  if (!ssl_log_secret(ssl, "CLIENT_RANDOM",
+                      MakeConstSpan(session->secret, session->secret_length))) {
     return 0;
   }
 
@@ -551,7 +585,11 @@ const SSL_SESSION *ssl_handshake_session(const SSL_HANDSHAKE *hs) {
 int ssl_run_handshake(SSL_HANDSHAKE *hs, bool *out_early_return) {
   SSL *const ssl = hs->ssl;
   for (;;) {
-    // Resolve the operation the handshake was waiting on.
+    // Resolve the operation the handshake was waiting on. Each condition may
+    // halt the handshake by returning, or continue executing if the handshake
+    // may immediately proceed. Cases which halt the handshake can clear
+    // |hs->wait| to re-enter the state machine on the next iteration, or leave
+    // it set to keep the condition sticky.
     switch (hs->wait) {
       case ssl_hs_error:
         ERR_restore_state(hs->error.get());
@@ -569,13 +607,13 @@ int ssl_run_handshake(SSL_HANDSHAKE *hs, bool *out_early_return) {
       case ssl_hs_read_message:
       case ssl_hs_read_change_cipher_spec: {
         if (ssl->quic_method) {
+          // QUIC has no ChangeCipherSpec messages.
+          assert(hs->wait != ssl_hs_read_change_cipher_spec);
+          // The caller should call |SSL_provide_quic_data|. Clear |hs->wait| so
+          // the handshake can check if there is sufficient data next iteration.
+          ssl->s3->rwstate = SSL_ERROR_WANT_READ;
           hs->wait = ssl_hs_ok;
-          // The change cipher spec is omitted in QUIC.
-          if (hs->wait != ssl_hs_read_change_cipher_spec) {
-            ssl->s3->rwstate = SSL_ERROR_WANT_READ;
-            return -1;
-          }
-          break;
+          return -1;
         }
 
         uint8_t alert = SSL_AD_DECODE_ERROR;
@@ -645,31 +683,26 @@ int ssl_run_handshake(SSL_HANDSHAKE *hs, bool *out_early_return) {
         return -1;
       }
 
+        // The following cases are associated with callback APIs which expect to
+        // be called each time the state machine runs. Thus they set |hs->wait|
+        // to |ssl_hs_ok| so that, next time, we re-enter the state machine and
+        // call the callback again.
       case ssl_hs_x509_lookup:
         ssl->s3->rwstate = SSL_ERROR_WANT_X509_LOOKUP;
         hs->wait = ssl_hs_ok;
         return -1;
-
-      case ssl_hs_channel_id_lookup:
-        ssl->s3->rwstate = SSL_ERROR_WANT_CHANNEL_ID_LOOKUP;
-        hs->wait = ssl_hs_ok;
-        return -1;
-
       case ssl_hs_private_key_operation:
         ssl->s3->rwstate = SSL_ERROR_WANT_PRIVATE_KEY_OPERATION;
         hs->wait = ssl_hs_ok;
         return -1;
-
       case ssl_hs_pending_session:
         ssl->s3->rwstate = SSL_ERROR_PENDING_SESSION;
         hs->wait = ssl_hs_ok;
         return -1;
-
       case ssl_hs_pending_ticket:
         ssl->s3->rwstate = SSL_ERROR_PENDING_TICKET;
         hs->wait = ssl_hs_ok;
         return -1;
-
       case ssl_hs_certificate_verify:
         ssl->s3->rwstate = SSL_ERROR_WANT_CERTIFICATE_VERIFY;
         hs->wait = ssl_hs_ok;
@@ -685,6 +718,10 @@ int ssl_run_handshake(SSL_HANDSHAKE *hs, bool *out_early_return) {
         *out_early_return = true;
         hs->wait = ssl_hs_ok;
         return 1;
+
+      case ssl_hs_hints_ready:
+        ssl->s3->rwstate = SSL_ERROR_HANDSHAKE_HINTS_READY;
+        return -1;
 
       case ssl_hs_ok:
         break;

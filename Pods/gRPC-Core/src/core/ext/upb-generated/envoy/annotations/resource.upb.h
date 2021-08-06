@@ -20,6 +20,11 @@
   #include  "upb/decode.h"
 #endif
 #if COCOAPODS==1
+  #include  "third_party/upb/upb/decode_fast.h"
+#else
+  #include  "upb/decode_fast.h"
+#endif
+#if COCOAPODS==1
   #include  "third_party/upb/upb/encode.h"
 #else
   #include  "upb/encode.h"
@@ -49,6 +54,12 @@ UPB_INLINE envoy_annotations_ResourceAnnotation *envoy_annotations_ResourceAnnot
                         upb_arena *arena) {
   envoy_annotations_ResourceAnnotation *ret = envoy_annotations_ResourceAnnotation_new(arena);
   return (ret && upb_decode(buf, size, ret, &envoy_annotations_ResourceAnnotation_msginit, arena)) ? ret : NULL;
+}
+UPB_INLINE envoy_annotations_ResourceAnnotation *envoy_annotations_ResourceAnnotation_parse_ex(const char *buf, size_t size,
+                           upb_arena *arena, int options) {
+  envoy_annotations_ResourceAnnotation *ret = envoy_annotations_ResourceAnnotation_new(arena);
+  return (ret && _upb_decode(buf, size, ret, &envoy_annotations_ResourceAnnotation_msginit, arena, options))
+      ? ret : NULL;
 }
 UPB_INLINE char *envoy_annotations_ResourceAnnotation_serialize(const envoy_annotations_ResourceAnnotation *msg, upb_arena *arena, size_t *len) {
   return upb_encode(msg, &envoy_annotations_ResourceAnnotation_msginit, arena, len);

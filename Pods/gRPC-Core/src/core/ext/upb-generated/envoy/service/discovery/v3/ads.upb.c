@@ -42,7 +42,7 @@
 const upb_msglayout envoy_service_discovery_v3_AdsDummy_msginit = {
   NULL,
   NULL,
-  UPB_SIZE(0, 0), 0, false,
+  UPB_SIZE(0, 0), 0, false, 255,
 };
 
 #if COCOAPODS==1

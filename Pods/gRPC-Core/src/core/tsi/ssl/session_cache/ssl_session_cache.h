@@ -24,8 +24,6 @@
 #include <grpc/slice.h>
 #include <grpc/support/sync.h>
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wmodule-import-in-extern-c"
 extern "C" {
 #if COCOAPODS==1
   #include <openssl_grpc/ssl.h>
@@ -33,11 +31,11 @@ extern "C" {
   #include <openssl/ssl.h>
 #endif
 }
-#pragma clang diagnostic pop
 
 #include "src/core/lib/avl/avl.h"
 #include "src/core/lib/gprpp/memory.h"
 #include "src/core/lib/gprpp/ref_counted.h"
+#include "src/core/lib/gprpp/sync.h"
 #include "src/core/tsi/ssl/session_cache/ssl_session.h"
 
 /// Cache for SSL sessions for sessions resumption.
@@ -83,7 +81,7 @@ class SslSessionLRUCache : public grpc_core::RefCounted<SslSessionLRUCache> {
   void PushFront(Node* node);
   void AssertInvariants();
 
-  gpr_mu lock_;
+  grpc_core::Mutex lock_;
   size_t capacity_;
 
   Node* use_order_list_head_ = nullptr;
