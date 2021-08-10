@@ -29,7 +29,7 @@ var RECORD_ID               = 0
 
 //DEV
 let WALLET_ENDPOINT         = "https://sandbox.tcscourier.com/qa/v1/wallet/"
-let ENDPOINT                = "https://devapi.tcscourier.com/qacore/api/main"
+let ENDPOINT                = "https://devapi.tcscourier.com/core/api/main"
 let UPLOADFILESURL          = "https://pwaqaapi.tcscourier.com/api/file-upload"
 
 let LOGIN                   = "oneapp.login"

@@ -30,7 +30,7 @@ class DashboardViewController: UITabBarController, UITabBarControllerDelegate {
                 return true
             }
             if let _ = viewController.children[0] as? WalletDashboardViewController {
-                return true
+                return false
             }
         }
         return true
