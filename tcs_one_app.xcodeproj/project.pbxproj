@@ -10,7 +10,6 @@
 		1B02129625A6E27300441E9F /* ConfirmationPopViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B02129525A6E27300441E9F /* ConfirmationPopViewController.swift */; };
 		1B0C62EB255C100C00DCA76D /* ModulePermissionsTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B0C62E9255C100C00DCA76D /* ModulePermissionsTableCell.swift */; };
 		1B0C62EC255C100C00DCA76D /* ModulePermissionsTableCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1B0C62EA255C100C00DCA76D /* ModulePermissionsTableCell.xib */; };
-		1B0CD7DA25F0C0B500C1C87D /* TCSOneApp.db in Resources */ = {isa = PBXBuildFile; fileRef = 1B0CD7D925F0C0B500C1C87D /* TCSOneApp.db */; };
 		1B11D07E262EB37000C137A3 /* RequestListingTableCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1B11D07C262EB37000C137A3 /* RequestListingTableCell.xib */; };
 		1B11D07F262EB37000C137A3 /* RequestListingTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B11D07D262EB37000C137A3 /* RequestListingTableCell.swift */; };
 		1B11D085262EC82800C137A3 /* HeadOfSecurity.docx in Resources */ = {isa = PBXBuildFile; fileRef = 1B11D083262EC82800C137A3 /* HeadOfSecurity.docx */; };
@@ -32,6 +31,8 @@
 		1B3202F92578C70B0034803F /* ImagePickerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B3202F82578C70B0034803F /* ImagePickerManager.swift */; };
 		1B326588259C95BF001B94C0 /* IMSDashboardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B326587259C95BF001B94C0 /* IMSDashboardViewController.swift */; };
 		1B3B229826C15F4E008EDC15 /* MIS.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1B3B229726C15F4E008EDC15 /* MIS.storyboard */; };
+		1B3B229A26C24E4A008EDC15 /* TCSOneApp.db in Resources */ = {isa = PBXBuildFile; fileRef = 1B3B229926C24E4A008EDC15 /* TCSOneApp.db */; };
+		1B3B229C26C24F40008EDC15 /* MIS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B3B229B26C24F40008EDC15 /* MIS.swift */; };
 		1B3B36102574D86B0051779A /* download-fill-icon.svg in Resources */ = {isa = PBXBuildFile; fileRef = 1B3B360F2574D86B0051779A /* download-fill-icon.svg */; };
 		1B3B36162574DC860051779A /* history-icon-fill.svg in Resources */ = {isa = PBXBuildFile; fileRef = 1B3B36152574DC860051779A /* history-icon-fill.svg */; };
 		1B3BB84D25DBEA69006A29F4 /* TrackingModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B3BB84C25DBEA69006A29F4 /* TrackingModel.swift */; };
@@ -183,7 +184,6 @@
 		1B02129525A6E27300441E9F /* ConfirmationPopViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmationPopViewController.swift; sourceTree = "<group>"; };
 		1B0C62E9255C100C00DCA76D /* ModulePermissionsTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModulePermissionsTableCell.swift; sourceTree = "<group>"; };
 		1B0C62EA255C100C00DCA76D /* ModulePermissionsTableCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ModulePermissionsTableCell.xib; sourceTree = "<group>"; };
-		1B0CD7D925F0C0B500C1C87D /* TCSOneApp.db */ = {isa = PBXFileReference; lastKnownFileType = file; path = TCSOneApp.db; sourceTree = "<group>"; };
 		1B11D07C262EB37000C137A3 /* RequestListingTableCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = RequestListingTableCell.xib; sourceTree = "<group>"; };
 		1B11D07D262EB37000C137A3 /* RequestListingTableCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RequestListingTableCell.swift; sourceTree = "<group>"; };
 		1B11D083262EC82800C137A3 /* HeadOfSecurity.docx */ = {isa = PBXFileReference; lastKnownFileType = file; path = HeadOfSecurity.docx; sourceTree = "<group>"; };
@@ -205,6 +205,8 @@
 		1B3202F82578C70B0034803F /* ImagePickerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePickerManager.swift; sourceTree = "<group>"; };
 		1B326587259C95BF001B94C0 /* IMSDashboardViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMSDashboardViewController.swift; sourceTree = "<group>"; };
 		1B3B229726C15F4E008EDC15 /* MIS.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = MIS.storyboard; sourceTree = "<group>"; };
+		1B3B229926C24E4A008EDC15 /* TCSOneApp.db */ = {isa = PBXFileReference; lastKnownFileType = file; path = TCSOneApp.db; sourceTree = "<group>"; };
+		1B3B229B26C24F40008EDC15 /* MIS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MIS.swift; sourceTree = "<group>"; };
 		1B3B360F2574D86B0051779A /* download-fill-icon.svg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "download-fill-icon.svg"; sourceTree = "<group>"; };
 		1B3B36152574DC860051779A /* history-icon-fill.svg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "history-icon-fill.svg"; sourceTree = "<group>"; };
 		1B3BB84C25DBEA69006A29F4 /* TrackingModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackingModel.swift; sourceTree = "<group>"; };
@@ -676,7 +678,7 @@
 		605CE77625419C2100509434 /* Local Database */ = {
 			isa = PBXGroup;
 			children = (
-				1B0CD7D925F0C0B500C1C87D /* TCSOneApp.db */,
+				1B3B229926C24E4A008EDC15 /* TCSOneApp.db */,
 			);
 			path = "Local Database";
 			sourceTree = "<group>";
@@ -693,6 +695,7 @@
 				1B3BB84C25DBEA69006A29F4 /* TrackingModel.swift */,
 				1B3EDCA9260C94FD00A97984 /* Fulfilment.swift */,
 				1BBB7DC9268DA556001EA7D0 /* Wallet.swift */,
+				1B3B229B26C24F40008EDC15 /* MIS.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -970,7 +973,7 @@
 				1B11D07E262EB37000C137A3 /* RequestListingTableCell.xib in Resources */,
 				609C605B25387B900051CF28 /* UserCredentials.storyboard in Resources */,
 				1B47F9A025A5F18300FC74A4 /* IncidentInvestigationTableCell.xib in Resources */,
-				1B0CD7DA25F0C0B500C1C87D /* TCSOneApp.db in Resources */,
+				1B3B229A26C24E4A008EDC15 /* TCSOneApp.db in Resources */,
 				1BE523DA2679DB1100F5F030 /* IMSDeliveryDetailTableCell.xib in Resources */,
 				605CE7712541686E00509434 /* KEYSTORE.der in Resources */,
 				1BFB375625F9D7CA0073CC53 /* AttendanceDetailsTableCell.xib in Resources */,
@@ -1054,6 +1057,7 @@
 				60E99917253D548200BCDAD1 /* ModulesCollectionCell.swift in Sources */,
 				1BBAEA4D259DA1AA00FBDCB4 /* IMSAllRequestsViewController.swift in Sources */,
 				605CE77A25419C8A00509434 /* DBHelper.swift in Sources */,
+				1B3B229C26C24F40008EDC15 /* MIS.swift in Sources */,
 				1B71451B25AF85250058C36C /* IMSFilesViewController.swift in Sources */,
 				60978BDD2551D1A6009AA2F3 /* LogoutViewController.swift in Sources */,
 				609C606025387C4B0051CF28 /* BaseViewController.swift in Sources */,

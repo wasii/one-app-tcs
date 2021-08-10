@@ -18,6 +18,8 @@ class FetchUserDataViewController: BaseViewController {
     @IBOutlet weak var hrNotification_Label: UILabel!
     @IBOutlet weak var attecndance_label: UILabel!
     @IBOutlet weak var fulfilment_label: UILabel!
+    @IBOutlet weak var mis_setup_label: UILabel!
+    @IBOutlet weak var mis_daily_overview: UILabel!
     @IBOutlet weak var wallet_label: UILabel!
     
     @IBOutlet weak var mainView: UIView!
@@ -45,6 +47,8 @@ class FetchUserDataViewController: BaseViewController {
     
     @IBOutlet weak var fulfilmentView: CustomView!
     @IBOutlet weak var imsSetupView: CustomView!
+    @IBOutlet weak var misSetupView: CustomView!
+    @IBOutlet weak var misDailyOverview: CustomView!
     //IMS Constraint/Variable
     
     var HR_Request = [HrRequest]()
@@ -58,6 +62,9 @@ class FetchUserDataViewController: BaseViewController {
     
     
     var isTotalCounter = 0
+    
+    //MIS Permission
+    var isMISListingAllowed: Bool = false
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationItem.hidesBackButton = true
@@ -78,16 +85,18 @@ class FetchUserDataViewController: BaseViewController {
             UIImageView.tintColor = UIColor.white
         }
         if CustomReachability.isConnectedNetwork() {
+            if let count = AppDelegate.sharedInstance.db?.read_tbl_UserPage().filter({ userPage in
+                userPage.PAGENAME == PERMISSION_MIS_LISTING
+            }).count {
+                if count > 0 {
+                    self.isMISListingAllowed = true
+                }
+            }
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                 self.setupAPI()
             }
         } else {
             self.view.makeToast(NOINTERNETCONNECTION)
-            //            if isPresented {
-            //                DispatchQueue.main.asyncAfter(deadline: .now() + 2.5, execute: {
-            //                    self.dismiss(animated: true, completion: nil)
-            //                })
-            //            }
             return
         }
     }
@@ -1083,30 +1092,78 @@ extension FetchUserDataViewController {
                         self.activityIndicator[5].isHidden = true
                         self.checkedImageView[5].isHidden = false
                         
-                        self.activityIndicator[6].isHidden = false
-                        self.activityIndicator[6].startAnimating()
-                        self.wallet_label.text = "Syncing Wallet Setup"
-                        self.setupWallet { wallet_success in
-                            if wallet_success {
-                                DispatchQueue.main.async {
-                                    self.wallet_label.text = "Synced Wallet Setup"
-                                    self.loaderViews[6].backgroundColor = UIColor.nativeRedColor()
-                                    self.activityIndicator[6].stopAnimating()
-                                    self.activityIndicator[6].isHidden = true
-                                    self.checkedImageView[6].isHidden = false
-                                    
-                                    self.activityIndicator[7].isHidden = false
-                                    self.activityIndicator[7].startAnimating()
-                                    
-                                    self.count = 0
-                                    self.skip = 0
-                                    self.isTotalCounter = 0
-                                    
-                                    self.setupwallethistorypoints()
+                        //MIS Setup
+                        if self.isMISListingAllowed {
+                            self.misSetupView.isHidden = false
+                            self.misDailyOverview.isHidden = false
+                            self.activityIndicator[6].isHidden = false
+                            self.activityIndicator[6].startAnimating()
+                            
+                            self.getMISToken { token_granted in
+                                if token_granted {
+                                    DispatchQueue.main.async {
+                                        self.loaderViews[6].backgroundColor = UIColor.nativeRedColor()
+                                        self.activityIndicator[6].stopAnimating()
+                                        self.activityIndicator[6].isHidden = true
+                                        self.checkedImageView[6].isHidden = false
+                                        self.mis_setup_label.text = "Synced MIS Setup"
+                                        
+                                        self.activityIndicator[7].isHidden = false
+                                        self.activityIndicator[7].startAnimating()
+                                        
+                                        self.getmisdailyoverview { dailyOverview_granted in
+                                            if dailyOverview_granted {
+                                                DispatchQueue.main.async {
+                                                    self.loaderViews[7].backgroundColor = UIColor.nativeRedColor()
+                                                    self.activityIndicator[7].stopAnimating()
+                                                    self.activityIndicator[7].isHidden = true
+                                                    self.checkedImageView[7].isHidden = false
+                                                    self.mis_daily_overview.text = "Synced MIS Daily Overview"
+                                                    self.navigateHomeScreen()
+                                                }
+                                            } else {
+                                                DispatchQueue.main.async {
+                                                    self.view.makeToast(SOMETHINGWENTWRONG)
+                                                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                                                        self.navigationController?.popViewController(animated: true)
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                } else {
+                                    DispatchQueue.main.async {
+                                        self.view.makeToast(SOMETHINGWENTWRONG)
+                                        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                                            self.navigationController?.popViewController(animated: true)
+                                        }
+                                    }
                                 }
-//                                self.navigateHomeScreen()
                             }
+                        } else {
+                            self.navigateHomeScreen()
                         }
+//                        self.wallet_label.text = "Syncing Wallet Setup"
+//                        self.setupWallet { wallet_success in
+//                            if wallet_success {
+//                                DispatchQueue.main.async {
+//                                    self.wallet_label.text = "Synced Wallet Setup"
+//                                    self.loaderViews[6].backgroundColor = UIColor.nativeRedColor()
+//                                    self.activityIndicator[6].stopAnimating()
+//                                    self.activityIndicator[6].isHidden = true
+//                                    self.checkedImageView[6].isHidden = false
+//
+//                                    self.activityIndicator[7].isHidden = false
+//                                    self.activityIndicator[7].startAnimating()
+//
+//                                    self.count = 0
+//                                    self.skip = 0
+//                                    self.isTotalCounter = 0
+//
+//                                    self.setupwallethistorypoints()
+//                                }
+//                            }
+//                        }
                     }
                     return
                 }
@@ -1144,31 +1201,80 @@ extension FetchUserDataViewController {
                                     self.activityIndicator[5].stopAnimating()
                                     self.activityIndicator[5].isHidden = true
                                     self.checkedImageView[5].isHidden = false
-                                    
-                                    self.activityIndicator[6].isHidden = false
-                                    self.activityIndicator[6].startAnimating()
-                                    self.wallet_label.text = "Syncing Wallet Setup"
-                                    self.setupWallet { wallet_success in
-                                        if wallet_success {
-                                            DispatchQueue.main.async {
-                                                self.wallet_label.text = "Synced Wallet Setup"
-                                                self.loaderViews[6].backgroundColor = UIColor.nativeRedColor()
-                                                self.activityIndicator[6].stopAnimating()
-                                                self.activityIndicator[6].isHidden = true
-                                                self.checkedImageView[6].isHidden = false
-                                                
-                                                self.activityIndicator[7].isHidden = false
-                                                self.activityIndicator[7].startAnimating()
-                                                
-                                                self.count = 0
-                                                self.skip = 0
-                                                self.isTotalCounter = 0
-                                                
-                                                self.setupwallethistorypoints()
+                                    //MIS Setup
+                                    if self.isMISListingAllowed {
+                                        self.misSetupView.isHidden = false
+                                        self.misDailyOverview.isHidden = false
+                                        self.activityIndicator[6].isHidden = false
+                                        self.activityIndicator[6].startAnimating()
+                                        
+                                        self.getMISToken { token_granted in
+                                            if token_granted {
+                                                DispatchQueue.main.async {
+                                                    self.loaderViews[6].backgroundColor = UIColor.nativeRedColor()
+                                                    self.activityIndicator[6].stopAnimating()
+                                                    self.activityIndicator[6].isHidden = true
+                                                    self.checkedImageView[6].isHidden = false
+                                                    self.mis_setup_label.text = "Synced MIS Setup"
+                                                    
+                                                    self.activityIndicator[7].isHidden = false
+                                                    self.activityIndicator[7].startAnimating()
+                                                    
+                                                    self.getmisdailyoverview { dailyOverview_granted in
+                                                        if dailyOverview_granted {
+                                                            DispatchQueue.main.async {
+                                                                self.loaderViews[7].backgroundColor = UIColor.nativeRedColor()
+                                                                self.activityIndicator[7].stopAnimating()
+                                                                self.activityIndicator[7].isHidden = true
+                                                                self.checkedImageView[7].isHidden = false
+                                                                self.mis_daily_overview.text = "Synced MIS Daily Overview"
+                                                                self.navigateHomeScreen()
+                                                            }
+                                                        } else {
+                                                            DispatchQueue.main.async {
+                                                                self.view.makeToast(SOMETHINGWENTWRONG)
+                                                                DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                                                                    self.navigationController?.popViewController(animated: true)
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            } else {
+                                                DispatchQueue.main.async {
+                                                    self.view.makeToast(SOMETHINGWENTWRONG)
+                                                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                                                        self.navigationController?.popViewController(animated: true)
+                                                    }
+                                                }
                                             }
                                         }
-//                                        self.navigateHomeScreen()
+                                    } else {
+                                        self.navigateHomeScreen()
                                     }
+//                                    self.activityIndicator[6].isHidden = false
+//                                    self.activityIndicator[6].startAnimating()
+//                                    self.wallet_label.text = "Syncing Wallet Setup"
+//                                    self.setupWallet { wallet_success in
+//                                        if wallet_success {
+//                                            DispatchQueue.main.async {
+//                                                self.wallet_label.text = "Synced Wallet Setup"
+//                                                self.loaderViews[6].backgroundColor = UIColor.nativeRedColor()
+//                                                self.activityIndicator[6].stopAnimating()
+//                                                self.activityIndicator[6].isHidden = true
+//                                                self.checkedImageView[6].isHidden = false
+//
+//                                                self.activityIndicator[7].isHidden = false
+//                                                self.activityIndicator[7].startAnimating()
+//
+//                                                self.count = 0
+//                                                self.skip = 0
+//                                                self.isTotalCounter = 0
+//
+//                                                self.setupwallethistorypoints()
+//                                            }
+//                                        }
+//                                    }
                                 }
                             }
                         } else {
@@ -1201,30 +1307,80 @@ extension FetchUserDataViewController {
                         self.checkedImageView[5].isHidden = false
                         self.fulfilment_label.text = "Synced Fulfilment Orders Log"
                         
-                        self.activityIndicator[6].isHidden = false
-                        self.activityIndicator[6].startAnimating()
-                        self.wallet_label.text = "Syncing Wallet Setup"
-                        self.setupWallet { wallet_success in
-                            if wallet_success {
-                                DispatchQueue.main.async {
-                                    self.wallet_label.text = "Synced Wallet Setup"
-                                    self.loaderViews[6].backgroundColor = UIColor.nativeRedColor()
-                                    self.activityIndicator[6].stopAnimating()
-                                    self.activityIndicator[6].isHidden = true
-                                    self.checkedImageView[6].isHidden = false
-                                    
-                                    self.activityIndicator[7].isHidden = false
-                                    self.activityIndicator[7].startAnimating()
-                                    
-                                    self.count = 0
-                                    self.skip = 0
-                                    self.isTotalCounter = 0
-                                    
-                                    self.setupwallethistorypoints()
+                        //MIS Setup
+                        if self.isMISListingAllowed {
+                            self.misSetupView.isHidden = false
+                            self.misDailyOverview.isHidden = false
+                            self.activityIndicator[6].isHidden = false
+                            self.activityIndicator[6].startAnimating()
+                            
+                            self.getMISToken { token_granted in
+                                if token_granted {
+                                    DispatchQueue.main.async {
+                                        self.loaderViews[6].backgroundColor = UIColor.nativeRedColor()
+                                        self.activityIndicator[6].stopAnimating()
+                                        self.activityIndicator[6].isHidden = true
+                                        self.checkedImageView[6].isHidden = false
+                                        self.mis_setup_label.text = "Synced MIS Setup"
+                                        
+                                        self.activityIndicator[7].isHidden = false
+                                        self.activityIndicator[7].startAnimating()
+                                        
+                                        self.getmisdailyoverview { dailyOverview_granted in
+                                            if dailyOverview_granted {
+                                                DispatchQueue.main.async {
+                                                    self.loaderViews[7].backgroundColor = UIColor.nativeRedColor()
+                                                    self.activityIndicator[7].stopAnimating()
+                                                    self.activityIndicator[7].isHidden = true
+                                                    self.checkedImageView[7].isHidden = false
+                                                    self.mis_daily_overview.text = "Synced MIS Daily Overview"
+                                                    self.navigateHomeScreen()
+                                                }
+                                            } else {
+                                                DispatchQueue.main.async {
+                                                    self.view.makeToast(SOMETHINGWENTWRONG)
+                                                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                                                        self.navigationController?.popViewController(animated: true)
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                } else {
+                                    DispatchQueue.main.async {
+                                        self.view.makeToast(SOMETHINGWENTWRONG)
+                                        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                                            self.navigationController?.popViewController(animated: true)
+                                        }
+                                    }
                                 }
-//                                self.navigateHomeScreen()
                             }
+                        } else {
+                            self.navigateHomeScreen()
                         }
+//                        self.activityIndicator[6].isHidden = false
+//                        self.activityIndicator[6].startAnimating()
+//                        self.wallet_label.text = "Syncing Wallet Setup"
+//                        self.setupWallet { wallet_success in
+//                            if wallet_success {
+//                                DispatchQueue.main.async {
+//                                    self.wallet_label.text = "Synced Wallet Setup"
+//                                    self.loaderViews[6].backgroundColor = UIColor.nativeRedColor()
+//                                    self.activityIndicator[6].stopAnimating()
+//                                    self.activityIndicator[6].isHidden = true
+//                                    self.checkedImageView[6].isHidden = false
+//
+//                                    self.activityIndicator[7].isHidden = false
+//                                    self.activityIndicator[7].startAnimating()
+//
+//                                    self.count = 0
+//                                    self.skip = 0
+//                                    self.isTotalCounter = 0
+//
+//                                    self.setupwallethistorypoints()
+//                                }
+//                            }
+//                        }
                     }
                 }
                 
@@ -1308,30 +1464,81 @@ extension FetchUserDataViewController {
                                             self.getFulfilment()
                                             return
                                         } else {
-                                            self.activityIndicator[6].isHidden = false
-                                            self.activityIndicator[6].startAnimating()
-                                            self.wallet_label.text = "Syncing Wallet Setup"
-                                            self.setupWallet { wallet_success in
-                                                if wallet_success {
-                                                    DispatchQueue.main.async {
-                                                        self.wallet_label.text = "Synced Wallet Setup"
-                                                        self.loaderViews[6].backgroundColor = UIColor.nativeRedColor()
-                                                        self.activityIndicator[6].stopAnimating()
-                                                        self.activityIndicator[6].isHidden = true
-                                                        self.checkedImageView[6].isHidden = false
-                                                        
-                                                        self.activityIndicator[7].isHidden = false
-                                                        self.activityIndicator[7].startAnimating()
-                                                        
-                                                        self.count = 0
-                                                        self.skip = 0
-                                                        self.isTotalCounter = 0
-                                                        
-                                                        self.setupwallethistorypoints()
+                                            //MIS Setup
+                                            if self.isMISListingAllowed {
+                                                self.misSetupView.isHidden = false
+                                                self.misDailyOverview.isHidden = false
+                                                self.activityIndicator[6].isHidden = false
+                                                self.activityIndicator[6].startAnimating()
+                                                
+                                                self.getMISToken { token_granted in
+                                                    if token_granted {
+                                                        DispatchQueue.main.async {
+                                                            self.loaderViews[6].backgroundColor = UIColor.nativeRedColor()
+                                                            self.activityIndicator[6].stopAnimating()
+                                                            self.activityIndicator[6].isHidden = true
+                                                            self.checkedImageView[6].isHidden = false
+                                                            self.mis_setup_label.text = "Synced MIS Setup"
+                                                            
+                                                            self.activityIndicator[7].isHidden = false
+                                                            self.activityIndicator[7].startAnimating()
+                                                            
+                                                            self.getmisdailyoverview { dailyOverview_granted in
+                                                                if dailyOverview_granted {
+                                                                    DispatchQueue.main.async {
+                                                                        self.loaderViews[7].backgroundColor = UIColor.nativeRedColor()
+                                                                        self.activityIndicator[7].stopAnimating()
+                                                                        self.activityIndicator[7].isHidden = true
+                                                                        self.checkedImageView[7].isHidden = false
+                                                                        self.mis_daily_overview.text = "Synced MIS Daily Overview"
+                                                                        
+                                                                        self.navigateHomeScreen()
+                                                                    }
+                                                                } else {
+                                                                    DispatchQueue.main.async {
+                                                                        self.view.makeToast(SOMETHINGWENTWRONG)
+                                                                        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                                                                            self.navigationController?.popViewController(animated: true)
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    } else {
+                                                        DispatchQueue.main.async {
+                                                            self.view.makeToast(SOMETHINGWENTWRONG)
+                                                            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                                                                self.navigationController?.popViewController(animated: true)
+                                                            }
+                                                        }
                                                     }
-//                                                    self.navigateHomeScreen()
                                                 }
+                                            } else {
+                                                self.navigateHomeScreen()
                                             }
+//                                            self.activityIndicator[6].isHidden = false
+//                                            self.activityIndicator[6].startAnimating()
+//                                            self.wallet_label.text = "Syncing Wallet Setup"
+//                                            self.setupWallet { wallet_success in
+//                                                if wallet_success {
+//                                                    DispatchQueue.main.async {
+//                                                        self.wallet_label.text = "Synced Wallet Setup"
+//                                                        self.loaderViews[6].backgroundColor = UIColor.nativeRedColor()
+//                                                        self.activityIndicator[6].stopAnimating()
+//                                                        self.activityIndicator[6].isHidden = true
+//                                                        self.checkedImageView[6].isHidden = false
+//
+//                                                        self.activityIndicator[7].isHidden = false
+//                                                        self.activityIndicator[7].startAnimating()
+//
+//                                                        self.count = 0
+//                                                        self.skip = 0
+//                                                        self.isTotalCounter = 0
+//
+//                                                        self.setupwallethistorypoints()
+//                                                    }
+//                                                }
+//                                            }
                                             return
                                         }
                                     }
@@ -1399,30 +1606,81 @@ extension FetchUserDataViewController {
                                                     self.getFulfilment()
                                                     return
                                                 } else {
-                                                    self.activityIndicator[6].isHidden = false
-                                                    self.activityIndicator[6].startAnimating()
-                                                    self.wallet_label.text = "Syncing Wallet Setup"
-                                                    self.setupWallet { wallet_success in
-                                                        if wallet_success {
-                                                            DispatchQueue.main.async {
-                                                                self.wallet_label.text = "Synced Wallet Setup"
-                                                                self.loaderViews[6].backgroundColor = UIColor.nativeRedColor()
-                                                                self.activityIndicator[6].stopAnimating()
-                                                                self.activityIndicator[6].isHidden = true
-                                                                self.checkedImageView[6].isHidden = false
-                                                                
-                                                                self.activityIndicator[7].isHidden = false
-                                                                self.activityIndicator[7].startAnimating()
-                                                                
-                                                                self.count = 0
-                                                                self.skip = 0
-                                                                self.isTotalCounter = 0
-                                                                
-                                                                self.setupwallethistorypoints()
+                                                    //MIS Setup
+                                                    if self.isMISListingAllowed {
+                                                        self.misSetupView.isHidden = false
+                                                        self.misDailyOverview.isHidden = false
+                                                        self.activityIndicator[6].isHidden = false
+                                                        self.activityIndicator[6].startAnimating()
+                                                        
+                                                        self.getMISToken { token_granted in
+                                                            if token_granted {
+                                                                DispatchQueue.main.async {
+                                                                    self.loaderViews[6].backgroundColor = UIColor.nativeRedColor()
+                                                                    self.activityIndicator[6].stopAnimating()
+                                                                    self.activityIndicator[6].isHidden = true
+                                                                    self.checkedImageView[6].isHidden = false
+                                                                    self.mis_setup_label.text = "Synced MIS Setup"
+                                                                    
+                                                                    self.activityIndicator[7].isHidden = false
+                                                                    self.activityIndicator[7].startAnimating()
+                                                                    
+                                                                    self.getmisdailyoverview { dailyOverview_granted in
+                                                                        if dailyOverview_granted {
+                                                                            DispatchQueue.main.async {
+                                                                                self.loaderViews[7].backgroundColor = UIColor.nativeRedColor()
+                                                                                self.activityIndicator[7].stopAnimating()
+                                                                                self.activityIndicator[7].isHidden = true
+                                                                                self.checkedImageView[7].isHidden = false
+                                                                                self.mis_daily_overview.text = "Synced MIS Daily Overview"
+                                                                                
+                                                                                self.navigateHomeScreen()
+                                                                            }
+                                                                        } else {
+                                                                            DispatchQueue.main.async {
+                                                                                self.view.makeToast(SOMETHINGWENTWRONG)
+                                                                                DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                                                                                    self.navigationController?.popViewController(animated: true)
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                }
+                                                            } else {
+                                                                DispatchQueue.main.async {
+                                                                    self.view.makeToast(SOMETHINGWENTWRONG)
+                                                                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                                                                        self.navigationController?.popViewController(animated: true)
+                                                                    }
+                                                                }
                                                             }
-//                                                            self.navigateHomeScreen()
                                                         }
+                                                    } else {
+                                                        self.navigateHomeScreen()
                                                     }
+//                                                    self.activityIndicator[6].isHidden = false
+//                                                    self.activityIndicator[6].startAnimating()
+//                                                    self.wallet_label.text = "Syncing Wallet Setup"
+//                                                    self.setupWallet { wallet_success in
+//                                                        if wallet_success {
+//                                                            DispatchQueue.main.async {
+//                                                                self.wallet_label.text = "Synced Wallet Setup"
+//                                                                self.loaderViews[6].backgroundColor = UIColor.nativeRedColor()
+//                                                                self.activityIndicator[6].stopAnimating()
+//                                                                self.activityIndicator[6].isHidden = true
+//                                                                self.checkedImageView[6].isHidden = false
+//
+//                                                                self.activityIndicator[7].isHidden = false
+//                                                                self.activityIndicator[7].startAnimating()
+//
+//                                                                self.count = 0
+//                                                                self.skip = 0
+//                                                                self.isTotalCounter = 0
+//
+//                                                                self.setupwallethistorypoints()
+//                                                            }
+//                                                        }
+//                                                    }
                                                     return
                                                 }
                                             }
@@ -1484,30 +1742,80 @@ extension FetchUserDataViewController {
                                         self.getFulfilment()
                                         return
                                     } else {
-                                        self.activityIndicator[6].isHidden = false
-                                        self.activityIndicator[6].startAnimating()
-                                        self.wallet_label.text = "Syncing Wallet Setup"
-                                        self.setupWallet { wallet_success in
-                                            if wallet_success {
-                                                DispatchQueue.main.async {
-                                                    self.wallet_label.text = "Synced Wallet Setup"
-                                                    self.loaderViews[6].backgroundColor = UIColor.nativeRedColor()
-                                                    self.activityIndicator[6].stopAnimating()
-                                                    self.activityIndicator[6].isHidden = true
-                                                    self.checkedImageView[6].isHidden = false
-                                                    
-                                                    self.activityIndicator[7].isHidden = false
-                                                    self.activityIndicator[7].startAnimating()
-                                                    
-                                                    self.count = 0
-                                                    self.skip = 0
-                                                    self.isTotalCounter = 0
-                                                    
-                                                    self.setupwallethistorypoints()
+                                        //MIS Setup
+                                        if self.isMISListingAllowed {
+                                            self.misSetupView.isHidden = false
+                                            self.misDailyOverview.isHidden = false
+                                            self.activityIndicator[6].isHidden = false
+                                            self.activityIndicator[6].startAnimating()
+                                            
+                                            self.getMISToken { token_granted in
+                                                if token_granted {
+                                                    DispatchQueue.main.async {
+                                                        self.loaderViews[6].backgroundColor = UIColor.nativeRedColor()
+                                                        self.activityIndicator[6].stopAnimating()
+                                                        self.activityIndicator[6].isHidden = true
+                                                        self.checkedImageView[6].isHidden = false
+                                                        self.mis_setup_label.text = "Synced MIS Setup"
+                                                        
+                                                        self.activityIndicator[7].isHidden = false
+                                                        self.activityIndicator[7].startAnimating()
+                                                        
+                                                        self.getmisdailyoverview { dailyOverview_granted in
+                                                            if dailyOverview_granted {
+                                                                DispatchQueue.main.async {
+                                                                    self.loaderViews[7].backgroundColor = UIColor.nativeRedColor()
+                                                                    self.activityIndicator[7].stopAnimating()
+                                                                    self.activityIndicator[7].isHidden = true
+                                                                    self.checkedImageView[7].isHidden = false
+                                                                    self.mis_daily_overview.text = "Synced MIS Daily Overview"
+                                                                    self.navigateHomeScreen()
+                                                                }
+                                                            } else {
+                                                                DispatchQueue.main.async {
+                                                                    self.view.makeToast(SOMETHINGWENTWRONG)
+                                                                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                                                                        self.navigationController?.popViewController(animated: true)
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                } else {
+                                                    DispatchQueue.main.async {
+                                                        self.view.makeToast(SOMETHINGWENTWRONG)
+                                                        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                                                            self.navigationController?.popViewController(animated: true)
+                                                        }
+                                                    }
                                                 }
-//                                                self.navigateHomeScreen()
                                             }
+                                        } else {
+                                            self.navigateHomeScreen()
                                         }
+//                                        self.activityIndicator[6].isHidden = false
+//                                        self.activityIndicator[6].startAnimating()
+//                                        self.wallet_label.text = "Syncing Wallet Setup"
+//                                        self.setupWallet { wallet_success in
+//                                            if wallet_success {
+//                                                DispatchQueue.main.async {
+//                                                    self.wallet_label.text = "Synced Wallet Setup"
+//                                                    self.loaderViews[6].backgroundColor = UIColor.nativeRedColor()
+//                                                    self.activityIndicator[6].stopAnimating()
+//                                                    self.activityIndicator[6].isHidden = true
+//                                                    self.checkedImageView[6].isHidden = false
+//
+//                                                    self.activityIndicator[7].isHidden = false
+//                                                    self.activityIndicator[7].startAnimating()
+//
+//                                                    self.count = 0
+//                                                    self.skip = 0
+//                                                    self.isTotalCounter = 0
+//
+//                                                    self.setupwallethistorypoints()
+//                                                }
+//                                            }
+//                                        }
                                     }
                                 }
                             }
@@ -1844,6 +2152,103 @@ extension FetchUserDataViewController {
                         self.navigationController?.popViewController(animated: true)
                     }
                 }
+            }
+        }
+    }
+}
+
+
+//MARK: - Management Information System
+extension FetchUserDataViewController {
+    private func getMISToken(_ handler: @escaping(Bool)->Void) {
+        NetworkCalls.getmistoken { token_granted in
+            if token_granted {
+                //get MIS Setup Data
+                NetworkCalls.setupmis { setup_granted, response in
+                    if setup_granted {
+                        let json = JSON(response)
+                        if let oneAppSetupData = json.dictionary?[_oneAppSetupData]?.dictionary {
+                            do {
+                                if let prodData = oneAppSetupData[_prodData]?.array {
+                                    for product_data in prodData {
+                                        let rawData = try product_data.rawData()
+                                        let productData = try JSONDecoder().decode(IMSProductData.self, from: rawData)
+                                        AppDelegate.sharedInstance.db?.deleteAll(tableName: db_mis_product_data, handler: { _ in
+                                            AppDelegate.sharedInstance.db?.insert_tbl_mis_product_data(product_data: productData, handler: { _ in })
+                                        })
+                                    }
+                                }
+                                if let regnData = oneAppSetupData[_regnData]?.array {
+                                    for regionData in regnData {
+                                        let rawData = try regionData.rawData()
+                                        let region_data = try JSONDecoder().decode(IMSRegionData.self, from: rawData)
+                                        AppDelegate.sharedInstance.db?.deleteAll(tableName: db_mis_region_data, handler: { _ in
+                                            AppDelegate.sharedInstance.db?.insert_tbl_mis_region_data(region_data: region_data, handler: { _ in })
+                                        })
+                                    }
+                                }
+                                handler(true)
+                            } catch let DecodingError.dataCorrupted(context) {
+                                print(context)
+                            } catch let DecodingError.keyNotFound(key, context) {
+                                print("Key '\(key)' not found:", context.debugDescription)
+                                print("codingPath:", context.codingPath)
+                            } catch let DecodingError.valueNotFound(value, context) {
+                                print("Value '\(value)' not found:", context.debugDescription)
+                                print("codingPath:", context.codingPath)
+                            } catch let DecodingError.typeMismatch(type, context)  {
+                                print("Type '\(type)' mismatch:", context.debugDescription)
+                                print("codingPath:", context.codingPath)
+                            } catch {
+                                print("error: ", error)
+                            }
+                        } else {
+                            handler(false)
+                        }
+                    } else {
+                        handler(false)
+                    }
+                }
+            } else {
+                handler(false)
+            }
+        }
+    }
+    
+    //GET Daily Delivery
+    private func getmisdailyoverview(_ handler: @escaping(Bool)->Void) {
+        NetworkCalls.getmisdailyoverview { daily_granted, response in
+            if daily_granted {
+                let json = JSON(response)
+                if let oneAppData = json.dictionary?[_oneAppData]?.array {
+                    do {
+                        for oAD in oneAppData {
+                            let rawData = try oAD.rawData()
+                            let daily_overview: MISDailyOverview = try JSONDecoder().decode(MISDailyOverview.self, from: rawData)
+                            AppDelegate.sharedInstance.db?.deleteAll(tableName: db_mis_daily_overview, handler: { _ in
+                                AppDelegate.sharedInstance.db?.insert_tbl_mis_daily_overview(daily_overview: daily_overview, handler: { _ in })
+                            })
+                        }
+                        handler(true)
+                    } catch let DecodingError.dataCorrupted(context) {
+                        print(context)
+                    } catch let DecodingError.keyNotFound(key, context) {
+                        print("Key '\(key)' not found:", context.debugDescription)
+                        print("codingPath:", context.codingPath)
+                    } catch let DecodingError.valueNotFound(value, context) {
+                        print("Value '\(value)' not found:", context.debugDescription)
+                        print("codingPath:", context.codingPath)
+                    } catch let DecodingError.typeMismatch(type, context)  {
+                        print("Type '\(type)' mismatch:", context.debugDescription)
+                        print("codingPath:", context.codingPath)
+                    } catch {
+                        print("error: ", error)
+                    }
+                } else {
+                    handler(false)
+                }
+            } else {
+                handler(false)
             }
         }
     }

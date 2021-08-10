@@ -11,7 +11,9 @@ let ACTIVE                  = "ACTIVE"
 let BACKGROUND              = "BACKGROUND"
 let INACTIVE                = "INACTIVE"
 let API_KEY                 = "5E4D0F6D8E12D8EC5EA3BBB11B63B2F88E39A7561F25EC67CCB440F782FD0360"
+let MISCLIENTSECRET         = "Tcs@oneapp3003"
 let CLIENTSECRET            = "Tcs@wallet3001"
+var MIS_BEARER_TOKEN        = ""
 var BEARER_TOKEN            = ""
 //let BROADCAST_KEY           = "broadcastiosdev"
 let BROADCAST_KEY           = "broadcastiosqa"
@@ -28,6 +30,7 @@ var RECORD_ID               = 0
 //let UPLOADFILESURL          = "https://oneappapi.tcscourier.com/api/file-upload"
 
 //DEV
+let MIS_ENDPOINT            = "http://apigatewayuat.tranzumpk.com:3003/dev/v1/oneapp/"
 let WALLET_ENDPOINT         = "https://sandbox.tcscourier.com/qa/v1/wallet/"
 let ENDPOINT                = "https://devapi.tcscourier.com/core/api/main"
 let UPLOADFILESURL          = "https://pwaqaapi.tcscourier.com/api/file-upload"
@@ -65,6 +68,14 @@ let MARKATTENDANCE          = "oneapp.markattendance"
 let GETORDERFULFILMET       = "oneapp.getorderfullfilment"
 let UPDATEORDERFULFILMENT   = "oneapp.updateorderfullfilment"
 
+//MIS
+let MIS_GET_TOKEN           = MIS_ENDPOINT + "token?clientSecret=\(MISCLIENTSECRET)"
+let MIS_SETUP               = MIS_ENDPOINT + "setup"
+let MIS_DAILY_OVERVIEW      = MIS_ENDPOINT + "daily-overview"
+
+let S_MIS_DAILY_OVERVIEW    = MIS_ENDPOINT + "DAILY.OVERVIEW.P"
+
+//WALLET
 let WALLET_SETUP            = WALLET_ENDPOINT + "setup"
 let WALLET_GET_TOKEN        = WALLET_ENDPOINT + "token?clientSecret=\(CLIENTSECRET)"
 
@@ -134,6 +145,12 @@ let _attn_out               = "attn_out"
 let _scan_prefix            = "scan_prefix"
 let _orders                 = "orders"
 
+//MIS Keys
+let _oneAppSetupData        = "oneAppSetupData"
+let _prodData               = "prodData"
+let _regnData               = "regnData"
+let _oneAppData             = "oneAppData"
+
 //Wallet_Keys
 let _walletSetupData        = "walletSetupData"
 let _walletHistoryPoints    = "walletHistoryPoints"
@@ -194,6 +211,11 @@ let db_lov_hr_status        = "IMS_HR_STATUS_TABLE"
 let db_lov_control_category = "IMS_CONTROL_CATEGORY_TABLE"
 let db_lov_risk_type        = "IMS_RISK_TABLE"
 let db_lov_control_type     = "IMS_CONTROL_TYPE_TABLE"
+
+// MIS
+let db_mis_product_data     = "MIS_PRODUCT_DATA"
+let db_mis_region_data      = "MIS_REGION_DATA"
+let db_mis_daily_overview   = "MIS_DAILY_OVERVIEW"
 
 // Wallet
 let db_w_query_master       = "WALLET_MASTER_DETAILS"
@@ -726,6 +748,14 @@ let PERMISSION_ViewBroadcastMode = "View Broadcast Mode"
 
 //MARK: FULFILMENT
 let PERMISSION_FulfilmentModule = "Fulfilment Module"
+
+//MARK: - MANAGEMENT INFORMATION SYSTEM (MIS)
+let PERMISSION_MIS_WEIGHT       = "WEIGHT"
+let PERMISSION_MIS_OVERLAND     = "Overland"
+let PERMISSION_MIS_DSR          = "DSR"
+let PERMISSION_MIS_QSR          = "QSR"
+let PERMISSION_MIS_GB           = "General & Banking"
+let PERMISSION_MIS_LISTING      = "MIS Listing"
 
 let FILTERDATA = [
     "Weekly",

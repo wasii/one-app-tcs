@@ -1180,6 +1180,101 @@ class NetworkCalls: NSObject {
         }.resume()
     }
     
+    //MARK: - Management Information System (MIS)
+    class func getmistoken(_ handler: @escaping(Bool)->Void) {
+        let Url = String(format: MIS_GET_TOKEN)
+        guard let serviceUrl = URL(string: Url) else { return }
+        var request = URLRequest(url: serviceUrl)
+        request.httpMethod = "GET"
+        request.setValue("Application/json", forHTTPHeaderField: "Content-Type")
+        
+        let session = URLSession.shared
+        session.dataTask(with: request) { (data, response, error) in
+            if let data = data {
+                let json = JSON(data)
+                if let bearer_token = json.dictionary?[_token]?.string {
+                    MIS_BEARER_TOKEN = bearer_token
+                    handler(true)
+                    return
+                } else {
+                    handler(false)
+                }
+            } else {
+                handler(false)
+            }
+        }.resume()
+    }
+    class func setupmis(_ handler: @escaping(_ granted: Bool,_ response: Any) -> Void) {
+        let Url = String(format: MIS_SETUP)
+        guard let serviceUrl = URL(string: Url) else { return }
+        var request = URLRequest(url: serviceUrl)
+        request.setValue("Bearer \(MIS_BEARER_TOKEN)", forHTTPHeaderField: "Authorization")
+        request.httpMethod = "GET"
+        let session = URLSession.shared
+        session.dataTask(with: request) { (data, response, error) in
+            if let data = data {
+                let json = JSON(data)
+                if let success = json.dictionary?[returnStatus] {
+                    //SUCCESS
+                    if success.dictionary?[_code] == "0200" {
+                        handler(true, data)
+                        return
+                    }
+                    //FAILED
+                    if success.dictionary?[_code] == "0400" {
+                        handler(false, SOMETHINGWENTWRONG)
+                    }
+                    if success.dictionary?[_code] == "0403" {
+                        handler(false, SOMETHINGWENTWRONG)
+                    }
+                    if success.dictionary?[_code] == "0404" {
+                        handler(false, SOMETHINGWENTWRONG)
+                    }
+                    if success.dictionary?[_code] == "0208" {
+                        handler(false, "Already Reported.")
+                    }
+                }
+            } else {
+                handler(false, SOMETHINGWENTWRONG)
+            }
+        }.resume()
+    }
+    class func getmisdailyoverview(_ handler: @escaping(_ granted: Bool,_ response: Any) -> Void) {
+        let Url = String(format: MIS_DAILY_OVERVIEW)
+        guard let serviceUrl = URL(string: Url) else { return }
+        var request = URLRequest(url: serviceUrl)
+        request.setValue("Bearer \(MIS_BEARER_TOKEN)", forHTTPHeaderField: "Authorization")
+        request.httpMethod = "GET"
+        let session = URLSession.shared
+        session.dataTask(with: request) { (data, response, error) in
+            if let data = data {
+                let json = JSON(data)
+                if let success = json.dictionary?[returnStatus] {
+                    //SUCCESS
+                    if success.dictionary?[_code] == "0200" {
+                        handler(true, data)
+                        return
+                    }
+                    //FAILED
+                    if success.dictionary?[_code] == "0400" {
+                        handler(false, SOMETHINGWENTWRONG)
+                    }
+                    if success.dictionary?[_code] == "0403" {
+                        handler(false, SOMETHINGWENTWRONG)
+                    }
+                    if success.dictionary?[_code] == "0404" {
+                        handler(false, SOMETHINGWENTWRONG)
+                    }
+                    if success.dictionary?[_code] == "0208" {
+                        handler(false, "Already Reported.")
+                    }
+                }
+            } else {
+                handler(false, SOMETHINGWENTWRONG)
+            }
+        }.resume()
+    }
+    
     //MARK: Wallet
     class func getwallettoken(_ handler: @escaping(Bool)->Void) {
         let Url = String(format: WALLET_GET_TOKEN)
