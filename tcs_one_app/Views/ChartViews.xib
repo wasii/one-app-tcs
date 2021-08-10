@@ -16,9 +16,15 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qRb-9S-FyS">
-                    <rect key="frame" x="15" y="15" width="48" height="24"/>
-                    <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                    <rect key="frame" x="15" y="15" width="41.5" height="20.5"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
                     <color key="textColor" red="0.86666666670000003" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Yearly Avg. per Day" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pHT-lA-fP8">
+                    <rect key="frame" x="289.5" y="18" width="109.5" height="14.5"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                    <color key="textColor" red="0.0" green="0.48627450979999998" blue="0.2236488596" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="B0f-D9-mrf" customClass="PieChartView" customModule="Charts">
@@ -28,19 +34,33 @@
                         <constraint firstAttribute="height" constant="150" id="NtI-PM-OCf"/>
                     </constraints>
                 </view>
+                <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="J2J-Vt-vri" customClass="LineChartView" customModule="Charts">
+                    <rect key="frame" x="15" y="99" width="384" height="150"/>
+                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="150" id="3sm-LN-Ioa"/>
+                    </constraints>
+                </view>
             </subviews>
             <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <constraints>
+                <constraint firstItem="J2J-Vt-vri" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" constant="55" id="7Kf-Q5-OHc"/>
                 <constraint firstItem="qRb-9S-FyS" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="15" id="AJD-q2-xIu"/>
+                <constraint firstItem="J2J-Vt-vri" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="15" id="DGk-9f-7wQ"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="J2J-Vt-vri" secondAttribute="trailing" constant="15" id="RMC-z8-uAq"/>
                 <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="B0f-D9-mrf" secondAttribute="trailing" constant="15" id="UHx-Qf-zHZ"/>
                 <constraint firstItem="B0f-D9-mrf" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="15" id="XZ8-Ce-7a3"/>
+                <constraint firstAttribute="trailing" secondItem="pHT-lA-fP8" secondAttribute="trailing" constant="15" id="ffq-Xl-wYt"/>
                 <constraint firstItem="B0f-D9-mrf" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" constant="55" id="oRB-Wd-96M"/>
                 <constraint firstItem="qRb-9S-FyS" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="15" id="oYM-5L-VzU"/>
+                <constraint firstItem="pHT-lA-fP8" firstAttribute="centerY" secondItem="qRb-9S-FyS" secondAttribute="centerY" id="zfs-0X-DFP"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <connections>
                 <outlet property="heading" destination="qRb-9S-FyS" id="Zx5-ZD-78s"/>
+                <outlet property="lineChartView" destination="J2J-Vt-vri" id="hUs-BQ-e6A"/>
+                <outlet property="misYearlyAverage" destination="pHT-lA-fP8" id="dmG-Qk-cUW"/>
                 <outlet property="pieChart" destination="B0f-D9-mrf" id="e4d-SG-Ox4"/>
             </connections>
             <point key="canvasLocation" x="139" y="78"/>

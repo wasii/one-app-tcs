@@ -386,6 +386,8 @@ let MODULE_TAG_FULFILMENT = "FULFILMENT"
 let MODULE_TAG_ATTENDANCE = "ATTENDANCE"
 let MODULE_TAG_CLS = "CLS"
 let MODULE_TAG_TRACK = "TRACK"
+let MODULE_TAG_MIS = "MIS"
+let MODULE_TAG_RIDER = "RIDER"
 
 let DOC = "application/msword";
 let DOCX = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";

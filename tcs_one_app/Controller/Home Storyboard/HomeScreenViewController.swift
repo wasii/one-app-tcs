@@ -207,7 +207,7 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
         if let _ = self.module {
             chartViews = [ChartViews]()
             for mod in self.module! {
-                if mod.TAGNAME == MODULE_TAG_TRACK || mod.TAGNAME == MODULE_TAG_LEADERSHIPAWAZ || mod.TAGNAME == MODULE_TAG_ATTENDANCE || mod.TAGNAME == MODULE_TAG_FULFILMENT || mod.TAGNAME == MODULE_TAG_CLS {
+                if mod.TAGNAME == MODULE_TAG_TRACK || mod.TAGNAME == MODULE_TAG_LEADERSHIPAWAZ || mod.TAGNAME == MODULE_TAG_ATTENDANCE || mod.TAGNAME == MODULE_TAG_FULFILMENT || mod.TAGNAME == MODULE_TAG_CLS || mod.TAGNAME == MODULE_TAG_RIDER || mod.TAGNAME == MODULE_TAG_MIS {
                     print(mod.MODULENAME)
                     continue
                 }
@@ -295,6 +295,35 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
             }
         }
         
+        //MARK: - MIS (General Trend)
+        if let general_trend = AppDelegate.sharedInstance.db?.read_tbl_UserPermission(permission: PERMISSION_MIS_GB).count {
+            if general_trend > 0 {
+                let chart:ChartViews = Bundle.main.loadNibNamed("ChartViews", owner: self, options: nil)?.first as! ChartViews
+                chart.pieChart.isHidden = true
+                
+                chart.heading.text = PERMISSION_MIS_GB + " Trend"
+                chart.lineChartView.isHidden = false
+                chart.misYearlyAverage.isHidden = false
+                
+                self.ModuleCount += 1
+                chartViews.append(chart)
+            }
+        }
+        //MARK: - MIS (Overland)
+        if let general_trend = AppDelegate.sharedInstance.db?.read_tbl_UserPermission(permission: PERMISSION_MIS_OVERLAND).count {
+            if general_trend > 0 {
+                let chart:ChartViews = Bundle.main.loadNibNamed("ChartViews", owner: self, options: nil)?.first as! ChartViews
+                chart.pieChart.isHidden = true
+                
+                chart.heading.text = PERMISSION_MIS_OVERLAND + " Trend"
+                chart.lineChartView.isHidden = false
+                chart.misYearlyAverage.isHidden = false
+                
+                self.ModuleCount += 1
+                chartViews.append(chart)
+            }
+        }
+        
         return chartViews
     }
     
@@ -314,6 +343,12 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
             scrollView.addSubview(chartViews[i])
         }
     }
+    
+    //MARK: - Setup LineChart
+//    private func setupLineChart(lineChart: LineChartView) -> LineChartView {
+//        lineChart.delegate = self
+//        
+//    }
     
     func setupGraphs(pieChartView: PieChartView, module_id: Int, pending: String, approved: String, rejected: String , tag: Int, module: String) -> PieChartView {
         

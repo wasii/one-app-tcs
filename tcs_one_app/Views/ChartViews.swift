@@ -13,6 +13,10 @@ class ChartViews: UIView {
 
     @IBOutlet weak var heading: UILabel!
     @IBOutlet weak var pieChart: PieChartView!
+    @IBOutlet weak var lineChartView: LineChartView!
+    
+    
+    @IBOutlet weak var misYearlyAverage: UILabel!
     /*
     // Only override draw() if you perform custom drawing.
     // An empty implementation adversely affects performance during animation.
