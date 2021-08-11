@@ -76,6 +76,10 @@
 		1B6B049F25665C6500CDEF66 /* GrievancesHistoryTableCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1B6B049D25665C6500CDEF66 /* GrievancesHistoryTableCell.xib */; };
 		1B6B04A3256660CD00CDEF66 /* GrievacneDownloadsTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B6B04A1256660CD00CDEF66 /* GrievacneDownloadsTableCell.swift */; };
 		1B6B04A4256660CD00CDEF66 /* GrievacneDownloadsTableCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1B6B04A2256660CD00CDEF66 /* GrievacneDownloadsTableCell.xib */; };
+		1B6FA11626C3A53900E954D0 /* MISDetailTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B6FA11426C3A53900E954D0 /* MISDetailTableCell.swift */; };
+		1B6FA11726C3A53900E954D0 /* MISDetailTableCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1B6FA11526C3A53900E954D0 /* MISDetailTableCell.xib */; };
+		1B6FA11A26C3AC7400E954D0 /* MISDashboardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B6FA11926C3AC7400E954D0 /* MISDashboardViewController.swift */; };
+		1B6FA11C26C3AC8C00E954D0 /* MISDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B6FA11B26C3AC8C00E954D0 /* MISDetailsViewController.swift */; };
 		1B71451825AF7E9A0058C36C /* IMSHistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B71451725AF7E9A0058C36C /* IMSHistoryViewController.swift */; };
 		1B71451B25AF85250058C36C /* IMSFilesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B71451A25AF85250058C36C /* IMSFilesViewController.swift */; };
 		1B77CE842562509B00A821E7 /* DownloadListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B77CE832562509B00A821E7 /* DownloadListViewController.swift */; };
@@ -250,6 +254,10 @@
 		1B6B049D25665C6500CDEF66 /* GrievancesHistoryTableCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GrievancesHistoryTableCell.xib; sourceTree = "<group>"; };
 		1B6B04A1256660CD00CDEF66 /* GrievacneDownloadsTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GrievacneDownloadsTableCell.swift; sourceTree = "<group>"; };
 		1B6B04A2256660CD00CDEF66 /* GrievacneDownloadsTableCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GrievacneDownloadsTableCell.xib; sourceTree = "<group>"; };
+		1B6FA11426C3A53900E954D0 /* MISDetailTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MISDetailTableCell.swift; sourceTree = "<group>"; };
+		1B6FA11526C3A53900E954D0 /* MISDetailTableCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MISDetailTableCell.xib; sourceTree = "<group>"; };
+		1B6FA11926C3AC7400E954D0 /* MISDashboardViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MISDashboardViewController.swift; sourceTree = "<group>"; };
+		1B6FA11B26C3AC8C00E954D0 /* MISDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MISDetailsViewController.swift; sourceTree = "<group>"; };
 		1B71451725AF7E9A0058C36C /* IMSHistoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMSHistoryViewController.swift; sourceTree = "<group>"; };
 		1B71451A25AF85250058C36C /* IMSFilesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMSFilesViewController.swift; sourceTree = "<group>"; };
 		1B77CE832562509B00A821E7 /* DownloadListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadListViewController.swift; sourceTree = "<group>"; };
@@ -510,6 +518,24 @@
 			path = "IMS Desk";
 			sourceTree = "<group>";
 		};
+		1B6FA11326C3A50400E954D0 /* MIS */ = {
+			isa = PBXGroup;
+			children = (
+				1B6FA11426C3A53900E954D0 /* MISDetailTableCell.swift */,
+				1B6FA11526C3A53900E954D0 /* MISDetailTableCell.xib */,
+			);
+			path = MIS;
+			sourceTree = "<group>";
+		};
+		1B6FA11826C3AC5C00E954D0 /* MIS  */ = {
+			isa = PBXGroup;
+			children = (
+				1B6FA11926C3AC7400E954D0 /* MISDashboardViewController.swift */,
+				1B6FA11B26C3AC8C00E954D0 /* MISDetailsViewController.swift */,
+			);
+			path = "MIS ";
+			sourceTree = "<group>";
+		};
 		1BA51108267B287F00E0E642 /* Wallet */ = {
 			isa = PBXGroup;
 			children = (
@@ -644,6 +670,7 @@
 		604FD75E2539B762007E9E87 /* TableView */ = {
 			isa = PBXGroup;
 			children = (
+				1B6FA11326C3A50400E954D0 /* MIS */,
 				1BA51108267B287F00E0E642 /* Wallet */,
 				1B11D07D262EB37000C137A3 /* RequestListingTableCell.swift */,
 				1B11D07C262EB37000C137A3 /* RequestListingTableCell.xib */,
@@ -794,6 +821,7 @@
 		60C34FE1253985D100495944 /* Home Storyboard */ = {
 			isa = PBXGroup;
 			children = (
+				1B6FA11826C3AC5C00E954D0 /* MIS  */,
 				1BE523DD2679E25500F5F030 /* Wallet */,
 				1B3EDC95260C530D00A97984 /* Fullfilment */,
 				1BFB374925F9D7070073CC53 /* Attendance */,
@@ -926,6 +954,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1B6FA11726C3A53900E954D0 /* MISDetailTableCell.xib in Resources */,
 				1B3B229826C15F4E008EDC15 /* MIS.storyboard in Resources */,
 				1BA51110267B801600E0E642 /* CustomAlertView.xib in Resources */,
 				1B3B36102574D86B0051779A /* download-fill-icon.svg in Resources */,
@@ -1133,8 +1162,11 @@
 				6082CD502550F4F90037CF54 /* RequestModePopupViewController.swift in Sources */,
 				609922942547ECB000534577 /* AddNewRequest.swift in Sources */,
 				6055E988254B303F009BB6E3 /* UpdateRequestViewController.swift in Sources */,
+				1B6FA11A26C3AC7400E954D0 /* MISDashboardViewController.swift in Sources */,
 				1BAFA3C626A14BAC00025BED /* WalletListingTableCell.swift in Sources */,
+				1B6FA11C26C3AC8C00E954D0 /* MISDetailsViewController.swift in Sources */,
 				60F3C7FA2546C7FE00FA80B9 /* Protocols.swift in Sources */,
+				1B6FA11626C3A53900E954D0 /* MISDetailTableCell.swift in Sources */,
 				1B3EDCAA260C94FD00A97984 /* Fulfilment.swift in Sources */,
 				1BE523D92679DB1100F5F030 /* IMSDeliveryDetailsTableCell.swift in Sources */,
 				1B614E1E2555276000E50B3A /* GraphListingFilterPopupViewController.swift in Sources */,

@@ -2222,12 +2222,13 @@ extension FetchUserDataViewController {
                 let json = JSON(response)
                 if let oneAppData = json.dictionary?[_oneAppData]?.array {
                     do {
+                        AppDelegate.sharedInstance.db?.deleteAll(tableName: db_mis_daily_overview, handler: { _ in })
+                        
                         for oAD in oneAppData {
                             let rawData = try oAD.rawData()
                             let daily_overview: MISDailyOverview = try JSONDecoder().decode(MISDailyOverview.self, from: rawData)
-                            AppDelegate.sharedInstance.db?.deleteAll(tableName: db_mis_daily_overview, handler: { _ in
-                                AppDelegate.sharedInstance.db?.insert_tbl_mis_daily_overview(daily_overview: daily_overview, handler: { _ in })
-                            })
+                            
+                            AppDelegate.sharedInstance.db?.insert_tbl_mis_daily_overview(daily_overview: daily_overview, handler: { _ in })
                         }
                         handler(true)
                     } catch let DecodingError.dataCorrupted(context) {
