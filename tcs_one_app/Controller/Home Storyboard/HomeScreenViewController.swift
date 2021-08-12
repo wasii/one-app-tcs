@@ -783,6 +783,7 @@ extension HomeScreenViewController: UICollectionViewDelegate, UICollectionViewDa
             CONSTANT_MODULE_ID = AppDelegate.sharedInstance.db?.read_tbl_UserModule(query: "SELECT * FROM \(db_user_module) WHERE TAGNAME = '\(MODULE_TAG_MIS)';").first?.SERVER_ID_PK ?? -1
             let storyboard = UIStoryboard(name: "MIS", bundle: nil)
             let controller = storyboard.instantiateViewController(withIdentifier: "MISDashboardViewController") as! MISDashboardViewController
+            controller.hidesBottomBarWhenPushed = true
             self.navigationController?.pushViewController(controller, animated: true)
             break
             

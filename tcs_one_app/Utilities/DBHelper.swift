@@ -2959,7 +2959,7 @@ class DBHelper {
             while sqlite3_step(queryStatement) == SQLITE_ROW {
                 let ID = Int(sqlite3_column_int(queryStatement, 0))
                 let PRODUCT = String(describing: String(cString: sqlite3_column_text(queryStatement, 1)))
-                mis_region_data.append(tbl_mis_region_data(id: ID, product: PRODUCT))
+                mis_region_data.append(tbl_mis_region_data(id: ID, product: PRODUCT, isSelected: false))
             }
         } else {
             print("SELECT statement \(db_mis_region_data) could not be prepared")
@@ -4000,6 +4000,7 @@ struct tbl_mis_product_data {
 struct tbl_mis_region_data {
     var id: Int = 0
     var product: String = ""
+    var isSelected: Bool = true
 }
 struct tbl_mis_daily_overview {
     var id: Int = 0

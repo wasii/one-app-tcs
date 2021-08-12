@@ -11,8 +11,8 @@ import UIKit
 class MISDashboardViewController: BaseViewController {
 
     @IBOutlet weak var mainView: UIView!
-    @IBOutlet weak var gbOutlet: UIButton!
-    @IBOutlet weak var overlandTrend: UIButton!
+    @IBOutlet weak var gbOutlet: UIView!
+    @IBOutlet weak var overlandTrend: UIView!
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "MIS"

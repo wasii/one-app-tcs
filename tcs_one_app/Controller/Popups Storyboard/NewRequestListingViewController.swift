@@ -21,7 +21,7 @@ class NewRequestListingViewController: UIViewController {
     var imsupdatedelegate: IMSUpdateRequestDelegate?
     
     var leadershipawazdelegate: LeadershipAwazDelegate?
-    
+    var misdelegate: MISDelegate?
     var request_mode: [tbl_RequestModes]?
     var master_query: [tbl_MasterQuery]?
     var detail_query: [tbl_DetailQuery]?
@@ -54,6 +54,9 @@ class NewRequestListingViewController: UIViewController {
     
     //LeadershipAwaz
     var la_ad_group:            [tbl_la_ad_group]?
+    
+    //MIS
+    var mis_region_date:        [tbl_mis_region_data]?
     override func viewDidLoad() {
         super.viewDidLoad()
         topHeading.text = heading ?? ""
@@ -209,6 +212,15 @@ class NewRequestListingViewController: UIViewController {
                     self.mainViewHeightConstraint.constant += self.tableView.contentSize.height//(CGFloat(count) * 50) - 30
                 }
             }
+            
+            //MIS
+            if let count = self.mis_region_date?.count {
+                if count > 12 {
+                    self.mainViewHeightConstraint.constant = 540
+                } else {
+                    self.mainViewHeightConstraint.constant += self.tableView.contentSize.height//(CGFloat(count) * 50) - 30
+                }
+            }
         }
         
 //        tableView.estimatedRowHeight = 45
@@ -288,7 +300,10 @@ extension NewRequestListingViewController: UITableViewDataSource, UITableViewDel
         if let count = self.la_ad_group?.count {
             return count
         }
-        
+        // MIS
+        if let count = self.mis_region_date?.count {
+            return count
+        }
         return 0
     }
     
@@ -382,6 +397,11 @@ extension NewRequestListingViewController: UITableViewDataSource, UITableViewDel
         if la_ad_group != nil {
             let data = self.la_ad_group![indexPath.row]
             cell.headingLabel.text = data.AD_GROUP_NAME
+        }
+        
+        //MIS
+        if let data = self.mis_region_date?[indexPath.row] {
+            cell.headingLabel.text = data.product
         }
         return cell
     }
@@ -529,6 +549,13 @@ extension NewRequestListingViewController: UITableViewDataSource, UITableViewDel
             dismiss(animated: true) {
                 let la_ad_group = self.la_ad_group![indexPath.row]
                 self.leadershipawazdelegate?.updateMessageSubject(messagesubject: la_ad_group)
+            }
+        }
+        
+        //MIS
+        if let data = self.mis_region_date?[indexPath.row] {
+            dismiss(animated: true) {
+                self.misdelegate?.updateListing(region_date: data)
             }
         }
     }

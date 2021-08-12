@@ -2170,21 +2170,23 @@ extension FetchUserDataViewController {
                         if let oneAppSetupData = json.dictionary?[_oneAppSetupData]?.dictionary {
                             do {
                                 if let prodData = oneAppSetupData[_prodData]?.array {
+                                    AppDelegate.sharedInstance.db?.deleteAll(tableName: db_mis_product_data, handler: { _ in })
                                     for product_data in prodData {
                                         let rawData = try product_data.rawData()
                                         let productData = try JSONDecoder().decode(IMSProductData.self, from: rawData)
-                                        AppDelegate.sharedInstance.db?.deleteAll(tableName: db_mis_product_data, handler: { _ in
-                                            AppDelegate.sharedInstance.db?.insert_tbl_mis_product_data(product_data: productData, handler: { _ in })
-                                        })
+                                        
+                                        AppDelegate.sharedInstance.db?.insert_tbl_mis_product_data(product_data: productData, handler: { _ in })
                                     }
                                 }
                                 if let regnData = oneAppSetupData[_regnData]?.array {
+                                    AppDelegate.sharedInstance.db?.deleteAll(tableName: db_mis_region_data, handler: { _ in })
+                                    let nation_wide: IMSRegionData = IMSRegionData(product: "Nation Wide")
+                                    AppDelegate.sharedInstance.db?.insert_tbl_mis_region_data(region_data: nation_wide, handler: { _ in })
                                     for regionData in regnData {
                                         let rawData = try regionData.rawData()
                                         let region_data = try JSONDecoder().decode(IMSRegionData.self, from: rawData)
-                                        AppDelegate.sharedInstance.db?.deleteAll(tableName: db_mis_region_data, handler: { _ in
-                                            AppDelegate.sharedInstance.db?.insert_tbl_mis_region_data(region_data: region_data, handler: { _ in })
-                                        })
+                                        
+                                        AppDelegate.sharedInstance.db?.insert_tbl_mis_region_data(region_data: region_data, handler: { _ in })
                                     }
                                 }
                                 handler(true)

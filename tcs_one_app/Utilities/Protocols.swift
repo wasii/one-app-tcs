@@ -72,3 +72,8 @@ protocol ConfirmationProtocol {
 protocol UpdateIncidentInvestigation {
     func updateIncidentInvestigation(ticket: tbl_Hr_Request_Logs)
 }
+
+
+protocol MISDelegate {
+    func updateListing(region_date: tbl_mis_region_data)
+}
