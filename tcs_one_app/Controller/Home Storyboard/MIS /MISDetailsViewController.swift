@@ -8,6 +8,7 @@
 
 import UIKit
 import DatePickerDialog
+import Charts
 
 class MISDetailsViewController: BaseViewController {
 
@@ -17,7 +18,10 @@ class MISDetailsViewController: BaseViewController {
     @IBOutlet weak var tableViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var dateLabel: UILabel!
     @IBOutlet weak var filterLabel: UILabel!
+    @IBOutlet weak var lineChart: LineChartView!
     
+    var mis_product_data: tbl_mis_product_data?
+    var mis_id: Int = 0
     var isOverload: Bool = false
     var daily_overview: [tbl_mis_daily_overview]?
     
@@ -48,18 +52,16 @@ class MISDetailsViewController: BaseViewController {
         title = "MIS"
         self.tableViewHeightConstraint.constant = 0
         
-        isWieghtAllowed = AppDelegate.sharedInstance.db?.read_tbl_UserPermission(permission: PERMISSION_MIS_WEIGHT).count ?? 0
-        isDSRAllowed = AppDelegate.sharedInstance.db?.read_tbl_UserPermission(permission: PERMISSION_MIS_DSR).count ?? 0
-        isQSRAllowed = AppDelegate.sharedInstance.db?.read_tbl_UserPermission(permission: PERMISSION_MIS_QSR).count ?? 0
+        self.mainHeading.text = "\(self.mis_product_data!.product) Trend"
+        
         
         tableView.register(UINib(nibName: MISDetailTableCell.description(), bundle: nil), forCellReuseIdentifier: MISDetailTableCell.description())
+        tableView.register(UINib(nibName: "MISHeaderCell", bundle: nil), forHeaderFooterViewReuseIdentifier: "MISHeaderCell")
         tableView.delegate = self
         tableView.dataSource = self
         
         tableView.rowHeight = 30
-        if isOverload {
-            self.mainHeading.text = "Overland Trend"
-        }
+        
         self.makeTopCornersRounded(roundView: self.mainView)
         setupDailyOverview(region: nil)
         let query = "SELECT * FROM \(db_mis_daily_overview)"
@@ -78,12 +80,9 @@ class MISDetailsViewController: BaseViewController {
         self.daily_overview = nil
         self.view.makeToastActivity(.center)
         var query = ""
+        
         //Get Product Name from Previous Screen (not hardcode)
-        if isOverload {
-            query = "SELECT * FROM \(db_mis_daily_overview) WHERE PRODUCT = 'Overland'"
-        } else {
-            query = "SELECT * FROM \(db_mis_daily_overview) WHERE PRODUCT = 'General & Banking'"
-        }
+        query = "SELECT * FROM \(db_mis_daily_overview) WHERE PRODUCT = '\(self.mis_product_data!.product)'"
         if startday == nil && endday == nil {
             let previousDate = getPreviousDays(days: -7)
             let weekly = previousDate.convertDateToString(date: previousDate)
@@ -125,6 +124,8 @@ class MISDetailsViewController: BaseViewController {
             self.view.hideToastActivity()
             
             if let count = self.daily_overview?.count {
+                self.bookedTotal = 0
+                self.weightedTotal = 0
                 var tempQSR = 0.0
                 var tempDSR = 0.0
                 self.daily_overview?.forEach({ d in
@@ -136,7 +137,7 @@ class MISDetailsViewController: BaseViewController {
                 self.qsrAverage = tempQSR / Double(count)
                 self.dsrAverage = tempDSR / Double(count)
                 self.tableView.reloadData()
-                self.tableViewHeightConstraint.constant = CGFloat(count * 30)
+                self.tableViewHeightConstraint.constant = CGFloat(count * 30) + 70
             } else {
                 self.tableView.reloadData()
                 self.tableViewHeightConstraint.constant = 0
@@ -240,7 +241,6 @@ extension MISDetailsViewController: UITableViewDataSource, UITableViewDelegate {
         }
         
         //Manipulate Data
-        
         if indexPath.row == self.daily_overview!.count {
             cell.dateLabel.text = ""
             cell.shipmentBookedLabel.text = "\(self.bookedTotal)"
@@ -265,47 +265,32 @@ extension MISDetailsViewController: UITableViewDataSource, UITableViewDelegate {
         if let qsr = Double(data.qsr) {
             cell.qsrLabel.text = String(format: "%.2f", qsr)
         }
-        
-//        if indexPath.row == 0 {
-//            cell.dateLabel.font = UIFont.boldSystemFont(ofSize: 12)
-//            cell.shipmentBookedLabel.font = UIFont.boldSystemFont(ofSize: 12)
-//            cell.weightLabel.font = UIFont.boldSystemFont(ofSize: 12)
-//            cell.qsrLabel.font = UIFont.boldSystemFont(ofSize: 12)
-//            cell.dsrLabel.font = UIFont.boldSystemFont(ofSize: 12)
-//        } else {
-//
-//        }
         return cell
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 30
+        return 40
     }
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let headerView = UIView.init(frame: CGRect.init(x: 0, y: 0, width: tableView.frame.width, height: 50))
-        let headerCell = tableView.dequeueReusableCell(withIdentifier: MISDetailTableCell.description()) as! MISDetailTableCell
+        let headerCell = tableView.dequeueReusableHeaderFooterView(withIdentifier: "MISHeaderCell") as! MISHeaderCell
         if isWieghtAllowed == 0 {
-            headerCell.weightView.isHidden = true
-        } else {
-            headerCell.weightView.isHidden = false
-            headerCell.weightLabel.font = UIFont.systemFont(ofSize: 10)
+            if let weightView = headerCell.viewWithTag(2) as? CustomView {
+                weightView.isHidden = true
+            }
         }
-        
         if isQSRAllowed == 0 {
-            headerCell.qsrView.isHidden = true
-        } else {
-            headerCell.qsrView.isHidden = false
-            headerCell.qsrLabel.font = UIFont.systemFont(ofSize: 10)
+            if let qsrView = headerCell.viewWithTag(3) as? CustomView {
+                qsrView.isHidden = true
+            }
         }
         
         if isDSRAllowed == 0 {
-            headerCell.dsrView.isHidden = true
-        } else {
-            headerCell.dsrView.isHidden = false
-            headerCell.dsrLabel.font = UIFont.systemFont(ofSize: 10)
+            if let dsrView = headerCell.viewWithTag(4) as? CustomView {
+                dsrView.isHidden = true
+            }
         }
-        headerView.addSubview(headerCell)
-        return headerView
+        
+        return headerCell
     }
 }
 

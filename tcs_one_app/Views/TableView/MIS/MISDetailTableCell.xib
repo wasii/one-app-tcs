@@ -188,7 +188,7 @@
                 <outlet property="weightLabel" destination="cSh-tE-T8e" id="10w-sH-Nc8"/>
                 <outlet property="weightView" destination="tAp-me-6di" id="nk5-Aw-IUO"/>
             </connections>
-            <point key="canvasLocation" x="265.94202898550725" y="101.45089285714285"/>
+            <point key="canvasLocation" x="265.94202898550725" y="101.11607142857143"/>
         </tableViewCell>
     </objects>
 </document>

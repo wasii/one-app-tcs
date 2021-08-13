@@ -71,6 +71,8 @@
 		1B61B2BD25DD25DD00CDAAE2 /* DManDetailsTableCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1B61B2BB25DD25DD00CDAAE2 /* DManDetailsTableCell.xib */; };
 		1B6279E22591E54D00C88FEE /* IMSStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1B6279E12591E54D00C88FEE /* IMSStoryboard.storyboard */; };
 		1B6279E72591E5E200C88FEE /* IMSNewRequestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B6279E62591E5E200C88FEE /* IMSNewRequestViewController.swift */; };
+		1B6A402126C650D4004265F3 /* MISHeaderCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1B6A402026C650D4004265F3 /* MISHeaderCell.xib */; };
+		1B6A402326C650F2004265F3 /* MISHeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B6A402226C650F2004265F3 /* MISHeaderCell.swift */; };
 		1B6B049A256642FF00CDEF66 /* GrievanceRemarksHistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B6B0499256642FF00CDEF66 /* GrievanceRemarksHistoryViewController.swift */; };
 		1B6B049E25665C6500CDEF66 /* GrievancesHistoryTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B6B049C25665C6500CDEF66 /* GrievancesHistoryTableCell.swift */; };
 		1B6B049F25665C6500CDEF66 /* GrievancesHistoryTableCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1B6B049D25665C6500CDEF66 /* GrievancesHistoryTableCell.xib */; };
@@ -249,6 +251,8 @@
 		1B61B2BB25DD25DD00CDAAE2 /* DManDetailsTableCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DManDetailsTableCell.xib; sourceTree = "<group>"; };
 		1B6279E12591E54D00C88FEE /* IMSStoryboard.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = IMSStoryboard.storyboard; sourceTree = "<group>"; };
 		1B6279E62591E5E200C88FEE /* IMSNewRequestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMSNewRequestViewController.swift; sourceTree = "<group>"; };
+		1B6A402026C650D4004265F3 /* MISHeaderCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MISHeaderCell.xib; sourceTree = "<group>"; };
+		1B6A402226C650F2004265F3 /* MISHeaderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MISHeaderCell.swift; sourceTree = "<group>"; };
 		1B6B0499256642FF00CDEF66 /* GrievanceRemarksHistoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GrievanceRemarksHistoryViewController.swift; sourceTree = "<group>"; };
 		1B6B049C25665C6500CDEF66 /* GrievancesHistoryTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GrievancesHistoryTableCell.swift; sourceTree = "<group>"; };
 		1B6B049D25665C6500CDEF66 /* GrievancesHistoryTableCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GrievancesHistoryTableCell.xib; sourceTree = "<group>"; };
@@ -523,6 +527,8 @@
 			children = (
 				1B6FA11426C3A53900E954D0 /* MISDetailTableCell.swift */,
 				1B6FA11526C3A53900E954D0 /* MISDetailTableCell.xib */,
+				1B6A402026C650D4004265F3 /* MISHeaderCell.xib */,
+				1B6A402226C650F2004265F3 /* MISHeaderCell.swift */,
 			);
 			path = MIS;
 			sourceTree = "<group>";
@@ -974,6 +980,7 @@
 				60978BE125523E0B009AA2F3 /* MultiplePieCharCollectionCell.xib in Resources */,
 				605CE76D2541459800509434 /* sandboxcert.p12 in Resources */,
 				1B61B2A925DD033B00CDAAE2 /* DeliveryDetailsTableCell.xib in Resources */,
+				1B6A402126C650D4004265F3 /* MISHeaderCell.xib in Resources */,
 				1B6B049F25665C6500CDEF66 /* GrievancesHistoryTableCell.xib in Resources */,
 				1BE523D72679DB1100F5F030 /* IMSBookingDetailTableCell.xib in Resources */,
 				1B1C0B6A2583DBB500AAAAE9 /* NewRequestsListingTableCell.xib in Resources */,
@@ -1151,6 +1158,7 @@
 				60485398253DC4BE00F7A0AA /* CircularView.swift in Sources */,
 				1BE523CD2679DA9400F5F030 /* IMSConsignmentDetailsViewController.swift in Sources */,
 				60EE11B5254B263400ACB45B /* MailViewController.swift in Sources */,
+				1B6A402326C650F2004265F3 /* MISHeaderCell.swift in Sources */,
 				605CE773254196E000509434 /* User.swift in Sources */,
 				60E9991F253D7D9900BCDAD1 /* NewRequestViewController.swift in Sources */,
 				1BF25A5325E7D507008CE34F /* ChairmenListingViewController.swift in Sources */,
