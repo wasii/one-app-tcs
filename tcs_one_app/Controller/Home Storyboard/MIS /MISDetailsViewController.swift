@@ -47,6 +47,11 @@ class MISDetailsViewController: BaseViewController {
         font: UIFont.boldSystemFont(ofSize: 17),
         showCancelButton: true
     )
+    
+    var months: [String]!
+    var unitsSold = [Double]()
+    weak var axisFormatDelegate: IAxisValueFormatter?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "MIS"
@@ -74,6 +79,13 @@ class MISDetailsViewController: BaseViewController {
             self.firstIndex = dateFormatter.date(from: firstIndex)
             self.lastIndex = dateFormatter.date(from: lastIndex)
         }
+        
+        super.viewDidLoad()
+                // Do any additional setup after loading the view, typically from a nib.
+        axisFormatDelegate = self
+        months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+        unitsSold = [20.0, 86.0, 6.0, 3.0, 12.0, 16.0, 4.0, 18.0, 2.0, 4.0, 5.0, 4.0]
+
     }
     
     private func setupDailyOverview(region: String?) {
@@ -120,9 +132,7 @@ class MISDetailsViewController: BaseViewController {
         daily_overview = AppDelegate.sharedInstance.db?.read_tbl_mis_daily_overview(query: query)
         
         DispatchQueue.main.async {
-            
             self.view.hideToastActivity()
-            
             if let count = self.daily_overview?.count {
                 self.bookedTotal = 0
                 self.weightedTotal = 0
@@ -136,6 +146,8 @@ class MISDetailsViewController: BaseViewController {
                 })
                 self.qsrAverage = tempQSR / Double(count)
                 self.dsrAverage = tempDSR / Double(count)
+//                self.setupGraph()
+                self.setChart(dataEntryX: self.months, dataEntryY: self.unitsSold)
                 self.tableView.reloadData()
                 self.tableViewHeightConstraint.constant = CGFloat(count * 30) + 70
             } else {
@@ -199,6 +211,74 @@ class MISDetailsViewController: BaseViewController {
         Helper.topMostController().present(controller, animated: true, completion: nil)
     }
     
+    private func setupGraphValues() {
+        var dataEntryX: [String] = [String]()
+        var dataEntryY: [Double] = [Double]()
+        
+        if let daily_overview = self.daily_overview {
+            var currentDate = ""
+            for DO in daily_overview {
+                if currentDate == DO.rpt_date {
+                    
+                } else {
+                    currentDate = DO.rpt_date
+                }
+                
+                
+            }
+        }
+        setChart(dataEntryX: dataEntryX, dataEntryY: dataEntryY)
+    }
+    private func setChart(dataEntryX forX:[String],dataEntryY forY: [Double]) {
+        lineChart.chartDescription?.enabled = false
+        lineChart.dragEnabled = true
+        lineChart.setScaleEnabled(true)
+        lineChart.pinchZoomEnabled = false
+        
+        lineChart.xAxis.gridLineDashLengths = [0, 0]
+        lineChart.xAxis.gridLineDashPhase = 0
+        
+        let ll1 = ChartLimitLine(limit: 150, label: "")
+        ll1.lineColor = UIColor.approvedColor()
+        ll1.lineWidth = 4
+        ll1.lineDashLengths = [0,0]
+
+        lineChart.rightAxis.enabled = false
+        
+
+        lineChart.animate(xAxisDuration: 0.5)
+        lineChart.noDataText = "You need to provide data for the chart."
+        var dataEntries:[ChartDataEntry] = []
+        for i in 0..<forX.count{
+            let dataEntry = ChartDataEntry(x: Double(i), y: Double(forY[i]) , data: months as AnyObject?)
+            print(dataEntry)
+            dataEntries.append(dataEntry)
+        }
+        let set1 = LineChartDataSet(entries: dataEntries)
+        set1.drawIconsEnabled = false
+        set1.lineDashLengths = [0, 0]
+        set1.highlightLineDashLengths = [0, 0]
+        set1.setColor(UIColor.nativeRedColor())
+        set1.setCircleColor(UIColor.nativeRedColor())
+        set1.lineWidth = 1
+        set1.circleRadius = 6
+        set1.drawCircleHoleEnabled = false
+        set1.valueFont = .systemFont(ofSize: 9)
+        set1.formLineDashLengths = [0,0]
+        set1.formLineWidth = 1
+//        set1.formSize = 25
+        set1.mode = .cubicBezier
+        set1.fillAlpha = 0
+        set1.drawValuesEnabled = false
+        
+        set1.drawFilledEnabled = true
+
+        let chartData = LineChartData(dataSet: set1)// BarChartData(dataSet: chartDataSet)
+        lineChart.data = chartData
+        let xAxisValue = lineChart.xAxis
+        xAxisValue.valueFormatter = axisFormatDelegate
+
+    }
 }
 
 extension MISDetailsViewController: UITableViewDataSource, UITableViewDelegate {
@@ -307,5 +387,13 @@ extension MISDetailsViewController: MISDelegate {
         
         
         self.setupDailyOverview(region: self.selectedRegion)
+    }
+}
+
+
+
+extension MISDetailsViewController: IAxisValueFormatter {
+    func stringForValue(_ value: Double, axis: AxisBase?) -> String {
+        return months[Int(value)]
     }
 }

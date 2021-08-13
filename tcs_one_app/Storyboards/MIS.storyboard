@@ -237,7 +237,7 @@
                                                         </constraints>
                                                     </view>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="366-sU-wtb" customClass="LineChartView" customModule="Charts">
-                                                        <rect key="frame" x="1" y="34" width="343" height="200"/>
+                                                        <rect key="frame" x="1" y="44" width="343" height="200"/>
                                                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="200" id="0He-Sp-f12"/>
@@ -247,7 +247,7 @@
                                                 <color key="backgroundColor" red="0.94901960784313721" green="0.94901960784313721" blue="0.94901960784313721" alpha="1" colorSpace="calibratedRGB"/>
                                                 <constraints>
                                                     <constraint firstAttribute="trailing" secondItem="366-sU-wtb" secondAttribute="trailing" constant="1" id="0bD-wJ-lQh"/>
-                                                    <constraint firstItem="366-sU-wtb" firstAttribute="top" secondItem="pFe-Zw-ghV" secondAttribute="bottom" id="E5c-Lr-Gfv"/>
+                                                    <constraint firstItem="366-sU-wtb" firstAttribute="top" secondItem="pFe-Zw-ghV" secondAttribute="bottom" constant="10" id="E5c-Lr-Gfv"/>
                                                     <constraint firstAttribute="trailing" secondItem="OD9-nH-RkD" secondAttribute="trailing" constant="15" id="Ec0-AQ-r79"/>
                                                     <constraint firstItem="pFe-Zw-ghV" firstAttribute="top" secondItem="blu-gR-5vv" secondAttribute="bottom" constant="2" id="Fye-wW-W1A"/>
                                                     <constraint firstItem="OD9-nH-RkD" firstAttribute="centerY" secondItem="blu-gR-5vv" secondAttribute="centerY" id="O6k-ql-4sz"/>
