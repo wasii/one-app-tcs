@@ -2,6 +2,7 @@ import Foundation
 import UIKit
 
 //APP CONSTANTS
+var isMISListingAllowed: Bool = false
 var DEVICEID: String?
 var FIREBASETOKEN :String?
 let USER_ACCESS_TOKEN       = "UserAccessToken"
@@ -30,7 +31,7 @@ var RECORD_ID               = 0
 //let UPLOADFILESURL          = "https://oneappapi.tcscourier.com/api/file-upload"
 
 //DEV
-let ENDPOINT_NEW            = "https://sandbox.tcscourier.com/dev/v1/"
+let ENDPOINT_NEW            = "https://developers.tcscourier.com/prod/v1/"
 //let WALLET_ENDPOINT         = "https://sandbox.tcscourier.com/qa/v1/wallet/"
 let ENDPOINT                = "https://devapi.tcscourier.com/core/api/main"
 let UPLOADFILESURL          = "https://pwaqaapi.tcscourier.com/api/file-upload"

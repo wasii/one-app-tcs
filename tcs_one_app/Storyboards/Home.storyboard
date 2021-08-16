@@ -82,14 +82,14 @@
                                                 </userDefinedRuntimeAttributes>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2rv-so-ScA" userLabel="PieChart View" customClass="CustomView" customModule="One_App" customModuleProvider="target">
-                                                <rect key="frame" x="13" y="100" width="388" height="250"/>
+                                                <rect key="frame" x="13" y="100" width="388" height="300"/>
                                                 <subviews>
                                                     <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" pagingEnabled="YES" translatesAutoresizingMaskIntoConstraints="NO" id="YNe-gn-pTL">
-                                                        <rect key="frame" x="0.0" y="0.0" width="388" height="250"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="388" height="300"/>
                                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     </scrollView>
                                                     <pageControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" numberOfPages="2" translatesAutoresizingMaskIntoConstraints="NO" id="Nk8-nw-PX7">
-                                                        <rect key="frame" x="143" y="218.66666666666669" width="102" height="26.333333333333343"/>
+                                                        <rect key="frame" x="143" y="268.66666666666669" width="102" height="26.333333333333314"/>
                                                         <color key="pageIndicatorTintColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <color key="currentPageIndicatorTintColor" red="0.86666666670000003" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                     </pageControl>
@@ -97,7 +97,7 @@
                                                 <color key="backgroundColor" red="0.94901960780000005" green="0.95294117649999999" blue="0.95686274510000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <constraints>
                                                     <constraint firstAttribute="bottom" secondItem="Nk8-nw-PX7" secondAttribute="bottom" constant="5" id="3nQ-6M-t4h"/>
-                                                    <constraint firstAttribute="height" constant="250" id="DJA-km-21z"/>
+                                                    <constraint firstAttribute="height" constant="300" id="DJA-km-21z"/>
                                                     <constraint firstItem="YNe-gn-pTL" firstAttribute="top" secondItem="2rv-so-ScA" secondAttribute="top" id="gEY-xq-OkO"/>
                                                     <constraint firstItem="Nk8-nw-PX7" firstAttribute="centerX" secondItem="2rv-so-ScA" secondAttribute="centerX" id="qVS-ga-tai"/>
                                                     <constraint firstItem="YNe-gn-pTL" firstAttribute="leading" secondItem="2rv-so-ScA" secondAttribute="leading" id="tnm-JA-Wfa"/>
@@ -126,7 +126,7 @@
                                                 </userDefinedRuntimeAttributes>
                                             </view>
                                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="N38-Tq-WRe">
-                                                <rect key="frame" x="10" y="380" width="394" height="208"/>
+                                                <rect key="frame" x="10" y="430" width="394" height="208"/>
                                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="208" id="BHK-Yg-fg2"/>

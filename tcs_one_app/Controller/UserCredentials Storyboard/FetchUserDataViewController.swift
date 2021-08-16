@@ -64,7 +64,6 @@ class FetchUserDataViewController: BaseViewController {
     var isTotalCounter = 0
     
     //MIS Permission
-    var isMISListingAllowed: Bool = false
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationItem.hidesBackButton = true
@@ -89,7 +88,7 @@ class FetchUserDataViewController: BaseViewController {
                 userPage.PAGENAME == PERMISSION_MIS_LISTING
             }).count {
                 if count > 0 {
-                    self.isMISListingAllowed = true
+                    isMISListingAllowed = true
                 }
             }
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
@@ -1093,7 +1092,7 @@ extension FetchUserDataViewController {
                         self.checkedImageView[5].isHidden = false
                         
                         //MIS Setup
-                        if self.isMISListingAllowed {
+                        if isMISListingAllowed {
                             self.misSetupView.isHidden = false
                             self.misDailyOverview.isHidden = false
                             self.activityIndicator[6].isHidden = false
@@ -1202,7 +1201,7 @@ extension FetchUserDataViewController {
                                     self.activityIndicator[5].isHidden = true
                                     self.checkedImageView[5].isHidden = false
                                     //MIS Setup
-                                    if self.isMISListingAllowed {
+                                    if isMISListingAllowed {
                                         self.misSetupView.isHidden = false
                                         self.misDailyOverview.isHidden = false
                                         self.activityIndicator[6].isHidden = false
@@ -1308,7 +1307,7 @@ extension FetchUserDataViewController {
                         self.fulfilment_label.text = "Synced Fulfilment Orders Log"
                         
                         //MIS Setup
-                        if self.isMISListingAllowed {
+                        if isMISListingAllowed {
                             self.misSetupView.isHidden = false
                             self.misDailyOverview.isHidden = false
                             self.activityIndicator[6].isHidden = false
@@ -1465,7 +1464,7 @@ extension FetchUserDataViewController {
                                             return
                                         } else {
                                             //MIS Setup
-                                            if self.isMISListingAllowed {
+                                            if isMISListingAllowed {
                                                 self.misSetupView.isHidden = false
                                                 self.misDailyOverview.isHidden = false
                                                 self.activityIndicator[6].isHidden = false
@@ -1607,7 +1606,7 @@ extension FetchUserDataViewController {
                                                     return
                                                 } else {
                                                     //MIS Setup
-                                                    if self.isMISListingAllowed {
+                                                    if isMISListingAllowed {
                                                         self.misSetupView.isHidden = false
                                                         self.misDailyOverview.isHidden = false
                                                         self.activityIndicator[6].isHidden = false
@@ -1743,7 +1742,7 @@ extension FetchUserDataViewController {
                                         return
                                     } else {
                                         //MIS Setup
-                                        if self.isMISListingAllowed {
+                                        if isMISListingAllowed {
                                             self.misSetupView.isHidden = false
                                             self.misDailyOverview.isHidden = false
                                             self.activityIndicator[6].isHidden = false

@@ -13,6 +13,8 @@ class MISDetailTableCell: UITableViewCell {
         return "MISDetailTableCell"
     }
     
+    @IBOutlet weak var dateView: CustomView!
+    @IBOutlet weak var shipmentBooked: CustomView!
     @IBOutlet weak var weightView: CustomView!
     @IBOutlet weak var qsrView: CustomView!
     @IBOutlet weak var dsrView: CustomView!

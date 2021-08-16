@@ -2994,6 +2994,9 @@ class DBHelper {
 
         if sqlite3_prepare_v2(db, queryStatementString, -1, &queryStatement, nil) == SQLITE_OK {
             while sqlite3_step(queryStatement) == SQLITE_ROW {
+                guard let _ = sqlite3_column_text(queryStatement, 1) else {
+                    return nil
+                }
                 let id = Int(sqlite3_column_int(queryStatement, 0))
                 let regn = String(describing: String(cString: sqlite3_column_text(queryStatement, 1)))
                 let rpt_date = String(describing: String(cString: sqlite3_column_text(queryStatement, 2)))
@@ -3034,6 +3037,30 @@ class DBHelper {
         sqlite3_finalize(insertStatement)
     }
     
+    //Get Averages (MIS)
+    func getAverageMIS(query: String) -> [Average]? {
+        let queryStatementString = query
+        var queryStatement: OpaquePointer? = nil
+        var mis_daily_overview = [Average]()
+
+        if sqlite3_prepare_v2(db, queryStatementString, -1, &queryStatement, nil) == SQLITE_OK {
+            while sqlite3_step(queryStatement) == SQLITE_ROW {
+                guard let _ = sqlite3_column_text(queryStatement, 0) else {
+                    return nil
+                }
+                let total_shipment = String(describing: String(cString: sqlite3_column_text(queryStatement, 0)))
+                let avgPerDay = String(describing: String(cString: sqlite3_column_text(queryStatement, 1)))
+                let total_weight = String(describing: String(cString: sqlite3_column_text(queryStatement, 2)))
+                let avgQSR = String(describing: String(cString: sqlite3_column_text(queryStatement, 3)))
+                let avgDSR = String(describing: String(cString: sqlite3_column_text(queryStatement, 4)))
+                
+                mis_daily_overview.append(Average(TOTAL_SHIPMENT: total_shipment, AvgPerDay: avgPerDay, TOTAL_WEIGHT: total_weight, AvgQSR: avgQSR, AvgDSR: avgDSR))
+            }
+        } else {
+            print("SELECT statement \(db_mis_daily_overview) could not be prepared")
+        }
+        return mis_daily_overview.count > 0 ? mis_daily_overview : nil
+    }
     //MARK: WALLET INSERT
     func read_tbl_wallet_query_master(query: String) -> [tbl_wallet_query_master]? {
         let queryStatementString = query
@@ -4106,4 +4133,13 @@ struct tbl_wallet_detail_points {
     var CAT: Int = -1
     var SUB_CAT: Int = -1
     var POINTS: Int = -1
+}
+
+
+struct Average {
+    var TOTAL_SHIPMENT: String = ""
+    var AvgPerDay: String = ""
+    var TOTAL_WEIGHT: String = ""
+    var AvgQSR: String = ""
+    var AvgDSR: String = ""
 }

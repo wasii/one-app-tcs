@@ -180,10 +180,12 @@
             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <connections>
                 <outlet property="dateLabel" destination="SQJ-zg-M8s" id="XE9-wg-bZv"/>
+                <outlet property="dateView" destination="ZAG-63-n9s" id="kCX-Tj-hfP"/>
                 <outlet property="dsrLabel" destination="Ecg-zO-Ws3" id="Avv-qC-Xvu"/>
                 <outlet property="dsrView" destination="VH9-Jp-aX6" id="IMQ-f1-6fJ"/>
                 <outlet property="qsrLabel" destination="VSS-Dr-Srk" id="FLi-b5-EW0"/>
                 <outlet property="qsrView" destination="Llp-6X-w77" id="Mce-mE-SoY"/>
+                <outlet property="shipmentBooked" destination="cSZ-ef-zQE" id="Uv5-m7-G2T"/>
                 <outlet property="shipmentBookedLabel" destination="nBI-vV-fv0" id="8fk-ID-jX5"/>
                 <outlet property="weightLabel" destination="cSh-tE-T8e" id="10w-sH-Nc8"/>
                 <outlet property="weightView" destination="tAp-me-6di" id="nk5-Aw-IUO"/>

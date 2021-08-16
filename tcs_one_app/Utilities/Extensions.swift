@@ -607,6 +607,19 @@ extension Date {
         df.setLocalizedDateFormatFromTemplate("MMM'-'dd")
         return df.string(from: self)
     }
+    func d() -> String {
+        let df = DateFormatter()
+        df.setLocalizedDateFormatFromTemplate("dd/MM")
+        return df.string(from: self)
+    }
+    
+    func startOfMonthss() -> Date {
+        return Calendar.current.date(from: Calendar.current.dateComponents([.year, .month, .day], from: Calendar.current.startOfDay(for: self)))!
+    }
+    
+    func endOfMonthss() -> Date {
+        return Calendar.current.date(byAdding: DateComponents(month: 1, day: -1), to: self.startOfMonth)!
+    }
 }
 extension Notification.Name {
     static let counterIncrease = Notification.Name.init("CounterIncrease")
