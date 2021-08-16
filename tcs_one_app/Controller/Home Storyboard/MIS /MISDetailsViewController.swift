@@ -48,8 +48,8 @@ class MISDetailsViewController: BaseViewController {
         showCancelButton: true
     )
     
-    var months: [String]!
-    var unitsSold = [Double]()
+    var dataEntryX: [String] = [String]()
+    var dataEntryY: [Double] = [Double]()
     weak var axisFormatDelegate: IAxisValueFormatter?
     
     override func viewDidLoad() {
@@ -83,8 +83,6 @@ class MISDetailsViewController: BaseViewController {
         super.viewDidLoad()
                 // Do any additional setup after loading the view, typically from a nib.
         axisFormatDelegate = self
-        months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
-        unitsSold = [20.0, 86.0, 6.0, 3.0, 12.0, 16.0, 4.0, 18.0, 2.0, 4.0, 5.0, 4.0]
 
     }
     
@@ -95,9 +93,11 @@ class MISDetailsViewController: BaseViewController {
         
         //Get Product Name from Previous Screen (not hardcode)
         query = "SELECT * FROM \(db_mis_daily_overview) WHERE PRODUCT = '\(self.mis_product_data!.product)'"
+        let previousDate = getPreviousDays(days: -7)
+        var weekly = ""
         if startday == nil && endday == nil {
-            let previousDate = getPreviousDays(days: -7)
-            let weekly = previousDate.convertDateToString(date: previousDate)
+            
+            weekly = previousDate.convertDateToString(date: previousDate)
             
             
             dateFormatter.dateFormat = "yyyy-MM-dd"
@@ -146,11 +146,16 @@ class MISDetailsViewController: BaseViewController {
                 })
                 self.qsrAverage = tempQSR / Double(count)
                 self.dsrAverage = tempDSR / Double(count)
-//                self.setupGraph()
-                self.setChart(dataEntryX: self.months, dataEntryY: self.unitsSold)
+                if self.startday == nil && self.endday == nil {
+                    self.setupGraphValues(startdate: weekly, enddate: self.getLocalCurrentDate())
+                } else {
+                    self.setupGraphValues(startdate: self.startday!, enddate: self.endday!)
+                }
+                
                 self.tableView.reloadData()
                 self.tableViewHeightConstraint.constant = CGFloat(count * 30) + 70
             } else {
+                self.lineChart.data = nil
                 self.tableView.reloadData()
                 self.tableViewHeightConstraint.constant = 0
             }
@@ -211,21 +216,34 @@ class MISDetailsViewController: BaseViewController {
         Helper.topMostController().present(controller, animated: true, completion: nil)
     }
     
-    private func setupGraphValues() {
-        var dataEntryX: [String] = [String]()
-        var dataEntryY: [Double] = [Double]()
+    private func setupGraphValues(startdate: String, enddate: String) {
         
-        if let daily_overview = self.daily_overview {
-            var currentDate = ""
-            for DO in daily_overview {
-                if currentDate == DO.rpt_date {
-                    
-                } else {
-                    currentDate = DO.rpt_date
-                }
-                
-                
+        let dateQuery = "SELECT strftime('%Y-%m-%d',RPT_DATE) as date FROM \(db_mis_daily_overview) WHERE  PRODUCT = '\(self.mis_product_data!.product)' AND RPT_DATE >= '\(startdate)' AND RPT_DATE <= '\(enddate)'  group by strftime('%Y-%m-%d',RPT_DATE)"
+        let countQuery = "SELECT BOOKED , count(BOOKED) as totalCount, strftime('%Y-%m-%d',RPT_DATE) as date FROM \(db_mis_daily_overview) WHERE  RPT_DATE >= '\(startdate)' AND RPT_DATE <= '\(enddate)'  group by  BOOKED , date"
+        
+        let dateCount  = AppDelegate.sharedInstance.db?.getDates(query: dateQuery).sorted(by: { (date1, date2) -> Bool in
+            date1 > date2
+        })
+        
+        let totalCount = AppDelegate.sharedInstance.db?.getBarGraphCounts(query: countQuery).sorted(by: { (g1, g2) -> Bool in
+            g1.ticket_date! > g2.ticket_date!
+        })
+        
+        for (_,date) in dateCount!.enumerated() {
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "yyyy-MM-dd"
+            let tDate = dateFormatter.date(from: date)!.monthAsStringAndDay()
+            dataEntryX.append(tDate)
+            
+            let currentDate = totalCount?.filter({ currentdate in
+                currentdate.ticket_date == date
+            })
+            var finalCount: Double = 0.0
+            currentDate!.forEach { currentCount in
+                let value = Double(currentCount.ticket_status!)
+                finalCount += value ?? 0.0
             }
+            dataEntryY.append(finalCount)
         }
         setChart(dataEntryX: dataEntryX, dataEntryY: dataEntryY)
     }
@@ -250,7 +268,7 @@ class MISDetailsViewController: BaseViewController {
         lineChart.noDataText = "You need to provide data for the chart."
         var dataEntries:[ChartDataEntry] = []
         for i in 0..<forX.count{
-            let dataEntry = ChartDataEntry(x: Double(i), y: Double(forY[i]) , data: months as AnyObject?)
+            let dataEntry = ChartDataEntry(x: Double(i), y: Double(forY[i]) , data: forX as AnyObject?)
             print(dataEntry)
             dataEntries.append(dataEntry)
         }
@@ -394,6 +412,6 @@ extension MISDetailsViewController: MISDelegate {
 
 extension MISDetailsViewController: IAxisValueFormatter {
     func stringForValue(_ value: Double, axis: AxisBase?) -> String {
-        return months[Int(value)]
+        return dataEntryX[Int(value)]
     }
 }

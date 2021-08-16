@@ -30,8 +30,8 @@ var RECORD_ID               = 0
 //let UPLOADFILESURL          = "https://oneappapi.tcscourier.com/api/file-upload"
 
 //DEV
-let MIS_ENDPOINT            = "http://apigatewayuat.tranzumpk.com:3003/dev/v1/oneapp/"
-let WALLET_ENDPOINT         = "https://sandbox.tcscourier.com/qa/v1/wallet/"
+let ENDPOINT_NEW            = "https://sandbox.tcscourier.com/dev/v1/"
+//let WALLET_ENDPOINT         = "https://sandbox.tcscourier.com/qa/v1/wallet/"
 let ENDPOINT                = "https://devapi.tcscourier.com/core/api/main"
 let UPLOADFILESURL          = "https://pwaqaapi.tcscourier.com/api/file-upload"
 
@@ -69,19 +69,19 @@ let GETORDERFULFILMET       = "oneapp.getorderfullfilment"
 let UPDATEORDERFULFILMENT   = "oneapp.updateorderfullfilment"
 
 //MIS
-let MIS_GET_TOKEN           = MIS_ENDPOINT + "token?clientSecret=\(MISCLIENTSECRET)"
-let MIS_SETUP               = MIS_ENDPOINT + "setup"
-let MIS_DAILY_OVERVIEW      = MIS_ENDPOINT + "daily-overview"
+let MIS_GET_TOKEN           = ENDPOINT_NEW + "oneapp/token?clientSecret=\(MISCLIENTSECRET)"
+let MIS_SETUP               = ENDPOINT_NEW + "oneapp/setup"
+let MIS_DAILY_OVERVIEW      = ENDPOINT_NEW + "oneapp/daily-overview"
 
-let S_MIS_DAILY_OVERVIEW    = MIS_ENDPOINT + "DAILY.OVERVIEW.P"
+let S_MIS_DAILY_OVERVIEW    = ENDPOINT_NEW + "DAILY.OVERVIEW.P"
 
 //WALLET
-let WALLET_SETUP            = WALLET_ENDPOINT + "setup"
-let WALLET_GET_TOKEN        = WALLET_ENDPOINT + "token?clientSecret=\(CLIENTSECRET)"
+let WALLET_SETUP            = ENDPOINT_NEW + "wallet/setup"
+let WALLET_GET_TOKEN        = ENDPOINT_NEW + "wallet/token?clientSecret=\(CLIENTSECRET)"
 
-let WALLET_DETAIL_POINTS    = WALLET_ENDPOINT + "detail-points"
-let WALLET_HISTORY_POINT    = WALLET_ENDPOINT + "history-points"
-let WALLET_SUMMARY_POINT    = WALLET_ENDPOINT + "summary-points"
+let WALLET_DETAIL_POINTS    = ENDPOINT_NEW + "wallet/detail-points"
+let WALLET_HISTORY_POINT    = ENDPOINT_NEW + "wallet/history-points"
+let WALLET_SUMMARY_POINT    = ENDPOINT_NEW + "wallet/summary-points"
 
 let S_WALLET_POINTS_HISTORY = "WALLET.GET.HISTORY.POINTS"
 let S_WALLET_POINTS_SUMMARY = "WALLET.GET.SUMMARY.POINTS"
