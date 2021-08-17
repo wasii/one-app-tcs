@@ -162,10 +162,18 @@ class MISDetailsViewController: BaseViewController {
                 } else {
                     self.setupGraphValues(startdate: self.startday!, enddate: self.endday!)
                 }
-                
+                self.daily_overview = self.daily_overview?.sorted(by: { d1, d2 in
+                    d1.rpt_date > d2.rpt_date
+                })
                 self.tableView.reloadData()
                 self.tableViewHeightConstraint.constant = CGFloat(count * 30) + 70
             } else {
+                self.totalShipmentLabel.text = "Total Shipment: 0"
+                self.averagePerDayLabel.text = "Avg. Per Day: 0"
+                self.totalWeightLabel.text = "Total Weight: 0"
+                self.averageWeightLabel.text = ""
+                self.averageQSRLabel.text = "Avg. QSR: 0"
+                self.averageDSRLabel.text = "Avg. DSR: 0"
                 self.lineChart.data = nil
                 self.tableView.reloadData()
                 self.tableViewHeightConstraint.constant = 0
@@ -400,13 +408,18 @@ extension MISDetailsViewController: UITableViewDataSource, UITableViewDelegate {
             cell.qsrLabel.text = String(format: "%.2f", self.qsrAverage)
             cell.dsrLabel.text = String(format: "%.2f", self.dsrAverage)
             
-            cell.dateView.bgColor = UIColor.gray
-            cell.shipmentBooked.bgColor = UIColor.gray
-            cell.weightView.bgColor = UIColor.gray
-            cell.qsrView.bgColor = UIColor.gray
-            cell.dsrView.bgColor = UIColor.gray
+            cell.dateView.bgColor = UIColor.init(red: 242.0/255.0, green: 242.0/255.0, blue: 242.0/255.0, alpha: 1)
+            cell.shipmentBooked.bgColor = UIColor.init(red: 242.0/255.0, green: 242.0/255.0, blue: 242.0/255.0, alpha: 1)
+            cell.weightView.bgColor = UIColor.init(red: 242.0/255.0, green: 242.0/255.0, blue: 242.0/255.0, alpha: 1)
+            cell.qsrView.bgColor = UIColor.init(red: 242.0/255.0, green: 242.0/255.0, blue: 242.0/255.0, alpha: 1)
+            cell.dsrView.bgColor = UIColor.init(red: 242.0/255.0, green: 242.0/255.0, blue: 242.0/255.0, alpha: 1)
             return cell
         }
+        cell.dateView.bgColor = UIColor.white
+        cell.shipmentBooked.bgColor = UIColor.white
+        cell.weightView.bgColor = UIColor.white
+        cell.qsrView.bgColor = UIColor.white
+        cell.dsrView.bgColor = UIColor.white
         
         cell.dateLabel.font = UIFont.systemFont(ofSize: 10)
         cell.shipmentBookedLabel.font = UIFont.systemFont(ofSize: 10)
@@ -472,6 +485,9 @@ extension MISDetailsViewController: MISDelegate {
 
 extension MISDetailsViewController: IAxisValueFormatter {
     func stringForValue(_ value: Double, axis: AxisBase?) -> String {
+        if value == -1 || value == 1 {
+            return dataEntryX[0]
+        }
         return dataEntryX[Int(value)]
     }
 }

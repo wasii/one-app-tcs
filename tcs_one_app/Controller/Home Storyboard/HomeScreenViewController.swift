@@ -458,15 +458,18 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
         let edate = df.string(from: end_date).dateOnly.split(separator: " ")
         let sdate = df.string(from: start_date).dateOnly.split(separator: "-")
         
-        var finalEdate = "\(String(edate[0]))"
-        var finalSdate = "\(String(sdate[0]))-\(String(sdate[1]))-01"
+        let finalEdate = "\(String(edate[0]))"
+        let finalSdate = "\(String(sdate[0]))-\(String(sdate[1]))-01"
         
         
         let lowerdata = "SELECT SUM(BOOKED) as TOTAL_SHIPMENT,round(Avg(BOOKED)) as AvgPerDay,SUM(WEIGHT) as TOTAL_WEIGHT,round(Avg(QSR)) as AvgQSR,round(Avg(DSR)) as AvgDSR FROM \(db_mis_daily_overview) WHERE PRODUCT = '\(self.mis_product_data!.product)' AND RPT_DATE >= '\(finalSdate)T00:00:00' AND RPT_DATE <= '\(finalEdate)T23:59:59'"
         
         if let averageDate = AppDelegate.sharedInstance.db?.getAverageMIS(query: lowerdata)?.first {
-            chartView.totalShipmentLabel.text = "Aug Shipment: \(averageDate.TOTAL_SHIPMENT)"
-            chartView.averagePerDayLabel.text = "Aug Avg. Per Day: \(averageDate.AvgPerDay)"
+            df.dateFormat = "MMM"
+            let monthName = df.string(from: Date())
+            print(monthName)
+            chartView.totalShipmentLabel.text = "\(monthName) Shipment: \(averageDate.TOTAL_SHIPMENT)"
+            chartView.averagePerDayLabel.text = "\(monthName) Avg. Per Day: \(averageDate.AvgPerDay)"
             
             var isWieghtAllowed = 0
             var isQSRAllowed = 0
@@ -492,8 +495,8 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
             if isWieghtAllowed == 0 {
                 chartView.weightStackView.isHidden = true
             } else {
-                chartView.totalWeightLabel.text = "Aug Weight: \(averageDate.TOTAL_WEIGHT)"
-                chartView.weightAverageLabel.text = "Aug Avg. Per Day: \(averageDate.AvgPerDay)"
+                chartView.totalWeightLabel.text = "\(monthName) Weight: \(averageDate.TOTAL_WEIGHT)"
+                chartView.weightAverageLabel.text = "\(monthName) Avg. Per Day: \(averageDate.AvgPerDay)"
                 chartView.weightStackView.isHidden = false
                 
             }
@@ -501,8 +504,8 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
             if isQSRAllowed == 0 {
                 chartView.QsrDsrStackView.isHidden = true
             } else {
-                chartView.averageQSRLabel.text = "Aug Avg. QSR: \(averageDate.AvgQSR)%"
-                chartView.averageDSRLabel.text = "Aug Avg. DSR: \(averageDate.AvgDSR)%"
+                chartView.averageQSRLabel.text = "\(monthName) Avg. QSR: \(averageDate.AvgQSR)%"
+                chartView.averageDSRLabel.text = "\(monthName) Avg. DSR: \(averageDate.AvgDSR)%"
                 chartView.QsrDsrStackView.isHidden = false
             }
         } else {
