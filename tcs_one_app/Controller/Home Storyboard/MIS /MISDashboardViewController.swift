@@ -59,7 +59,7 @@ extension MISDashboardViewController: UITableViewDelegate, UITableViewDataSource
         }
         
         if let label = cell.viewWithTag(1) as? UILabel {
-            label.text = mis_listing_data![indexPath.row].product
+            label.text = mis_listing_data![indexPath.row].product + " Trend"
         }
         return cell
     }

@@ -3017,7 +3017,7 @@ class DBHelper {
         var insertStatement: OpaquePointer? = nil
         if sqlite3_prepare_v2(self.db, insertStatementString, -1, &insertStatement, nil) == SQLITE_OK {
             sqlite3_bind_text(insertStatement, 1, (daily_overview.regn as NSString).utf8String, -1, nil)
-            sqlite3_bind_text(insertStatement, 2, (daily_overview.rptDate as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 2, (daily_overview.rptDate.dateOnly as NSString).utf8String, -1, nil)
             sqlite3_bind_text(insertStatement, 3, (daily_overview.product as NSString).utf8String, -1, nil)
             sqlite3_bind_int(insertStatement, 4, Int32(daily_overview.booked))
             sqlite3_bind_text(insertStatement, 5, ("\(daily_overview.weight)" as NSString).utf8String, -1, nil)

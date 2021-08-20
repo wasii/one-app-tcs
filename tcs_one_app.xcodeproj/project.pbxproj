@@ -29,6 +29,7 @@
 		1B28176B257F7D4F009AE4E3 /* ChartViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B28176A257F7D4F009AE4E3 /* ChartViews.swift */; };
 		1B3202F62578C1270034803F /* ComingSoonViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B3202F52578C1270034803F /* ComingSoonViewController.swift */; };
 		1B3202F92578C70B0034803F /* ImagePickerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B3202F82578C70B0034803F /* ImagePickerManager.swift */; };
+		1B3239A726CF859900D89A9B /* YAxisFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B3239A626CF859900D89A9B /* YAxisFormatter.swift */; };
 		1B326588259C95BF001B94C0 /* IMSDashboardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B326587259C95BF001B94C0 /* IMSDashboardViewController.swift */; };
 		1B3B229826C15F4E008EDC15 /* MIS.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1B3B229726C15F4E008EDC15 /* MIS.storyboard */; };
 		1B3B229A26C24E4A008EDC15 /* TCSOneApp.db in Resources */ = {isa = PBXBuildFile; fileRef = 1B3B229926C24E4A008EDC15 /* TCSOneApp.db */; };
@@ -209,6 +210,7 @@
 		1B28176A257F7D4F009AE4E3 /* ChartViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartViews.swift; sourceTree = "<group>"; };
 		1B3202F52578C1270034803F /* ComingSoonViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComingSoonViewController.swift; sourceTree = "<group>"; };
 		1B3202F82578C70B0034803F /* ImagePickerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePickerManager.swift; sourceTree = "<group>"; };
+		1B3239A626CF859900D89A9B /* YAxisFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YAxisFormatter.swift; sourceTree = "<group>"; };
 		1B326587259C95BF001B94C0 /* IMSDashboardViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMSDashboardViewController.swift; sourceTree = "<group>"; };
 		1B3B229726C15F4E008EDC15 /* MIS.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = MIS.storyboard; sourceTree = "<group>"; };
 		1B3B229926C24E4A008EDC15 /* TCSOneApp.db */ = {isa = PBXFileReference; lastKnownFileType = file; path = TCSOneApp.db; sourceTree = "<group>"; };
@@ -792,6 +794,7 @@
 				606D6402254974BC00F67B77 /* ConnectionManager.swift */,
 				1B3202F82578C70B0034803F /* ImagePickerManager.swift */,
 				1BFB375825F9D8E60073CC53 /* SlideManager.swift */,
+				1B3239A626CF859900D89A9B /* YAxisFormatter.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -1157,6 +1160,7 @@
 				1B77CE842562509B00A821E7 /* DownloadListViewController.swift in Sources */,
 				60485398253DC4BE00F7A0AA /* CircularView.swift in Sources */,
 				1BE523CD2679DA9400F5F030 /* IMSConsignmentDetailsViewController.swift in Sources */,
+				1B3239A726CF859900D89A9B /* YAxisFormatter.swift in Sources */,
 				60EE11B5254B263400ACB45B /* MailViewController.swift in Sources */,
 				1B6A402326C650F2004265F3 /* MISHeaderCell.swift in Sources */,
 				605CE773254196E000509434 /* User.swift in Sources */,
@@ -1325,7 +1329,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "tcs_one_app/One App.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.0;
+				CURRENT_PROJECT_VERSION = 1.2;
 				DEVELOPMENT_TEAM = R33FJ93Y8M;
 				INFOPLIST_FILE = tcs_one_app/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
@@ -1348,7 +1352,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "tcs_one_app/One App.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.0;
+				CURRENT_PROJECT_VERSION = 1.2;
 				DEVELOPMENT_TEAM = R33FJ93Y8M;
 				INFOPLIST_FILE = tcs_one_app/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;

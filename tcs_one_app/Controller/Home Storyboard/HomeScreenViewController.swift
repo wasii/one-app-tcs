@@ -366,11 +366,11 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
         let previousDate = getPreviousDays(days: -7)
         let weekly = previousDate.convertDateToString(date: previousDate)
         
-        query += " AND RPT_DATE >= '\(weekly)' AND RPT_DATE <= '\(self.getLocalCurrentDate())'"
+        query += " AND RPT_DATE >= '\(weekly.dateOnly)' AND RPT_DATE <= '\(self.getLocalCurrentDate().dateOnly)'"
         lineChart.delegate = self
         
-        let dateQuery = "SELECT strftime('%Y-%m-%d',RPT_DATE) as date FROM \(db_mis_daily_overview) WHERE  PRODUCT = '\(self.mis_product_data!.product)' AND RPT_DATE >= '\(weekly)' AND RPT_DATE <= '\(getLocalCurrentDate())'  group by strftime('%Y-%m-%d',RPT_DATE)"
-        let countQuery = "SELECT SUM(BOOKED), count(BOOKED) as totalCount, strftime('%Y-%m-%d',RPT_DATE) as date FROM \(db_mis_daily_overview) WHERE  RPT_DATE >= '\(weekly)' AND RPT_DATE <= '\(getLocalCurrentDate())' AND PRODUCT = '\(self.mis_product_data!.product)'  group by date"
+        let dateQuery = "SELECT strftime('%Y-%m-%d',RPT_DATE) as date FROM \(db_mis_daily_overview) WHERE  PRODUCT = '\(self.mis_product_data!.product)' AND RPT_DATE >= '\(weekly.dateOnly)' AND RPT_DATE <= '\(getLocalCurrentDate().dateOnly)'  group by strftime('%Y-%m-%d',RPT_DATE)"
+        let countQuery = "SELECT SUM(BOOKED), count(BOOKED) as totalCount, strftime('%Y-%m-%d',RPT_DATE) as date FROM \(db_mis_daily_overview) WHERE  RPT_DATE >= '\(weekly.dateOnly)' AND RPT_DATE <= '\(getLocalCurrentDate().dateOnly)' AND PRODUCT = '\(self.mis_product_data!.product)'  group by date"
         
         let dateCount  = AppDelegate.sharedInstance.db?.getDates(query: dateQuery).sorted(by: { (date1, date2) -> Bool in
             date1 > date2
@@ -450,6 +450,9 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
         xAxisValue.setLabelCount(dateCount!.count, force: true)
         xAxisValue.labelPosition = .bottom
         
+        let yAxisValue = lineChart.leftAxis
+        yAxisValue.valueFormatter = YAxisFormatter()
+        
         let start_date = Date().startOfMonthss()
         let end_date = Date().endOfMonthss()
         
@@ -462,7 +465,7 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
         let finalSdate = "\(String(sdate[0]))-\(String(sdate[1]))-01"
         
         
-        let lowerdata = "SELECT SUM(BOOKED) as TOTAL_SHIPMENT,round(Avg(BOOKED)) as AvgPerDay,SUM(WEIGHT) as TOTAL_WEIGHT,round(Avg(QSR)) as AvgQSR,round(Avg(DSR)) as AvgDSR FROM \(db_mis_daily_overview) WHERE PRODUCT = '\(self.mis_product_data!.product)' AND RPT_DATE >= '\(finalSdate)T00:00:00' AND RPT_DATE <= '\(finalEdate)T23:59:59'"
+        let lowerdata = "SELECT SUM(BOOKED) as TOTAL_SHIPMENT,round(Avg(BOOKED)) as AvgPerDay,SUM(WEIGHT) as TOTAL_WEIGHT,round(Avg(QSR)) as AvgQSR,round(Avg(DSR)) as AvgDSR FROM \(db_mis_daily_overview) WHERE PRODUCT = '\(self.mis_product_data!.product)' AND RPT_DATE >= '\(finalSdate)' AND RPT_DATE <= '\(finalEdate)'"
         
         if let averageDate = AppDelegate.sharedInstance.db?.getAverageMIS(query: lowerdata)?.first {
             df.dateFormat = "MMM"

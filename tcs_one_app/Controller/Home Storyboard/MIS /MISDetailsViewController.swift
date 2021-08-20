@@ -120,7 +120,7 @@ class MISDetailsViewController: BaseViewController {
             let endDate = dateFormatter.string(from: Tempenddate)
             
             self.dateLabel.text = "\(startDate) - \(endDate)"
-            query += " AND RPT_DATE >= '\(weekly)' AND RPT_DATE <= '\(self.getLocalCurrentDate())'"
+            query += " AND RPT_DATE >= '\(weekly.dateOnly)' AND RPT_DATE <= '\(self.getLocalCurrentDate().dateOnly)'"
         } else {
             dateFormatter.dateFormat = "yyyy-MM-dd"
             let Tempstartdate = dateFormatter.date(from: self.startday!.dateOnly) ?? Date()
@@ -132,7 +132,7 @@ class MISDetailsViewController: BaseViewController {
             let endDate = dateFormatter.string(from: Tempenddate)
             
             self.dateLabel.text = "\(startDate) - \(endDate)"
-            query += " AND RPT_DATE >= '\(self.startday!)' AND RPT_DATE <= '\(self.endday!)'"
+            query += " AND RPT_DATE >= '\(self.startday!.dateOnly)' AND RPT_DATE <= '\(self.endday!.dateOnly)'"
         }
         
         if let r = region {
@@ -141,7 +141,7 @@ class MISDetailsViewController: BaseViewController {
         
         query += " GROUP BY RPT_DATE"
         daily_overview = AppDelegate.sharedInstance.db?.read_tbl_mis_daily_overview(query: query)
-        
+        print(query)
         DispatchQueue.main.async {
             self.view.hideToastActivity()
             if let count = self.daily_overview?.count {
@@ -238,10 +238,10 @@ class MISDetailsViewController: BaseViewController {
     private func setupGraphValues(startdate: String, enddate: String) {
         dataEntryY = [Double]()
         dataEntryX = [String]()
-        var getAverageQuery = "SELECT SUM(BOOKED) as TOTAL_SHIPMENT,round(Avg(BOOKED)) as AvgPerDay,SUM(WEIGHT) as TOTAL_WEIGHT,round(Avg(QSR)) as AvgQSR,round(Avg(DSR)) as AvgDSR FROM \(db_mis_daily_overview) WHERE PRODUCT = '\(self.mis_product_data!.product)' AND RPT_DATE >= '\(startdate)' AND RPT_DATE <= '\(enddate)'"
+        var getAverageQuery = "SELECT SUM(BOOKED) as TOTAL_SHIPMENT,round(Avg(BOOKED)) as AvgPerDay,SUM(WEIGHT) as TOTAL_WEIGHT,round(Avg(QSR)) as AvgQSR,round(Avg(DSR)) as AvgDSR FROM \(db_mis_daily_overview) WHERE PRODUCT = '\(self.mis_product_data!.product)' AND RPT_DATE >= '\(startdate.dateOnly)' AND RPT_DATE <= '\(enddate.dateOnly)'"
         
         if let selected_region = self.selectedRegion {
-            getAverageQuery = "SELECT SUM(BOOKED) as TOTAL_SHIPMENT,round(Avg(BOOKED)) as AvgPerDay,SUM(WEIGHT) as TOTAL_WEIGHT,round(Avg(QSR)) as AvgQSR,round(Avg(DSR)) as AvgDSR FROM \(db_mis_daily_overview) WHERE PRODUCT = '\(self.mis_product_data!.product)' AND RPT_DATE >= '\(startdate)' AND RPT_DATE <= '\(enddate)' \(selected_region)"
+            getAverageQuery = "SELECT SUM(BOOKED) as TOTAL_SHIPMENT,round(Avg(BOOKED)) as AvgPerDay,SUM(WEIGHT) as TOTAL_WEIGHT,round(Avg(QSR)) as AvgQSR,round(Avg(DSR)) as AvgDSR FROM \(db_mis_daily_overview) WHERE PRODUCT = '\(self.mis_product_data!.product)' AND RPT_DATE >= '\(startdate.dateOnly)' AND RPT_DATE <= '\(enddate.dateOnly)' \(selected_region)"
         }
         if let averageDate = AppDelegate.sharedInstance.db?.getAverageMIS(query: getAverageQuery)?.first {
             self.totalShipmentLabel.text = "Total Shipment: \(averageDate.TOTAL_SHIPMENT)"
@@ -268,13 +268,13 @@ class MISDetailsViewController: BaseViewController {
         var dateQuery = ""
         var countQuery = ""
         if let selected_region = self.selectedRegion {
-            dateQuery = "SELECT strftime('%Y-%m-%d',RPT_DATE) as date FROM \(db_mis_daily_overview) WHERE  PRODUCT = '\(self.mis_product_data!.product)' \(selected_region) AND RPT_DATE >= '\(startdate)' AND RPT_DATE <= '\(enddate)'  group by strftime('%Y-%m-%d',RPT_DATE)"
+            dateQuery = "SELECT strftime('%Y-%m-%d',RPT_DATE) as date FROM \(db_mis_daily_overview) WHERE  PRODUCT = '\(self.mis_product_data!.product)' \(selected_region) AND RPT_DATE >= '\(startdate.dateOnly)' AND RPT_DATE <= '\(enddate.dateOnly)'  group by strftime('%Y-%m-%d',RPT_DATE)"
             
-            countQuery = "SELECT SUM(BOOKED) , count(BOOKED) as totalCount, strftime('%Y-%m-%d',RPT_DATE) as date FROM \(db_mis_daily_overview) WHERE  RPT_DATE >= '\(startdate)' AND RPT_DATE <= '\(enddate)' \(selected_region)  group by date"
+            countQuery = "SELECT SUM(BOOKED) , count(BOOKED) as totalCount, strftime('%Y-%m-%d',RPT_DATE) as date FROM \(db_mis_daily_overview) WHERE  RPT_DATE >= '\(startdate.dateOnly)' AND RPT_DATE <= '\(enddate.dateOnly)' \(selected_region)  group by date"
         } else {
-            dateQuery = "SELECT strftime('%Y-%m-%d',RPT_DATE) as date FROM \(db_mis_daily_overview) WHERE  PRODUCT = '\(self.mis_product_data!.product)' AND RPT_DATE >= '\(startdate)' AND RPT_DATE <= '\(enddate)'  group by strftime('%Y-%m-%d',RPT_DATE)"
+            dateQuery = "SELECT strftime('%Y-%m-%d',RPT_DATE) as date FROM \(db_mis_daily_overview) WHERE  PRODUCT = '\(self.mis_product_data!.product)' AND RPT_DATE >= '\(startdate.dateOnly)' AND RPT_DATE <= '\(enddate.dateOnly)'  group by strftime('%Y-%m-%d',RPT_DATE)"
             
-            countQuery = "SELECT SUM(BOOKED) , count(BOOKED) as totalCount, strftime('%Y-%m-%d',RPT_DATE) as date FROM \(db_mis_daily_overview) WHERE  RPT_DATE >= '\(startdate)' AND RPT_DATE <= '\(enddate)' group by date"
+            countQuery = "SELECT SUM(BOOKED) , count(BOOKED) as totalCount, strftime('%Y-%m-%d',RPT_DATE) as date FROM \(db_mis_daily_overview) WHERE  RPT_DATE >= '\(startdate.dateOnly)' AND RPT_DATE <= '\(enddate.dateOnly)' group by date"
         }
         
         let dateCount  = AppDelegate.sharedInstance.db?.getDates(query: dateQuery).sorted(by: { (date1, date2) -> Bool in
@@ -358,6 +358,9 @@ class MISDetailsViewController: BaseViewController {
         xAxisValue.granularityEnabled = true
         xAxisValue.setLabelCount(forX.count, force: true)
         xAxisValue.labelPosition = .bottom
+        
+        let yAxisValue = lineChart.leftAxis
+        yAxisValue.valueFormatter = YAxisFormatter()
     }
 }
 
@@ -485,7 +488,7 @@ extension MISDetailsViewController: MISDelegate {
 
 extension MISDetailsViewController: IAxisValueFormatter {
     func stringForValue(_ value: Double, axis: AxisBase?) -> String {
-        if value == -1 || value == 1 {
+        if self.dataEntryX.count == 1 {
             return dataEntryX[0]
         }
         return dataEntryX[Int(value)]
