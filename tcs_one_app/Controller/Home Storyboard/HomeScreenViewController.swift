@@ -402,14 +402,27 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
         lineChart.xAxis.gridLineDashLengths = [0, 0]
         lineChart.xAxis.gridLineDashPhase = 0
         
-        let getAverageQuery = "SELECT ROUND(AVG(BOOKED)) AS SHIPMENT FROM \(db_mis_daily_overview) WHERE PRODUCT = '\(self.mis_product_data!.product)'"
-        if let getAverage = AppDelegate.sharedInstance.db?.read_column(query: getAverageQuery) {
-            let average = (getAverage as? NSString)?.doubleValue
-            let ll1 = ChartLimitLine(limit: average ?? 0.0, label: "")
+        let getAverageQuery = "SELECT SUM(BOOKED) AS SHIPMENT FROM \(db_mis_daily_overview) WHERE PRODUCT = '\(self.mis_product_data!.product)' GROUP BY RPT_DATE"
+        if let getAverage = AppDelegate.sharedInstance.db?.read_row(query: getAverageQuery) {
+            var average: Int = 0
+            for json in getAverage {
+                average += (json as NSString).integerValue
+            }
+            average = average / getAverage.count
+            let ll1 = ChartLimitLine(limit: Double(average), label: "")
             ll1.lineColor = UIColor.approvedColor()
-            ll1.lineWidth = 4
+            ll1.lineWidth = 2
             ll1.lineDashLengths = [0,0]
+            let yAxisValue = lineChart.leftAxis
+            yAxisValue.addLimitLine(ll1)
         }
+//        if let getAverage = AppDelegate.sharedInstance.db?.read_column(query: getAverageQuery) {
+//            let average = (getAverage as? NSString)?.doubleValue
+//            let ll1 = ChartLimitLine(limit: average ?? 0.0, label: "")
+//            ll1.lineColor = UIColor.approvedColor()
+//            ll1.lineWidth = 4
+//            ll1.lineDashLengths = [0,0]
+//        }
 
         lineChart.rightAxis.enabled = false
         
@@ -465,14 +478,33 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
         let finalSdate = "\(String(sdate[0]))-\(String(sdate[1]))-01"
         
         
-        let lowerdata = "SELECT SUM(BOOKED) as TOTAL_SHIPMENT,round(Avg(BOOKED)) as AvgPerDay,SUM(WEIGHT) as TOTAL_WEIGHT,round(Avg(QSR)) as AvgQSR,round(Avg(DSR)) as AvgDSR FROM \(db_mis_daily_overview) WHERE PRODUCT = '\(self.mis_product_data!.product)' AND RPT_DATE >= '\(finalSdate)' AND RPT_DATE <= '\(finalEdate)'"
+        let lowerdata = "SELECT SUM(BOOKED) as TOTAL_SHIPMENT,round(Avg(BOOKED)) as AvgPerDay,SUM(WEIGHT) as TOTAL_WEIGHT,round(Avg(QSR)) as AvgQSR,round(Avg(DSR)) as AvgDSR FROM \(db_mis_daily_overview) WHERE PRODUCT = '\(self.mis_product_data!.product)' AND RPT_DATE >= '\(finalSdate)' AND RPT_DATE <= '\(finalEdate)' GROUP BY RPT_DATE"
         
-        if let averageDate = AppDelegate.sharedInstance.db?.getAverageMIS(query: lowerdata)?.first {
+        if let averageDate = AppDelegate.sharedInstance.db?.getAverageMIS(query: lowerdata) {
             df.dateFormat = "MMM"
             let monthName = df.string(from: Date())
-            print(monthName)
-            chartView.totalShipmentLabel.text = "\(monthName) Shipment: \(averageDate.TOTAL_SHIPMENT)"
-            chartView.averagePerDayLabel.text = "\(monthName) Avg. Per Day: \(averageDate.AvgPerDay)"
+            
+            let count = Double(averageDate.count)
+            var totalShipment: Double = 0
+            var averagePerDay: Double = 0
+            var totalWeight: Double = 0
+            var averageQSR: Double = 0
+            var averageDSR: Double = 0
+            
+            for json in averageDate {
+                totalShipment += Double(json.TOTAL_SHIPMENT)!
+                totalWeight += Double(json.TOTAL_WEIGHT)!
+                averageQSR += Double(json.AvgQSR)!
+                averageDSR += Double(json.AvgDSR)!
+            }
+            averagePerDay = totalShipment / count
+            averageDSR = averageDSR / count
+            averageQSR = averageQSR / count
+            
+            
+            
+            chartView.totalShipmentLabel.text = "\(monthName) Shipment: \(totalShipment)"
+            chartView.averagePerDayLabel.text = "\(monthName) Avg. Per Day: "  + String(format: "%.1f", averagePerDay)
             
             var isWieghtAllowed = 0
             var isQSRAllowed = 0
@@ -498,8 +530,8 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
             if isWieghtAllowed == 0 {
                 chartView.weightStackView.isHidden = true
             } else {
-                chartView.totalWeightLabel.text = "\(monthName) Weight: \(averageDate.TOTAL_WEIGHT)"
-                chartView.weightAverageLabel.text = "\(monthName) Avg. Per Day: \(averageDate.AvgPerDay)"
+                chartView.totalWeightLabel.text = "\(monthName) Weight: " + String(format: "%.2f", totalWeight)
+//                chartView.weightAverageLabel.text = "\(monthName)"
                 chartView.weightStackView.isHidden = false
                 
             }
@@ -507,8 +539,8 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
             if isQSRAllowed == 0 {
                 chartView.QsrDsrStackView.isHidden = true
             } else {
-                chartView.averageQSRLabel.text = "\(monthName) Avg. QSR: \(averageDate.AvgQSR)%"
-                chartView.averageDSRLabel.text = "\(monthName) Avg. DSR: \(averageDate.AvgDSR)%"
+                chartView.averageQSRLabel.text = "\(monthName) Avg. QSR: " + String(format: "%.2f", averageQSR) + "%"
+                chartView.averageDSRLabel.text = "\(monthName) Avg. DSR: " + String(format: "%.2f", averageDSR) + "%"
                 chartView.QsrDsrStackView.isHidden = false
             }
         } else {

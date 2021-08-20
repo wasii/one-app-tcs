@@ -238,20 +238,37 @@ class MISDetailsViewController: BaseViewController {
     private func setupGraphValues(startdate: String, enddate: String) {
         dataEntryY = [Double]()
         dataEntryX = [String]()
-        var getAverageQuery = "SELECT SUM(BOOKED) as TOTAL_SHIPMENT,round(Avg(BOOKED)) as AvgPerDay,SUM(WEIGHT) as TOTAL_WEIGHT,round(Avg(QSR)) as AvgQSR,round(Avg(DSR)) as AvgDSR FROM \(db_mis_daily_overview) WHERE PRODUCT = '\(self.mis_product_data!.product)' AND RPT_DATE >= '\(startdate.dateOnly)' AND RPT_DATE <= '\(enddate.dateOnly)'"
+        var getAverageQuery = "SELECT SUM(BOOKED) as TOTAL_SHIPMENT,round(Avg(BOOKED)) as AvgPerDay,SUM(WEIGHT) as TOTAL_WEIGHT,round(Avg(QSR)) as AvgQSR,round(Avg(DSR)) as AvgDSR FROM \(db_mis_daily_overview) WHERE PRODUCT = '\(self.mis_product_data!.product)' AND RPT_DATE >= '\(startdate.dateOnly)' AND RPT_DATE <= '\(enddate.dateOnly)' GROUP BY RPT_DATE"
         
         if let selected_region = self.selectedRegion {
-            getAverageQuery = "SELECT SUM(BOOKED) as TOTAL_SHIPMENT,round(Avg(BOOKED)) as AvgPerDay,SUM(WEIGHT) as TOTAL_WEIGHT,round(Avg(QSR)) as AvgQSR,round(Avg(DSR)) as AvgDSR FROM \(db_mis_daily_overview) WHERE PRODUCT = '\(self.mis_product_data!.product)' AND RPT_DATE >= '\(startdate.dateOnly)' AND RPT_DATE <= '\(enddate.dateOnly)' \(selected_region)"
+            getAverageQuery = "SELECT SUM(BOOKED) as TOTAL_SHIPMENT,round(Avg(BOOKED)) as AvgPerDay,SUM(WEIGHT) as TOTAL_WEIGHT,round(Avg(QSR)) as AvgQSR,round(Avg(DSR)) as AvgDSR FROM \(db_mis_daily_overview) WHERE PRODUCT = '\(self.mis_product_data!.product)' AND RPT_DATE >= '\(startdate.dateOnly)' AND RPT_DATE <= '\(enddate.dateOnly)' \(selected_region) GROUP BY RPT_DATE"
         }
-        if let averageDate = AppDelegate.sharedInstance.db?.getAverageMIS(query: getAverageQuery)?.first {
-            self.totalShipmentLabel.text = "Total Shipment: \(averageDate.TOTAL_SHIPMENT)"
-            self.averagePerDayLabel.text = "Avg. Per Day: \(averageDate.AvgPerDay)"
+        if let averageDate = AppDelegate.sharedInstance.db?.getAverageMIS(query: getAverageQuery) {
+            let count = Double(averageDate.count)
+            var totalShipment: Double = 0
+            var averagePerDay: Double = 0
+            var totalWeight: Double = 0
+            var averageQSR: Double = 0
+            var averageDSR: Double = 0
+            
+            for json in averageDate {
+                totalShipment += Double(json.TOTAL_SHIPMENT)!
+                totalWeight += Double(json.TOTAL_WEIGHT)!
+                averageQSR += Double(json.AvgQSR)!
+                averageDSR += Double(json.AvgDSR)!
+            }
+            averagePerDay = totalShipment / count
+            averageDSR = averageDSR / count
+            averageQSR = averageQSR / count
+            
+            self.totalShipmentLabel.text = "Total Shipment: \(totalShipment)"
+            self.averagePerDayLabel.text = "Avg. Per Day: "  + String(format: "%.2f", averagePerDay)
             
             if self.isWieghtAllowed == 0 {
                 self.weightStackView.isHidden = true
             } else {
-                self.totalWeightLabel.text = "Total Weight: \(averageDate.TOTAL_WEIGHT)"
-                self.averageWeightLabel.text = "Avg. Per Day: \(averageDate.AvgPerDay)"
+                self.totalWeightLabel.text = "Total Weight: \(totalWeight)"
+//                self.averageWeightLabel.text = "Avg. Per Day: \(averageDate.AvgPerDay)"
                 self.weightStackView.isHidden = false
                 
             }
@@ -259,8 +276,8 @@ class MISDetailsViewController: BaseViewController {
             if self.isQSRAllowed == 0 {
                 self.QsrDsrStackView.isHidden = true
             } else {
-                self.averageQSRLabel.text = "Avg. QSR: \(averageDate.AvgQSR)%"
-                self.averageDSRLabel.text = "Avg. DSR: \(averageDate.AvgDSR)%"
+                self.averageQSRLabel.text = "Avg. QSR: " + String(format: "%.2f", averageQSR) + "%"
+                self.averageDSRLabel.text = "Avg. DSR: " + String(format: "%.2f", averageDSR) + "%"
                 self.QsrDsrStackView.isHidden = false
             }
         }
@@ -311,13 +328,25 @@ class MISDetailsViewController: BaseViewController {
         lineChart.xAxis.gridLineDashLengths = [0, 0]
         lineChart.xAxis.gridLineDashPhase = 0
         
-        let getAverageQuery = "SELECT ROUND(AVG(BOOKED)) AS SHIPMENT FROM \(db_mis_daily_overview) WHERE PRODUCT = '\(self.mis_product_data!.product)'"
-        if let getAverage = AppDelegate.sharedInstance.db?.read_column(query: getAverageQuery) {
-            let average = (getAverage as? NSString)?.doubleValue
-            let ll1 = ChartLimitLine(limit: average ?? 0.0, label: "")
+        var getAverageQuery = "SELECT SUM(BOOKED) AS SHIPMENT FROM \(db_mis_daily_overview) WHERE PRODUCT = '\(self.mis_product_data!.product)'"
+        if let selectedRegion = self.selectedRegion {
+            getAverageQuery += selectedRegion
+        }
+        
+        getAverageQuery += " GROUP BY RPT_DATE"
+        let yAxisValue = lineChart.leftAxis
+        if let getAverage = AppDelegate.sharedInstance.db?.read_row(query: getAverageQuery) {
+            var average: Int = 0
+            for json in getAverage {
+                average += (json as NSString).integerValue
+            }
+            average = average / getAverage.count
+            let ll1 = ChartLimitLine(limit: Double(average), label: "")
             ll1.lineColor = UIColor.approvedColor()
-            ll1.lineWidth = 4
+            ll1.lineWidth = 2
             ll1.lineDashLengths = [0,0]
+            yAxisValue.removeAllLimitLines()
+            yAxisValue.addLimitLine(ll1)
         }
 
         lineChart.rightAxis.enabled = false
@@ -359,7 +388,6 @@ class MISDetailsViewController: BaseViewController {
         xAxisValue.setLabelCount(forX.count, force: true)
         xAxisValue.labelPosition = .bottom
         
-        let yAxisValue = lineChart.leftAxis
         yAxisValue.valueFormatter = YAxisFormatter()
     }
 }

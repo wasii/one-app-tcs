@@ -216,6 +216,21 @@ class DBHelper {
         return ref_id
     }
     
+    func read_row(query: String) -> [String]? {
+        let queryStatementString = query// "SELECT * FROM \(db_files) WHERE TICKET_ID = '\(ticketId)'"
+        var queryStatement: OpaquePointer? = nil
+        
+        var ref_id = [String]()
+        if sqlite3_prepare_v2(db, queryStatementString, -1, &queryStatement, nil) == SQLITE_OK {
+            while sqlite3_step(queryStatement) == SQLITE_ROW {
+                ref_id.append(String(describing: String(cString: sqlite3_column_text(queryStatement, 0))))
+            }
+        } else {
+            print("SELECT statement 'read_column' could not be prepared")
+        }
+        return ref_id.count > 0 ? ref_id : nil
+    }
+    
     func readTables(tableName: String, condition: String) -> Bool {
         let queryStatementString = "SELECT * FROM \(tableName) WHERE \(condition);"
         var queryStatement: OpaquePointer? = nil
