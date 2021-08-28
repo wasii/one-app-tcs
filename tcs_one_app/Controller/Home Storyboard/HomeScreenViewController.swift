@@ -52,7 +52,7 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = "Dashboard"
-        
+        numberFormatter.numberStyle = .decimal
         addHomeNavigationButton()
         self.makeTopCornersRounded(roundView: self.mainView)
         
@@ -70,7 +70,7 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
         
         
         setupUserModules()
-        chartViews = createChartViews()
+//        chartViews = createChartViews()
         scrollView.delegate = self
         
         pageControl.numberOfPages = self.ModuleCount
@@ -191,6 +191,9 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
         }
         chartViews = [ChartViews]()
         chartViews = createChartViews()
+        pageControl.numberOfPages = self.ModuleCount
+//        pageControl.currentPage = 0
+        mainView.bringSubviewToFront(pageControl)
     }
     override func viewDidDisappear(_ animated: Bool) {
         NotificationCenter.default.removeObserver(self)
@@ -210,6 +213,39 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
     func createChartViews() -> [ChartViews] {
         if let _ = self.module {
             chartViews = [ChartViews]()
+            //MARK: - MIS Listing
+            if isMISListingAllowed {
+                var mis_listing_data = [tbl_mis_product_data]()
+                if let mis_id = AppDelegate.sharedInstance.db?.read_tbl_UserPage().filter({ user_page in
+                    user_page.PAGENAME == "MIS Listing"
+                }).first?.SERVER_ID_PK {
+                    print("MIS ID: \(mis_id)")
+                    if let user_permissions = AppDelegate.sharedInstance.db?.read_tbl_UserPermission() {
+                        
+                        let _ = AppDelegate.sharedInstance.db?.read_tbl_mis_product_data(query: "SELECT * FROM \(db_mis_product_data)")?.forEach({ pd in
+                            user_permissions.forEach { permission in
+                                if permission.PERMISSION == pd.product {
+                                    mis_listing_data.append(tbl_mis_product_data(id: pd.id, product: pd.product))
+                                }
+                            }
+                        })
+                    }
+                }
+                for listing_data in mis_listing_data {
+                    self.mis_product_data = listing_data
+                    let chart:ChartViews = Bundle.main.loadNibNamed("ChartViews", owner: self, options: nil)?.first as! ChartViews
+                    chart.pieChart.isHidden = true
+                    chart.mainStackView.isHidden = false
+                    chart.heading.text = listing_data.product + " Trend"
+                    chart.lineChartView.isHidden = false
+                    chart.misYearlyAverage.isHidden = false
+                    if let data = self.setupLineChart(lineChart: chart.lineChartView, chartView: chart) {
+                        chart.lineChartView = data
+                    }
+                    self.ModuleCount += 1
+                    chartViews.append(chart)
+                }
+            }
             for mod in self.module! {
                 if mod.TAGNAME == MODULE_TAG_TRACK || mod.TAGNAME == MODULE_TAG_LEADERSHIPAWAZ || mod.TAGNAME == MODULE_TAG_ATTENDANCE || mod.TAGNAME == MODULE_TAG_FULFILMENT || mod.TAGNAME == MODULE_TAG_CLS || mod.TAGNAME == MODULE_TAG_RIDER || mod.TAGNAME == MODULE_TAG_MIS {
                     print(mod.MODULENAME)
@@ -299,39 +335,6 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
                                                   rejected: "Ready to Delivery",
                                                   tag: -2,
                                                   module: "-2")
-                self.ModuleCount += 1
-                chartViews.append(chart)
-            }
-        }
-        //MARK: - MIS Listing
-        if isMISListingAllowed {
-            var mis_listing_data = [tbl_mis_product_data]()
-            if let mis_id = AppDelegate.sharedInstance.db?.read_tbl_UserPage().filter({ user_page in
-                user_page.PAGENAME == "MIS Listing"
-            }).first?.SERVER_ID_PK {
-                print("MIS ID: \(mis_id)")
-                if let user_permissions = AppDelegate.sharedInstance.db?.read_tbl_UserPermission() {
-                    
-                    let _ = AppDelegate.sharedInstance.db?.read_tbl_mis_product_data(query: "SELECT * FROM \(db_mis_product_data)")?.forEach({ pd in
-                        user_permissions.forEach { permission in
-                            if permission.PERMISSION == pd.product {
-                                mis_listing_data.append(tbl_mis_product_data(id: pd.id, product: pd.product))
-                            }
-                        }
-                    })
-                }
-            }
-            for listing_data in mis_listing_data {
-                self.mis_product_data = listing_data
-                let chart:ChartViews = Bundle.main.loadNibNamed("ChartViews", owner: self, options: nil)?.first as! ChartViews
-                chart.pieChart.isHidden = true
-                chart.mainStackView.isHidden = false
-                chart.heading.text = listing_data.product + " Trend"
-                chart.lineChartView.isHidden = false
-                chart.misYearlyAverage.isHidden = false
-                if let data = self.setupLineChart(lineChart: chart.lineChartView, chartView: chart) {
-                    chart.lineChartView = data
-                }
                 self.ModuleCount += 1
                 chartViews.append(chart)
             }
@@ -456,7 +459,7 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
         let chartData = LineChartData(dataSet: set1)// BarChartData(dataSet: chartDataSet)
         lineChart.data = chartData
         let xAxisValue = lineChart.xAxis
-        xAxisValue.valueFormatter = axisFormatDelegate
+        xAxisValue.accessibilityLabel = self.mis_product_data!.product
         xAxisValue.valueFormatter = axisFormatDelegate
         xAxisValue.granularity = 1.0
         xAxisValue.granularityEnabled = true
@@ -501,10 +504,12 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
             averageDSR = averageDSR / count
             averageQSR = averageQSR / count
             
+            let totalShipmentFormattedNumber = numberFormatter.string(from: NSNumber(value:totalShipment))
+            let averagePerDayFormattedNumber = numberFormatter.string(from: NSNumber(value:averagePerDay))
+            let totalWeightFormattedNumber = numberFormatter.string(from: NSNumber(value:totalWeight))
             
-            
-            chartView.totalShipmentLabel.text = "\(monthName) Shipment: \(totalShipment)"
-            chartView.averagePerDayLabel.text = "\(monthName) Avg. Per Day: "  + String(format: "%.1f", averagePerDay)
+            chartView.totalShipmentLabel.text = "\(monthName) Shipment: \(totalShipmentFormattedNumber ?? "0.0")"
+            chartView.averagePerDayLabel.text = "\(monthName) Avg. Per Day: \(averagePerDayFormattedNumber ?? "0.0")"//  + String(format: "%.1f", averagePerDay)
             
             var isWieghtAllowed = 0
             var isQSRAllowed = 0
@@ -530,7 +535,7 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
             if isWieghtAllowed == 0 {
                 chartView.weightStackView.isHidden = true
             } else {
-                chartView.totalWeightLabel.text = "\(monthName) Weight: " + String(format: "%.2f", totalWeight)
+                chartView.totalWeightLabel.text = "\(monthName) Weight: \(totalWeightFormattedNumber ?? "0.0")"// + String(format: "%.2f", totalWeight)
 //                chartView.weightAverageLabel.text = "\(monthName)"
                 chartView.weightStackView.isHidden = false
                 
@@ -1102,6 +1107,19 @@ extension HomeScreenViewController:  CLLocationManagerDelegate {
 
 extension HomeScreenViewController: IAxisValueFormatter {
     func stringForValue(_ value: Double, axis: AxisBase?) -> String {
+        dataEntryX = [String]()
+        let previousDate = getPreviousDays(days: -7)
+        let weekly = previousDate.convertDateToString(date: previousDate)
+        let dateQuery = "SELECT strftime('%Y-%m-%d',RPT_DATE) as date FROM \(db_mis_daily_overview) WHERE  PRODUCT = '\(axis?.accessibilityLabel ?? "")' AND RPT_DATE >= '\(weekly.dateOnly)' AND RPT_DATE <= '\(getLocalCurrentDate().dateOnly)'  group by strftime('%Y-%m-%d',RPT_DATE)"
+        let dateCount  = AppDelegate.sharedInstance.db?.getDates(query: dateQuery).sorted(by: { (date1, date2) -> Bool in
+            date1 > date2
+        })
+        dateCount!.forEach { date in
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "yyyy-MM-dd"
+            let tDate = dateFormatter.date(from: date)!.d()
+            dataEntryX.append(tDate)
+        }
         return dataEntryX[Int(value)]
     }
 }

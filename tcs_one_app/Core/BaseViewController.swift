@@ -12,7 +12,7 @@ import SwiftyJSON
 import FirebaseMessaging
 
 class BaseViewController: UIViewController {
-
+    let numberFormatter = NumberFormatter()
     var searchQueryTimer: Timer?
     var dismiss = false
     

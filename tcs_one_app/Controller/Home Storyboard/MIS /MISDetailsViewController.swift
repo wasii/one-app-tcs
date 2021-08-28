@@ -68,7 +68,7 @@ class MISDetailsViewController: BaseViewController {
         self.tableViewHeightConstraint.constant = 0
         
         self.mainHeading.text = "\(self.mis_product_data!.product) Trend"
-        
+        numberFormatter.numberStyle = .decimal
         
         tableView.register(UINib(nibName: MISDetailTableCell.description(), bundle: nil), forCellReuseIdentifier: MISDetailTableCell.description())
         tableView.register(UINib(nibName: "MISHeaderCell", bundle: nil), forHeaderFooterViewReuseIdentifier: "MISHeaderCell")
@@ -261,13 +261,17 @@ class MISDetailsViewController: BaseViewController {
             averageDSR = averageDSR / count
             averageQSR = averageQSR / count
             
-            self.totalShipmentLabel.text = "Total Shipment: \(totalShipment)"
-            self.averagePerDayLabel.text = "Avg. Per Day: "  + String(format: "%.2f", averagePerDay)
+            let totalShipmentFormattedNumber = numberFormatter.string(from: NSNumber(value:totalShipment))
+            let averagePerDayFormattedNumber = numberFormatter.string(from: NSNumber(value:averagePerDay))
+            let totalWeightFormattedNumber = numberFormatter.string(from: NSNumber(value:totalWeight))
+            
+            self.totalShipmentLabel.text = "Total Shipment: \(totalShipmentFormattedNumber ?? "0.0")"
+            self.averagePerDayLabel.text = "Avg. Per Day: "  + "\(averagePerDayFormattedNumber ?? "0.0")"// String(format: "%.2f", averagePerDayFormattedNumber ?? "0.0")
             
             if self.isWieghtAllowed == 0 {
                 self.weightStackView.isHidden = true
             } else {
-                self.totalWeightLabel.text = "Total Weight: \(totalWeight)"
+                self.totalWeightLabel.text = "Total Weight: \(totalWeightFormattedNumber ?? "0.0")"//  + String(format: "%.2f", totalWeightFormattedNumber ?? "0.0")
 //                self.averageWeightLabel.text = "Avg. Per Day: \(averageDate.AvgPerDay)"
                 self.weightStackView.isHidden = false
                 
@@ -433,8 +437,9 @@ extension MISDetailsViewController: UITableViewDataSource, UITableViewDelegate {
         
         //Manipulate Data
         if indexPath.row == self.daily_overview!.count {
+            let formattedNumber = numberFormatter.string(from: NSNumber(value:self.bookedTotal))
             cell.dateLabel.text = "Total "
-            cell.shipmentBookedLabel.text = "\(self.bookedTotal)"
+            cell.shipmentBookedLabel.text = "\(formattedNumber ?? "0.0")"
             cell.weightLabel.text = String(format: "%.2f", self.weightedTotal)
             cell.qsrLabel.text = String(format: "%.2f", self.qsrAverage)
             cell.dsrLabel.text = String(format: "%.2f", self.dsrAverage)
@@ -456,8 +461,11 @@ extension MISDetailsViewController: UITableViewDataSource, UITableViewDelegate {
         cell.shipmentBookedLabel.font = UIFont.systemFont(ofSize: 10)
         
         let data = self.daily_overview![indexPath.row]
+        //Casting Number into Number
+        let formattedNumber = numberFormatter.string(from: NSNumber(value:data.booked))
+        
         cell.dateLabel.text = data.rpt_date.dateOnly
-        cell.shipmentBookedLabel.text = "\(data.booked)"
+        cell.shipmentBookedLabel.text = "\(formattedNumber ?? "0.0")"
         if let weight = Double(data.weight) {
             cell.weightLabel.text = String(format: "%.2f", weight)
         }
