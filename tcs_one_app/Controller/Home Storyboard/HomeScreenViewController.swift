@@ -241,9 +241,9 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
                     chart.misYearlyAverage.isHidden = false
                     if let data = self.setupLineChart(lineChart: chart.lineChartView, chartView: chart) {
                         chart.lineChartView = data
+                        self.ModuleCount += 1
+                        chartViews.append(chart)
                     }
-                    self.ModuleCount += 1
-                    chartViews.append(chart)
                 }
             }
             for mod in self.module! {
@@ -1119,6 +1119,12 @@ extension HomeScreenViewController: IAxisValueFormatter {
             dateFormatter.dateFormat = "yyyy-MM-dd"
             let tDate = dateFormatter.date(from: date)!.d()
             dataEntryX.append(tDate)
+        }
+        if value < 0 {
+            return dataEntryX[0]
+        }
+        if dataEntryX.count == 1 {
+            return dataEntryX[0]
         }
         return dataEntryX[Int(value)]
     }
