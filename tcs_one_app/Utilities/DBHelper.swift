@@ -28,14 +28,14 @@ class DBHelper {
             let fileManager = FileManager.default
             if fileManager.fileExists(atPath: filePath) {
                 let new_db = UserDefaults.standard.bool(forKey: "NEWDB")
-                if !new_db {
+                if new_db {
                     do {
                         try fileManager.removeItem(at: pathComponent)
                         try fileManager.removeItem(at: url.appendingPathComponent("\(databaseName).db-shm")!)
                         try fileManager.removeItem(at: url.appendingPathComponent("\(databaseName).db-wal")!)
                         UserDefaults.standard.removeObject(forKey: "CurrentUser")
                         UserDefaults.standard.removeObject(forKey: USER_ACCESS_TOKEN)
-                        UserDefaults.standard.set(true, forKey: "NEWDB")
+                        UserDefaults.standard.set(false, forKey: "NEWDB")
                         return self.copy_database(databaseName: databaseName, pathComponent: pathComponent)
 
                     } catch let err {
@@ -45,7 +45,7 @@ class DBHelper {
                 print(pathComponent)
                 return pathComponent
             } else {
-                UserDefaults.standard.set(true, forKey: "NEWDB")
+                UserDefaults.standard.set(false, forKey: "NEWDB")
                 return self.copy_database(databaseName: databaseName, pathComponent: pathComponent)
             }
         } else {
@@ -3076,6 +3076,116 @@ class DBHelper {
         }
         return mis_daily_overview.count > 0 ? mis_daily_overview : nil
     }
+    
+    //MARK: MIS (NEW)
+    //Budget Setup
+    func read_tbl_mis_budget_setup(query: String) -> [tbl_mis_budget_setup]? {
+        let queryStatementString = query
+        var queryStatement: OpaquePointer? = nil
+        var mis_budget_setup = [tbl_mis_budget_setup]()
+
+        if sqlite3_prepare_v2(db, queryStatementString, -1, &queryStatement, nil) == SQLITE_OK {
+            while sqlite3_step(queryStatement) == SQLITE_ROW {
+                guard let _ = sqlite3_column_text(queryStatement, 1) else {
+                    return nil
+                }
+                let id = Int(sqlite3_column_int(queryStatement, 0))
+                let product = String(describing: String(cString: sqlite3_column_text(queryStatement, 1)))
+                let budgeted = Int(sqlite3_column_int(queryStatement, 2))
+                let dsr = Int(sqlite3_column_int(queryStatement, 3))
+                let prodType = String(describing: String(cString: sqlite3_column_text(queryStatement, 4)))
+                let mnth = String(describing: String(cString: sqlite3_column_text(queryStatement, 5)))
+                let yearr = Int(sqlite3_column_int(queryStatement, 6))
+                let pdBudget = Int(sqlite3_column_int(queryStatement, 7))
+                let weight = Int(sqlite3_column_int(queryStatement, 8))
+                let qsr = Int(sqlite3_column_int(queryStatement, 9))
+                let pdWeight = Int(sqlite3_column_int(queryStatement, 10))
+                
+                mis_budget_setup.append(tbl_mis_budget_setup(id: id, product: product, budgeted: budgeted, dsr: dsr, prodType: prodType, mnth: mnth, yearr: yearr, pdBudget: pdBudget, weight: weight, qsr: qsr, pdWeight: pdWeight))
+            }
+        } else {
+            print("SELECT statement \(db_mis_daily_overview) could not be prepared")
+        }
+        return mis_budget_setup.count > 0 ? mis_budget_setup : nil
+    }
+    func insert_tbl_mis_budget_setup(budget_setup: BudgetSetup, handler: @escaping(_ success: Bool) -> Void) {
+        let insertStatementString = "INSERT INTO \(db_mis_budget_setup)(PRODUCT, BUDGETED, DSR, PROD_TYPE, MNTH, YEARR, PD_BUDGET, WEIGHT, QSR, PD_WEIGHT) VALUES (?,?,?,?,?,?,?,?,?,?);"
+        var insertStatement: OpaquePointer? = nil
+        if sqlite3_prepare_v2(self.db, insertStatementString, -1, &insertStatement, nil) == SQLITE_OK {
+            sqlite3_bind_text(insertStatement, 1, (budget_setup.product as NSString).utf8String, -1, nil)
+            sqlite3_bind_int(insertStatement, 2, Int32(budget_setup.budgeted))
+            sqlite3_bind_int(insertStatement, 3, Int32(budget_setup.dsr))
+            sqlite3_bind_text(insertStatement, 4, (budget_setup.prodType as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 5, (budget_setup.mnth as NSString).utf8String, -1, nil)
+            sqlite3_bind_int(insertStatement, 6, Int32(budget_setup.yearr))
+            sqlite3_bind_int(insertStatement, 7, Int32(budget_setup.pdBudget))
+            sqlite3_bind_int(insertStatement, 8, Int32(budget_setup.weight))
+            sqlite3_bind_int(insertStatement, 9, Int32(budget_setup.qsr))
+            sqlite3_bind_int(insertStatement, 10, Int32(budget_setup.pdWeight))
+            if sqlite3_step(insertStatement) == SQLITE_DONE {
+                handler(true)
+            } else {
+                print("\(db_mis_region_data): Could not insert row.")
+                handler(false)
+            }
+        } else {
+            handler(false)
+            print("\(db_mis_region_data): INSERT statement could not be prepared.")
+        }
+        sqlite3_finalize(insertStatement)
+    }
+    
+    //Budget Data
+    func read_tbl_mis_budget_data(query: String) -> [tbl_mis_budget_data]? {
+        let queryStatementString = query
+        var queryStatement: OpaquePointer? = nil
+        var mis_budget_data = [tbl_mis_budget_data]()
+
+        if sqlite3_prepare_v2(db, queryStatementString, -1, &queryStatement, nil) == SQLITE_OK {
+            while sqlite3_step(queryStatement) == SQLITE_ROW {
+                guard let _ = sqlite3_column_text(queryStatement, 1) else {
+                    return nil
+                }
+                let id = Int(sqlite3_column_int(queryStatement, 0))
+                let rptDate = String(describing: String(cString: sqlite3_column_text(queryStatement, 1)))
+                let product = String(describing: String(cString: sqlite3_column_text(queryStatement, 2)))
+                let ship = String(describing: String(cString: sqlite3_column_text(queryStatement, 3)))
+                let dsr = String(describing: String(cString: sqlite3_column_text(queryStatement, 4)))
+                let type = String(describing: String(cString: sqlite3_column_text(queryStatement, 5)))
+                let qsr = String(describing: String(cString: sqlite3_column_text(queryStatement, 6)))
+                let weight = String(describing: String(cString: sqlite3_column_text(queryStatement, 7)))
+                
+                mis_budget_data.append(tbl_mis_budget_data(id: id, rptDate: rptDate, product: product, ship: ship, dsr: dsr, type: type, qsr: qsr, weight: weight))
+            }
+        } else {
+            print("SELECT statement \(db_mis_daily_overview) could not be prepared")
+        }
+        return mis_budget_data.count > 0 ? mis_budget_data : nil
+    }
+    func insert_tbl_mis_budget_data(budget_data: BudgetData, handler: @escaping(_ success: Bool) -> Void) {
+        let insertStatementString = "INSERT INTO \(db_mis_budget_data)(RPT_DATE, PRODUCT, SHIP, DSR, TYPE, QSR, WEIGHT) VALUES (?,?,?,?,?,?,?);"
+        var insertStatement: OpaquePointer? = nil
+        if sqlite3_prepare_v2(self.db, insertStatementString, -1, &insertStatement, nil) == SQLITE_OK {
+            sqlite3_bind_text(insertStatement, 1, (budget_data.rptDate as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 2, (budget_data.product as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 3, ("\(budget_data.ship)" as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 4, ("\(budget_data.dsr)" as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 5, (budget_data.type as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 6, ("\(budget_data.qsr)" as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 7, ("\(budget_data.weight)" as NSString).utf8String, -1, nil)
+            if sqlite3_step(insertStatement) == SQLITE_DONE {
+                handler(true)
+            } else {
+                print("\(db_mis_region_data): Could not insert row.")
+                handler(false)
+            }
+        } else {
+            handler(false)
+            print("\(db_mis_region_data): INSERT statement could not be prepared.")
+        }
+        sqlite3_finalize(insertStatement)
+    }
+    
     //MARK: WALLET INSERT
     func read_tbl_wallet_query_master(query: String) -> [tbl_wallet_query_master]? {
         let queryStatementString = query
@@ -4053,6 +4163,23 @@ struct tbl_mis_daily_overview {
     var weight: String = ""
     var qsr: String = ""
     var dsr: String = ""
+}
+
+//MARK: - Management information System - MIS (NEW)
+struct tbl_mis_budget_setup {
+    var id: Int = 0
+    var product: String = ""
+    var budgeted: Int, dsr: Int = -1
+    var prodType: String, mnth: String = ""
+    var yearr: Int, pdBudget: Int, weight: Int, qsr: Int = -1
+    var pdWeight: Int = -1
+}
+struct tbl_mis_budget_data {
+    var id: Int = -1
+    var rptDate: String, product: String = ""
+    var ship: String, dsr: String = ""
+    var type: String = ""
+    var qsr: String, weight: String = ""
 }
 
 //MARK: Wallet

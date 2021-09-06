@@ -178,6 +178,7 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
     }
     
     override func viewDidAppear(_ animated: Bool) {
+        self.ModuleCount = 0
         NotificationCenter.default.addObserver(self, selector: #selector(upload_pending_request), name: .networkRefreshed, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(refreshedView(notification:)), name: .refreshedViews, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(navigateThroughtNotify(notification:)), name: .navigateThroughNotification, object: nil)

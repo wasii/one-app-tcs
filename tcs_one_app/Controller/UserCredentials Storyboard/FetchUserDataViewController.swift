@@ -2166,27 +2166,13 @@ extension FetchUserDataViewController {
                 NetworkCalls.setupmis { setup_granted, response in
                     if setup_granted {
                         let json = JSON(response)
-                        if let oneAppSetupData = json.dictionary?[_oneAppSetupData]?.dictionary {
+                        if let _BudgetSetup = json.dictionary?[_BudgetSetup]?.array {
                             do {
-                                if let prodData = oneAppSetupData[_prodData]?.array {
-                                    AppDelegate.sharedInstance.db?.deleteAll(tableName: db_mis_product_data, handler: { _ in })
-                                    for product_data in prodData {
-                                        let rawData = try product_data.rawData()
-                                        let productData = try JSONDecoder().decode(IMSProductData.self, from: rawData)
-                                        
-                                        AppDelegate.sharedInstance.db?.insert_tbl_mis_product_data(product_data: productData, handler: { _ in })
-                                    }
-                                }
-                                if let regnData = oneAppSetupData[_regnData]?.array {
-                                    AppDelegate.sharedInstance.db?.deleteAll(tableName: db_mis_region_data, handler: { _ in })
-                                    let nation_wide: IMSRegionData = IMSRegionData(product: "Nation Wide")
-                                    AppDelegate.sharedInstance.db?.insert_tbl_mis_region_data(region_data: nation_wide, handler: { _ in })
-                                    for regionData in regnData {
-                                        let rawData = try regionData.rawData()
-                                        let region_data = try JSONDecoder().decode(IMSRegionData.self, from: rawData)
-                                        
-                                        AppDelegate.sharedInstance.db?.insert_tbl_mis_region_data(region_data: region_data, handler: { _ in })
-                                    }
+                                AppDelegate.sharedInstance.db?.deleteAll(tableName: db_mis_budget_setup, handler: { _ in })
+                                for budgetSetup in _BudgetSetup {
+                                    let rawData = try budgetSetup.rawData()
+                                    let budget_setup: BudgetSetup = try JSONDecoder().decode(BudgetSetup.self, from: rawData)
+                                    AppDelegate.sharedInstance.db?.insert_tbl_mis_budget_setup(budget_setup: budget_setup, handler: { _ in })
                                 }
                                 handler(true)
                             } catch let DecodingError.dataCorrupted(context) {
@@ -2218,18 +2204,38 @@ extension FetchUserDataViewController {
     
     //GET Daily Delivery
     private func getmisdailyoverview(_ handler: @escaping(Bool)->Void) {
-        NetworkCalls.getmisdailyoverview { daily_granted, response in
+        let lastSyncStatus = AppDelegate.sharedInstance.db?.readLastSyncStatus(tableName: db_last_sync_status,
+                                                                               condition: "SYNC_KEY = '\(S_MIS_BUDGET_DATA)' AND CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)'")
+        var last_budget_data = [String:Any]()
+        if lastSyncStatus == nil {
+            last_budget_data = [
+                "dateTime": ""
+            ]
+        } else {
+            last_budget_data = [
+                "dateTime" : lastSyncStatus!.DATE
+            ]
+        }
+        let params = self.getAPIParameters(service_name: S_MIS_BUDGET_DATA, request_body: last_budget_data)
+        NetworkCalls.getbudgetdata(params: params) { daily_granted, response in
             if daily_granted {
                 let json = JSON(response)
-                if let oneAppData = json.dictionary?[_oneAppData]?.array {
+                if let budgetData = json.array {
                     do {
-                        AppDelegate.sharedInstance.db?.deleteAll(tableName: db_mis_daily_overview, handler: { _ in })
+                        AppDelegate.sharedInstance.db?.deleteAll(tableName: db_mis_budget_data, handler: { _ in })
                         
-                        for oAD in oneAppData {
-                            let rawData = try oAD.rawData()
-                            let daily_overview: MISDailyOverview = try JSONDecoder().decode(MISDailyOverview.self, from: rawData)
+                        for bd in budgetData {
+                            let rawData = try bd.rawData()
+                            let budget_data: BudgetData = try JSONDecoder().decode(BudgetData.self, from: rawData)
                             
-                            AppDelegate.sharedInstance.db?.insert_tbl_mis_daily_overview(daily_overview: daily_overview, handler: { _ in })
+                            AppDelegate.sharedInstance.db?.insert_tbl_mis_budget_data(budget_data: budget_data, handler: { _ in })
+                        }
+                        if let lastSync = json.dictionary?["lastSync"]?.string {
+                            Helper.updateLastSyncStatus(APIName: S_MIS_BUDGET_DATA,
+                                                        date: lastSync,
+                                                        skip: 0,
+                                                        take: 0,
+                                                        total_records: 0)
                         }
                         handler(true)
                     } catch let DecodingError.dataCorrupted(context) {

@@ -42,3 +42,44 @@ struct MISDailyOverview: Codable {
         case dsr = "DSR"
     }
 }
+
+
+// MARK: - BudgetSetup
+struct BudgetSetup: Codable {
+    let product: String
+    let budgeted, dsr: Int
+    let prodType, mnth: String
+    let yearr, pdBudget, weight, qsr: Int
+    let pdWeight: Int
+
+    enum CodingKeys: String, CodingKey {
+        case product = "PRODUCT"
+        case budgeted = "BUDGETED"
+        case dsr = "DSR"
+        case prodType = "PROD_TYPE"
+        case mnth = "MNTH"
+        case yearr = "YEARR"
+        case pdBudget = "PD_BUDGET"
+        case weight = "WEIGHT"
+        case qsr = "QSR"
+        case pdWeight = "PD_WEIGHT"
+    }
+}
+
+// MARK: - BudgetData
+struct BudgetData: Codable {
+    let rptDate, product: String
+    let ship, dsr: Double
+    let type: String
+    let qsr, weight: Double
+
+    enum CodingKeys: String, CodingKey {
+        case rptDate = "RPT_DATE"
+        case product = "PRODUCT"
+        case ship = "SHIP"
+        case dsr = "DSR"
+        case type = "TYPE"
+        case qsr = "QSR"
+        case weight = "WEIGHT"
+    }
+}

@@ -16,9 +16,9 @@ let MISCLIENTSECRET         = "Tcs@oneapp3003"
 let CLIENTSECRET            = "Tcs@wallet3001"
 var MIS_BEARER_TOKEN        = ""
 var BEARER_TOKEN            = ""
-//let BROADCAST_KEY           = "broadcastiosdev"
+let BROADCAST_KEY           = "broadcastiosdev"
 //let BROADCAST_KEY           = "broadcastiosqa"
-let BROADCAST_KEY           = "broadcastios"
+//let BROADCAST_KEY           = "broadcastios"
 
 let IS_NEW_DATABASE: Bool   = true
 var NOTIFICATION_COUNT      = 0
@@ -27,14 +27,14 @@ var RECORD_ID               = 0
 //API ENDPOINTS
 
 //PRODUCTION
-let ENDPOINT                = "https://prodapi.tcscourier.com/core/api/main/"
-let UPLOADFILESURL          = "https://oneappapi.tcscourier.com/api/file-upload"
+//let ENDPOINT                = "https://prodapi.tcscourier.com/core/api/main/"
+//let UPLOADFILESURL          = "https://oneappapi.tcscourier.com/api/file-upload"
+//let ENDPOINT_NEW            = "https://developers.tcscourier.com/prod/v1/"
 
 //DEV
-let ENDPOINT_NEW            = "https://developers.tcscourier.com/prod/v1/"
-//let WALLET_ENDPOINT         = "https://sandbox.tcscourier.com/qa/v1/wallet/"
-//let ENDPOINT                = "https://devapi.tcscourier.com/core/api/main"
-//let UPLOADFILESURL          = "https://pwaqaapi.tcscourier.com/api/file-upload"
+let ENDPOINT_NEW            = "http://apigatewayuat.tranzumpk.com:3003/dev/v1/"
+let ENDPOINT                = "https://devapi.tcscourier.com/core/api/main"
+let UPLOADFILESURL          = "https://pwaqaapi.tcscourier.com/api/file-upload"
 
 let LOGIN                   = "oneapp.login"
 let PIN_VALIDATE            = "oneapp.pinvalidate"
@@ -73,6 +73,11 @@ let UPDATEORDERFULFILMENT   = "oneapp.updateorderfullfilment"
 let MIS_GET_TOKEN           = ENDPOINT_NEW + "oneapp/token?clientSecret=\(MISCLIENTSECRET)"
 let MIS_SETUP               = ENDPOINT_NEW + "oneapp/setup"
 let MIS_DAILY_OVERVIEW      = ENDPOINT_NEW + "oneapp/daily-overview"
+
+//MIS NEW
+let MIS_BUDGET_SETUP        = ENDPOINT_NEW + "oneapp/budget-setup"
+let MIS_BUDGET_DATA         = ENDPOINT_NEW + "oneapp/daily_budget"
+let S_MIS_BUDGET_DATA       = "DAILY.BUDGET"
 
 let S_MIS_DAILY_OVERVIEW    = ENDPOINT_NEW + "DAILY.OVERVIEW.P"
 
@@ -147,10 +152,14 @@ let _scan_prefix            = "scan_prefix"
 let _orders                 = "orders"
 
 //MIS Keys
-let _oneAppSetupData        = "oneAppSetupData"
-let _prodData               = "prodData"
-let _regnData               = "regnData"
-let _oneAppData             = "oneAppData"
+//let _oneAppSetupData        = "oneAppSetupData"
+//let _prodData               = "prodData"
+//let _regnData               = "regnData"
+//let _oneAppData             = "oneAppData"
+
+let _BudgetSetup            = "BudgetSetup"
+let _budgetData             = "budgetData"
+
 
 //Wallet_Keys
 let _walletSetupData        = "walletSetupData"
@@ -217,6 +226,9 @@ let db_lov_control_type     = "IMS_CONTROL_TYPE_TABLE"
 let db_mis_product_data     = "MIS_PRODUCT_DATA"
 let db_mis_region_data      = "MIS_REGION_DATA"
 let db_mis_daily_overview   = "MIS_DAILY_OVERVIEW"
+
+let db_mis_budget_setup     = "MIS_BUDGET_SETUP"
+let db_mis_budget_data      = "MIS_BUDGET_DATA"
 
 // Wallet
 let db_w_query_master       = "WALLET_MASTER_DETAILS"
