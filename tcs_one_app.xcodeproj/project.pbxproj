@@ -89,6 +89,7 @@
 		1B77CE87256257B700A821E7 /* GrievanceViewRequestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B77CE86256257B700A821E7 /* GrievanceViewRequestViewController.swift */; };
 		1B78A6F525EE3434005670BE /* LeadershipAwazAllRequestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B78A6F425EE3434005670BE /* LeadershipAwazAllRequestViewController.swift */; };
 		1B7A292425A05E3C005694B6 /* IMSViewUpdateRequestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B7A292325A05E3C005694B6 /* IMSViewUpdateRequestViewController.swift */; };
+		1B93213626E77FB100C96237 /* MISDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B93213526E77FB100C96237 /* MISDetailViewController.swift */; };
 		1B96C0A325E8D3020059775C /* NewRequestLeadershipAwazViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B96C0A225E8D3020059775C /* NewRequestLeadershipAwazViewController.swift */; };
 		1B9E6C812562779D006529C3 /* GrievanceViewClosedRequestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B9E6C802562779D006529C3 /* GrievanceViewClosedRequestViewController.swift */; };
 		1BA5110B267B28A400E0E642 /* WalletHistoryTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BA51109267B28A400E0E642 /* WalletHistoryTableCell.swift */; };
@@ -270,6 +271,7 @@
 		1B77CE86256257B700A821E7 /* GrievanceViewRequestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GrievanceViewRequestViewController.swift; sourceTree = "<group>"; };
 		1B78A6F425EE3434005670BE /* LeadershipAwazAllRequestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeadershipAwazAllRequestViewController.swift; sourceTree = "<group>"; };
 		1B7A292325A05E3C005694B6 /* IMSViewUpdateRequestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMSViewUpdateRequestViewController.swift; sourceTree = "<group>"; };
+		1B93213526E77FB100C96237 /* MISDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MISDetailViewController.swift; sourceTree = "<group>"; };
 		1B96C0A225E8D3020059775C /* NewRequestLeadershipAwazViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewRequestLeadershipAwazViewController.swift; sourceTree = "<group>"; };
 		1B9E6C802562779D006529C3 /* GrievanceViewClosedRequestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GrievanceViewClosedRequestViewController.swift; sourceTree = "<group>"; };
 		1BA51109267B28A400E0E642 /* WalletHistoryTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletHistoryTableCell.swift; sourceTree = "<group>"; };
@@ -540,6 +542,7 @@
 			children = (
 				1B6FA11926C3AC7400E954D0 /* MISDashboardViewController.swift */,
 				1B6FA11B26C3AC8C00E954D0 /* MISDetailsViewController.swift */,
+				1B93213526E77FB100C96237 /* MISDetailViewController.swift */,
 			);
 			path = "MIS ";
 			sourceTree = "<group>";
@@ -1150,6 +1153,7 @@
 				1B61B2AD25DD1CC000CDAAE2 /* PBagDetailsTableViewCell.swift in Sources */,
 				1B590C64255818E300C413AA /* WatchAllRequestsViewController.swift in Sources */,
 				1B61B2A325DCFB3800CDAAE2 /* BookingDetailsTableCell.swift in Sources */,
+				1B93213626E77FB100C96237 /* MISDetailViewController.swift in Sources */,
 				1B11D07F262EB37000C137A3 /* RequestListingTableCell.swift in Sources */,
 				1BA51112267B804100E0E642 /* CustomAlertView.swift in Sources */,
 				1B71451825AF7E9A0058C36C /* IMSHistoryViewController.swift in Sources */,

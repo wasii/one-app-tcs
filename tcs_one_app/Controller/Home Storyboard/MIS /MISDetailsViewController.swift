@@ -506,6 +506,14 @@ extension MISDetailsViewController: UITableViewDataSource, UITableViewDelegate {
 
 
 extension MISDetailsViewController: MISDelegate {
+    func updateMonth(mnth: MISPopupMonth) {
+        
+    }
+    
+    func updateYearr(year: MISPopupYear) {
+        
+    }
+    
     func updateListing(region_date: tbl_mis_region_data) {
         self.filterLabel.text = region_date.product
         

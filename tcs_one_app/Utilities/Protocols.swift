@@ -76,4 +76,6 @@ protocol UpdateIncidentInvestigation {
 
 protocol MISDelegate {
     func updateListing(region_date: tbl_mis_region_data)
+    func updateMonth(mnth: MISPopupMonth)
+    func updateYearr(year: MISPopupYear)
 }

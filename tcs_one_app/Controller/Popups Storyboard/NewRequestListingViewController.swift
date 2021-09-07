@@ -57,6 +57,8 @@ class NewRequestListingViewController: UIViewController {
     
     //MIS
     var mis_region_date:        [tbl_mis_region_data]?
+    var mis_popup_mnth: [MISPopupMonth]?
+    var mis_popop_year: [MISPopupYear]?
     override func viewDidLoad() {
         super.viewDidLoad()
         topHeading.text = heading ?? ""
@@ -221,6 +223,20 @@ class NewRequestListingViewController: UIViewController {
                     self.mainViewHeightConstraint.constant += self.tableView.contentSize.height//(CGFloat(count) * 50) - 30
                 }
             }
+            if let count = self.mis_popup_mnth?.count {
+                if count > 12 {
+                    self.mainViewHeightConstraint.constant = 540
+                } else {
+                    self.mainViewHeightConstraint.constant += self.tableView.contentSize.height//(CGFloat(count) * 50) - 30
+                }
+            }
+            if let count = self.mis_popop_year?.count {
+                if count > 12 {
+                    self.mainViewHeightConstraint.constant = 540
+                } else {
+                    self.mainViewHeightConstraint.constant += self.tableView.contentSize.height//(CGFloat(count) * 50) - 30
+                }
+            }
         }
         
 //        tableView.estimatedRowHeight = 45
@@ -302,6 +318,12 @@ extension NewRequestListingViewController: UITableViewDataSource, UITableViewDel
         }
         // MIS
         if let count = self.mis_region_date?.count {
+            return count
+        }
+        if let count = self.mis_popop_year?.count {
+            return count
+        }
+        if let count = self.mis_popup_mnth?.count {
             return count
         }
         return 0
@@ -402,6 +424,12 @@ extension NewRequestListingViewController: UITableViewDataSource, UITableViewDel
         //MIS
         if let data = self.mis_region_date?[indexPath.row] {
             cell.headingLabel.text = data.product
+        }
+        if let data = self.mis_popop_year?[indexPath.row] {
+            cell.headingLabel.text = data.yearr
+        }
+        if let data = self.mis_popup_mnth?[indexPath.row] {
+            cell.headingLabel.text = data.mnth
         }
         return cell
     }
@@ -556,6 +584,16 @@ extension NewRequestListingViewController: UITableViewDataSource, UITableViewDel
         if let data = self.mis_region_date?[indexPath.row] {
             dismiss(animated: true) {
                 self.misdelegate?.updateListing(region_date: data)
+            }
+        }
+        if let data = self.mis_popop_year?[indexPath.row] {
+            dismiss(animated: true) {
+                self.misdelegate?.updateYearr(year: data)
+            }
+        }
+        if let data = self.mis_popup_mnth?[indexPath.row] {
+            dismiss(animated: true) {
+                self.misdelegate?.updateMonth(mnth: data)
             }
         }
     }

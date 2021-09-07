@@ -3078,6 +3078,36 @@ class DBHelper {
     }
     
     //MARK: MIS (NEW)
+    func read_tbl_mis_budget_setup_listing(query: String) -> [tbl_mis_budget_setup]? {
+        let queryStatementString = query
+        var queryStatement: OpaquePointer? = nil
+        var mis_budget_setup = [tbl_mis_budget_setup]()
+
+        if sqlite3_prepare_v2(db, queryStatementString, -1, &queryStatement, nil) == SQLITE_OK {
+            while sqlite3_step(queryStatement) == SQLITE_ROW {
+                var prod_Type = ""
+                if let _ = sqlite3_column_text(queryStatement, 1) {
+                    prod_Type = String(describing: String(cString: sqlite3_column_text(queryStatement, 0)))
+                }
+                let id = Int(sqlite3_column_int(queryStatement, 1))
+                let product = String(describing: String(cString: sqlite3_column_text(queryStatement, 2)))
+                let budgeted = Int(sqlite3_column_int(queryStatement, 3))
+                let dsr = Int(sqlite3_column_int(queryStatement, 4))
+                let prodType = String(describing: String(cString: sqlite3_column_text(queryStatement, 5)))
+                let mnth = String(describing: String(cString: sqlite3_column_text(queryStatement, 6)))
+                let yearr = Int(sqlite3_column_int(queryStatement, 7))
+                let pdBudget = Int(sqlite3_column_int(queryStatement, 8))
+                let weight = Int(sqlite3_column_int(queryStatement, 9))
+                let qsr = Int(sqlite3_column_int(queryStatement, 10))
+                let pdWeight = Int(sqlite3_column_int(queryStatement, 11))
+                
+                mis_budget_setup.append(tbl_mis_budget_setup(prod_with_prodtype: prod_Type, id: id, product: product, budgeted: budgeted, dsr: dsr, prodType: prodType, mnth: mnth, yearr: yearr, pdBudget: pdBudget, weight: weight, qsr: qsr, pdWeight: pdWeight))
+            }
+        } else {
+            print("SELECT statement \(db_mis_daily_overview) could not be prepared")
+        }
+        return mis_budget_setup.count > 0 ? mis_budget_setup : nil
+    }
     //Budget Setup
     func read_tbl_mis_budget_setup(query: String) -> [tbl_mis_budget_setup]? {
         let queryStatementString = query
@@ -3101,7 +3131,7 @@ class DBHelper {
                 let qsr = Int(sqlite3_column_int(queryStatement, 9))
                 let pdWeight = Int(sqlite3_column_int(queryStatement, 10))
                 
-                mis_budget_setup.append(tbl_mis_budget_setup(id: id, product: product, budgeted: budgeted, dsr: dsr, prodType: prodType, mnth: mnth, yearr: yearr, pdBudget: pdBudget, weight: weight, qsr: qsr, pdWeight: pdWeight))
+                mis_budget_setup.append(tbl_mis_budget_setup(prod_with_prodtype: "", id: id, product: product, budgeted: budgeted, dsr: dsr, prodType: prodType, mnth: mnth, yearr: yearr, pdBudget: pdBudget, weight: weight, qsr: qsr, pdWeight: pdWeight))
             }
         } else {
             print("SELECT statement \(db_mis_daily_overview) could not be prepared")
@@ -3184,6 +3214,39 @@ class DBHelper {
             print("\(db_mis_region_data): INSERT statement could not be prepared.")
         }
         sqlite3_finalize(insertStatement)
+    }
+    
+    //Get MIS Months
+    func read_tbl_mis_budget_setup_month() -> [MISPopupMonth]? {
+        let queryStatementString = "SELECT DISTINCT MNTH from \(db_mis_budget_setup)"
+        var queryStatement: OpaquePointer? = nil
+        var popup_month = [MISPopupMonth]()
+
+        if sqlite3_prepare_v2(db, queryStatementString, -1, &queryStatement, nil) == SQLITE_OK {
+            while sqlite3_step(queryStatement) == SQLITE_ROW {
+                let mnth = String(describing: String(cString: sqlite3_column_text(queryStatement, 0)))
+                popup_month.append(MISPopupMonth(mnth: mnth))
+            }
+        } else {
+            print("SELECT statement \(db_mis_budget_setup) could not be prepared")
+        }
+        return popup_month.count > 0 ? popup_month : nil
+    }
+    //Get MIS Years
+    func read_tbl_mis_budget_setup_year() -> [MISPopupYear]? {
+        let queryStatementString = "SELECT DISTINCT YEARR from \(db_mis_budget_setup)"
+        var queryStatement: OpaquePointer? = nil
+        var popup_yearr = [MISPopupYear]()
+
+        if sqlite3_prepare_v2(db, queryStatementString, -1, &queryStatement, nil) == SQLITE_OK {
+            while sqlite3_step(queryStatement) == SQLITE_ROW {
+                let yearr = String(describing: String(cString: sqlite3_column_text(queryStatement, 0)))
+                popup_yearr.append(MISPopupYear(yearr: yearr))
+            }
+        } else {
+            print("SELECT statement \(db_mis_budget_setup) could not be prepared")
+        }
+        return popup_yearr.count > 0 ? popup_yearr : nil
     }
     
     //MARK: WALLET INSERT
@@ -4166,7 +4229,8 @@ struct tbl_mis_daily_overview {
 }
 
 //MARK: - Management information System - MIS (NEW)
-struct tbl_mis_budget_setup {
+struct tbl_mis_budget_setup: Hashable {
+    var prod_with_prodtype: String = ""
     var id: Int = 0
     var product: String = ""
     var budgeted: Int, dsr: Int = -1

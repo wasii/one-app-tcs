@@ -83,3 +83,13 @@ struct BudgetData: Codable {
         case weight = "WEIGHT"
     }
 }
+
+
+//MARK: - Selection
+struct MISPopupMonth {
+    var mnth: String = ""
+}
+
+struct MISPopupYear {
+    var yearr: String = ""
+}
