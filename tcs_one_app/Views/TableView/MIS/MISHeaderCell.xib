@@ -17,15 +17,15 @@
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TV4-Nc-Tv5">
                     <rect key="frame" x="0.0" y="0.0" width="492" height="40"/>
                     <subviews>
-                        <stackView opaque="NO" contentMode="scaleToFill" distribution="fillProportionally" spacing="1" translatesAutoresizingMaskIntoConstraints="NO" id="6vu-Ea-2Hf">
+                        <stackView opaque="NO" contentMode="scaleToFill" distribution="fillProportionally" spacing="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="6vu-Ea-2Hf">
                             <rect key="frame" x="0.0" y="0.0" width="492" height="40"/>
                             <subviews>
-                                <view tag="10" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="HJI-KP-l5e" userLabel="Date" customClass="CustomView" customModule="One_App" customModuleProvider="target">
-                                    <rect key="frame" x="0.0" y="0.0" width="72.5" height="40"/>
+                                <view tag="1" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="HJI-KP-l5e" userLabel="Date" customClass="CustomView" customModule="One_App" customModuleProvider="target">
+                                    <rect key="frame" x="0.0" y="0.0" width="73" height="40"/>
                                     <subviews>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Dates" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BRG-vn-xUb">
-                                            <rect key="frame" x="0.0" y="13" width="72.5" height="14.5"/>
-                                            <fontDescription key="fontDescription" type="system" weight="medium" pointSize="12"/>
+                                        <label opaque="NO" userInteractionEnabled="NO" tag="10" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Dates" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BRG-vn-xUb">
+                                            <rect key="frame" x="0.0" y="13.5" width="73" height="13.5"/>
+                                            <fontDescription key="fontDescription" type="system" weight="medium" pointSize="11"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
@@ -39,7 +39,7 @@
                                     </constraints>
                                     <userDefinedRuntimeAttributes>
                                         <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
-                                            <real key="value" value="0.20000000000000001"/>
+                                            <real key="value" value="0.29999999999999999"/>
                                         </userDefinedRuntimeAttribute>
                                         <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
                                             <color key="value" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -50,10 +50,10 @@
                                     </userDefinedRuntimeAttributes>
                                 </view>
                                 <view tag="1" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="PYd-zk-7uv" userLabel="Shipment Booked" customClass="CustomView" customModule="One_App" customModuleProvider="target">
-                                    <rect key="frame" x="73.5" y="0.0" width="237" height="40"/>
+                                    <rect key="frame" x="73.5" y="0.0" width="238" height="40"/>
                                     <subviews>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Shipment Booked" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cji-Mr-9px">
-                                            <rect key="frame" x="0.0" y="13" width="237" height="14.5"/>
+                                        <label opaque="NO" userInteractionEnabled="NO" tag="20" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cji-Mr-9px">
+                                            <rect key="frame" x="0.0" y="20" width="238" height="0.0"/>
                                             <fontDescription key="fontDescription" type="system" weight="medium" pointSize="12"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
@@ -61,13 +61,14 @@
                                     </subviews>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <constraints>
+                                        <constraint firstAttribute="width" constant="237" id="0sY-fp-eCb"/>
                                         <constraint firstAttribute="trailing" secondItem="cji-Mr-9px" secondAttribute="trailing" id="1iG-Mb-RQC"/>
                                         <constraint firstItem="cji-Mr-9px" firstAttribute="leading" secondItem="PYd-zk-7uv" secondAttribute="leading" id="1sP-tG-UV0"/>
                                         <constraint firstItem="cji-Mr-9px" firstAttribute="centerY" secondItem="PYd-zk-7uv" secondAttribute="centerY" id="8kx-0X-ETs"/>
                                     </constraints>
                                     <userDefinedRuntimeAttributes>
                                         <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
-                                            <real key="value" value="0.20000000000000001"/>
+                                            <real key="value" value="0.29999999999999999"/>
                                         </userDefinedRuntimeAttribute>
                                         <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
                                             <color key="value" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -78,11 +79,11 @@
                                     </userDefinedRuntimeAttributes>
                                 </view>
                                 <view tag="2" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XbL-sy-jc9" userLabel="Weight" customClass="CustomView" customModule="One_App" customModuleProvider="target">
-                                    <rect key="frame" x="311.5" y="0.0" width="59" height="40"/>
+                                    <rect key="frame" x="312" y="0.0" width="59" height="40"/>
                                     <subviews>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Weight" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="82b-JN-TFN">
-                                            <rect key="frame" x="0.0" y="13" width="59" height="14.5"/>
-                                            <fontDescription key="fontDescription" type="system" weight="medium" pointSize="12"/>
+                                        <label opaque="NO" userInteractionEnabled="NO" tag="30" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Weight" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="82b-JN-TFN">
+                                            <rect key="frame" x="0.0" y="13.5" width="59" height="13.5"/>
+                                            <fontDescription key="fontDescription" type="system" weight="medium" pointSize="11"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
@@ -90,13 +91,13 @@
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <constraints>
                                         <constraint firstItem="82b-JN-TFN" firstAttribute="centerY" secondItem="XbL-sy-jc9" secondAttribute="centerY" id="cyu-0c-hkE"/>
-                                        <constraint firstAttribute="width" constant="60" id="g83-tq-mSQ"/>
+                                        <constraint firstAttribute="width" constant="65" id="g83-tq-mSQ"/>
                                         <constraint firstAttribute="trailing" secondItem="82b-JN-TFN" secondAttribute="trailing" id="jAd-do-2RV"/>
                                         <constraint firstItem="82b-JN-TFN" firstAttribute="leading" secondItem="XbL-sy-jc9" secondAttribute="leading" id="nTw-yn-In9"/>
                                     </constraints>
                                     <userDefinedRuntimeAttributes>
                                         <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
-                                            <real key="value" value="0.20000000000000001"/>
+                                            <real key="value" value="0.29999999999999999"/>
                                         </userDefinedRuntimeAttribute>
                                         <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
                                             <color key="value" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -109,9 +110,9 @@
                                 <view tag="3" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="28K-WG-LwL" userLabel="QSR" customClass="CustomView" customModule="One_App" customModuleProvider="target">
                                     <rect key="frame" x="371.5" y="0.0" width="59.5" height="40"/>
                                     <subviews>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="QSR" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TQe-v3-49Y">
-                                            <rect key="frame" x="0.0" y="13" width="59.5" height="14.5"/>
-                                            <fontDescription key="fontDescription" type="system" weight="medium" pointSize="12"/>
+                                        <label opaque="NO" userInteractionEnabled="NO" tag="40" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="QSR" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TQe-v3-49Y">
+                                            <rect key="frame" x="0.0" y="13.5" width="59.5" height="13.5"/>
+                                            <fontDescription key="fontDescription" type="system" weight="medium" pointSize="11"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
@@ -119,13 +120,13 @@
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <constraints>
                                         <constraint firstItem="TQe-v3-49Y" firstAttribute="leading" secondItem="28K-WG-LwL" secondAttribute="leading" id="WLd-wV-591"/>
-                                        <constraint firstAttribute="width" constant="45" id="aVg-EJ-ucC"/>
+                                        <constraint firstAttribute="width" constant="65" id="aVg-EJ-ucC"/>
                                         <constraint firstAttribute="trailing" secondItem="TQe-v3-49Y" secondAttribute="trailing" id="eWp-0R-7MI"/>
                                         <constraint firstItem="TQe-v3-49Y" firstAttribute="centerY" secondItem="28K-WG-LwL" secondAttribute="centerY" id="hgO-d6-Tey"/>
                                     </constraints>
                                     <userDefinedRuntimeAttributes>
                                         <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
-                                            <real key="value" value="0.20000000000000001"/>
+                                            <real key="value" value="0.29999999999999999"/>
                                         </userDefinedRuntimeAttribute>
                                         <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
                                             <color key="value" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -136,11 +137,11 @@
                                     </userDefinedRuntimeAttributes>
                                 </view>
                                 <view tag="4" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="uay-q7-x43" userLabel="DSR" customClass="CustomView" customModule="One_App" customModuleProvider="target">
-                                    <rect key="frame" x="432" y="0.0" width="60" height="40"/>
+                                    <rect key="frame" x="431.5" y="0.0" width="60.5" height="40"/>
                                     <subviews>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="DSR" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tzK-xm-u80">
-                                            <rect key="frame" x="0.0" y="13" width="60" height="14.5"/>
-                                            <fontDescription key="fontDescription" type="system" weight="medium" pointSize="12"/>
+                                        <label opaque="NO" userInteractionEnabled="NO" tag="50" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="DSR" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tzK-xm-u80">
+                                            <rect key="frame" x="0.0" y="13.5" width="60.5" height="13.5"/>
+                                            <fontDescription key="fontDescription" type="system" weight="medium" pointSize="11"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
@@ -149,12 +150,12 @@
                                     <constraints>
                                         <constraint firstItem="tzK-xm-u80" firstAttribute="leading" secondItem="uay-q7-x43" secondAttribute="leading" id="8rz-Z6-Zby"/>
                                         <constraint firstItem="tzK-xm-u80" firstAttribute="centerY" secondItem="uay-q7-x43" secondAttribute="centerY" id="Gvs-ef-aVQ"/>
-                                        <constraint firstAttribute="width" constant="45" id="WKE-fz-Uil"/>
+                                        <constraint firstAttribute="width" constant="65" id="WKE-fz-Uil"/>
                                         <constraint firstAttribute="trailing" secondItem="tzK-xm-u80" secondAttribute="trailing" id="eke-Gm-8Yg"/>
                                     </constraints>
                                     <userDefinedRuntimeAttributes>
                                         <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
-                                            <real key="value" value="0.20000000000000001"/>
+                                            <real key="value" value="0.29999999999999999"/>
                                         </userDefinedRuntimeAttribute>
                                         <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
                                             <color key="value" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
