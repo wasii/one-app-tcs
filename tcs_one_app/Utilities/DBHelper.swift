@@ -3249,6 +3249,40 @@ class DBHelper {
         return popup_yearr.count > 0 ? popup_yearr : nil
     }
     
+    //Get MIS Years
+    func read_tbl_mis_budget_data_detail(query: String) -> [tbl_mis_budget_data_details]? {
+        let queryStatementString = query
+        var queryStatement: OpaquePointer? = nil
+        var budget_detail = [tbl_mis_budget_data_details]()
+
+        if sqlite3_prepare_v2(db, queryStatementString, -1, &queryStatement, nil) == SQLITE_OK {
+            while sqlite3_step(queryStatement) == SQLITE_ROW {
+                
+                let IS_DSR_SHOW = String(describing: String(cString: sqlite3_column_text(queryStatement, 0)))
+                let IS_QSR_SHOW = String(describing: String(cString: sqlite3_column_text(queryStatement, 1)))
+                let IS_SHIP_SHOW = String(describing: String(cString: sqlite3_column_text(queryStatement, 2)))
+                let IS_WEIGHT_SHOW = String(describing: String(cString: sqlite3_column_text(queryStatement, 3)))
+                let ALL_TYPE = String(describing: String(cString: sqlite3_column_text(queryStatement, 4)))
+                let ALL_SHIP = String(describing: String(cString: sqlite3_column_text(queryStatement, 5)))
+                let ALL_DSR = String(describing: String(cString: sqlite3_column_text(queryStatement, 6)))
+                let ALL_QSR = String(describing: String(cString: sqlite3_column_text(queryStatement, 7)))
+                let ALL_WEIGHT = String(describing: String(cString: sqlite3_column_text(queryStatement, 8)))
+                let DSR = String(describing: String(cString: sqlite3_column_text(queryStatement, 9)))
+                let PRODUCT = String(describing: String(cString: sqlite3_column_text(queryStatement, 10)))
+                let QSR = String(describing: String(cString: sqlite3_column_text(queryStatement, 11)))
+                let RPT_DATE = String(describing: String(cString: sqlite3_column_text(queryStatement, 12)))
+                let SHIP = String(describing: String(cString: sqlite3_column_text(queryStatement, 13)))
+                let TYPE = String(describing: String(cString: sqlite3_column_text(queryStatement, 14)))
+                let WEIGHT = String(describing: String(cString: sqlite3_column_text(queryStatement, 15)))
+                
+                budget_detail.append(tbl_mis_budget_data_details(IS_DSR_SHOW: IS_DSR_SHOW, IS_QSR_SHOW: IS_QSR_SHOW, IS_SHIP_SHOW: IS_SHIP_SHOW, IS_WEIGHT_SHOW: IS_WEIGHT_SHOW, ALL_TYPE: ALL_TYPE, ALL_SHIP: ALL_SHIP, ALL_DSR: ALL_DSR, ALL_QSR: ALL_QSR, ALL_WEIGHT: ALL_WEIGHT, DSR: DSR, PRODUCT: PRODUCT, QSR: QSR, RPT_DATE: RPT_DATE, SHIP: SHIP, TYPE: TYPE, WEIGHT: WEIGHT))
+            }
+        } else {
+            print("SELECT statement \(db_mis_budget_data) could not be prepared")
+        }
+        return budget_detail.count > 0 ? budget_detail : nil
+    }
+    
     //MARK: WALLET INSERT
     func read_tbl_wallet_query_master(query: String) -> [tbl_wallet_query_master]? {
         let queryStatementString = query
@@ -4244,6 +4278,25 @@ struct tbl_mis_budget_data {
     var ship: String, dsr: String = ""
     var type: String = ""
     var qsr: String, weight: String = ""
+}
+
+struct tbl_mis_budget_data_details {
+    var IS_DSR_SHOW: String = ""
+    var IS_QSR_SHOW: String = ""
+    var IS_SHIP_SHOW: String = ""
+    var IS_WEIGHT_SHOW: String = ""
+    var ALL_TYPE: String = ""
+    var ALL_SHIP: String = ""
+    var ALL_DSR: String = ""
+    var ALL_QSR: String = ""
+    var ALL_WEIGHT: String = ""
+    var DSR: String = ""
+    var PRODUCT: String = ""
+    var QSR: String = ""
+    var RPT_DATE: String = ""
+    var SHIP: String = ""
+    var TYPE: String = ""
+    var WEIGHT: String = ""
 }
 
 //MARK: Wallet

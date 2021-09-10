@@ -301,7 +301,7 @@
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Jx0-7I-Rfp" customClass="CustomView" customModule="One_App" customModuleProvider="target">
                                                 <rect key="frame" x="15" y="344" width="384" height="150"/>
                                                 <subviews>
-                                                    <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" scrollEnabled="NO" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="E2u-xc-Yr7">
+                                                    <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" scrollEnabled="NO" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="E2u-xc-Yr7">
                                                         <rect key="frame" x="0.0" y="0.0" width="384" height="150"/>
                                                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                                         <connections>
@@ -345,16 +345,20 @@
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="QUd-bu-6bP" customClass="CustomView" customModule="One_App" customModuleProvider="target">
                                                 <rect key="frame" x="15" y="509.00000000000006" width="384" height="202.66666666666669"/>
                                                 <subviews>
-                                                    <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="gNa-hz-0Ms">
+                                                    <collectionView clipsSubviews="YES" contentMode="scaleToFill" bounces="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="gNa-hz-0Ms">
                                                         <rect key="frame" x="0.0" y="0.0" width="384" height="202.66666666666666"/>
                                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                        <collectionViewFlowLayout key="collectionViewLayout" automaticEstimatedItemSize="YES" minimumLineSpacing="10" minimumInteritemSpacing="10" id="pRm-TT-Uk4">
+                                                        <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" automaticEstimatedItemSize="YES" minimumLineSpacing="10" minimumInteritemSpacing="10" id="pRm-TT-Uk4">
                                                             <size key="itemSize" width="128" height="128"/>
                                                             <size key="headerReferenceSize" width="0.0" height="0.0"/>
                                                             <size key="footerReferenceSize" width="0.0" height="0.0"/>
                                                             <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                                         </collectionViewFlowLayout>
                                                         <cells/>
+                                                        <connections>
+                                                            <outlet property="dataSource" destination="Fdz-aE-e4V" id="oBX-RN-wVl"/>
+                                                            <outlet property="delegate" destination="Fdz-aE-e4V" id="bkp-Y6-VzS"/>
+                                                        </connections>
                                                     </collectionView>
                                                 </subviews>
                                                 <color key="backgroundColor" red="0.94901960784313721" green="0.94901960784313721" blue="0.94901960784313721" alpha="1" colorSpace="calibratedRGB"/>
@@ -426,6 +430,7 @@
                     </view>
                     <connections>
                         <outlet property="collectionView" destination="gNa-hz-0Ms" id="bNx-Hp-bx7"/>
+                        <outlet property="collectionViewHeightConstraint" destination="Yhk-tT-6rN" id="GWQ-vq-oMx"/>
                         <outlet property="headingLabel" destination="CeY-Ui-zTo" id="bQo-vx-LdX"/>
                         <outlet property="mainView" destination="o8x-hv-6Wd" id="LiT-iM-GWG"/>
                         <outlet property="monthLabel" destination="B8h-DI-EKl" id="ljq-7e-R1i"/>

@@ -27,6 +27,8 @@
 		1B1ED252261C99EF0026234B /* buzzer.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 1B1ED250261C99EF0026234B /* buzzer.mp3 */; };
 		1B281768257F7D44009AE4E3 /* ChartViews.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1B281767257F7D44009AE4E3 /* ChartViews.xib */; };
 		1B28176B257F7D4F009AE4E3 /* ChartViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B28176A257F7D4F009AE4E3 /* ChartViews.swift */; };
+		1B30AAEB26EB34410051D32A /* MISCollectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B30AAE926EB34410051D32A /* MISCollectionCell.swift */; };
+		1B30AAEC26EB34410051D32A /* MISCollectionCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1B30AAEA26EB34410051D32A /* MISCollectionCell.xib */; };
 		1B3202F62578C1270034803F /* ComingSoonViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B3202F52578C1270034803F /* ComingSoonViewController.swift */; };
 		1B3202F92578C70B0034803F /* ImagePickerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B3202F82578C70B0034803F /* ImagePickerManager.swift */; };
 		1B3239A726CF859900D89A9B /* YAxisFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B3239A626CF859900D89A9B /* YAxisFormatter.swift */; };
@@ -209,6 +211,8 @@
 		1B1ED250261C99EF0026234B /* buzzer.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = buzzer.mp3; sourceTree = "<group>"; };
 		1B281767257F7D44009AE4E3 /* ChartViews.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ChartViews.xib; sourceTree = "<group>"; };
 		1B28176A257F7D4F009AE4E3 /* ChartViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartViews.swift; sourceTree = "<group>"; };
+		1B30AAE926EB34410051D32A /* MISCollectionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MISCollectionCell.swift; sourceTree = "<group>"; };
+		1B30AAEA26EB34410051D32A /* MISCollectionCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MISCollectionCell.xib; sourceTree = "<group>"; };
 		1B3202F52578C1270034803F /* ComingSoonViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComingSoonViewController.swift; sourceTree = "<group>"; };
 		1B3202F82578C70B0034803F /* ImagePickerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePickerManager.swift; sourceTree = "<group>"; };
 		1B3239A626CF859900D89A9B /* YAxisFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YAxisFormatter.swift; sourceTree = "<group>"; };
@@ -416,6 +420,15 @@
 				1B1691B425724CE30007B3B0 /* next-icon.svg */,
 			);
 			path = "svg icons";
+			sourceTree = "<group>";
+		};
+		1B30AAE826EB34250051D32A /* MIS */ = {
+			isa = PBXGroup;
+			children = (
+				1B30AAE926EB34410051D32A /* MISCollectionCell.swift */,
+				1B30AAEA26EB34410051D32A /* MISCollectionCell.xib */,
+			);
+			path = MIS;
 			sourceTree = "<group>";
 		};
 		1B3EDC95260C530D00A97984 /* Fullfilment */ = {
@@ -666,6 +679,7 @@
 		604FD75D2539B759007E9E87 /* CollectionView */ = {
 			isa = PBXGroup;
 			children = (
+				1B30AAE826EB34250051D32A /* MIS */,
 				60E9990F253D4F1300BCDAD1 /* PieChartCollectionCell.swift */,
 				60E99910253D4F1300BCDAD1 /* PieChartCollectionCell.xib */,
 				60E99915253D548200BCDAD1 /* ModulesCollectionCell.swift */,
@@ -993,6 +1007,7 @@
 				1B61B2B825DD235200CDAAE2 /* TBagDetailsTableCell.xib in Resources */,
 				6010F41125400E3300CF8597 /* CicrularProgressBarCollectionCell.xib in Resources */,
 				601BA4C925387B18002CFD1F /* LaunchScreen.storyboard in Resources */,
+				1B30AAEC26EB34410051D32A /* MISCollectionCell.xib in Resources */,
 				60E99918253D548200BCDAD1 /* ModulesCollectionCell.xib in Resources */,
 				60E99912253D4F1300BCDAD1 /* PieChartCollectionCell.xib in Resources */,
 				60E9990A253D4DF000BCDAD1 /* Dashboard.storyboard in Resources */,
@@ -1111,6 +1126,7 @@
 				1B5EAACD255EB71C00F49D09 /* GrievanceNewRequestViewController.swift in Sources */,
 				1BA5110B267B28A400E0E642 /* WalletHistoryTableCell.swift in Sources */,
 				1B61B2BC25DD25DD00CDAAE2 /* DManDetailsTableCell.swift in Sources */,
+				1B30AAEB26EB34410051D32A /* MISCollectionCell.swift in Sources */,
 				1B3EDCA2260C620100A97984 /* FulfilmentListingTableCell.swift in Sources */,
 				1B5EAA83255EA4A600F49D09 /* GrievanceHelpDeskRequestsViewController.swift in Sources */,
 				1BA7BAC2260DF3FD002D9FA9 /* FulfilmentOrderDetailTableCell.swift in Sources */,
