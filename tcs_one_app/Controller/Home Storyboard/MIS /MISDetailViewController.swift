@@ -35,6 +35,7 @@ class MISDetailViewController: BaseViewController {
     var collectionRow: Int?
     
     var budget_data: [tbl_mis_budget_data_details]?
+    var isDualValue: Bool = false
     override func viewDidLoad() {
         super.viewDidLoad()
         self.makeTopCornersRounded(roundView: self.mainView)
@@ -61,7 +62,7 @@ class MISDetailViewController: BaseViewController {
             self.setupJSON { count in
                 self.collectionView.reloadData()
                 if count > 7 {
-                    self.collectionViewHeightConstraint.constant = CGFloat(30 * count)
+                    self.collectionViewHeightConstraint.constant = CGFloat(30 * count) + 30
                 }
             }
             
@@ -80,30 +81,39 @@ class MISDetailViewController: BaseViewController {
     }
     
     private func setupJSON(_ handler: @escaping(Int)->Void) {
-        let query = "SELECT PERMISSION.IS_DSR_SHOW, PERMISSION.IS_QSR_SHOW, PERMISSION.IS_SHIP_SHOW, PERMISSION.IS_WEIGHT_SHOW, group_concat(TYPE, '*') AS ALL_TYPE , GROUP_CONCAT(SHIP, '*') AS ALL_SHIP , GROUP_CONCAT(DSR, '*') AS ALL_DSR , GROUP_CONCAT(QSR, '*') AS ALL_QSR, GROUP_CONCAT(WEIGHT, '*') AS ALL_WEIGHT, AVG(DSR) AS DSR, PRODUCT, AVG(QSR) AS QSR , RPT_DATE, SUM(SHIP) AS SHIP, TYPE , SUM(WEIGHT) AS WEIGHT FROM (SELECT * FROM MIS_BUDGET_DATA WHERE PRODUCT = 'Fleet Kilo Meters' AND (RPT_DATE BETWEEN '2021-01-01' AND '2021-01-31') ORDER BY RPT_DATE,TYPE DESC), (SELECT AVG(DSR) > 0.0 AS IS_DSR_SHOW, AVG(QSR) > 0.0 AS IS_QSR_SHOW, SUM(SHIP) > 0 AS IS_SHIP_SHOW, SUM(WEIGHT) > 0.0 AS IS_WEIGHT_SHOW FROM MIS_BUDGET_DATA WHERE PRODUCT = 'Fleet Kilo Meters' AND (RPT_DATE BETWEEN '2021-01-01' AND '2021-01-31') GROUP BY PRODUCT) AS PERMISSION GROUP BY RPT_DATE"
+        
+        var query = ""
+        if isDualValue {
+            query = "SELECT PERMISSION.IS_DSR_SHOW, PERMISSION.IS_QSR_SHOW, PERMISSION.IS_SHIP_SHOW, PERMISSION.IS_WEIGHT_SHOW, group_concat(TYPE, '*') AS ALL_TYPE , GROUP_CONCAT(SHIP, '*') AS ALL_SHIP , GROUP_CONCAT(DSR, '*') AS ALL_DSR , GROUP_CONCAT(QSR, '*') AS ALL_QSR, GROUP_CONCAT(WEIGHT, '*') AS ALL_WEIGHT, AVG(DSR) AS DSR, PRODUCT, AVG(QSR) AS QSR , RPT_DATE, SUM(SHIP) AS SHIP, TYPE , SUM(WEIGHT) AS WEIGHT FROM (SELECT * FROM MIS_BUDGET_DATA WHERE PRODUCT = '\(mis_budget_setup?.product ?? "")' AND (RPT_DATE BETWEEN '2021-01-01' AND '2021-01-31') ORDER BY RPT_DATE,TYPE DESC), (SELECT AVG(DSR) > 0.0 AS IS_DSR_SHOW, AVG(QSR) > 0.0 AS IS_QSR_SHOW, SUM(SHIP) > 0 AS IS_SHIP_SHOW, SUM(WEIGHT) > 0.0 AS IS_WEIGHT_SHOW FROM MIS_BUDGET_DATA WHERE PRODUCT = '\(mis_budget_setup?.product ?? "")' AND (RPT_DATE BETWEEN '2021-01-01' AND '2021-01-31') GROUP BY PRODUCT) AS PERMISSION GROUP BY RPT_DATE"
+        } else {
+            query = "SELECT PERMISSION.IS_DSR_SHOW, PERMISSION.IS_QSR_SHOW, PERMISSION.IS_SHIP_SHOW, PERMISSION.IS_WEIGHT_SHOW, '' AS ALL_TYPE , '' AS ALL_SHIP , '' AS ALL_DSR , '' AS ALL_QSR, '' AS ALL_WEIGHT, AVG(DSR) AS DSR, PRODUCT, AVG(QSR) AS QSR , RPT_DATE, SUM(SHIP) AS SHIP, TYPE , SUM(WEIGHT) AS WEIGHT FROM (SELECT * FROM MIS_BUDGET_DATA WHERE PRODUCT = '\(mis_budget_setup?.product ?? "")' AND (RPT_DATE BETWEEN '2021-01-01' AND '2021-01-31') ORDER BY RPT_DATE,TYPE DESC), (SELECT AVG(DSR) > 0.0 AS IS_DSR_SHOW, AVG(QSR) > 0.0 AS IS_QSR_SHOW, SUM(SHIP) > 0 AS IS_SHIP_SHOW, SUM(WEIGHT) > 0.0 AS IS_WEIGHT_SHOW FROM MIS_BUDGET_DATA WHERE PRODUCT = '\(mis_budget_setup?.product ?? "")' AND (RPT_DATE BETWEEN '2021-01-01' AND '2021-01-31') GROUP BY PRODUCT) AS PERMISSION GROUP BY RPT_DATE"
+        }
         
         if let budget_data = AppDelegate.sharedInstance.db?.read_tbl_mis_budget_data_detail(query: query) {
-            let splitType = budget_data[0].ALL_TYPE.split(separator: "*")
+            
             var dsrTypeName = ""
             var qsrTypeName = ""
             var weightTypeName = ""
             
-            for (index, data) in splitType.enumerated() {
-                if (splitType.count - 1 == index) {
-                    dsrTypeName += "\(data) DSR"
-                    qsrTypeName += "\(data) QSR"
-                    weightTypeName += "\(data) Weight"
-                } else {
-                    dsrTypeName += "\(data) DSR*"
-                    qsrTypeName += "\(data) QSR*"
-                    weightTypeName += "\(data) Weight*"
+            if isDualValue {
+                let splitType = budget_data[0].ALL_TYPE.split(separator: "*")
+                for (index, data) in splitType.enumerated() {
+                    if (splitType.count - 1 == index) {
+                        dsrTypeName += "\(data) DSR"
+                        qsrTypeName += "\(data) QSR"
+                        weightTypeName += "\(data) Weight"
+                    } else {
+                        dsrTypeName += "\(data) DSR*"
+                        qsrTypeName += "\(data) QSR*"
+                        weightTypeName += "\(data) Weight*"
+                    }
                 }
             }
             
-            let headingObject: tbl_mis_budget_data_details = tbl_mis_budget_data_details(IS_DSR_SHOW: "", IS_QSR_SHOW: "", IS_SHIP_SHOW: "", IS_WEIGHT_SHOW: "", ALL_TYPE: "", ALL_SHIP: budget_data[0].ALL_TYPE, ALL_DSR: dsrTypeName, ALL_QSR: qsrTypeName, ALL_WEIGHT: weightTypeName, DSR: "DSR Total", PRODUCT: "", QSR: "QSR Total", RPT_DATE: "Date", SHIP: "Total", TYPE: "", WEIGHT: "Total Weight")
+            let headingObject: tbl_mis_budget_data_details = tbl_mis_budget_data_details(IS_DSR_SHOW: budget_data[0].IS_DSR_SHOW, IS_QSR_SHOW: budget_data[0].IS_QSR_SHOW, IS_SHIP_SHOW: budget_data[0].IS_SHIP_SHOW, IS_WEIGHT_SHOW: budget_data[0].IS_WEIGHT_SHOW, ALL_TYPE: "", ALL_SHIP: budget_data[0].ALL_TYPE, ALL_DSR: dsrTypeName, ALL_QSR: qsrTypeName, ALL_WEIGHT: weightTypeName, DSR: "DSR Total", PRODUCT: "", QSR: "QSR Total", RPT_DATE: "Date", SHIP: "Total", TYPE: "", WEIGHT: "Total Weight")
             self.budget_data = [tbl_mis_budget_data_details]()
-            self.budget_data!.append(headingObject)
             self.budget_data = budget_data
+            self.budget_data!.insert(headingObject, at: 0)
             handler(budget_data.count)
         }
     }
@@ -141,7 +151,11 @@ extension MISDetailViewController: UICollectionViewDataSource, UICollectionViewD
         }
         let data = self.budget_data![indexPath.row]
         cell.indexPath = indexPath.row
+        
+        cell.tbl_mis_budget_data_detail = data
+        cell.isDualValue = self.isDualValue
         cell.setupCell()
+        
         return cell
     }
     

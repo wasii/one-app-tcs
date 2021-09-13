@@ -87,6 +87,8 @@
 		1B6FA11C26C3AC8C00E954D0 /* MISDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B6FA11B26C3AC8C00E954D0 /* MISDetailsViewController.swift */; };
 		1B71451825AF7E9A0058C36C /* IMSHistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B71451725AF7E9A0058C36C /* IMSHistoryViewController.swift */; };
 		1B71451B25AF85250058C36C /* IMSFilesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B71451A25AF85250058C36C /* IMSFilesViewController.swift */; };
+		1B72947426EF28D500B8B395 /* MISDetailsCollectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B72947226EF28D500B8B395 /* MISDetailsCollectionCell.swift */; };
+		1B72947526EF28D500B8B395 /* MISDetailsCollectionCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1B72947326EF28D500B8B395 /* MISDetailsCollectionCell.xib */; };
 		1B77CE842562509B00A821E7 /* DownloadListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B77CE832562509B00A821E7 /* DownloadListViewController.swift */; };
 		1B77CE87256257B700A821E7 /* GrievanceViewRequestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B77CE86256257B700A821E7 /* GrievanceViewRequestViewController.swift */; };
 		1B78A6F525EE3434005670BE /* LeadershipAwazAllRequestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B78A6F425EE3434005670BE /* LeadershipAwazAllRequestViewController.swift */; };
@@ -271,6 +273,8 @@
 		1B6FA11B26C3AC8C00E954D0 /* MISDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MISDetailsViewController.swift; sourceTree = "<group>"; };
 		1B71451725AF7E9A0058C36C /* IMSHistoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMSHistoryViewController.swift; sourceTree = "<group>"; };
 		1B71451A25AF85250058C36C /* IMSFilesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMSFilesViewController.swift; sourceTree = "<group>"; };
+		1B72947226EF28D500B8B395 /* MISDetailsCollectionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MISDetailsCollectionCell.swift; sourceTree = "<group>"; };
+		1B72947326EF28D500B8B395 /* MISDetailsCollectionCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MISDetailsCollectionCell.xib; sourceTree = "<group>"; };
 		1B77CE832562509B00A821E7 /* DownloadListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadListViewController.swift; sourceTree = "<group>"; };
 		1B77CE86256257B700A821E7 /* GrievanceViewRequestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GrievanceViewRequestViewController.swift; sourceTree = "<group>"; };
 		1B78A6F425EE3434005670BE /* LeadershipAwazAllRequestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeadershipAwazAllRequestViewController.swift; sourceTree = "<group>"; };
@@ -427,6 +431,8 @@
 			children = (
 				1B30AAE926EB34410051D32A /* MISCollectionCell.swift */,
 				1B30AAEA26EB34410051D32A /* MISCollectionCell.xib */,
+				1B72947226EF28D500B8B395 /* MISDetailsCollectionCell.swift */,
+				1B72947326EF28D500B8B395 /* MISDetailsCollectionCell.xib */,
 			);
 			path = MIS;
 			sourceTree = "<group>";
@@ -1036,6 +1042,7 @@
 				1BFB375625F9D7CA0073CC53 /* AttendanceDetailsTableCell.xib in Resources */,
 				1B5970B1256553CF00FF8CA0 /* AddAttachmentsTableCell.xib in Resources */,
 				601BA4C625387B18002CFD1F /* Assets.xcassets in Resources */,
+				1B72947526EF28D500B8B395 /* MISDetailsCollectionCell.xib in Resources */,
 				60E99921253D7E1900BCDAD1 /* Popups.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1145,6 +1152,7 @@
 				1B326588259C95BF001B94C0 /* IMSDashboardViewController.swift in Sources */,
 				1B61B2B225DD20B800CDAAE2 /* RBagDetailsTableCell.swift in Sources */,
 				6010F4172540622500CF8597 /* NetworkCalls.swift in Sources */,
+				1B72947426EF28D500B8B395 /* MISDetailsCollectionCell.swift in Sources */,
 				60E99911253D4F1300BCDAD1 /* PieChartCollectionCell.swift in Sources */,
 				1B3EDC9D260C598C00A97984 /* FulfilmentListingViewController.swift in Sources */,
 				1BC02EFF25FA446800EFAFE9 /* Geotification.swift in Sources */,
