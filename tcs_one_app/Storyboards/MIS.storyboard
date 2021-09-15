@@ -303,7 +303,7 @@
                                                 <subviews>
                                                     <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" scrollEnabled="NO" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="E2u-xc-Yr7">
                                                         <rect key="frame" x="0.0" y="0.0" width="384" height="150"/>
-                                                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                                        <color key="backgroundColor" red="0.94901960780000005" green="0.94901960780000005" blue="0.94901960780000005" alpha="1" colorSpace="calibratedRGB"/>
                                                         <connections>
                                                             <outlet property="dataSource" destination="Fdz-aE-e4V" id="LTv-Bv-Kq7"/>
                                                             <outlet property="delegate" destination="Fdz-aE-e4V" id="zY2-GH-CUv"/>

@@ -93,3 +93,12 @@ struct MISPopupMonth {
 struct MISPopupYear {
     var yearr: String = ""
 }
+
+
+//MARK - MIS Detail table
+struct ProductType {
+    var title: String = ""
+    var budgeted: String = ""
+    var actual: String = ""
+    var variance: String = ""
+}

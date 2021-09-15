@@ -35,6 +35,8 @@ class MISCollectionCell: UICollectionViewCell {
     var indexPath: Int = 0
     var tbl_mis_budget_data_detail: tbl_mis_budget_data_details?
     var isDualValue: Bool = false
+    var isLastRow: Bool = false
+    var totalCount: Double = 0.0
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
@@ -66,15 +68,22 @@ class MISCollectionCell: UICollectionViewCell {
                 dateLabel.text = "Date"
                 dateLabel.font = UIFont.systemFont(ofSize: 11, weight: .medium)
             } else {
-                dateView.bgColor = UIColor.white
-                dateLabel.text = self.tbl_mis_budget_data_detail!.RPT_DATE.dateOnly
-                dateLabel.font = UIFont.systemFont(ofSize: 10, weight: .regular)
+                if isLastRow {
+                    dateView.bgColor = UIColor.init(red: 242.0/255.0, green: 242.0/255.0, blue: 242.0/255.0, alpha: 1)
+                    dateLabel.text = "Total"
+                    dateLabel.font = UIFont.systemFont(ofSize: 11, weight: .medium)
+                } else {
+                    dateView.bgColor = UIColor.white
+                    dateLabel.text = self.tbl_mis_budget_data_detail!.RPT_DATE.dateOnly
+                    dateLabel.font = UIFont.systemFont(ofSize: 10, weight: .regular)
+                }
+                
             }
             if budget_detail.IS_WEIGHT_SHOW == "0" {
                 weightView.isHidden = true
                 weightCollectionView.isHidden = true
             } else {
-                if indexPath == 0 {
+                if indexPath == 0 || isLastRow {
                     weightView.bgColor = UIColor.init(red: 242.0/255.0, green: 242.0/255.0, blue: 242.0/255.0, alpha: 1)
                     weightLabel.text = budget_detail.WEIGHT
                     weightLabel.font = UIFont.systemFont(ofSize: 11, weight: .medium)
@@ -98,7 +107,7 @@ class MISCollectionCell: UICollectionViewCell {
                 dsrView.isHidden = true
                 dsrCollectionView.isHidden = true
             } else {
-                if indexPath == 0 {
+                if indexPath == 0 || isLastRow  {
                     dsrView.bgColor = UIColor.init(red: 242.0/255.0, green: 242.0/255.0, blue: 242.0/255.0, alpha: 1)
                     dsrLabel.text = budget_detail.DSR
                     dsrLabel.font = UIFont.systemFont(ofSize: 11, weight: .medium)
@@ -122,7 +131,7 @@ class MISCollectionCell: UICollectionViewCell {
                 qsrView.isHidden = true
                 qsrCollectionView.isHidden = true
             } else {
-                if indexPath == 0 {
+                if indexPath == 0 || isLastRow  {
                     qsrView.bgColor = UIColor.init(red: 242.0/255.0, green: 242.0/255.0, blue: 242.0/255.0, alpha: 1)
                     qsrLabel.text = budget_detail.QSR
                     qsrLabel.font = UIFont.systemFont(ofSize: 11, weight: .medium)
@@ -147,7 +156,7 @@ class MISCollectionCell: UICollectionViewCell {
                 shipmentView.isHidden = true
                 shipmentCollectionViiew.isHidden = true
             } else {
-                if indexPath == 0 {
+                if indexPath == 0 || isLastRow  {
                     shipmentView.bgColor = UIColor.init(red: 242.0/255.0, green: 242.0/255.0, blue: 242.0/255.0, alpha: 1)
                     shipmentLabel.text = budget_detail.SHIP
                     shipmentLabel.font = UIFont.systemFont(ofSize: 11, weight: .medium)
@@ -210,12 +219,12 @@ extension MISCollectionCell: UICollectionViewDataSource, UICollectionViewDelegat
         
         if collectionView == shipmentCollectionViiew {
             if let heading = self.tbl_mis_budget_data_detail?.ALL_SHIP.split(separator: "*") {
-                if self.indexPath > 0 {
-                    cell.detail_label.font = UIFont.systemFont(ofSize: 10, weight: .regular)
-                    cell.mainView.bgColor = UIColor.white
-                } else {
+                if self.indexPath == 0 || isLastRow {
                     cell.mainView.bgColor = UIColor.init(red: 242.0/255.0, green: 242.0/255.0, blue: 242.0/255.0, alpha: 1)
                     cell.detail_label.font = UIFont.systemFont(ofSize: 11, weight: .medium)
+                } else {
+                    cell.detail_label.font = UIFont.systemFont(ofSize: 10, weight: .regular)
+                    cell.mainView.bgColor = UIColor.white
                 }
                 let h = heading[indexPath.row]
                 cell.detail_label.text = String(h)
@@ -223,41 +232,58 @@ extension MISCollectionCell: UICollectionViewDataSource, UICollectionViewDelegat
             return cell
         }
         if collectionView == dsrCollectionView {
+            
             if let heading = self.tbl_mis_budget_data_detail?.ALL_DSR.split(separator: "*") {
-                if self.indexPath > 0 {
-                    cell.detail_label.font = UIFont.systemFont(ofSize: 10, weight: .regular)
-                    cell.mainView.bgColor = UIColor.white
-                } else {
+                if self.indexPath == 0 {
                     cell.mainView.bgColor = UIColor.init(red: 242.0/255.0, green: 242.0/255.0, blue: 242.0/255.0, alpha: 1)
                     cell.detail_label.font = UIFont.systemFont(ofSize: 11, weight: .medium)
+                } else {
+                    cell.detail_label.font = UIFont.systemFont(ofSize: 10, weight: .regular)
+                    cell.mainView.bgColor = UIColor.white
                 }
                 let h = heading[indexPath.row]
                 cell.detail_label.text = String(h)
+            }
+            if isLastRow {
+                if let heading = self.tbl_mis_budget_data_detail?.ALL_DSR.split(separator: "*") {
+                    cell.mainView.bgColor = UIColor.init(red: 242.0/255.0, green: 242.0/255.0, blue: 242.0/255.0, alpha: 1)
+                    cell.detail_label.font = UIFont.systemFont(ofSize: 11, weight: .medium)
+                    let h = heading[indexPath.row]
+                    cell.detail_label.text = String(format: "%.2f", (h as NSString).doubleValue / self.totalCount)
+                }
             }
             return cell
         }
         if collectionView == qsrCollectionView {
             if let heading = self.tbl_mis_budget_data_detail?.ALL_QSR.split(separator: "*") {
-                if self.indexPath > 0 {
-                    cell.detail_label.font = UIFont.systemFont(ofSize: 10, weight: .regular)
-                    cell.mainView.bgColor = UIColor.white
-                } else {
+                if self.indexPath == 0 || isLastRow {
                     cell.mainView.bgColor = UIColor.init(red: 242.0/255.0, green: 242.0/255.0, blue: 242.0/255.0, alpha: 1)
                     cell.detail_label.font = UIFont.systemFont(ofSize: 11, weight: .medium)
+                } else {
+                    cell.detail_label.font = UIFont.systemFont(ofSize: 10, weight: .regular)
+                    cell.mainView.bgColor = UIColor.white
                 }
                 let h = heading[indexPath.row]
                 cell.detail_label.text = String(h)
+            }
+            if isLastRow {
+                if let heading = self.tbl_mis_budget_data_detail?.ALL_QSR.split(separator: "*") {
+                    cell.mainView.bgColor = UIColor.init(red: 242.0/255.0, green: 242.0/255.0, blue: 242.0/255.0, alpha: 1)
+                    cell.detail_label.font = UIFont.systemFont(ofSize: 11, weight: .medium)
+                    let h = heading[indexPath.row]
+                    cell.detail_label.text = String(format: "%.2f", (h as NSString).doubleValue / self.totalCount)
+                }
             }
             return cell
         }
         if collectionView == weightCollectionView {
             if let heading = self.tbl_mis_budget_data_detail?.ALL_WEIGHT.split(separator: "*") {
-                if self.indexPath > 0 {
-                    cell.detail_label.font = UIFont.systemFont(ofSize: 10, weight: .regular)
-                    cell.mainView.bgColor = UIColor.white
-                } else {
+                if self.indexPath == 0 || isLastRow {
                     cell.mainView.bgColor = UIColor.init(red: 242.0/255.0, green: 242.0/255.0, blue: 242.0/255.0, alpha: 1)
                     cell.detail_label.font = UIFont.systemFont(ofSize: 11, weight: .medium)
+                } else {
+                    cell.detail_label.font = UIFont.systemFont(ofSize: 10, weight: .regular)
+                    cell.mainView.bgColor = UIColor.white
                 }
                 let h = heading[indexPath.row]
                 cell.detail_label.text = String(h)
