@@ -390,7 +390,7 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
         dateCount!.forEach { date in
             let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = "yyyy-MM-dd"
-            let tDate = dateFormatter.date(from: date)!.d()
+            let tDate = dateFormatter.date(from: date)!.dayAndMonth()
             dataEntryX.append(tDate)
         }
         totalCount!.forEach { graph in
@@ -1118,7 +1118,7 @@ extension HomeScreenViewController: IAxisValueFormatter {
         dateCount!.forEach { date in
             let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = "yyyy-MM-dd"
-            let tDate = dateFormatter.date(from: date)!.d()
+            let tDate = dateFormatter.date(from: date)!.dayAndMonth()
             dataEntryX.append(tDate)
         }
         if value < 0 {

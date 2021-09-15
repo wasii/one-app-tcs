@@ -68,26 +68,6 @@ extension MISDashboardViewController: UITableViewDelegate, UITableViewDataSource
         } else {
             controller.isDualValue = true
         }
-//        controller.mis_product_data = self.mis_listing_data![indexPath.row]
-//        controller.mis_id = self.mis_id
-//
-//        if let ServerIdPk = AppDelegate.sharedInstance.db?.read_tbl_UserPage().filter({ page in
-//            page.PAGENAME == self.mis_listing_data![indexPath.row].product
-//        }).first?.SERVER_ID_PK {
-//            AppDelegate.sharedInstance.db?.read_tbl_UserPermission().filter({ permissions in
-//                permissions.PAGEID == ServerIdPk
-//            }).forEach({ listing in
-//                if listing.PERMISSION == "WEIGHT" {
-//                    controller.isWieghtAllowed = 1
-//                }
-//                if listing.PERMISSION == "QSR" {
-//                    controller.isQSRAllowed = 1
-//                }
-//                if listing.PERMISSION == "DSR" {
-//                    controller.isDSRAllowed = 1
-//                }
-//            })
-//        }
         self.navigationController?.pushViewController(controller, animated: true)
     }
 }

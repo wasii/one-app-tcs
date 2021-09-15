@@ -607,7 +607,7 @@ extension Date {
         df.setLocalizedDateFormatFromTemplate("MMM'-'dd")
         return df.string(from: self)
     }
-    func d() -> String {
+    func dayAndMonth() -> String {
         let df = DateFormatter()
         df.setLocalizedDateFormatFromTemplate("dd/MM")
         return df.string(from: self)

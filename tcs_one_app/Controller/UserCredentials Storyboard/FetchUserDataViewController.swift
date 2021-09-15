@@ -2220,15 +2220,27 @@ extension FetchUserDataViewController {
         NetworkCalls.getbudgetdata(params: params) { daily_granted, response in
             if daily_granted {
                 let json = JSON(response)
-                if let budgetData = json.array {
+                if let budgetData = json.dictionary?[_budgetData]?.array {
                     do {
-                        AppDelegate.sharedInstance.db?.deleteAll(tableName: db_mis_budget_data, handler: { _ in })
+                        if budgetData.count <= 0 {
+                            if let lastSync = json.dictionary?["lastSync"]?.string {
+                                Helper.updateLastSyncStatus(APIName: S_MIS_BUDGET_DATA,
+                                                            date: lastSync,
+                                                            skip: 0,
+                                                            take: 0,
+                                                            total_records: 0)
+                            }
+                            handler(true)
+                            return
+                        }
                         
                         for bd in budgetData {
                             let rawData = try bd.rawData()
                             let budget_data: BudgetData = try JSONDecoder().decode(BudgetData.self, from: rawData)
+                            AppDelegate.sharedInstance.db?.deleteRowWithMultipleConditions(tbl: db_mis_budget_data, conditions: "RPT_DATE = '\(budget_data.rptDate)' AND TYPE = '\(budget_data.type)'", { _ in
+                                AppDelegate.sharedInstance.db?.insert_tbl_mis_budget_data(budget_data: budget_data, handler: { _ in })
+                            })
                             
-                            AppDelegate.sharedInstance.db?.insert_tbl_mis_budget_data(budget_data: budget_data, handler: { _ in })
                         }
                         if let lastSync = json.dictionary?["lastSync"]?.string {
                             Helper.updateLastSyncStatus(APIName: S_MIS_BUDGET_DATA,

@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Charts
 
 class MISDetailViewController: BaseViewController {
     
@@ -14,6 +15,7 @@ class MISDetailViewController: BaseViewController {
     @IBOutlet weak var headingLabel: UILabel!
     @IBOutlet weak var monthLabel: UILabel!
     @IBOutlet weak var yearLabel: UILabel!
+    @IBOutlet weak var lineChart: LineChartView!
     
     
     @IBOutlet weak var tableView: UITableView!
@@ -24,21 +26,25 @@ class MISDetailViewController: BaseViewController {
     var mis_popup_mnth: MISPopupMonth?
     var mis_popop_year: MISPopupYear?
     
+    var monthInNumber: String = ""
     var monthName: String = ""
     var year: String = ""
     
     
-    var tableSection: Int?
-    var tableRow: Int?
-    
-    var collectionSection: Int?
-    var collectionRow: Int?
+    let df = DateFormatter()
     
     var budget_data: [tbl_mis_budget_data_details]?
     var tableView_data: [ProductType]?
     var isDualValue: Bool = false
     
     var lastObject: tbl_mis_budget_data_details = tbl_mis_budget_data_details()
+    
+    var dataEntryX: [String] = [String]()
+    var dataEntryY: [Double] = [Double]()
+    
+    var monthlyTarget: Double = 0.0
+    weak var axisFormatDelegate: IAxisValueFormatter?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.makeTopCornersRounded(roundView: self.mainView)
@@ -53,40 +59,62 @@ class MISDetailViewController: BaseViewController {
         tableView.dataSource = self
         
         tableView.rowHeight = 30
-        self.freezeScreen()
-        self.view.makeToastActivity(.center)
         
-        let df = DateFormatter()
         df.dateFormat = "MMMM"
         monthName = df.string(from: Date())
         df.dateFormat = "yyyy"
         year = df.string(from: Date())
         
+        df.locale = Locale(identifier: "en_US_POSIX")
+        df.dateFormat = "LLLL"  // if you need 3 letter month just use "LLL"
+        if let date = df.date(from: monthName) {
+            let month = Calendar.current.component(.month, from: date)
+            self.monthInNumber = "\(month)"
+        }
+        
         self.monthLabel.text = monthName
         self.yearLabel.text = year
         
+        if monthInNumber.count == 1 {
+            monthInNumber = "0\(monthInNumber)"
+        }
+        reloadData(date: "\(year)-\(monthInNumber)")
+    }
+    
+    private func reloadData(date: String) {
+        dataEntryX = [String]()
+        dataEntryY = [Double]()
+        self.axisFormatDelegate = self
+        self.lineChart.data = nil
+        self.freezeScreen()
+        self.view.makeToastActivity(.center)
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
             self.unFreezeScreen()
             self.view.hideToastActivity()
-            self.tableView.reloadData()
-            self.setupJSON(date: "2021-01") { count in
-                self.tableView.reloadData()
-                self.collectionView.reloadData()
-                if count > 7 {
+            self.setupJSON(date: date) { count in
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                    self.collectionView.reloadData()
                     self.collectionViewHeightConstraint.constant = CGFloat(30 * count) + 70
+                    
+                }
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                    self.setupTableView { _ in
+                        self.tableView.reloadData()
+                        self.tableViewHeightConstraint.constant = CGFloat(30 * self.tableView_data!.count) + CGFloat(40)
+                    }
+                }
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                    //setupgraph
+                    self.setupGraph()
                 }
             }
-            
-            self.tableViewHeightConstraint.constant = CGFloat(30 * self.tableView_data!.count) + CGFloat(40)
-            
         }
     }
-    
     private func setupJSON(date: String, _ handler: @escaping(Int)->Void) {
         
         var query = ""
         if isDualValue {
-            query = "SELECT PERMISSION.IS_DSR_SHOW, PERMISSION.IS_QSR_SHOW, PERMISSION.IS_SHIP_SHOW, PERMISSION.IS_WEIGHT_SHOW, group_concat(TYPE, '*') AS ALL_TYPE , GROUP_CONCAT(SHIP, '*') AS ALL_SHIP , GROUP_CONCAT(DSR, '*') AS ALL_DSR , GROUP_CONCAT(QSR, '*') AS ALL_QSR, GROUP_CONCAT(WEIGHT, '*') AS ALL_WEIGHT, AVG(DSR) AS DSR, PRODUCT, AVG(QSR) AS QSR , RPT_DATE, SUM(SHIP) AS SHIP, TYPE , SUM(WEIGHT) AS WEIGHT FROM (SELECT * FROM MIS_BUDGET_DATA WHERE PRODUCT = '\(mis_budget_setup?.product ?? "")' AND (RPT_DATE BETWEEN '\(date)-1' AND '\(date)-31') ORDER BY RPT_DATE,TYPE DESC), (SELECT AVG(DSR) > 0.0 AS IS_DSR_SHOW, AVG(QSR) > 0.0 AS IS_QSR_SHOW, SUM(SHIP) > 0 AS IS_SHIP_SHOW, SUM(WEIGHT) > 0.0 AS IS_WEIGHT_SHOW FROM MIS_BUDGET_DATA WHERE PRODUCT = '\(mis_budget_setup?.product ?? "")' AND (RPT_DATE BETWEEN '\(date)-01' AND '\(date)-31') GROUP BY PRODUCT) AS PERMISSION GROUP BY RPT_DATE"
+            query = "SELECT PERMISSION.IS_DSR_SHOW, PERMISSION.IS_QSR_SHOW, PERMISSION.IS_SHIP_SHOW, PERMISSION.IS_WEIGHT_SHOW, group_concat(TYPE, '*') AS ALL_TYPE , GROUP_CONCAT(SHIP, '*') AS ALL_SHIP , GROUP_CONCAT(DSR, '*') AS ALL_DSR , GROUP_CONCAT(QSR, '*') AS ALL_QSR, GROUP_CONCAT(WEIGHT, '*') AS ALL_WEIGHT, AVG(DSR) AS DSR, PRODUCT, AVG(QSR) AS QSR , RPT_DATE, SUM(SHIP) AS SHIP, TYPE , SUM(WEIGHT) AS WEIGHT FROM (SELECT * FROM MIS_BUDGET_DATA WHERE PRODUCT = '\(mis_budget_setup?.product ?? "")' AND (RPT_DATE BETWEEN '\(date)-01' AND '\(date)-31') ORDER BY RPT_DATE,TYPE DESC), (SELECT AVG(DSR) > 0.0 AS IS_DSR_SHOW, AVG(QSR) > 0.0 AS IS_QSR_SHOW, SUM(SHIP) > 0 AS IS_SHIP_SHOW, SUM(WEIGHT) > 0.0 AS IS_WEIGHT_SHOW FROM MIS_BUDGET_DATA WHERE PRODUCT = '\(mis_budget_setup?.product ?? "")' AND (RPT_DATE BETWEEN '\(date)-01' AND '\(date)-31') GROUP BY PRODUCT) AS PERMISSION GROUP BY RPT_DATE"
         } else {
             query = "SELECT PERMISSION.IS_DSR_SHOW, PERMISSION.IS_QSR_SHOW, PERMISSION.IS_SHIP_SHOW, PERMISSION.IS_WEIGHT_SHOW, '' AS ALL_TYPE , '' AS ALL_SHIP , '' AS ALL_DSR , '' AS ALL_QSR, '' AS ALL_WEIGHT, AVG(DSR) AS DSR, PRODUCT, AVG(QSR) AS QSR , RPT_DATE, SUM(SHIP) AS SHIP, TYPE , SUM(WEIGHT) AS WEIGHT FROM (SELECT * FROM MIS_BUDGET_DATA WHERE PRODUCT = '\(mis_budget_setup?.product ?? "")' AND (RPT_DATE BETWEEN '\(date)-01' AND '\(date)-31') ORDER BY RPT_DATE,TYPE DESC), (SELECT AVG(DSR) > 0.0 AS IS_DSR_SHOW, AVG(QSR) > 0.0 AS IS_QSR_SHOW, SUM(SHIP) > 0 AS IS_SHIP_SHOW, SUM(WEIGHT) > 0.0 AS IS_WEIGHT_SHOW FROM MIS_BUDGET_DATA WHERE PRODUCT = '\(mis_budget_setup?.product ?? "")' AND (RPT_DATE BETWEEN '\(date)-01' AND '\(date)-31') GROUP BY PRODUCT) AS PERMISSION GROUP BY RPT_DATE"
         }
@@ -243,122 +271,389 @@ class MISDetailViewController: BaseViewController {
                                                               WEIGHT: String(format: "%.2f", totalWeight))
                 self.budget_data!.append(lastObject)
             }
+            handler(budget_data.count)
+        }
+    }
+    private func setupTableView(_ handler: @escaping(Bool)->Void) {
+        let query = "SELECT * FROM \(db_mis_budget_setup) WHERE PRODUCT = '\(mis_budget_setup?.product ?? "")' AND MNTH = '\(self.monthName)' AND YEARR = '\(self.year)'"
+        if let budget_setup = AppDelegate.sharedInstance.db?.read_tbl_mis_budget_setup(query: query) {
+//            print(budget_setup)
+            self.tableView_data = [ProductType]()
+            let allType = lastObject.ALL_TYPE.split(separator: "*")
+            let shipment = lastObject.ALL_SHIP.split(separator: "*")
+            let qsr = lastObject.ALL_QSR.split(separator: "*")
+            let dsr = lastObject.ALL_DSR.split(separator: "*")
+            let weight = lastObject.ALL_WEIGHT.split(separator: "*")
             
-            let query = "SELECT * FROM \(db_mis_budget_setup) WHERE PRODUCT = '\(mis_budget_setup?.product ?? "")' AND MNTH = '\(self.monthName)' AND YEARR = '\(self.year)'"
-            if let budget_setup = AppDelegate.sharedInstance.db?.read_tbl_mis_budget_setup(query: query) {
-                print(budget_setup)
-                self.tableView_data = [ProductType]()
-                let allType = lastObject.ALL_TYPE.split(separator: "*")
-                let shipment = lastObject.ALL_SHIP.split(separator: "*")
-                let qsr = lastObject.ALL_QSR.split(separator: "*")
-                let dsr = lastObject.ALL_DSR.split(separator: "*")
-                let weight = lastObject.ALL_WEIGHT.split(separator: "*")
+            monthlyTarget = 0.0
+            
+            for (i,setup) in budget_setup.enumerated() {
                 
-                for (i,setup) in budget_setup.enumerated() {
-                    if lastObject.IS_SHIP_SHOW == "1" {
-                        if isDualValue {
-                            let title = String("\(allType[i]) Target PM")
-                            let budget = "\(setup.budgeted)"
-                            let actual = String(shipment[i])
-                            let variance = Int((budget as NSString).intValue) - Int((actual as NSString).intValue)
-                            
-                            self.tableView_data!.append(ProductType(title: title, budgeted: budget, actual: actual, variance: "\(variance)"))
-                            
-                            let pdtitle = String("\(allType[i]) Target PD")
-                            let pdbudget = "\(setup.pdBudget)"
-                            let pdactual = Int((shipment[i] as NSString).intValue) / self.budget_data!.count - 2
-                            let pdvariance = Int((pdbudget as NSString).intValue) - pdactual
-                            
-                            self.tableView_data!.append(ProductType(title: pdtitle, budgeted: pdbudget, actual: "\(pdactual)", variance: "\(pdvariance)"))
-                        } else {
-                            let title = "Shipment PM"
-                            let budget = "\(setup.budgeted)"
-                            let actual = lastObject.SHIP
-                            let variance = Int((budget as NSString).intValue) - Int((actual as NSString).intValue)
-                            
-                            self.tableView_data!.append(ProductType(title: title, budgeted: budget, actual: actual, variance: "\(variance)"))
-                            
-                            let pdtitle = "Shipment PD"
-                            let pdbudget = "\(setup.pdBudget)"
-                            let pdactual = Int((lastObject.SHIP as NSString).intValue) / self.budget_data!.count - 2
-                            let pdvariance = Int((pdbudget as NSString).intValue) - pdactual
-                            
-                            self.tableView_data!.append(ProductType(title: pdtitle, budgeted: pdbudget, actual: "\(pdactual)", variance: "\(pdvariance)"))
-                        }
+                if lastObject.IS_SHIP_SHOW == "1" {
+                    monthlyTarget += Double(setup.budgeted)
+                    if isDualValue {
+                        let title = String("\(allType[i]) Target PM")
+                        let budget = "\(setup.budgeted)"
+                        let actual = String(shipment[i])
+                        let variance = Int((budget as NSString).intValue) - Int((actual as NSString).intValue)
+                        
+                        self.tableView_data!.append(ProductType(title: title, budgeted: budget, actual: actual, variance: "\(variance)"))
+                        
+                        let pdtitle = String("\(allType[i]) Target PD")
+                        let pdbudget = "\(setup.pdBudget)"
+                        let pdactual = Int((shipment[i] as NSString).intValue) / self.budget_data!.count - 2
+                        let pdvariance = Int((pdbudget as NSString).intValue) - pdactual
+                        
+                        self.tableView_data!.append(ProductType(title: pdtitle, budgeted: pdbudget, actual: "\(pdactual)", variance: "\(pdvariance)"))
+                    } else {
+                        let title = "Shipment PM"
+                        let budget = "\(setup.budgeted)"
+                        let actual = lastObject.SHIP
+                        let variance = Int((budget as NSString).intValue) - Int((actual as NSString).intValue)
+                        
+                        self.tableView_data!.append(ProductType(title: title, budgeted: budget, actual: actual, variance: "\(variance)"))
+                        
+                        let pdtitle = "Shipment PD"
+                        let pdbudget = "\(setup.pdBudget)"
+                        let pdactual = Int((lastObject.SHIP as NSString).intValue) / self.budget_data!.count - 2
+                        let pdvariance = Int((pdbudget as NSString).intValue) - pdactual
+                        
+                        self.tableView_data!.append(ProductType(title: pdtitle, budgeted: pdbudget, actual: "\(pdactual)", variance: "\(pdvariance)"))
                     }
-                    if lastObject.IS_DSR_SHOW == "1" {
-                        if isDualValue {
-                            let title = String("\(allType[i]) Target DSR")
-                            let budget = "\(setup.dsr)"
-                            let actual = String(dsr[i])
-                            let variance = Int((budget as NSString).intValue) - Int((actual as NSString).intValue)
-                            
-                            self.tableView_data!.append(ProductType(title: title, budgeted: budget, actual: actual, variance: "\(variance)"))
-                            
-                        } else {
-                            let title = "Target DSR"
-                            let budget = "\(setup.dsr)"
-                            let actual = lastObject.DSR
-                            let variance = Int((budget as NSString).intValue) - Int((actual as NSString).intValue)
-                            
-                            self.tableView_data!.append(ProductType(title: title, budgeted: budget, actual: actual, variance: "\(variance)"))
-                        }
+                }
+                if lastObject.IS_DSR_SHOW == "1" {
+                    if isDualValue {
+                        let title = String("\(allType[i]) Target DSR")
+                        let budget = "\(setup.dsr)"
+                        let actual = String(dsr[i])
+                        let variance = Int((budget as NSString).intValue) - Int((actual as NSString).intValue)
+                        
+                        self.tableView_data!.append(ProductType(title: title, budgeted: budget, actual: actual, variance: "\(variance)"))
+                        
+                    } else {
+                        let title = "Target DSR"
+                        let budget = "\(setup.dsr)"
+                        let actual = lastObject.DSR
+                        let variance = Int((budget as NSString).intValue) - Int((actual as NSString).intValue)
+                        
+                        self.tableView_data!.append(ProductType(title: title, budgeted: budget, actual: actual, variance: "\(variance)"))
                     }
-                    if lastObject.IS_QSR_SHOW == "1" {
-                        if isDualValue {
-                            let title = String("\(allType[i]) Target QSR")
-                            let budget = "\(setup.qsr)"
-                            let actual = String(qsr[i])
-                            let variance = Int((budget as NSString).intValue) - Int((actual as NSString).intValue)
-                            
-                            self.tableView_data!.append(ProductType(title: title, budgeted: budget, actual: actual, variance: "\(variance)"))
-                            
-                        } else {
-                            let title = "Target QSR"
-                            let budget = "\(setup.qsr)"
-                            let actual = lastObject.QSR
-                            let variance = Int((budget as NSString).intValue) - Int((actual as NSString).intValue)
-                            
-                            self.tableView_data!.append(ProductType(title: title, budgeted: budget, actual: actual, variance: "\(variance)"))
-                        }
+                }
+                if lastObject.IS_QSR_SHOW == "1" {
+                    if isDualValue {
+                        let title = String("\(allType[i]) Target QSR")
+                        let budget = "\(setup.qsr)"
+                        let actual = String(qsr[i])
+                        let variance = Int((budget as NSString).intValue) - Int((actual as NSString).intValue)
+                        
+                        self.tableView_data!.append(ProductType(title: title, budgeted: budget, actual: actual, variance: "\(variance)"))
+                        
+                    } else {
+                        let title = "Target QSR"
+                        let budget = "\(setup.qsr)"
+                        let actual = lastObject.QSR
+                        let variance = Int((budget as NSString).intValue) - Int((actual as NSString).intValue)
+                        
+                        self.tableView_data!.append(ProductType(title: title, budgeted: budget, actual: actual, variance: "\(variance)"))
                     }
-                    if lastObject.IS_WEIGHT_SHOW == "1" {
-                        if isDualValue {
-                            let title = String("\(allType[i]) Weight PM")
-                            let budget = "\(setup.weight)"
-                            let actual = String(weight[i])
-                            let variance = Int((budget as NSString).intValue) - Int((actual as NSString).intValue)
-                            
-                            self.tableView_data!.append(ProductType(title: title, budgeted: budget, actual: actual, variance: "\(variance)"))
-                            
-                            let pdtitle = String("\(allType[i]) Weight PD")
-                            let pdbudget = "\(setup.pdWeight)"
-                            let pdactual = Int((weight[i] as NSString).intValue) / self.budget_data!.count - 2
-                            let pdvariance = Int((pdbudget as NSString).intValue) - pdactual
-                            
-                            self.tableView_data!.append(ProductType(title: pdtitle, budgeted: pdbudget, actual: "\(pdactual)", variance: "\(pdvariance)"))
-                        } else {
-                            let title = "Weight PM"
-                            let budget = "\(setup.weight)"
-                            let actual = lastObject.WEIGHT
-                            let variance = Int((budget as NSString).intValue) - Int((actual as NSString).intValue)
-                            
-                            self.tableView_data!.append(ProductType(title: title, budgeted: budget, actual: actual, variance: "\(variance)"))
-                            
-                            let pdtitle = "Weight PD"
-                            let pdbudget = "\(setup.pdWeight)"
-                            let pdactual = Int((lastObject.WEIGHT as NSString).intValue) / self.budget_data!.count - 2
-                            let pdvariance = Int((pdbudget as NSString).intValue) - pdactual
-                            
-                            self.tableView_data!.append(ProductType(title: pdtitle, budgeted: pdbudget, actual: "\(pdactual)", variance: "\(pdvariance)"))
-                        }
+                }
+                if lastObject.IS_WEIGHT_SHOW == "1" {
+                    monthlyTarget += Double(setup.weight)
+                    if isDualValue {
+                        let title = String("\(allType[i]) Weight PM")
+                        let budget = "\(setup.weight)"
+                        let actual = String(weight[i])
+                        let variance = Int((budget as NSString).intValue) - Int((actual as NSString).intValue)
+                        
+                        self.tableView_data!.append(ProductType(title: title, budgeted: budget, actual: actual, variance: "\(variance)"))
+                        
+                        let pdtitle = String("\(allType[i]) Weight PD")
+                        let pdbudget = "\(setup.pdWeight)"
+                        let pdactual = Int((weight[i] as NSString).intValue) / self.budget_data!.count - 2
+                        let pdvariance = Int((pdbudget as NSString).intValue) - pdactual
+                        
+                        self.tableView_data!.append(ProductType(title: pdtitle, budgeted: pdbudget, actual: "\(pdactual)", variance: "\(pdvariance)"))
+                    } else {
+                        let title = "Weight PM"
+                        let budget = "\(setup.weight)"
+                        let actual = lastObject.WEIGHT
+                        let variance = Int((budget as NSString).intValue) - Int((actual as NSString).intValue)
+                        
+                        self.tableView_data!.append(ProductType(title: title, budgeted: budget, actual: actual, variance: "\(variance)"))
+                        
+                        let pdtitle = "Weight PD"
+                        let pdbudget = "\(setup.pdWeight)"
+                        let pdactual = Int((lastObject.WEIGHT as NSString).intValue) / self.budget_data!.count - 2
+                        let pdvariance = Int((pdbudget as NSString).intValue) - pdactual
+                        
+                        self.tableView_data!.append(ProductType(title: pdtitle, budgeted: pdbudget, actual: "\(pdactual)", variance: "\(pdvariance)"))
                     }
                 }
             }
-            
-            
-            handler(budget_data.count)
+            handler(true)
         }
+    }
+    
+    private func setupGraph() {
+        if var budget_data = self.budget_data {
+            budget_data.removeFirst()
+            budget_data.removeLast()
+            
+            var newDailyList = [tbl_mis_budget_data_details]()
+            var finalDailyList = [tbl_mis_budget_data_details]()
+
+            if (budget_data.count > 7) {
+                if (budget_data.count % 7 == 0) {
+                    let count = budget_data.count / 7
+                    var tempCount = 1
+                    for (_, data) in budget_data.enumerated() {
+                        if (tempCount == count) {
+                            let misDaily = tbl_mis_budget_data_details(IS_DSR_SHOW: data.IS_DSR_SHOW, IS_QSR_SHOW: data.IS_QSR_SHOW, IS_SHIP_SHOW: data.IS_SHIP_SHOW, IS_WEIGHT_SHOW: data.IS_WEIGHT_SHOW, ALL_TYPE: data.ALL_TYPE, ALL_SHIP: data.ALL_SHIP, ALL_DSR: data.ALL_DSR, ALL_QSR: data.ALL_QSR, ALL_WEIGHT: data.ALL_WEIGHT, DSR: data.DSR, PRODUCT: data.PRODUCT, QSR: data.QSR, RPT_DATE: data.RPT_DATE, SHIP: data.SHIP, TYPE: data.TYPE, WEIGHT: data.WEIGHT)
+                            newDailyList.append(misDaily)
+
+                            var misDailyFinal: tbl_mis_budget_data_details?
+
+                            for (i, misDailyData) in newDailyList.enumerated() {
+                                if (i == 0) {
+                                    misDailyFinal = tbl_mis_budget_data_details(IS_DSR_SHOW: misDailyData.IS_DSR_SHOW,
+                                                                                IS_QSR_SHOW: misDailyData.IS_QSR_SHOW,
+                                                                                IS_SHIP_SHOW: misDailyData.IS_SHIP_SHOW,
+                                                                                IS_WEIGHT_SHOW: misDailyData.IS_WEIGHT_SHOW,
+                                                                                ALL_TYPE: misDailyData.ALL_TYPE,
+                                                                                ALL_SHIP: misDailyData.ALL_SHIP,
+                                                                                ALL_DSR: misDailyData.ALL_DSR,
+                                                                                ALL_QSR: misDailyData.ALL_QSR,
+                                                                                ALL_WEIGHT: misDailyData.ALL_WEIGHT,
+                                                                                DSR: misDailyData.DSR,
+                                                                                PRODUCT: misDailyData.PRODUCT,
+                                                                                QSR: misDailyData.QSR,
+                                                                                RPT_DATE: misDailyData.RPT_DATE,
+                                                                                SHIP: misDailyData.SHIP,
+                                                                                TYPE: misDailyData.TYPE,
+                                                                                WEIGHT: misDailyData.WEIGHT)
+                                } else {
+                                    var booked: Double = 0.0
+                                    var weight: Double = 0.0
+                                    if data.IS_SHIP_SHOW == "1" {
+                                        booked = (((misDailyFinal?.SHIP ?? "0.0") as NSString).doubleValue) + (misDailyData.SHIP as NSString).doubleValue
+                                    } else {
+                                        weight = (((misDailyFinal?.WEIGHT ?? "0.0") as NSString).doubleValue) + (misDailyData.WEIGHT as NSString).doubleValue
+                                    }
+
+                                    misDailyFinal = tbl_mis_budget_data_details(IS_DSR_SHOW: misDailyData.IS_DSR_SHOW,
+                                                                                    IS_QSR_SHOW: misDailyData.IS_QSR_SHOW,
+                                                                                    IS_SHIP_SHOW: misDailyData.IS_SHIP_SHOW,
+                                                                                    IS_WEIGHT_SHOW: misDailyData.IS_WEIGHT_SHOW,
+                                                                                    ALL_TYPE: misDailyData.ALL_TYPE,
+                                                                                    ALL_SHIP: misDailyData.ALL_SHIP,
+                                                                                    ALL_DSR: misDailyData.ALL_DSR,
+                                                                                    ALL_QSR: misDailyData.ALL_QSR,
+                                                                                    ALL_WEIGHT: misDailyData.ALL_WEIGHT,
+                                                                                    DSR: misDailyData.DSR,
+                                                                                    PRODUCT: misDailyData.PRODUCT,
+                                                                                    QSR: misDailyData.QSR,
+                                                                                    RPT_DATE: misDailyData.RPT_DATE,
+                                                                                    SHIP: "\(booked)",
+                                                                                    TYPE: misDailyData.TYPE,
+                                                                                    WEIGHT: "\(weight)")
+                                    
+                                    
+                                }
+                            }
+
+                            tempCount = 1
+                            finalDailyList.append(misDailyFinal!)
+                            newDailyList.removeAll()
+                        } else {
+                            let misDaily = tbl_mis_budget_data_details(IS_DSR_SHOW: data.IS_DSR_SHOW, IS_QSR_SHOW: data.IS_QSR_SHOW, IS_SHIP_SHOW: data.IS_SHIP_SHOW, IS_WEIGHT_SHOW: data.IS_WEIGHT_SHOW, ALL_TYPE: data.ALL_TYPE, ALL_SHIP: data.ALL_SHIP, ALL_DSR: data.ALL_DSR, ALL_QSR: data.ALL_QSR, ALL_WEIGHT: data.ALL_WEIGHT, DSR: data.DSR, PRODUCT: data.PRODUCT, QSR: data.QSR, RPT_DATE: data.RPT_DATE, SHIP: data.SHIP, TYPE: data.TYPE, WEIGHT: data.WEIGHT)
+                            newDailyList.append(misDaily)
+
+                            tempCount += 1
+                        }
+                    }
+                } else {
+                    let countDouble = Double(budget_data.count) / 7.0
+                    let countTwoDecimal = String(format: "%.2f", countDouble).split(separator: ".")
+                    
+                    var extraCount = 0
+                    var count = Int((countTwoDecimal[0] as NSString).intValue)
+                    var tempCount = 1
+                    switch countTwoDecimal[1] {
+                        case "14" : extraCount = 6
+                            break
+                        case "28" : extraCount = 5
+                            break
+                        case "42" : extraCount = 4
+                            break
+                        case "57" : extraCount = 3
+                            break
+                        case "71" : extraCount = 2
+                            break
+                        case "85" : extraCount = 1
+                            break
+                    default: break
+                    }
+                    for (_, data) in budget_data.enumerated() {
+                        if finalDailyList.count == extraCount {
+                            count += 1
+                            extraCount = 100
+                        }
+                        if (tempCount == count) {
+                            let misDaily = tbl_mis_budget_data_details(IS_DSR_SHOW: data.IS_DSR_SHOW, IS_QSR_SHOW: data.IS_QSR_SHOW, IS_SHIP_SHOW: data.IS_SHIP_SHOW, IS_WEIGHT_SHOW: data.IS_WEIGHT_SHOW, ALL_TYPE: data.ALL_TYPE, ALL_SHIP: data.ALL_SHIP, ALL_DSR: data.ALL_DSR, ALL_QSR: data.ALL_QSR, ALL_WEIGHT: data.ALL_WEIGHT, DSR: data.DSR, PRODUCT: data.PRODUCT, QSR: data.QSR, RPT_DATE: data.RPT_DATE, SHIP: data.SHIP, TYPE: data.TYPE, WEIGHT: data.WEIGHT)
+                            newDailyList.append(misDaily)
+
+                            var misDailyFinal: tbl_mis_budget_data_details?
+
+                            for (i, misDailyData) in newDailyList.enumerated() {
+                                if (i == 0) {
+                                    misDailyFinal = tbl_mis_budget_data_details(IS_DSR_SHOW: misDailyData.IS_DSR_SHOW,
+                                                                                IS_QSR_SHOW: misDailyData.IS_QSR_SHOW,
+                                                                                IS_SHIP_SHOW: misDailyData.IS_SHIP_SHOW,
+                                                                                IS_WEIGHT_SHOW: misDailyData.IS_WEIGHT_SHOW,
+                                                                                ALL_TYPE: misDailyData.ALL_TYPE,
+                                                                                ALL_SHIP: misDailyData.ALL_SHIP,
+                                                                                ALL_DSR: misDailyData.ALL_DSR,
+                                                                                ALL_QSR: misDailyData.ALL_QSR,
+                                                                                ALL_WEIGHT: misDailyData.ALL_WEIGHT,
+                                                                                DSR: misDailyData.DSR,
+                                                                                PRODUCT: misDailyData.PRODUCT,
+                                                                                QSR: misDailyData.QSR,
+                                                                                RPT_DATE: misDailyData.RPT_DATE,
+                                                                                SHIP: misDailyData.SHIP,
+                                                                                TYPE: misDailyData.TYPE,
+                                                                                WEIGHT: misDailyData.WEIGHT)
+                                } else {
+                                    var booked: Double = 0.0
+                                    var weight: Double = 0.0
+                                    if data.IS_SHIP_SHOW == "1" {
+                                        booked = (((misDailyFinal?.SHIP ?? "0.0") as NSString).doubleValue) + (misDailyData.SHIP as NSString).doubleValue
+                                    } else {
+                                        weight = (((misDailyFinal?.WEIGHT ?? "0.0") as NSString).doubleValue) + (misDailyData.WEIGHT as NSString).doubleValue
+                                    }
+
+                                    misDailyFinal = tbl_mis_budget_data_details(IS_DSR_SHOW: misDailyData.IS_DSR_SHOW,
+                                                                                    IS_QSR_SHOW: misDailyData.IS_QSR_SHOW,
+                                                                                    IS_SHIP_SHOW: misDailyData.IS_SHIP_SHOW,
+                                                                                    IS_WEIGHT_SHOW: misDailyData.IS_WEIGHT_SHOW,
+                                                                                    ALL_TYPE: misDailyData.ALL_TYPE,
+                                                                                    ALL_SHIP: misDailyData.ALL_SHIP,
+                                                                                    ALL_DSR: misDailyData.ALL_DSR,
+                                                                                    ALL_QSR: misDailyData.ALL_QSR,
+                                                                                    ALL_WEIGHT: misDailyData.ALL_WEIGHT,
+                                                                                    DSR: misDailyData.DSR,
+                                                                                    PRODUCT: misDailyData.PRODUCT,
+                                                                                    QSR: misDailyData.QSR,
+                                                                                    RPT_DATE: misDailyData.RPT_DATE,
+                                                                                    SHIP: "\(booked)",
+                                                                                    TYPE: misDailyData.TYPE,
+                                                                                    WEIGHT: "\(weight)")
+                                    
+                                    
+                                }
+                            }
+
+                            tempCount = 1
+                            finalDailyList.append(misDailyFinal!)
+                            newDailyList.removeAll()
+                        } else {
+                            let misDaily = tbl_mis_budget_data_details(IS_DSR_SHOW: data.IS_DSR_SHOW, IS_QSR_SHOW: data.IS_QSR_SHOW, IS_SHIP_SHOW: data.IS_SHIP_SHOW, IS_WEIGHT_SHOW: data.IS_WEIGHT_SHOW, ALL_TYPE: data.ALL_TYPE, ALL_SHIP: data.ALL_SHIP, ALL_DSR: data.ALL_DSR, ALL_QSR: data.ALL_QSR, ALL_WEIGHT: data.ALL_WEIGHT, DSR: data.DSR, PRODUCT: data.PRODUCT, QSR: data.QSR, RPT_DATE: data.RPT_DATE, SHIP: data.SHIP, TYPE: data.TYPE, WEIGHT: data.WEIGHT)
+                            newDailyList.append(misDaily)
+
+                            tempCount += 1
+                        }
+                    }
+                }
+            } else {
+                finalDailyList = budget_data
+            }
+            
+            
+            let isWeightShow: String = self.lastObject.IS_WEIGHT_SHOW
+            for data in finalDailyList {
+                let dateFormatter = DateFormatter()
+                dateFormatter.dateFormat = "yyyy-MM-dd"
+                let tDate = dateFormatter.date(from: data.RPT_DATE.dateOnly)!.dayAndMonth()
+                dataEntryX.append(tDate)
+                
+                if isWeightShow == "1" {
+                    let value = (data.WEIGHT as NSString).doubleValue
+                    dataEntryY.append(value)
+                } else {
+                    let value = (data.SHIP as NSString).doubleValue
+                    dataEntryY.append(value)
+                }
+            }
+            self.setChart(dataEntryX: dataEntryX, dataEntryY: dataEntryY)
+        }
+    }
+    private func setChart(dataEntryX forX:[String],dataEntryY forY: [Double]) {
+        lineChart.chartDescription?.enabled = false
+        lineChart.dragEnabled = true
+        lineChart.setScaleEnabled(true)
+        lineChart.pinchZoomEnabled = false
+        
+        lineChart.xAxis.gridLineDashLengths = [0, 0]
+        lineChart.xAxis.gridLineDashPhase = 0
+        
+        let yAxisValue = lineChart.leftAxis
+        yAxisValue.removeAllLimitLines()
+        
+        if monthlyTarget > yAxisValue.axisMaximum {
+            yAxisValue.axisMaximum = monthlyTarget + monthlyTarget/8
+        } else {
+            yAxisValue.axisMaximum = yAxisValue.axisMaximum + yAxisValue.axisMaximum/6
+        }
+        
+        yAxisValue.axisMinimum = 0
+        
+        
+        let ll1 = ChartLimitLine(limit: monthlyTarget, label: "")
+        ll1.lineColor = UIColor.approvedColor()
+        ll1.lineWidth = 2
+        ll1.lineDashLengths = [0,0]
+        yAxisValue.removeAllLimitLines()
+        yAxisValue.addLimitLine(ll1)
+
+        lineChart.rightAxis.enabled = false
+        
+
+        lineChart.animate(xAxisDuration: 1.0)
+        lineChart.noDataText = "You need to provide data for the chart."
+        var dataEntries:[ChartDataEntry] = []
+        for i in 0..<forX.count{
+            let dataEntry = ChartDataEntry(x: Double(i), y: Double(forY[i]) , data: forX as AnyObject?)
+            print(dataEntry)
+            dataEntries.append(dataEntry)
+        }
+        let set1 = LineChartDataSet(entries: dataEntries)
+        set1.drawIconsEnabled = false
+        set1.lineDashLengths = [0, 0]
+        set1.highlightLineDashLengths = [0, 0]
+        set1.setColor(UIColor.nativeRedColor())
+        set1.setCircleColor(UIColor.nativeRedColor())
+        set1.lineWidth = 1
+        set1.circleRadius = 6
+        set1.drawCircleHoleEnabled = false
+        set1.valueFont = .systemFont(ofSize: 9)
+        set1.formLineDashLengths = [0,0]
+        set1.formLineWidth = 1
+        set1.formSize = 25
+        set1.mode = .cubicBezier
+        set1.fillAlpha = 0
+        set1.drawValuesEnabled = false
+        
+        set1.drawFilledEnabled = true
+
+        let chartData = LineChartData(dataSet: set1)// BarChartData(dataSet: chartDataSet)
+        lineChart.data = chartData
+        let xAxisValue = lineChart.xAxis
+        xAxisValue.valueFormatter = axisFormatDelegate
+        xAxisValue.granularity = 1.0
+        xAxisValue.granularityEnabled = true
+        xAxisValue.setLabelCount(forX.count, force: true)
+        xAxisValue.labelPosition = .bottom
+        
+        yAxisValue.valueFormatter = YAxisFormatter()
     }
     
     @IBAction func selectionBtnTapped(_ sender: UIButton) {
@@ -445,6 +740,13 @@ extension MISDetailViewController: UITableViewDataSource, UITableViewDelegate {
         cell.weightLabel.text = data.budgeted
         cell.qsrLabel.text = data.actual
         cell.dsrLabel.text = data.variance
+        
+        
+        cell.shipmentBooked.bgColor = UIColor.white
+        cell.weightView.bgColor = UIColor.white
+        cell.dsrView.bgColor = UIColor.white
+        cell.qsrView.bgColor = UIColor.white
+        
         return cell
     }
     
@@ -476,10 +778,37 @@ extension MISDetailViewController: MISDelegate {
     func updateListing(region_date: tbl_mis_region_data) {}
     
     func updateMonth(mnth: MISPopupMonth) {
+        df.locale = Locale(identifier: "en_US_POSIX")
+        df.dateFormat = "LLLL"  // if you need 3 letter month just use "LLL"
+        if mnth.mnth == "Feburary" {
+            monthInNumber = "02"
+        }
+        if let date = df.date(from: mnth.mnth) {
+            let month = Calendar.current.component(.month, from: date)
+            self.monthInNumber = "\(month)"
+            if monthInNumber.count == 1 {
+                monthInNumber = "0\(monthInNumber)"
+            }
+            self.monthName = mnth.mnth
+        }
         self.monthLabel.text = mnth.mnth
+        self.reloadData(date: "\(year)-\(monthInNumber)")
     }
     
     func updateYearr(year: MISPopupYear) {
         self.yearLabel.text = year.yearr
+        self.year = year.yearr
+        
+        self.reloadData(date: "\(year)-\(monthInNumber)")
+    }
+}
+
+
+extension MISDetailViewController: IAxisValueFormatter {
+    func stringForValue(_ value: Double, axis: AxisBase?) -> String {
+        if self.dataEntryX.count == 1 {
+            return dataEntryX[0]
+        }
+        return dataEntryX[Int(value)]
     }
 }

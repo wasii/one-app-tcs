@@ -1259,8 +1259,8 @@ class NetworkCalls: NSObject {
                 if let success = json.dictionary?[returnStatus] {
                     //SUCCESS
                     if success.dictionary?[_code] == "0200" {
-                        if let o = json.dictionary?[_budgetData] {
-                            handler(true, o)
+                        if let _ = json.dictionary?[_budgetData] {
+                            handler(true, json)
                             return
                         }
                         handler(true, data)

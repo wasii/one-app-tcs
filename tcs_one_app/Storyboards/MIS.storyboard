@@ -432,6 +432,7 @@
                         <outlet property="collectionView" destination="gNa-hz-0Ms" id="bNx-Hp-bx7"/>
                         <outlet property="collectionViewHeightConstraint" destination="Yhk-tT-6rN" id="GWQ-vq-oMx"/>
                         <outlet property="headingLabel" destination="CeY-Ui-zTo" id="bQo-vx-LdX"/>
+                        <outlet property="lineChart" destination="eCR-1N-CpW" id="wTE-Bj-cZ9"/>
                         <outlet property="mainView" destination="o8x-hv-6Wd" id="LiT-iM-GWG"/>
                         <outlet property="monthLabel" destination="B8h-DI-EKl" id="ljq-7e-R1i"/>
                         <outlet property="tableView" destination="E2u-xc-Yr7" id="jS6-SW-Xui"/>
