@@ -3283,6 +3283,22 @@ class DBHelper {
         return budget_detail.count > 0 ? budget_detail : nil
     }
     
+    func read_tbl_mis_permission(query: String) -> [NewPermissoin]? {
+        let queryStatementString = query
+        var queryStatement: OpaquePointer? = nil
+        var new_permission = [NewPermissoin]()
+
+        if sqlite3_prepare_v2(db, queryStatementString, -1, &queryStatement, nil) == SQLITE_OK {
+            while sqlite3_step(queryStatement) == SQLITE_ROW {
+                let permission = String(describing: String(cString: sqlite3_column_text(queryStatement, 0)))
+                new_permission.append(NewPermissoin(PERMISSION: permission))
+            }
+        } else {
+            print("SELECT statement \(db_w_detail_point) could not be prepared")
+        }
+        return new_permission.count > 0 ? new_permission : nil
+    }
+    
     //MARK: WALLET INSERT
     func read_tbl_wallet_query_master(query: String) -> [tbl_wallet_query_master]? {
         let queryStatementString = query
@@ -4401,4 +4417,8 @@ struct Average {
     var TOTAL_WEIGHT: String = ""
     var AvgQSR: String = ""
     var AvgDSR: String = ""
+}
+
+struct NewPermissoin {
+    var PERMISSION: String = ""
 }

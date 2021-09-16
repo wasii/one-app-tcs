@@ -216,36 +216,85 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
             chartViews = [ChartViews]()
             //MARK: - MIS Listing
             if isMISListingAllowed {
-                var mis_listing_data = [tbl_mis_product_data]()
-                if let mis_id = AppDelegate.sharedInstance.db?.read_tbl_UserPage().filter({ user_page in
-                    user_page.PAGENAME == "MIS Listing"
-                }).first?.SERVER_ID_PK {
-                    print("MIS ID: \(mis_id)")
-                    if let user_permissions = AppDelegate.sharedInstance.db?.read_tbl_UserPermission() {
+                var product_type = ""
+                
+                let query = "SELECT up.* FROM (SELECT (CASE WHEN count(*) > 1 THEN GROUP_CONCAT(PROD_TYPE , ' + ') ELSE '' END) AS PROD_WITH_PRODTYPE,* FROM (SELECT * FROM MIS_BUDGET_SETUP GROUP BY PRODUCT,PROD_TYPE ORDER BY PROD_TYPE DESC) GROUP BY PRODUCT) AS up INNER JOIN (SELECT u.PERMISSION FROM USER_PAGE AS up INNER JOIN USER_PERMISSION AS u ON  up.PAGENAME = 'MIS Listing' AND up.SERVER_ID_PK = u.PAGEID) AS permission ON permission.PERMISSION = (CASE WHEN up.PROD_WITH_PRODTYPE == '' THEN up.PRODUCT || ' - ' || up.PROD_TYPE ELSE up.PRODUCT || ' - ' || up.PROD_WITH_PRODTYPE END)"
+
+                if let mis_budget_setup = AppDelegate.sharedInstance.db?.read_tbl_mis_budget_setup_listing(query: query) {
+                    for setup in mis_budget_setup {
+                        if isDualValue {
+                            product_type = mis_budget_setup.prod_with_prodtype
+                        } else {
+                            product_type = mis_budget_setup.prodType
+                        }
                         
-                        let _ = AppDelegate.sharedInstance.db?.read_tbl_mis_product_data(query: "SELECT * FROM \(db_mis_product_data)")?.forEach({ pd in
-                            user_permissions.forEach { permission in
-                                if permission.PERMISSION == pd.product {
-                                    mis_listing_data.append(tbl_mis_product_data(id: pd.id, product: pd.product))
+                        let temp_string = "\(self.mis_budget_setup?.product ?? "") - \(product_type)"
+                        let product_permission_query = "SELECT u.PERMISSION FROM USER_PAGE AS up INNER JOIN USER_PERMISSION AS u ON  up.PAGENAME = '\(temp_string)' AND up.SERVER_ID_PK = u.PAGEID"
+                        
+                        if let permissions = AppDelegate.sharedInstance.db?.read_tbl_mis_permission(query: product_permission_query) {
+                            for permission in permissions {
+                                switch permission.PERMISSION {
+                                case "SHIP":
+                                    self.isShipmentShow = true
+                                    break
+                                case "WEIGHT":
+                                    self.isWeightShow = true
+                                    break
+                                case "DSR":
+                                    self.isQSRShow = true
+                                    break
+                                case "QSR":
+                                    self.isDSRShow = true
+                                    break
+                                default:
+                                    break
                                 }
                             }
-                        })
+                        }
+                        let chart:ChartViews = Bundle.main.loadNibNamed("ChartViews", owner: self, options: nil)?.first as! ChartViews
+                        chart.pieChart.isHidden = true
+                        chart.mainStackView.isHidden = false
+                        chart.heading.text = setup.product
+                        chart.lineChartView.isHidden = false
+                        chart.misYearlyAverage.isHidden = false
+                        if let data = self.setupLineChart(lineChart: chart.lineChartView, chartView: chart) {
+                            chart.lineChartView = data
+                            self.ModuleCount += 1
+                            chartViews.append(chart)
+                        }
                     }
                 }
-                for listing_data in mis_listing_data {
-                    self.mis_product_data = listing_data
-                    let chart:ChartViews = Bundle.main.loadNibNamed("ChartViews", owner: self, options: nil)?.first as! ChartViews
-                    chart.pieChart.isHidden = true
-                    chart.mainStackView.isHidden = false
-                    chart.heading.text = listing_data.product + " Trend"
-                    chart.lineChartView.isHidden = false
-                    chart.misYearlyAverage.isHidden = false
-                    if let data = self.setupLineChart(lineChart: chart.lineChartView, chartView: chart) {
-                        chart.lineChartView = data
-                        self.ModuleCount += 1
-                        chartViews.append(chart)
-                    }
-                }
+//                var mis_listing_data = [tbl_mis_product_data]()
+//                if let mis_id = AppDelegate.sharedInstance.db?.read_tbl_UserPage().filter({ user_page in
+//                    user_page.PAGENAME == "MIS Listing"
+//                }).first?.SERVER_ID_PK {
+//                    print("MIS ID: \(mis_id)")
+//                    if let user_permissions = AppDelegate.sharedInstance.db?.read_tbl_UserPermission() {
+//
+//                        let _ = AppDelegate.sharedInstance.db?.read_tbl_mis_product_data(query: "SELECT * FROM \(db_mis_product_data)")?.forEach({ pd in
+//                            user_permissions.forEach { permission in
+//                                if permission.PERMISSION == pd.product {
+//                                    mis_listing_data.append(tbl_mis_product_data(id: pd.id, product: pd.product))
+//                                }
+//                            }
+//                        })
+//                    }
+//                }
+//                for listing_data in mis_listing_data {
+//                    self.mis_product_data = listing_data
+//                    let chart:ChartViews = Bundle.main.loadNibNamed("ChartViews", owner: self, options: nil)?.first as! ChartViews
+//                    chart.pieChart.isHidden = true
+//                    chart.mainStackView.isHidden = false
+//                    chart.heading.text = listing_data.product + " Trend"
+//                    chart.lineChartView.isHidden = false
+//                    chart.misYearlyAverage.isHidden = false
+//                    if let data = self.setupLineChart(lineChart: chart.lineChartView, chartView: chart) {
+//                        chart.lineChartView = data
+//                        self.ModuleCount += 1
+//                        chartViews.append(chart)
+//                    }
+//                }
+                
             }
             for mod in self.module! {
                 if mod.TAGNAME == MODULE_TAG_TRACK || mod.TAGNAME == MODULE_TAG_LEADERSHIPAWAZ || mod.TAGNAME == MODULE_TAG_ATTENDANCE || mod.TAGNAME == MODULE_TAG_FULFILMENT || mod.TAGNAME == MODULE_TAG_CLS || mod.TAGNAME == MODULE_TAG_RIDER || mod.TAGNAME == MODULE_TAG_MIS {

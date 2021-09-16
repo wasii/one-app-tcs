@@ -10,6 +10,10 @@ import UIKit
 import Charts
 
 class MISDetailViewController: BaseViewController {
+    var isShipmentShow: Bool = false
+    var isWeightShow: Bool = false
+    var isQSRShow: Bool = false
+    var isDSRShow: Bool = false
     
     @IBOutlet weak var mainView: UIView!
     @IBOutlet weak var headingLabel: UILabel!
@@ -92,15 +96,12 @@ class MISDetailViewController: BaseViewController {
             self.unFreezeScreen()
             self.view.hideToastActivity()
             self.setupJSON(date: date) { count in
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                    self.collectionView.reloadData()
-                    self.collectionViewHeightConstraint.constant = CGFloat(30 * count) + 70
-                    
-                }
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                    self.setupTableView { _ in
-                        self.tableView.reloadData()
-                        self.tableViewHeightConstraint.constant = CGFloat(30 * self.tableView_data!.count) + CGFloat(40)
+                self.setupTableView { _ in
+                    self.tableView.reloadData()
+                    self.tableViewHeightConstraint.constant = CGFloat(30 * self.tableView_data!.count) + CGFloat(40)
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                        self.collectionViewHeightConstraint.constant = CGFloat(30 * count) + 70
+                        self.collectionView.reloadData()
                     }
                 }
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
@@ -111,12 +112,41 @@ class MISDetailViewController: BaseViewController {
         }
     }
     private func setupJSON(date: String, _ handler: @escaping(Int)->Void) {
+        var product_type = ""
+        if isDualValue {
+            product_type = mis_budget_setup?.prod_with_prodtype ?? ""
+        } else {
+            product_type = mis_budget_setup?.prodType ?? ""
+        }
         
+        let temp_string = "\(self.mis_budget_setup?.product ?? "") - \(product_type)"
+        let product_permission_query = "SELECT u.PERMISSION FROM USER_PAGE AS up INNER JOIN USER_PERMISSION AS u ON  up.PAGENAME = '\(temp_string)' AND up.SERVER_ID_PK = u.PAGEID"
+        
+        if let permissions = AppDelegate.sharedInstance.db?.read_tbl_mis_permission(query: product_permission_query) {
+            for permission in permissions {
+                switch permission.PERMISSION {
+                case "SHIP":
+                    self.isShipmentShow = true
+                    break
+                case "WEIGHT":
+                    self.isWeightShow = true
+                    break
+                case "DSR":
+                    self.isQSRShow = true
+                    break
+                case "QSR":
+                    self.isDSRShow = true
+                    break
+                default:
+                    break
+                }
+            }
+        }
         var query = ""
         if isDualValue {
-            query = "SELECT PERMISSION.IS_DSR_SHOW, PERMISSION.IS_QSR_SHOW, PERMISSION.IS_SHIP_SHOW, PERMISSION.IS_WEIGHT_SHOW, group_concat(TYPE, '*') AS ALL_TYPE , GROUP_CONCAT(SHIP, '*') AS ALL_SHIP , GROUP_CONCAT(DSR, '*') AS ALL_DSR , GROUP_CONCAT(QSR, '*') AS ALL_QSR, GROUP_CONCAT(WEIGHT, '*') AS ALL_WEIGHT, AVG(DSR) AS DSR, PRODUCT, AVG(QSR) AS QSR , RPT_DATE, SUM(SHIP) AS SHIP, TYPE , SUM(WEIGHT) AS WEIGHT FROM (SELECT * FROM MIS_BUDGET_DATA WHERE PRODUCT = '\(mis_budget_setup?.product ?? "")' AND (RPT_DATE BETWEEN '\(date)-01' AND '\(date)-31') ORDER BY RPT_DATE,TYPE DESC), (SELECT AVG(DSR) > 0.0 AS IS_DSR_SHOW, AVG(QSR) > 0.0 AS IS_QSR_SHOW, SUM(SHIP) > 0 AS IS_SHIP_SHOW, SUM(WEIGHT) > 0.0 AS IS_WEIGHT_SHOW FROM MIS_BUDGET_DATA WHERE PRODUCT = '\(mis_budget_setup?.product ?? "")' AND (RPT_DATE BETWEEN '\(date)-01' AND '\(date)-31') GROUP BY PRODUCT) AS PERMISSION GROUP BY RPT_DATE"
+            query = "SELECT \(isDSRShow) AS IS_DSR_SHOW, \(isQSRShow) AS IS_QSR_SHOW, \(isShipmentShow) AS IS_SHIP_SHOW, \(isWeightShow) AS IS_WEIGHT_SHOW, group_concat(TYPE, '*') AS ALL_TYPE , GROUP_CONCAT(SHIP, '*') AS ALL_SHIP , GROUP_CONCAT(DSR, '*') AS ALL_DSR ,GROUP_CONCAT(QSR, '*') AS ALL_QSR, GROUP_CONCAT(WEIGHT, '*') AS ALL_WEIGHT, AVG(DSR) AS DSR, PRODUCT, AVG(QSR) AS QSR , RPT_DATE, SUM(SHIP) AS SHIP, TYPE , SUM(WEIGHT) AS WEIGHT FROM  \(db_mis_budget_data) WHERE PRODUCT = '\(self.mis_budget_setup?.product ?? "")' AND (RPT_DATE BETWEEN '\(date)-01' AND '\(date)-31') GROUP BY RPT_DATE  ORDER BY RPT_DATE,TYPE DESC"
         } else {
-            query = "SELECT PERMISSION.IS_DSR_SHOW, PERMISSION.IS_QSR_SHOW, PERMISSION.IS_SHIP_SHOW, PERMISSION.IS_WEIGHT_SHOW, '' AS ALL_TYPE , '' AS ALL_SHIP , '' AS ALL_DSR , '' AS ALL_QSR, '' AS ALL_WEIGHT, AVG(DSR) AS DSR, PRODUCT, AVG(QSR) AS QSR , RPT_DATE, SUM(SHIP) AS SHIP, TYPE , SUM(WEIGHT) AS WEIGHT FROM (SELECT * FROM MIS_BUDGET_DATA WHERE PRODUCT = '\(mis_budget_setup?.product ?? "")' AND (RPT_DATE BETWEEN '\(date)-01' AND '\(date)-31') ORDER BY RPT_DATE,TYPE DESC), (SELECT AVG(DSR) > 0.0 AS IS_DSR_SHOW, AVG(QSR) > 0.0 AS IS_QSR_SHOW, SUM(SHIP) > 0 AS IS_SHIP_SHOW, SUM(WEIGHT) > 0.0 AS IS_WEIGHT_SHOW FROM MIS_BUDGET_DATA WHERE PRODUCT = '\(mis_budget_setup?.product ?? "")' AND (RPT_DATE BETWEEN '\(date)-01' AND '\(date)-31') GROUP BY PRODUCT) AS PERMISSION GROUP BY RPT_DATE"
+            query = "SELECT \(isDSRShow) AS IS_DSR_SHOW, \(isQSRShow) AS IS_QSR_SHOW, \(isShipmentShow) AS IS_SHIP_SHOW, \(isWeightShow) AS IS_WEIGHT_SHOW, '' AS ALL_TYPE , '' AS ALL_SHIP , '' AS ALL_DSR , '' AS ALL_QSR, '' AS ALL_WEIGHT, AVG(DSR) AS DSR, PRODUCT, AVG(QSR) AS QSR , RPT_DATE, SUM(SHIP) AS SHIP, TYPE , SUM(WEIGHT) AS WEIGHT FROM \(db_mis_budget_data) WHERE PRODUCT = '\(self.mis_budget_setup?.product ?? "")' AND (RPT_DATE BETWEEN '\(date)-01' AND '\(date)-31') GROUP BY RPT_DATE  ORDER BY RPT_DATE,TYPE DESC"
         }
         
         if let budget_data = AppDelegate.sharedInstance.db?.read_tbl_mis_budget_data_detail(query: query) {
@@ -616,7 +646,7 @@ class MISDetailViewController: BaseViewController {
 
         lineChart.rightAxis.enabled = false
         
-
+        lineChart.legend.enabled = false
         lineChart.animate(xAxisDuration: 1.0)
         lineChart.noDataText = "You need to provide data for the chart."
         var dataEntries:[ChartDataEntry] = []
@@ -663,7 +693,16 @@ class MISDetailViewController: BaseViewController {
             controller.mis_popop_year = AppDelegate.sharedInstance.db?.read_tbl_mis_budget_setup_year()
             controller.heading = "Select Year"
         } else {
-            controller.mis_popup_mnth = AppDelegate.sharedInstance.db?.read_tbl_mis_budget_setup_month()
+            let formatter : DateFormatter = {
+                let df = DateFormatter()
+                df.locale = Locale(identifier: "en_US_POSIX")
+                df.dateFormat = "MMMM"
+                return df
+            }()
+            
+            controller.mis_popup_mnth = AppDelegate.sharedInstance.db?.read_tbl_mis_budget_setup_month()?.sorted(by: { m1, m2 in
+                formatter.date(from: m1.mnth)! < formatter.date(from: m2.mnth)!
+            })
             controller.heading = "Select Month"
         }
         
@@ -780,9 +819,9 @@ extension MISDetailViewController: MISDelegate {
     func updateMonth(mnth: MISPopupMonth) {
         df.locale = Locale(identifier: "en_US_POSIX")
         df.dateFormat = "LLLL"  // if you need 3 letter month just use "LLL"
-        if mnth.mnth == "Feburary" {
-            monthInNumber = "02"
-        }
+//        if mnth.mnth == "Feburary" {
+//            monthInNumber = "02"
+//        }
         if let date = df.date(from: mnth.mnth) {
             let month = Calendar.current.component(.month, from: date)
             self.monthInNumber = "\(month)"
@@ -792,7 +831,7 @@ extension MISDetailViewController: MISDelegate {
             self.monthName = mnth.mnth
         }
         self.monthLabel.text = mnth.mnth
-        self.reloadData(date: "\(year)-\(monthInNumber)")
+        self.reloadData(date: "\(self.year)-\(self.monthInNumber)")
     }
     
     func updateYearr(year: MISPopupYear) {
