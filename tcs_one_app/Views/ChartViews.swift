@@ -16,17 +16,11 @@ class ChartViews: UIView {
     @IBOutlet weak var lineChartView: LineChartView!
     
     
-    @IBOutlet weak var weightStackView: UIStackView!
-    @IBOutlet weak var QsrDsrStackView: UIStackView!
+    
     @IBOutlet weak var mainStackView: UIStackView!
     
     @IBOutlet weak var misYearlyAverage: UILabel!
-    @IBOutlet weak var totalShipmentLabel: UILabel!
-    @IBOutlet weak var averagePerDayLabel: UILabel!
-    @IBOutlet weak var totalWeightLabel: UILabel!
-    @IBOutlet weak var weightAverageLabel: UILabel!
-    @IBOutlet weak var averageQSRLabel: UILabel!
-    @IBOutlet weak var averageDSRLabel: UILabel!
+    @IBOutlet weak var lineChartBtn: UIButton!
     /*
     // Only override draw() if you perform custom drawing.
     // An empty implementation adversely affects performance during animation.

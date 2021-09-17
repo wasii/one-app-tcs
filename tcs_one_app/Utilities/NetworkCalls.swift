@@ -1181,13 +1181,16 @@ class NetworkCalls: NSObject {
     }
     
     //MARK: - Management Information System (MIS)
-    class func getmistoken(_ handler: @escaping(Bool)->Void) {
+    class func getmistoken(params: [String:Any], _ handler: @escaping(Bool)->Void) {
         let Url = String(format: MIS_GET_TOKEN)
         guard let serviceUrl = URL(string: Url) else { return }
         var request = URLRequest(url: serviceUrl)
-        request.httpMethod = "GET"
+        request.httpMethod = "POST"
         request.setValue("Application/json", forHTTPHeaderField: "Content-Type")
-        
+        guard let httpBody = try? JSONSerialization.data(withJSONObject: params, options: []) else {
+            return
+        }
+        request.httpBody = httpBody
         let session = URLSession.shared
         session.dataTask(with: request) { (data, response, error) in
             if let data = data {
@@ -1204,12 +1207,17 @@ class NetworkCalls: NSObject {
             }
         }.resume()
     }
-    class func setupmis(_ handler: @escaping(_ granted: Bool,_ response: Any) -> Void) {
+    class func setupmis(params: [String:Any], _ handler: @escaping(_ granted: Bool,_ response: Any) -> Void) {
         let Url = String(format: MIS_BUDGET_SETUP)
         guard let serviceUrl = URL(string: Url) else { return }
         var request = URLRequest(url: serviceUrl)
+        request.setValue("Application/json", forHTTPHeaderField: "Content-Type")
         request.setValue("Bearer \(MIS_BEARER_TOKEN)", forHTTPHeaderField: "Authorization")
-        request.httpMethod = "GET"
+        request.httpMethod = "POST"
+        guard let httpBody = try? JSONSerialization.data(withJSONObject: params, options: []) else {
+            return
+        }
+        request.httpBody = httpBody
         let session = URLSession.shared
         session.dataTask(with: request) { (data, response, error) in
             if let data = data {
@@ -1217,6 +1225,10 @@ class NetworkCalls: NSObject {
                 if let success = json.dictionary?[returnStatus] {
                     //SUCCESS
                     if success.dictionary?[_code] == "0200" {
+                        if let result = json.dictionary?[_result]?.dictionary {
+                            handler(true, result)
+                            return
+                        }
                         handler(true, data)
                         return
                     }
@@ -1259,11 +1271,12 @@ class NetworkCalls: NSObject {
                 if let success = json.dictionary?[returnStatus] {
                     //SUCCESS
                     if success.dictionary?[_code] == "0200" {
-                        if let _ = json.dictionary?[_budgetData] {
-                            handler(true, json)
+                        if let result = json.dictionary?[_result]?.dictionary {
+                            handler(true, result)
                             return
                         }
                         handler(true, data)
+                        return
                     }
                     //FAILED
                     if success.dictionary?[_code] == "0400" {

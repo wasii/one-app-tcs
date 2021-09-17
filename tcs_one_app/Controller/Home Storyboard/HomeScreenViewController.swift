@@ -49,6 +49,8 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
     var dataEntryX: [String] = [String]()
     var dataEntryY: [Double] = [Double]()
     weak var axisFormatDelegate: IAxisValueFormatter?
+    var product_type: String = ""
+    var mis_budget_setup: [tbl_mis_budget_setup]?
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = "Dashboard"
@@ -221,30 +223,25 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
                 let query = "SELECT up.* FROM (SELECT (CASE WHEN count(*) > 1 THEN GROUP_CONCAT(PROD_TYPE , ' + ') ELSE '' END) AS PROD_WITH_PRODTYPE,* FROM (SELECT * FROM MIS_BUDGET_SETUP GROUP BY PRODUCT,PROD_TYPE ORDER BY PROD_TYPE DESC) GROUP BY PRODUCT) AS up INNER JOIN (SELECT u.PERMISSION FROM USER_PAGE AS up INNER JOIN USER_PERMISSION AS u ON  up.PAGENAME = 'MIS Listing' AND up.SERVER_ID_PK = u.PAGEID) AS permission ON permission.PERMISSION = (CASE WHEN up.PROD_WITH_PRODTYPE == '' THEN up.PRODUCT || ' - ' || up.PROD_TYPE ELSE up.PRODUCT || ' - ' || up.PROD_WITH_PRODTYPE END)"
 
                 if let mis_budget_setup = AppDelegate.sharedInstance.db?.read_tbl_mis_budget_setup_listing(query: query) {
+                    self.mis_budget_setup = mis_budget_setup
                     for setup in mis_budget_setup {
-                        if isDualValue {
-                            product_type = mis_budget_setup.prod_with_prodtype
+                        var isDualValue: Bool = false
+                        var isShipmentShow: Bool = false
+                        if setup.prod_with_prodtype != "" {
+                            product_type = setup.prod_with_prodtype
+                            isDualValue = true
                         } else {
-                            product_type = mis_budget_setup.prodType
+                            product_type = setup.prodType
                         }
                         
-                        let temp_string = "\(self.mis_budget_setup?.product ?? "") - \(product_type)"
+                        let temp_string = "\(setup.product) - \(product_type)"
                         let product_permission_query = "SELECT u.PERMISSION FROM USER_PAGE AS up INNER JOIN USER_PERMISSION AS u ON  up.PAGENAME = '\(temp_string)' AND up.SERVER_ID_PK = u.PAGEID"
                         
                         if let permissions = AppDelegate.sharedInstance.db?.read_tbl_mis_permission(query: product_permission_query) {
                             for permission in permissions {
                                 switch permission.PERMISSION {
                                 case "SHIP":
-                                    self.isShipmentShow = true
-                                    break
-                                case "WEIGHT":
-                                    self.isWeightShow = true
-                                    break
-                                case "DSR":
-                                    self.isQSRShow = true
-                                    break
-                                case "QSR":
-                                    self.isDSRShow = true
+                                    isShipmentShow = true
                                     break
                                 default:
                                     break
@@ -253,48 +250,19 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
                         }
                         let chart:ChartViews = Bundle.main.loadNibNamed("ChartViews", owner: self, options: nil)?.first as! ChartViews
                         chart.pieChart.isHidden = true
-                        chart.mainStackView.isHidden = false
                         chart.heading.text = setup.product
                         chart.lineChartView.isHidden = false
                         chart.misYearlyAverage.isHidden = false
-                        if let data = self.setupLineChart(lineChart: chart.lineChartView, chartView: chart) {
+                        if let data = self.setupLineChart(lineChart: chart.lineChartView, chartView: chart, product: setup, isShipment: isShipmentShow) {
+                            chart.lineChartBtn.accessibilityLabel = "\(setup.product)"
+                            chart.lineChartBtn.addTarget(self, action: #selector(openLineChart(sender:)), for: .touchUpInside)
                             chart.lineChartView = data
                             self.ModuleCount += 1
                             chartViews.append(chart)
+                            print(data)
                         }
                     }
                 }
-//                var mis_listing_data = [tbl_mis_product_data]()
-//                if let mis_id = AppDelegate.sharedInstance.db?.read_tbl_UserPage().filter({ user_page in
-//                    user_page.PAGENAME == "MIS Listing"
-//                }).first?.SERVER_ID_PK {
-//                    print("MIS ID: \(mis_id)")
-//                    if let user_permissions = AppDelegate.sharedInstance.db?.read_tbl_UserPermission() {
-//
-//                        let _ = AppDelegate.sharedInstance.db?.read_tbl_mis_product_data(query: "SELECT * FROM \(db_mis_product_data)")?.forEach({ pd in
-//                            user_permissions.forEach { permission in
-//                                if permission.PERMISSION == pd.product {
-//                                    mis_listing_data.append(tbl_mis_product_data(id: pd.id, product: pd.product))
-//                                }
-//                            }
-//                        })
-//                    }
-//                }
-//                for listing_data in mis_listing_data {
-//                    self.mis_product_data = listing_data
-//                    let chart:ChartViews = Bundle.main.loadNibNamed("ChartViews", owner: self, options: nil)?.first as! ChartViews
-//                    chart.pieChart.isHidden = true
-//                    chart.mainStackView.isHidden = false
-//                    chart.heading.text = listing_data.product + " Trend"
-//                    chart.lineChartView.isHidden = false
-//                    chart.misYearlyAverage.isHidden = false
-//                    if let data = self.setupLineChart(lineChart: chart.lineChartView, chartView: chart) {
-//                        chart.lineChartView = data
-//                        self.ModuleCount += 1
-//                        chartViews.append(chart)
-//                    }
-//                }
-                
             }
             for mod in self.module! {
                 if mod.TAGNAME == MODULE_TAG_TRACK || mod.TAGNAME == MODULE_TAG_LEADERSHIPAWAZ || mod.TAGNAME == MODULE_TAG_ATTENDANCE || mod.TAGNAME == MODULE_TAG_FULFILMENT || mod.TAGNAME == MODULE_TAG_CLS || mod.TAGNAME == MODULE_TAG_RIDER || mod.TAGNAME == MODULE_TAG_MIS {
@@ -304,7 +272,7 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
                 let chart:ChartViews = Bundle.main.loadNibNamed("ChartViews", owner: self, options: nil)?.first as! ChartViews
                 switch mod.TAGNAME {
                 case MODULE_TAG_HR:
-                    chart.mainStackView.isHidden = true
+//                    chart.mainStackView.isHidden = true
                     chart.heading.text = "HR Dashboard"
                     chart.pieChart = self.setupGraphs(pieChartView: chart.pieChart,
                                                       module_id: mod.SERVER_ID_PK,
@@ -316,7 +284,7 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
                     self.ModuleCount += 1
                     break
                 case MODULE_TAG_GRIEVANCE:
-                    chart.mainStackView.isHidden = true
+//                    chart.mainStackView.isHidden = true
                     chart.heading.text = "Awaz Dashboard"
                     chart.pieChart = self.setupGraphs(pieChartView: chart.pieChart,
                                                       module_id: mod.SERVER_ID_PK,
@@ -328,7 +296,7 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
                     self.ModuleCount += 1
                     break
                 case MODULE_TAG_IMS:
-                    chart.mainStackView.isHidden = true
+//                    chart.mainStackView.isHidden = true
                     chart.heading.text = "IMS Dashboard"
                     chart.pieChart = self.setupGraphs(pieChartView: chart.pieChart,
                                                       module_id: mod.SERVER_ID_PK,
@@ -359,7 +327,7 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
             if let appCount = AppDelegate.sharedInstance.db?.read_tbl_login_count(query: "SELECT * FROM \(db_login_count)") {
                 if appCount.count > 0 {
                     let chart:ChartViews = Bundle.main.loadNibNamed("ChartViews", owner: self, options: nil)?.first as! ChartViews
-                    chart.mainStackView.isHidden = true
+//                    chart.mainStackView.isHidden = true
                     chart.heading.text = "OneApp Installs"
                     chart.pieChart = self.setupGraphs(pieChartView: chart.pieChart,
                                                       module_id: -1,
@@ -376,7 +344,7 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
         if let fulfilment_perssion = AppDelegate.sharedInstance.db?.read_tbl_UserPermission(permission: PERMISSION_FulfilmentModule).count {
             if fulfilment_perssion > 0 {
                 let chart:ChartViews = Bundle.main.loadNibNamed("ChartViews", owner: self, options: nil)?.first as! ChartViews
-                chart.mainStackView.isHidden = true
+//                chart.mainStackView.isHidden = true
                 chart.heading.text = "Fulfilment Dashboard"
                 chart.pieChart = self.setupGraphs(pieChartView: chart.pieChart,
                                                   module_id: -2,
@@ -410,198 +378,229 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
     }
     
     //MARK: - Setup LineChart
-    private func setupLineChart(lineChart: LineChartView, chartView: ChartViews) -> LineChartView? {
+    private func setupLineChart(lineChart: LineChartView, chartView: ChartViews, product: tbl_mis_budget_setup, isShipment:Bool) -> LineChartView? {
         axisFormatDelegate = self
         dataEntryX = [String]()
         dataEntryY = [Double]()
-        var query = "SELECT * FROM \(db_mis_daily_overview) WHERE PRODUCT = '\(self.mis_product_data!.product)'"
-        
-        let previousDate = getPreviousDays(days: -7)
-        let weekly = previousDate.convertDateToString(date: previousDate)
-        
-        query += " AND RPT_DATE >= '\(weekly.dateOnly)' AND RPT_DATE <= '\(self.getLocalCurrentDate().dateOnly)'"
-        lineChart.delegate = self
-        
-        let dateQuery = "SELECT strftime('%Y-%m-%d',RPT_DATE) as date FROM \(db_mis_daily_overview) WHERE  PRODUCT = '\(self.mis_product_data!.product)' AND RPT_DATE >= '\(weekly.dateOnly)' AND RPT_DATE <= '\(getLocalCurrentDate().dateOnly)'  group by strftime('%Y-%m-%d',RPT_DATE)"
-        let countQuery = "SELECT SUM(BOOKED), count(BOOKED) as totalCount, strftime('%Y-%m-%d',RPT_DATE) as date FROM \(db_mis_daily_overview) WHERE  RPT_DATE >= '\(weekly.dateOnly)' AND RPT_DATE <= '\(getLocalCurrentDate().dateOnly)' AND PRODUCT = '\(self.mis_product_data!.product)'  group by date"
-        
-        let dateCount  = AppDelegate.sharedInstance.db?.getDates(query: dateQuery).sorted(by: { (date1, date2) -> Bool in
-            date1 > date2
-        })
-        
-        let totalCount = AppDelegate.sharedInstance.db?.getBarGraphCounts(query: countQuery).sorted(by: { (g1, g2) -> Bool in
-            g1.ticket_date! > g2.ticket_date!
-        })
-        
-        if dateCount!.count <= 0 {
-            return nil
-        }
-        dateCount!.forEach { date in
-            let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "yyyy-MM-dd"
-            let tDate = dateFormatter.date(from: date)!.dayAndMonth()
-            dataEntryX.append(tDate)
-        }
-        totalCount!.forEach { graph in
-            let value = Double(graph.ticket_status!)
-            dataEntryY.append(value ?? 0.0)
-        }
-        
-        lineChart.chartDescription?.enabled = false
-        lineChart.dragEnabled = true
-        lineChart.setScaleEnabled(true)
-        lineChart.pinchZoomEnabled = false
-        
-        lineChart.xAxis.gridLineDashLengths = [0, 0]
-        lineChart.xAxis.gridLineDashPhase = 0
-        
-        let getAverageQuery = "SELECT SUM(BOOKED) AS SHIPMENT FROM \(db_mis_daily_overview) WHERE PRODUCT = '\(self.mis_product_data!.product)' GROUP BY RPT_DATE"
-        if let getAverage = AppDelegate.sharedInstance.db?.read_row(query: getAverageQuery) {
-            var average: Int = 0
-            for json in getAverage {
-                average += (json as NSString).integerValue
-            }
-            average = average / getAverage.count
-            let ll1 = ChartLimitLine(limit: Double(average), label: "")
-            ll1.lineColor = UIColor.approvedColor()
-            ll1.lineWidth = 2
-            ll1.lineDashLengths = [0,0]
-            let yAxisValue = lineChart.leftAxis
-            yAxisValue.addLimitLine(ll1)
-        }
-//        if let getAverage = AppDelegate.sharedInstance.db?.read_column(query: getAverageQuery) {
-//            let average = (getAverage as? NSString)?.doubleValue
-//            let ll1 = ChartLimitLine(limit: average ?? 0.0, label: "")
-//            ll1.lineColor = UIColor.approvedColor()
-//            ll1.lineWidth = 4
-//            ll1.lineDashLengths = [0,0]
-//        }
-
-        lineChart.rightAxis.enabled = false
-        
-
-        lineChart.animate(xAxisDuration: 0.5)
-        lineChart.noDataText = "You need to provide data for the chart."
-        var dataEntries:[ChartDataEntry] = []
-        for i in 0..<dataEntryX.count{
-            let dataEntry = ChartDataEntry(x: Double(i), y: Double(dataEntryY[i]) , data: dataEntryX as AnyObject?)
-            print(dataEntry)
-            dataEntries.append(dataEntry)
-        }
-        let set1 = LineChartDataSet(entries: dataEntries)
-        set1.drawIconsEnabled = false
-        set1.lineDashLengths = [0, 0]
-        set1.highlightLineDashLengths = [0, 0]
-        set1.setColor(UIColor.nativeRedColor())
-        set1.setCircleColor(UIColor.nativeRedColor())
-        set1.lineWidth = 1
-        set1.circleRadius = 6
-        set1.drawCircleHoleEnabled = false
-        set1.valueFont = .systemFont(ofSize: 9)
-        set1.formLineDashLengths = [0,0]
-        set1.formLineWidth = 1
-        set1.mode = .cubicBezier
-        set1.fillAlpha = 0
-        set1.drawValuesEnabled = false
-        
-        set1.drawFilledEnabled = true
-
-        let chartData = LineChartData(dataSet: set1)// BarChartData(dataSet: chartDataSet)
-        lineChart.data = chartData
-        let xAxisValue = lineChart.xAxis
-        xAxisValue.accessibilityLabel = self.mis_product_data!.product
-        xAxisValue.valueFormatter = axisFormatDelegate
-        xAxisValue.granularity = 1.0
-        xAxisValue.granularityEnabled = true
-        xAxisValue.setLabelCount(dateCount!.count, force: true)
-        xAxisValue.labelPosition = .bottom
-        
-        let yAxisValue = lineChart.leftAxis
-        yAxisValue.valueFormatter = YAxisFormatter()
-        
-        let start_date = Date().startOfMonthss()
-        let end_date = Date().endOfMonthss()
         
         let df = DateFormatter()
-        df.dateFormat = "yyyy-MM-dd HH:mm:ss"
-        let edate = df.string(from: end_date).dateOnly.split(separator: " ")
-        let sdate = df.string(from: start_date).dateOnly.split(separator: "-")
+        df.dateFormat = "MM"
+        var monthName = df.string(from: Date())
+        df.dateFormat = "yyyy"
+        let year = df.string(from: Date())
         
-        let finalEdate = "\(String(edate[0]))"
-        let finalSdate = "\(String(sdate[0]))-\(String(sdate[1]))-01"
+        let query = "SELECT ID, RPT_DATE, PRODUCT,  SUM(SHIP) AS SHIP, AVG(DSR) AS DSR, TYPE,  AVG(QSR) AS QSR ,  SUM(WEIGHT) AS WEIGHT  FROM \(db_mis_budget_data) WHERE PRODUCT = '\(product.product)' AND (RPT_DATE BETWEEN '\(year)-\(monthName)-01' AND '\(year)-\(monthName)-31') GROUP BY RPT_DATE ORDER BY RPT_DATE,TYPE DESC"
         
+        df.dateFormat = "MMMM"
+        monthName = df.string(from: Date())
+        let targeted_query = "SELECT SUM(BUDGETED) AS TARGETED_SHIP, SUM(WEIGHT) AS TARGETED_WEIGHT, PRODUCT FROM \(db_mis_budget_setup) WHERE PRODUCT = '\(product.product)' AND MNTH = '\(monthName)' AND YEARR = '\(year)'"
         
-        let lowerdata = "SELECT SUM(BOOKED) as TOTAL_SHIPMENT,round(Avg(BOOKED)) as AvgPerDay,SUM(WEIGHT) as TOTAL_WEIGHT,round(Avg(QSR)) as AvgQSR,round(Avg(DSR)) as AvgDSR FROM \(db_mis_daily_overview) WHERE PRODUCT = '\(self.mis_product_data!.product)' AND RPT_DATE >= '\(finalSdate)' AND RPT_DATE <= '\(finalEdate)' GROUP BY RPT_DATE"
-        
-        if let averageDate = AppDelegate.sharedInstance.db?.getAverageMIS(query: lowerdata) {
-            df.dateFormat = "MMM"
-            let monthName = df.string(from: Date())
-            
-            let count = Double(averageDate.count)
-            var totalShipment: Double = 0
-            var averagePerDay: Double = 0
-            var totalWeight: Double = 0
-            var averageQSR: Double = 0
-            var averageDSR: Double = 0
-            
-            for json in averageDate {
-                totalShipment += Double(json.TOTAL_SHIPMENT)!
-                totalWeight += Double(json.TOTAL_WEIGHT)!
-                averageQSR += Double(json.AvgQSR)!
-                averageDSR += Double(json.AvgDSR)!
-            }
-            averagePerDay = totalShipment / count
-            averageDSR = averageDSR / count
-            averageQSR = averageQSR / count
-            
-            let totalShipmentFormattedNumber = numberFormatter.string(from: NSNumber(value:totalShipment))
-            let averagePerDayFormattedNumber = numberFormatter.string(from: NSNumber(value:averagePerDay))
-            let totalWeightFormattedNumber = numberFormatter.string(from: NSNumber(value:totalWeight))
-            
-            chartView.totalShipmentLabel.text = "\(monthName) Shipment: \(totalShipmentFormattedNumber ?? "0.0")"
-            chartView.averagePerDayLabel.text = "\(monthName) Avg. Per Day: \(averagePerDayFormattedNumber ?? "0.0")"//  + String(format: "%.1f", averagePerDay)
-            
-            var isWieghtAllowed = 0
-            var isQSRAllowed = 0
-            var isDSRAllowed = 0
-            if let ServerIdPk = AppDelegate.sharedInstance.db?.read_tbl_UserPage().filter({ page in
-                page.PAGENAME == self.mis_product_data!.product
-            }).first?.SERVER_ID_PK {
-                AppDelegate.sharedInstance.db?.read_tbl_UserPermission().filter({ permissions in
-                    permissions.PAGEID == ServerIdPk
-                }).forEach({ listing in
-                    if listing.PERMISSION == "WEIGHT" {
-                        isWieghtAllowed = 1
-                    }
-                    if listing.PERMISSION == "QSR" {
-                        isQSRAllowed = 1
-                    }
-                    if listing.PERMISSION == "DSR" {
-                        isDSRAllowed = 1
-                    }
-                })
-            }
-            
-            if isWieghtAllowed == 0 {
-                chartView.weightStackView.isHidden = true
-            } else {
-                chartView.totalWeightLabel.text = "\(monthName) Weight: \(totalWeightFormattedNumber ?? "0.0")"// + String(format: "%.2f", totalWeight)
-//                chartView.weightAverageLabel.text = "\(monthName)"
-                chartView.weightStackView.isHidden = false
+        if let daily_data = AppDelegate.sharedInstance.db?.read_tbl_mis_budget_data(query: query) {
+            if let targeted_home = AppDelegate.sharedInstance.db?.read_tbl_target_home(query: targeted_query) {
+                var targeted_value: Double = 0.0
+                if isShipment {
+                    targeted_value = (targeted_home.first!.TARGETED_SHIP as NSString).doubleValue
+                } else {
+                    targeted_value = (targeted_home.first!.TARGETED_WEIGHT as NSString).doubleValue
+                }
                 
+                var newDailyList = [tbl_mis_budget_data]()
+                var finalDailyList = [tbl_mis_budget_data]()
+
+                if (daily_data.count > 7) {
+                    if (daily_data.count % 7 == 0) {
+                        let count = daily_data.count / 7
+                        var tempCount = 1
+                        for (_, data) in daily_data.enumerated() {
+                            if (tempCount == count) {
+                                let misDaily = tbl_mis_budget_data(id: 0, rptDate: data.rptDate, product: data.product, ship: data.ship, dsr: data.dsr, type: data.type, qsr: data.qsr, weight: data.weight)
+                                newDailyList.append(misDaily)
+
+                                var misDailyFinal: tbl_mis_budget_data?
+
+                                for (i, misDailyData) in newDailyList.enumerated() {
+                                    if (i == 0) {
+                                        misDailyFinal = tbl_mis_budget_data(id: 0, rptDate: misDailyData.rptDate, product: misDailyData.product, ship: misDailyData.ship, dsr: misDailyData.dsr, type: misDailyData.type, qsr: misDailyData.qsr, weight: misDailyData.weight)
+                                    } else {
+                                        var booked: Double = 0.0
+                                        var weight: Double = 0.0
+                                        if isShipment {
+                                            booked = (((misDailyFinal?.ship ?? "0.0") as NSString).doubleValue) + (misDailyData.ship as NSString).doubleValue
+                                        } else {
+                                            weight = (((misDailyFinal?.weight ?? "0.0") as NSString).doubleValue) + (misDailyData.weight as NSString).doubleValue
+                                        }
+
+                                        misDailyFinal = tbl_mis_budget_data(id: 0, rptDate: misDailyData.rptDate, product: misDailyData.product, ship: "\(booked)", dsr: misDailyData.dsr, type: misDailyData.type, qsr: misDailyData.qsr, weight: "\(weight)")
+                                        
+                                        
+                                    }
+                                }
+
+                                tempCount = 1
+                                finalDailyList.append(misDailyFinal!)
+                                newDailyList.removeAll()
+                            } else {
+                                let misDaily = tbl_mis_budget_data(id: 0, rptDate: data.rptDate, product: data.product, ship: data.ship, dsr: data.dsr, type: data.type, qsr: data.qsr, weight: data.weight)
+                                newDailyList.append(misDaily)
+
+                                tempCount += 1
+                            }
+                        }
+                    } else {
+                        let countDouble = Double(daily_data.count) / 7.0
+                        let countTwoDecimal = String(format: "%.2f", countDouble).split(separator: ".")
+                        
+                        var extraCount = 0
+                        var count = Int((countTwoDecimal[0] as NSString).intValue)
+                        var tempCount = 1
+                        switch countTwoDecimal[1] {
+                            case "14" : extraCount = 6
+                                break
+                            case "28" : extraCount = 5
+                                break
+                            case "42" : extraCount = 4
+                                break
+                            case "57" : extraCount = 3
+                                break
+                            case "71" : extraCount = 2
+                                break
+                            case "85" : extraCount = 1
+                                break
+                        default: break
+                        }
+                        
+                        for (_, data) in daily_data.enumerated() {
+                            if finalDailyList.count == extraCount {
+                                count += 1
+                                extraCount = 100
+                            }
+                            if (tempCount == count) {
+                                let misDaily = tbl_mis_budget_data(id: 0, rptDate: data.rptDate, product: data.product, ship: data.ship, dsr: data.dsr, type: data.type, qsr: data.qsr, weight: data.weight)
+                                newDailyList.append(misDaily)
+
+                                var misDailyFinal: tbl_mis_budget_data?
+
+                                for (i, misDailyData) in newDailyList.enumerated() {
+                                    if (i == 0) {
+                                        misDailyFinal = tbl_mis_budget_data(id: 0, rptDate: misDailyData.rptDate, product: misDailyData.product, ship: misDailyData.ship, dsr: misDailyData.dsr, type: misDailyData.type, qsr: misDailyData.qsr, weight: misDailyData.weight)
+                                    } else {
+                                        var booked: Double = 0.0
+                                        var weight: Double = 0.0
+                                        if isShipment {
+                                            booked = (((misDailyFinal?.ship ?? "0.0") as NSString).doubleValue) + (misDailyData.ship as NSString).doubleValue
+                                        } else {
+                                            weight = (((misDailyFinal?.weight ?? "0.0") as NSString).doubleValue) + (misDailyData.weight as NSString).doubleValue
+                                        }
+
+                                        misDailyFinal = tbl_mis_budget_data(id: 0, rptDate: misDailyData.rptDate, product: misDailyData.product, ship: "\(booked)", dsr: misDailyData.dsr, type: misDailyData.type, qsr: misDailyData.qsr, weight: "\(weight)")
+                                        
+                                        
+                                    }
+                                }
+
+                                tempCount = 1
+                                finalDailyList.append(misDailyFinal!)
+                                newDailyList.removeAll()
+                            } else {
+                                let misDaily = tbl_mis_budget_data(id: 0, rptDate: data.rptDate, product: data.product, ship: data.ship, dsr: data.dsr, type: data.type, qsr: data.qsr, weight: data.weight)
+                                newDailyList.append(misDaily)
+
+                                tempCount += 1
+                            }
+                        }
+                    }
+                } else {
+                    finalDailyList = daily_data
+                }
+                
+                finalDailyList.forEach { date in
+                    let dateFormatter = DateFormatter()
+                    dateFormatter.dateFormat = "yyyy-MM-dd"
+                    let tDate = dateFormatter.date(from: date.rptDate.dateOnly)!.dayAndMonth()
+                    dataEntryX.append(tDate)
+                }
+                finalDailyList.forEach { graph in
+                    if isShipment {
+                        dataEntryY.append((graph.product as NSString).doubleValue)
+                    } else {
+                        dataEntryY.append((graph.weight as NSString).doubleValue)
+                    }
+                }
+                print("finalDailyList.count: \(finalDailyList.count)")
+                lineChart.chartDescription?.enabled = false
+                lineChart.dragEnabled = true
+                lineChart.setScaleEnabled(true)
+                lineChart.pinchZoomEnabled = false
+                
+                lineChart.xAxis.gridLineDashLengths = [0, 0]
+                lineChart.xAxis.gridLineDashPhase = 0
+                
+                let yAxisValue = lineChart.leftAxis
+                yAxisValue.removeAllLimitLines()
+                
+                if targeted_value > yAxisValue.axisMaximum {
+                    yAxisValue.axisMaximum = targeted_value + targeted_value/8
+                } else {
+                    yAxisValue.axisMaximum = yAxisValue.axisMaximum + yAxisValue.axisMaximum/6
+                }
+                
+                yAxisValue.axisMinimum = 0
+                
+                
+                let ll1 = ChartLimitLine(limit: targeted_value, label: "")
+                ll1.lineColor = UIColor.approvedColor()
+                ll1.lineWidth = 2
+                ll1.lineDashLengths = [0,0]
+                yAxisValue.removeAllLimitLines()
+                yAxisValue.addLimitLine(ll1)
+
+                lineChart.rightAxis.enabled = false
+                
+                lineChart.legend.enabled = false
+                lineChart.animate(xAxisDuration: 1.0)
+                lineChart.noDataText = "You need to provide data for the chart."
+                var dataEntries:[ChartDataEntry] = []
+                for i in 0..<finalDailyList.count{
+                    let dd = DateFormatter()
+                    dd.dateFormat = "yyyy-MM-dd"
+                    let d = dd.date(from: finalDailyList[i].rptDate.dateOnly)
+                    let timeInterval = d?.timeIntervalSince1970 ?? 0.0
+                    let dataEntry = ChartDataEntry(x: Double(timeInterval), y: Double(dataEntryY[i]))// , data: dataEntryX as AnyObject?)
+                    print(dataEntry)
+                    dataEntries.append(dataEntry)
+                }
+                let set1 = LineChartDataSet(entries: dataEntries)
+                set1.drawIconsEnabled = false
+                set1.lineDashLengths = [0, 0]
+                set1.highlightLineDashLengths = [0, 0]
+                set1.setColor(UIColor.nativeRedColor())
+                set1.setCircleColor(UIColor.nativeRedColor())
+                set1.lineWidth = 1
+                set1.circleRadius = 6
+                set1.drawCircleHoleEnabled = false
+                set1.valueFont = .systemFont(ofSize: 9)
+                set1.formLineDashLengths = [0,0]
+                set1.formLineWidth = 1
+                set1.formSize = 25
+                set1.mode = .cubicBezier
+                set1.fillAlpha = 0
+                set1.drawValuesEnabled = false
+                
+                set1.drawFilledEnabled = true
+
+                let chartData = LineChartData(dataSet: set1)// BarChartData(dataSet: chartDataSet)
+                lineChart.data = chartData
+                let xAxisValue = lineChart.xAxis
+                xAxisValue.valueFormatter = XAxisFormatter()
+                xAxisValue.granularity = 1.0
+                xAxisValue.granularityEnabled = true
+                xAxisValue.setLabelCount(finalDailyList.count, force: true)
+                xAxisValue.labelPosition = .bottom
+                
+                yAxisValue.valueFormatter = YAxisFormatter()
+                lineChart.delegate = self
             }
-            
-            if isQSRAllowed == 0 {
-                chartView.QsrDsrStackView.isHidden = true
-            } else {
-                chartView.averageQSRLabel.text = "\(monthName) Avg. QSR: " + String(format: "%.2f", averageQSR) + "%"
-                chartView.averageDSRLabel.text = "\(monthName) Avg. DSR: " + String(format: "%.2f", averageDSR) + "%"
-                chartView.QsrDsrStackView.isHidden = false
-            }
-        } else {
-            chartView.mainStackView.isHidden = true
         }
-        lineChart.accessibilityLabel = self.mis_product_data!.product
         return lineChart
     }
     
@@ -944,49 +943,6 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
         default:
             break
         }
-        
-        
-        var mis_listing_data = [tbl_mis_product_data]()
-        if let user_permissions = AppDelegate.sharedInstance.db?.read_tbl_UserPermission() {
-            mis_listing_data = [tbl_mis_product_data]()
-            let _ = AppDelegate.sharedInstance.db?.read_tbl_mis_product_data(query: "SELECT * FROM \(db_mis_product_data)")?.forEach({ pd in
-                user_permissions.forEach { permission in
-                    if permission.PERMISSION == pd.product {
-                        mis_listing_data.append(tbl_mis_product_data(id: pd.id, product: pd.product))
-                    }
-                }
-            })
-        }
-        if let mode = chartView.accessibilityLabel {
-            if let listing_data = mis_listing_data.filter { listing in
-                listing.product == mode
-            }.first {
-                let storyboard = UIStoryboard(name: "MIS", bundle: nil)
-                let controller = storyboard.instantiateViewController(withIdentifier: "MISDetailsViewController") as! MISDetailsViewController
-                if let ServerIdPk = AppDelegate.sharedInstance.db?.read_tbl_UserPage().filter({ page in
-                    page.PAGENAME == listing_data.product
-                }).first?.SERVER_ID_PK {
-                    AppDelegate.sharedInstance.db?.read_tbl_UserPermission().filter({ permissions in
-                        permissions.PAGEID == ServerIdPk
-                    }).forEach({ listing in
-                        if listing.PERMISSION == "WEIGHT" {
-                            controller.isWieghtAllowed = 1
-                        }
-                        if listing.PERMISSION == "QSR" {
-                            controller.isQSRAllowed = 1
-                        }
-                        if listing.PERMISSION == "DSR" {
-                            controller.isDSRAllowed = 1
-                        }
-                    })
-                }
-                
-                
-                controller.mis_product_data = listing_data
-                self.navigationController?.pushViewController(controller, animated: true)
-            }
-        }
-        
     }
     
     func chartValueNothingSelected(_ chartView: ChartViewBase) {
@@ -1117,6 +1073,24 @@ extension HomeScreenViewController: UICollectionViewDelegate, UICollectionViewDa
     @objc func handleTap(_ sender: UITapGestureRecognizer) {
         print("Hello World")
     }
+    @objc func openLineChart(sender: UIButton) {
+        if let mis_budget_setup = self.mis_budget_setup {
+            let selectedChartLabel = sender.accessibilityLabel ?? ""
+            if let selectedChart = mis_budget_setup.filter { setup in
+                setup.product == selectedChartLabel
+            }.first {
+                let storyboard = UIStoryboard(name: "MIS", bundle: nil)
+                let controller = storyboard.instantiateViewController(withIdentifier: "MISDetailViewController") as! MISDetailViewController
+                controller.mis_budget_setup = selectedChart
+                if selectedChart.prod_with_prodtype == "" {
+                    controller.isDualValue = false
+                } else {
+                    controller.isDualValue = true
+                }
+                self.navigationController?.pushViewController(controller, animated: true)
+            }
+        }
+    }
 }
 
 
@@ -1155,27 +1129,44 @@ extension HomeScreenViewController:  CLLocationManagerDelegate {
     }
 }
 
+//extension HomeScreenViewController: IAxisValueFormatter {
+//    func stringForValue(_ value: Double, axis: AxisBase?) -> String {
+//        dataEntryX = [String]()
+//        let previousDate = getPreviousDays(days: -7)
+//        let weekly = previousDate.convertDateToString(date: previousDate)
+//        let dateQuery = "SELECT strftime('%Y-%m-%d',RPT_DATE) as date FROM \(db_mis_daily_overview) WHERE  PRODUCT = '\(axis?.accessibilityLabel ?? "")' AND RPT_DATE >= '\(weekly.dateOnly)' AND RPT_DATE <= '\(getLocalCurrentDate().dateOnly)'  group by strftime('%Y-%m-%d',RPT_DATE)"
+//        let dateCount  = AppDelegate.sharedInstance.db?.getDates(query: dateQuery).sorted(by: { (date1, date2) -> Bool in
+//            date1 > date2
+//        })
+//        dateCount!.forEach { date in
+//            let dateFormatter = DateFormatter()
+//            dateFormatter.dateFormat = "yyyy-MM-dd"
+//            let tDate = dateFormatter.date(from: date)!.dayAndMonth()
+//            dataEntryX.append(tDate)
+//        }
+//        if value < 0 {
+//            return dataEntryX[0]
+//        }
+//        if dataEntryX.count == 1 {
+//            return dataEntryX[0]
+//        }
+//        return dataEntryX[Int(value)]
+//    }
+//}
 extension HomeScreenViewController: IAxisValueFormatter {
     func stringForValue(_ value: Double, axis: AxisBase?) -> String {
-        dataEntryX = [String]()
-        let previousDate = getPreviousDays(days: -7)
-        let weekly = previousDate.convertDateToString(date: previousDate)
-        let dateQuery = "SELECT strftime('%Y-%m-%d',RPT_DATE) as date FROM \(db_mis_daily_overview) WHERE  PRODUCT = '\(axis?.accessibilityLabel ?? "")' AND RPT_DATE >= '\(weekly.dateOnly)' AND RPT_DATE <= '\(getLocalCurrentDate().dateOnly)'  group by strftime('%Y-%m-%d',RPT_DATE)"
-        let dateCount  = AppDelegate.sharedInstance.db?.getDates(query: dateQuery).sorted(by: { (date1, date2) -> Bool in
-            date1 > date2
-        })
-        dateCount!.forEach { date in
-            let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "yyyy-MM-dd"
-            let tDate = dateFormatter.date(from: date)!.dayAndMonth()
-            dataEntryX.append(tDate)
-        }
-        if value < 0 {
-            return dataEntryX[0]
-        }
-        if dataEntryX.count == 1 {
-            return dataEntryX[0]
-        }
+//        do {
+//            if self.dataEntryX.count == 1 {
+//                return dataEntryX[0]
+//            }
+//            let a: String?
+//
+//            a = try dataEntryX[Int(value)]
+//            return a ?? ""
+//        } catch {
+//            return ""
+//        }
+        print("value + \(value)")
         return dataEntryX[Int(value)]
     }
 }

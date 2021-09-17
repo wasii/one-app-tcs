@@ -2160,10 +2160,32 @@ extension FetchUserDataViewController {
 //MARK: - Management Information System
 extension FetchUserDataViewController {
     private func getMISToken(_ handler: @escaping(Bool)->Void) {
-        NetworkCalls.getmistoken { token_granted in
+        let params = ["clientSecret": MISCLIENTSECRET] as [String:Any]
+//        let params = self.getAPIParameters(service_name: "", request_body: request_body)
+        NetworkCalls.getmistoken(params: params) { token_granted in
             if token_granted {
                 //get MIS Setup Data
-                NetworkCalls.setupmis { setup_granted, response in
+                let request_body = [String: Any]()
+                let params = [
+                    "eAI_MESSAGE": [
+                        "eAI_HEADER": [
+                            "serviceName": S_MIS_BUDGET_SETUP,
+                            "client": "TCS",
+                            "clientChannel": "MOB",
+                            "referenceNum": "",
+                            "securityInfo": [
+                                "authentication": [
+                                    "userId": "",
+                                    "password": ""
+                                ]
+                            ]
+                        ],
+                        "eAI_BODY": [
+                            "eAI_REQUEST": request_body
+                        ]
+                    ]
+                ] as [String :Any]
+                NetworkCalls.setupmis(params: params) { setup_granted, response in
                     if setup_granted {
                         let json = JSON(response)
                         if let _BudgetSetup = json.dictionary?[_BudgetSetup]?.array {
@@ -2213,10 +2235,31 @@ extension FetchUserDataViewController {
             ]
         } else {
             last_budget_data = [
-                "dateTime" : lastSyncStatus!.DATE
+//                "dateTime" : lastSyncStatus!.DATE
+                "dateTime" : ""
             ]
         }
-        let params = self.getAPIParameters(service_name: S_MIS_BUDGET_DATA, request_body: last_budget_data)
+        
+        let params = [
+            "eAI_MESSAGE": [
+              "eAI_HEADER": [
+                "serviceName": "DAILY.BUDGET",
+                "client": "",
+                "clientChannel": "",
+                "referenceNum": "",
+                "securityInfo": [
+                  "authentication": [
+                    "userId": "string",
+                    "password": "string"
+                  ]
+                ]
+              ],
+              "eAI_BODY": [
+                "eAI_REQUEST": last_budget_data
+              ]
+            ]
+        ] as [String:Any]
+        
         NetworkCalls.getbudgetdata(params: params) { daily_granted, response in
             if daily_granted {
                 let json = JSON(response)
@@ -2242,7 +2285,7 @@ extension FetchUserDataViewController {
                             })
                             
                         }
-                        if let lastSync = json.dictionary?["lastSync"]?.string {
+                        if let lastSync = json.dictionary?["lastSyncDate"]?.string {
                             Helper.updateLastSyncStatus(APIName: S_MIS_BUDGET_DATA,
                                                         date: lastSync,
                                                         skip: 0,

@@ -3282,7 +3282,7 @@ class DBHelper {
         }
         return budget_detail.count > 0 ? budget_detail : nil
     }
-    
+    //MIS Permissions
     func read_tbl_mis_permission(query: String) -> [NewPermissoin]? {
         let queryStatementString = query
         var queryStatement: OpaquePointer? = nil
@@ -3297,6 +3297,25 @@ class DBHelper {
             print("SELECT statement \(db_w_detail_point) could not be prepared")
         }
         return new_permission.count > 0 ? new_permission : nil
+    }
+    //MIS Targeted Home
+    func read_tbl_target_home(query: String) -> [MISHomeTargeted]? {
+        let queryStatementString = query
+        var queryStatement: OpaquePointer? = nil
+        var home_targeted = [MISHomeTargeted]()
+
+        if sqlite3_prepare_v2(db, queryStatementString, -1, &queryStatement, nil) == SQLITE_OK {
+            while sqlite3_step(queryStatement) == SQLITE_ROW {
+                let targeted_ship = String(describing: String(cString: sqlite3_column_text(queryStatement, 0)))
+                let targeted_weight = String(describing: String(cString: sqlite3_column_text(queryStatement, 1)))
+                let product = String(describing: String(cString: sqlite3_column_text(queryStatement, 2)))
+                
+                home_targeted.append(MISHomeTargeted(TARGETED_SHIP: targeted_ship, TARGETED_WEIGHT: targeted_weight, PRODUCT: product))
+            }
+        } else {
+            print("SELECT statement \(db_w_detail_point) could not be prepared")
+        }
+        return home_targeted.count > 0 ? home_targeted : nil
     }
     
     //MARK: WALLET INSERT
@@ -4421,4 +4440,10 @@ struct Average {
 
 struct NewPermissoin {
     var PERMISSION: String = ""
+}
+
+struct MISHomeTargeted {
+    var TARGETED_SHIP: String = ""
+    var TARGETED_WEIGHT: String = ""
+    var PRODUCT: String = ""
 }

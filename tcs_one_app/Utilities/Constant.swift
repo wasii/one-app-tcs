@@ -32,7 +32,8 @@ var RECORD_ID               = 0
 //let ENDPOINT_NEW            = "https://developers.tcscourier.com/prod/v1/"
 
 //DEV
-let ENDPOINT_NEW            = "http://apigatewayuat.tranzumpk.com:3003/dev/v1/"
+//let ENDPOINT_NEW            = "http://apigatewayuat.tranzumpk.com:3003/dev/v1/"
+let ENDPOINT_NEW            = "http://apigatewayuat:3003/dev/v1/"
 let ENDPOINT                = "https://devapi.tcscourier.com/core/api/main"
 let UPLOADFILESURL          = "https://pwaqaapi.tcscourier.com/api/file-upload"
 
@@ -70,14 +71,15 @@ let GETORDERFULFILMET       = "oneapp.getorderfullfilment"
 let UPDATEORDERFULFILMENT   = "oneapp.updateorderfullfilment"
 
 //MIS
-let MIS_GET_TOKEN           = ENDPOINT_NEW + "oneapp/token?clientSecret=\(MISCLIENTSECRET)"
+let MIS_GET_TOKEN           = ENDPOINT_NEW + "oneapp/token"
 let MIS_SETUP               = ENDPOINT_NEW + "oneapp/setup"
 let MIS_DAILY_OVERVIEW      = ENDPOINT_NEW + "oneapp/daily-overview"
 
 //MIS NEW
-let MIS_BUDGET_SETUP        = ENDPOINT_NEW + "oneapp/budget-setup"
-let MIS_BUDGET_DATA         = ENDPOINT_NEW + "oneapp/daily_budget"
+let MIS_BUDGET_SETUP        = ENDPOINT_NEW + "oneapp/mis/budget-setup"
+let MIS_BUDGET_DATA         = ENDPOINT_NEW + "oneapp/mis/daily-budget"
 let S_MIS_BUDGET_DATA       = "DAILY.BUDGET"
+let S_MIS_BUDGET_SETUP      = "BUDGET.SETUP"
 
 let S_MIS_DAILY_OVERVIEW    = ENDPOINT_NEW + "DAILY.OVERVIEW.P"
 
@@ -157,7 +159,8 @@ let _orders                 = "orders"
 //let _regnData               = "regnData"
 //let _oneAppData             = "oneAppData"
 
-let _BudgetSetup            = "BudgetSetup"
+let _result                 = "result"
+let _BudgetSetup            = "budgetSetupData"
 let _budgetData             = "budgetData"
 
 
