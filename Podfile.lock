@@ -472,6 +472,9 @@ PODS:
     - nanopb/encode (= 0.3.9011)
   - nanopb/decode (0.3.9011)
   - nanopb/encode (0.3.9011)
+  - NVActivityIndicatorView (5.1.1):
+    - NVActivityIndicatorView/Base (= 5.1.1)
+  - NVActivityIndicatorView/Base (5.1.1)
   - Protobuf (3.14.0)
   - ReachabilitySwift (5.0.0)
   - SDWebImage (5.9.4):
@@ -501,6 +504,7 @@ DEPENDENCIES:
   - "MaterialComponents/TextControls+OutlinedTextAreas"
   - "MaterialComponents/TextControls+OutlinedTextFields"
   - MBCircularProgressBar
+  - NVActivityIndicatorView
   - ReachabilitySwift
   - SDWebImage
   - SimplePDF
@@ -540,6 +544,7 @@ SPEC REPOS:
     - MBCircularProgressBar
     - MDFInternationalization
     - nanopb
+    - NVActivityIndicatorView
     - Protobuf
     - ReachabilitySwift
     - SDWebImage
@@ -579,6 +584,7 @@ SPEC CHECKSUMS:
   MBCircularProgressBar: 0b795b722a5eb5b0923822f90474e2576a1a7855
   MDFInternationalization: 010097556d6b09d2c4ea38e0820ea6d37be6a314
   nanopb: 18003b5e52dab79db540fe93fe9579f399bd1ccd
+  NVActivityIndicatorView: 1f6c5687f1171810aa27a3296814dc2d7dec3667
   Protobuf: 0cde852566359049847168e51bd1c690e0f70056
   ReachabilitySwift: 985039c6f7b23a1da463388634119492ff86c825
   SDWebImage: b69257f4ab14e9b6a2ef53e910fdf914d8f757c1
@@ -589,6 +595,6 @@ SPEC CHECKSUMS:
   Toast-Swift: 9b6a70f28b3bf0b96c40d46c0c4b9d6639846711
   TPPDF: 000c670ca79d0b00c62dcc32b168c6f691dc92a5
 
-PODFILE CHECKSUM: f3147efde3ac8d06660a06ea23db05779e1c911f
+PODFILE CHECKSUM: 0f531a33db7f83d51af76b50b5951656c2b1d651
 
 COCOAPODS: 1.10.1
