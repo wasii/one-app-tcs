@@ -55,6 +55,9 @@
 		1B5970B0256553CF00FF8CA0 /* AddAttachmentsTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B5970AE256553CF00FF8CA0 /* AddAttachmentsTableCell.swift */; };
 		1B5970B1256553CF00FF8CA0 /* AddAttachmentsTableCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1B5970AF256553CF00FF8CA0 /* AddAttachmentsTableCell.xib */; };
 		1B5CBC8326F4A73B00831018 /* XAxisFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B5CBC8226F4A73B00831018 /* XAxisFormatter.swift */; };
+		1B5CBC8526F865B600831018 /* Landing.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1B5CBC8426F865B600831018 /* Landing.storyboard */; };
+		1B5CBC8826F8662A00831018 /* LandingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B5CBC8726F8662A00831018 /* LandingViewController.swift */; };
+		1B5CBC8926F86CB900831018 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 601BA4C725387B18002CFD1F /* LaunchScreen.storyboard */; };
 		1B5EAA7C255E636A00F49D09 /* GrievanceHelpDeskViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B5EAA7B255E636A00F49D09 /* GrievanceHelpDeskViewController.swift */; };
 		1B5EAA7F255E63CB00F49D09 /* GrievanceStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1B5EAA7E255E63CB00F49D09 /* GrievanceStoryboard.storyboard */; };
 		1B5EAA83255EA4A600F49D09 /* GrievanceHelpDeskRequestsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B5EAA82255EA4A600F49D09 /* GrievanceHelpDeskRequestsViewController.swift */; };
@@ -141,7 +144,6 @@
 		601BA4BD25387B17002CFD1F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 601BA4BC25387B17002CFD1F /* AppDelegate.swift */; };
 		601BA4BF25387B17002CFD1F /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 601BA4BE25387B17002CFD1F /* SceneDelegate.swift */; };
 		601BA4C625387B18002CFD1F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 601BA4C525387B18002CFD1F /* Assets.xcassets */; };
-		601BA4C925387B18002CFD1F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 601BA4C725387B18002CFD1F /* LaunchScreen.storyboard */; };
 		602011A12542948100759D2E /* NewRequestListingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 602011A02542948100759D2E /* NewRequestListingViewController.swift */; };
 		60485398253DC4BE00F7A0AA /* CircularView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60485397253DC4BE00F7A0AA /* CircularView.swift */; };
 		604B3960253EA03F00864293 /* NotificationsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 604B395F253EA03F00864293 /* NotificationsViewController.swift */; };
@@ -242,6 +244,8 @@
 		1B5970AE256553CF00FF8CA0 /* AddAttachmentsTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddAttachmentsTableCell.swift; sourceTree = "<group>"; };
 		1B5970AF256553CF00FF8CA0 /* AddAttachmentsTableCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AddAttachmentsTableCell.xib; sourceTree = "<group>"; };
 		1B5CBC8226F4A73B00831018 /* XAxisFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XAxisFormatter.swift; sourceTree = "<group>"; };
+		1B5CBC8426F865B600831018 /* Landing.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Landing.storyboard; sourceTree = "<group>"; };
+		1B5CBC8726F8662A00831018 /* LandingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LandingViewController.swift; sourceTree = "<group>"; };
 		1B5EAA7B255E636A00F49D09 /* GrievanceHelpDeskViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GrievanceHelpDeskViewController.swift; sourceTree = "<group>"; };
 		1B5EAA7E255E63CB00F49D09 /* GrievanceStoryboard.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = GrievanceStoryboard.storyboard; sourceTree = "<group>"; };
 		1B5EAA82255EA4A600F49D09 /* GrievanceHelpDeskRequestsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GrievanceHelpDeskRequestsViewController.swift; sourceTree = "<group>"; };
@@ -468,6 +472,14 @@
 				1B4AAD1625DA784300A26DE7 /* TrackHomeViewController.swift */,
 			);
 			path = Track;
+			sourceTree = "<group>";
+		};
+		1B5CBC8626F8661A00831018 /* Landing */ = {
+			isa = PBXGroup;
+			children = (
+				1B5CBC8726F8662A00831018 /* LandingViewController.swift */,
+			);
+			path = Landing;
 			sourceTree = "<group>";
 		};
 		1B5EAA78255E580800F49D09 /* HR HELP DESK */ = {
@@ -840,6 +852,7 @@
 				1B3EDC96260C532E00A97984 /* Fullfillment.storyboard */,
 				1BE523DB2679E1CF00F5F030 /* Wallet.storyboard */,
 				1B3B229726C15F4E008EDC15 /* MIS.storyboard */,
+				1B5CBC8426F865B600831018 /* Landing.storyboard */,
 			);
 			path = Storyboards;
 			sourceTree = "<group>";
@@ -856,6 +869,7 @@
 		60C34FE1253985D100495944 /* Home Storyboard */ = {
 			isa = PBXGroup;
 			children = (
+				1B5CBC8626F8661A00831018 /* Landing */,
 				1B6FA11826C3AC5C00E954D0 /* MIS  */,
 				1BE523DD2679E25500F5F030 /* Wallet */,
 				1B3EDC95260C530D00A97984 /* Fullfilment */,
@@ -989,6 +1003,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1B5CBC8926F86CB900831018 /* LaunchScreen.storyboard in Resources */,
 				1B6FA11726C3A53900E954D0 /* MISDetailTableCell.xib in Resources */,
 				1B3B229826C15F4E008EDC15 /* MIS.storyboard in Resources */,
 				1BA51110267B801600E0E642 /* CustomAlertView.xib in Resources */,
@@ -1015,7 +1030,6 @@
 				1B1C0B6A2583DBB500AAAAE9 /* NewRequestsListingTableCell.xib in Resources */,
 				1B61B2B825DD235200CDAAE2 /* TBagDetailsTableCell.xib in Resources */,
 				6010F41125400E3300CF8597 /* CicrularProgressBarCollectionCell.xib in Resources */,
-				601BA4C925387B18002CFD1F /* LaunchScreen.storyboard in Resources */,
 				1B30AAEC26EB34410051D32A /* MISCollectionCell.xib in Resources */,
 				60E99918253D548200BCDAD1 /* ModulesCollectionCell.xib in Resources */,
 				60E99912253D4F1300BCDAD1 /* PieChartCollectionCell.xib in Resources */,
@@ -1038,6 +1052,7 @@
 				60C34FE02539830E00495944 /* Home.storyboard in Resources */,
 				1B11D07E262EB37000C137A3 /* RequestListingTableCell.xib in Resources */,
 				609C605B25387B900051CF28 /* UserCredentials.storyboard in Resources */,
+				1B5CBC8526F865B600831018 /* Landing.storyboard in Resources */,
 				1B47F9A025A5F18300FC74A4 /* IncidentInvestigationTableCell.xib in Resources */,
 				1B3B229A26C24E4A008EDC15 /* TCSOneApp.db in Resources */,
 				1BE523DA2679DB1100F5F030 /* IMSDeliveryDetailTableCell.xib in Resources */,
@@ -1167,6 +1182,7 @@
 				1B3EDCA7260C6BEA00A97984 /* FulfilmentOrderDetailViewController.swift in Sources */,
 				1BFB375025F9D7710073CC53 /* AttendanceDetailsViewController.swift in Sources */,
 				1B7A292425A05E3C005694B6 /* IMSViewUpdateRequestViewController.swift in Sources */,
+				1B5CBC8826F8662A00831018 /* LandingViewController.swift in Sources */,
 				1BF25A4F25E7D4EB008CE34F /* LeadershipListingViewController.swift in Sources */,
 				1BFB375525F9D7CA0073CC53 /* AttendanceDetailsTableCell.swift in Sources */,
 				1B1C4294255738A300F881B6 /* NewChartListingViewController.swift in Sources */,
