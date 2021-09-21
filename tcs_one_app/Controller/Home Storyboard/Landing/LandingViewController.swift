@@ -9,10 +9,12 @@
 import UIKit
 import NVActivityIndicatorView
 import SwiftyJSON
+import FirebaseMessaging
 
 class LandingViewController: BaseViewController {
     
     @IBOutlet weak var mainView: UIView!
+    @IBOutlet weak var headingLabel: UILabel!
     @IBOutlet weak var logoCenterConstraint: NSLayoutConstraint!
     @IBOutlet weak var logoHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var mainViewHeightConstraint: NSLayoutConstraint!
@@ -32,11 +34,17 @@ class LandingViewController: BaseViewController {
     var skip = 0
     var count = 0
     var isTotalCounter = 0
+    
+    var isPresented: Bool = false
+    var headingText: String?
     override func viewDidLoad() {
         super.viewDidLoad()
         mainView.clipsToBounds = true
         mainView.layer.cornerRadius = 40
         mainView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
+        if let text = headingText {
+            self.headingLabel.text = text
+        }
         if #available(iOS 11.0, *) {
             let window = UIApplication.shared.keyWindow
             safeTopArea = window?.safeAreaInsets.top ?? 0.0
@@ -50,21 +58,21 @@ class LandingViewController: BaseViewController {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
             if UserDefaults.standard.string(forKey: USER_ACCESS_TOKEN) == nil {
                 if UserDefaults.standard.string(forKey: "CurrentUser") == nil {
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                        let storyboard = UIStoryboard(name: "UserCredentials", bundle: nil)
-                        let controller = storyboard.instantiateViewController(withIdentifier: "mainNavigation") as! UINavigationController
-                        (controller.children.first as! EnterPinViewController).delegate = self
-                        controller.modalTransitionStyle = .crossDissolve
-                        if #available(iOS 13.0, *) {
-                            controller.modalPresentationStyle = .overFullScreen
-                        }
-                        self.present(controller, animated: true, completion: nil)
-                        return
-                    }
+                    self.openLoginScreen()
+                    return
                 }
             } else {
                 CURRENT_USER_LOGGED_IN_ID = UserDefaults.standard.string(forKey: "CurrentUser")!
                 self.setupAnimations()
+            }
+        }
+    }
+    override func viewDidAppear(_ animated: Bool) {
+        if UserDefaults.standard.bool(forKey: "Logout") {
+            UserDefaults.standard.removeObject(forKey: "Logout")
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                self.openLoginScreen()
+                return
             }
         }
     }
@@ -89,7 +97,7 @@ class LandingViewController: BaseViewController {
                 userPage.PAGENAME == PERMISSION_MIS_LISTING
             }).count {
                 if count > 0 {
-                    self.totalApiCounts += 2
+                    self.totalApiCounts += 3
                     isMISListingAllowed = true
                 }
             }
@@ -176,15 +184,14 @@ class LandingViewController: BaseViewController {
                             }
                             self.getHrRequest()
                         } else {
-                            // IMS SYNCED ERROR
+                            self.showError()
                         }
                     }
                 } else {
                     self.getHrRequest()
                 }
             } else {
-                //SETUP ERROR
-                
+                self.showError()
             }
         }
     }
@@ -715,6 +722,8 @@ extension LandingViewController {
                         self.getHrNotifications()
                     }
                 }
+            } else {
+                self.showError()
             }
         }
     }
@@ -1060,9 +1069,7 @@ extension LandingViewController {
                     }
                     
                 } else {
-                    DispatchQueue.main.async {
-                        self.navigationController?.popViewController(animated: true)
-                    }
+                    self.showError()
                 }
             }
         }
@@ -1105,7 +1112,7 @@ extension LandingViewController {
                     })
                 }
             } else {
-                
+//                self.showError()
             }
             handler()
         }
@@ -1178,22 +1185,12 @@ extension LandingViewController {
                                                     self.navigateHomeScreen()
                                                 }
                                             } else {
-                                                DispatchQueue.main.async {
-                                                    self.view.makeToast(SOMETHINGWENTWRONG)
-                                                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                                                        self.navigationController?.popViewController(animated: true)
-                                                    }
-                                                }
+                                                self.showError()
                                             }
                                         }
                                     }
                                 } else {
-                                    DispatchQueue.main.async {
-                                        self.view.makeToast(SOMETHINGWENTWRONG)
-                                        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                                            self.navigationController?.popViewController(animated: true)
-                                        }
-                                    }
+                                    self.showError()
                                 }
                             }
                         } else {
@@ -1260,22 +1257,12 @@ extension LandingViewController {
                                                                 self.navigateHomeScreen()
                                                             }
                                                         } else {
-                                                            DispatchQueue.main.async {
-                                                                self.view.makeToast(SOMETHINGWENTWRONG)
-                                                                DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                                                                    self.navigationController?.popViewController(animated: true)
-                                                                }
-                                                            }
+                                                            self.showError()
                                                         }
                                                     }
                                                 }
                                             } else {
-                                                DispatchQueue.main.async {
-                                                    self.view.makeToast(SOMETHINGWENTWRONG)
-                                                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                                                        self.navigationController?.popViewController(animated: true)
-                                                    }
-                                                }
+                                                self.showError()
                                             }
                                         }
                                     } else {
@@ -1341,22 +1328,12 @@ extension LandingViewController {
                                                     self.navigateHomeScreen()
                                                 }
                                             } else {
-                                                DispatchQueue.main.async {
-                                                    self.view.makeToast(SOMETHINGWENTWRONG)
-                                                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                                                        self.navigationController?.popViewController(animated: true)
-                                                    }
-                                                }
+                                                self.showError()
                                             }
                                         }
                                     }
                                 } else {
-                                    DispatchQueue.main.async {
-                                        self.view.makeToast(SOMETHINGWENTWRONG)
-                                        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                                            self.navigationController?.popViewController(animated: true)
-                                        }
-                                    }
+                                    self.showError()
                                 }
                             }
                         } else {
@@ -1562,20 +1539,19 @@ extension LandingViewController {
 
 extension LandingViewController {
     @objc func navigateHomeScreen() {
-        if self.currentCount > 95 {
-            self.percentCounter.text = "100%"
-        }
+        
+        self.percentCounter.text = "100%"
         UserDefaults.standard.setValue(CURRENT_USER_LOGGED_IN_ID, forKeyPath: "CurrentUser")
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
             NotificationCenter.default.removeObserver(self)
-//            if self.isPresented {
-//                self.isPresented = false
-//                self.dismiss(animated: true) {
-//                    NotificationCenter.default.post(Notification.init(name: .refreshedViews))
-//                }
-//                return
-//            }
+            if self.isPresented {
+                self.isPresented = false
+                self.dismiss(animated: true) {
+                    NotificationCenter.default.post(Notification.init(name: .refreshedViews))
+                }
+                return
+            }
             
             let dashboard = UIStoryboard(name: "Dashboard", bundle: nil)
             let controller = dashboard.instantiateViewController(withIdentifier: "tabbar") as! UITabBarController
@@ -1583,19 +1559,80 @@ extension LandingViewController {
                 controller.modalPresentationStyle = .overFullScreen
                 
             }
-//            controller.modalTransitionStyle = .crossDissolve
-//            Helper.topMostController().present(controller, animated: true, completion: nil)
             self.navigationController?.pushViewController(controller, animated: true)
-//            self.navigationController?.popViewController(animated: true)
+            self.resetAllSettings()
         }
-//        Messaging.messaging().subscribe(toTopic: BROADCAST_KEY) { error in
-//            guard let err = error else {
-//                print("user subscribed")
-//                return
-//            }
-//            print(err.localizedDescription)
-//        }
+        Messaging.messaging().subscribe(toTopic: BROADCAST_KEY) { error in
+            guard let err = error else {
+                print("user subscribed")
+                return
+            }
+            print(err.localizedDescription)
+        }
     }
 }
 
+
+extension LandingViewController {
+    func resetAllSettings() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+            self.safeTopArea = 0.0
+            self.currentCenterConstraintPosition = 0.0
+            
+            self.totalApiCounts = 4 //Setup, HrRequest, HrNotification, Attendance
+            self.increment = 0
+            self.currentCount = 0
+            
+            self.isIMSAllowed = false
+            self.isFulfilmentAllowed = false
+            self.access_token = ""
+            self.skip = 0
+            self.count = 0
+            self.isTotalCounter = 0
+            self.mainViewHeightConstraint.constant = 0
+            self.logoHeightConstraint.constant = 211
+            self.logoCenterConstraint.constant = 0
+        }
+    }
+    
+    func openLoginScreen() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+            let storyboard = UIStoryboard(name: "UserCredentials", bundle: nil)
+            let controller = storyboard.instantiateViewController(withIdentifier: "mainNavigation") as! UINavigationController
+            (controller.children.first as! EnterPinViewController).delegate = self
+            controller.modalTransitionStyle = .crossDissolve
+            if #available(iOS 13.0, *) {
+                controller.modalPresentationStyle = .overFullScreen
+            }
+            self.present(controller, animated: true, completion: nil)
+            self.resetAllSettings()
+        }
+    }
+    
+    func showError() {
+        DispatchQueue.main.async {
+            self.view.makeToast("Session Expired")
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                Messaging.messaging().unsubscribe(fromTopic: BROADCAST_KEY)
+                AppDelegate.sharedInstance.db?.deleteRow(tableName: db_last_sync_status, column: "SYNC_KEY", ref_id: GET_HR_NOTIFICATION, handler: { _ in })
+                AppDelegate.sharedInstance.db?.deleteRow(tableName: db_last_sync_status, column: "SYNC_KEY", ref_id: GETORDERFULFILMET, handler: { _ in })
+                
+                AppDelegate.sharedInstance.db?.deleteAll(tableName: db_hr_notifications, handler: { _ in })
+                AppDelegate.sharedInstance.db?.deleteAll(tableName: db_fulfilment_orders, handler: { _ in })
+                UserDefaults.standard.removeObject(forKey: USER_ACCESS_TOKEN)
+                UserDefaults.standard.removeObject(forKey: "CurrentUser")
+                if self.isPresented {
+                    self.dismiss(animated: true) {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.7) {
+                            UserDefaults.standard.set(true, forKey: "Logout")
+                            Helper.topMostController().navigationController?.popToRootViewController(animated: true)
+                        }
+                    }
+                    return
+                }
+                self.openLoginScreen()
+            }
+        }
+    }
+}
 

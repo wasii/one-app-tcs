@@ -176,13 +176,15 @@ class BaseViewController: UIViewController {
     }
     
     @objc func syncServerData() {
-        let storyboard = UIStoryboard(name: "UserCredentials", bundle: nil)
-        let controller = storyboard.instantiateViewController(withIdentifier: "FetchUserDataViewController") as! FetchUserDataViewController
+        let storyboard = UIStoryboard(name: "Landing", bundle: nil)
+        let controller = storyboard.instantiateViewController(withIdentifier: "mainLanding") as! UINavigationController
         
         if #available(iOS 13.0, *) {
             controller.modalPresentationStyle = .overFullScreen
         }
-        controller.isPresented = true
+        controller.modalTransitionStyle = .crossDissolve
+        (controller.children.first as! LandingViewController).isPresented = true
+        (controller.children.first as! LandingViewController).headingText = "Syncing Server\nData"
         Helper.topMostController().present(controller, animated: true, completion: nil)
     }
     
@@ -386,7 +388,8 @@ class BaseViewController: UIViewController {
             }
         } else {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                self.dismiss(animated: true, completion: nil)
+                UserDefaults.standard.set(true, forKey: "Logout")
+                Helper.topMostController().navigationController?.popViewController(animated: true)
             }
         }
     }
