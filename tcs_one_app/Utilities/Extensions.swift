@@ -4,6 +4,10 @@ import NaturalLanguage
 import MapKit
 
 extension UIColor {
+    class func nativeBlueColor() -> UIColor {
+        return UIColor.init(red: 25.0/255.0, green: 31.0/255.0, blue: 41.0/255.0, alpha: 1)
+    }
+    
     class func nativeRedColor() -> UIColor {
         return UIColor.init(red: 222.0/255.0, green: 0.0/255.0, blue: 0.0/255.0, alpha: 1)
     }

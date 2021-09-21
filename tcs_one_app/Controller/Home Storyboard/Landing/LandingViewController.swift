@@ -10,8 +10,8 @@ import UIKit
 import NVActivityIndicatorView
 import SwiftyJSON
 
-class LandingViewController: UIViewController {
-
+class LandingViewController: BaseViewController {
+    
     @IBOutlet weak var mainView: UIView!
     @IBOutlet weak var logoCenterConstraint: NSLayoutConstraint!
     @IBOutlet weak var logoHeightConstraint: NSLayoutConstraint!
@@ -23,11 +23,15 @@ class LandingViewController: UIViewController {
     var currentCenterConstraintPosition: CGFloat = 0.0
     
     var totalApiCounts: Int = 4 //Setup, HrRequest, HrNotification, Attendance
+    var increment: Int = 0
     var currentCount: Int = 0
     
     var isIMSAllowed: Bool = false
     var isFulfilmentAllowed: Bool = false
     var access_token: String = ""
+    var skip = 0
+    var count = 0
+    var isTotalCounter = 0
     override func viewDidLoad() {
         super.viewDidLoad()
         mainView.clipsToBounds = true
@@ -41,6 +45,7 @@ class LandingViewController: UIViewController {
             let window = UIApplication.shared.windows.first
             safeTopArea = window?.safeAreaInsets.top ?? 0.0
         }
+        view.backgroundColor = UIColor.nativeBlueColor()
         currentCenterConstraintPosition = self.logoCenterConstraint.constant
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
             if UserDefaults.standard.string(forKey: USER_ACCESS_TOKEN) == nil {
@@ -58,6 +63,7 @@ class LandingViewController: UIViewController {
                     }
                 }
             } else {
+                CURRENT_USER_LOGGED_IN_ID = UserDefaults.standard.string(forKey: "CurrentUser")!
                 self.setupAnimations()
             }
         }
@@ -89,7 +95,7 @@ class LandingViewController: UIViewController {
             }
             //IMS
             let isIMSSynced = AppDelegate.sharedInstance.db?.readLastSyncStatus(tableName: db_last_sync_status,
-                                                                                   condition: "SYNC_KEY = '\(IMSSETUP)' AND CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)'")
+                                                                                condition: "SYNC_KEY = '\(IMSSETUP)' AND CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)'")
             if isIMSSynced == nil {
                 self.totalApiCounts += 1
                 self.isIMSAllowed = true
@@ -110,10 +116,31 @@ class LandingViewController: UIViewController {
             return
         }
         
-        self.currentCount += 100 / self.totalApiCounts
+        self.increment += 100 / self.totalApiCounts
         self.percentCounter.text = "0%"
-        self.indicatorView.type = .circleStrokeSpin
+        self.indicatorView.type = .orbit
         self.indicatorView.startAnimating()
+        
+        self.setupAPIs()
+//        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+//            self.percentCounter.text = "20%"
+//            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+//                self.percentCounter.text = "40%"
+//                DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+//                    self.percentCounter.text = "60%"
+//                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+//                        self.percentCounter.text = "80%"
+//                        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+//                            self.percentCounter.text = "100%"
+//                            self.indicatorView.stopAnimating()
+//                            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+//                                self.navigateHomeScreen()
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//        }
     }
     
     private func setupAPIs() {
@@ -136,11 +163,25 @@ class LandingViewController: UIViewController {
         let params = self.getAPIParameter(service_name: SETUP, request_body: setup_body)
         self.syncSetup(params: params) { setupSynced in
             if setupSynced {
-                self.percentCounter.text = String(format: "%.0f", self.currentCount)
-                if self.isIMSAllowed {
-                    self.syncIMSSetup { _ in }
+                DispatchQueue.main.async {
+                    self.currentCount += self.increment
+                    self.percentCounter.text = "\(self.currentCount)%"
                 }
-                
+                if self.isIMSAllowed {
+                    self.syncIMSSetup { isimsSynced in
+                        if isimsSynced {
+                            DispatchQueue.main.async {
+                                self.currentCount += self.increment
+                                self.percentCounter.text = "\(self.currentCount)%"
+                            }
+                            self.getHrRequest()
+                        } else {
+                            // IMS SYNCED ERROR
+                        }
+                    }
+                } else {
+                    self.getHrRequest()
+                }
             } else {
                 //SETUP ERROR
                 
@@ -579,3 +620,982 @@ extension LandingViewController {
         handler(true)
     }
 }
+
+//MARK: - HR Requst Logs
+extension LandingViewController {
+    @objc func getHrRequest() {
+        var hr_request = [String: [String:Any]]()
+        if let lastSyncStatus = AppDelegate.sharedInstance.db?.readLastSyncStatus(tableName: db_last_sync_status,
+                                                                                  condition: "SYNC_KEY = '\(GET_HR_REQUEST)' AND CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)'") {
+            hr_request = [
+                "hr_request":[
+                    "access_token": self.access_token,
+                    "skip" :0,
+                    "take" : 80,
+                    "sync_date": lastSyncStatus.DATE
+                ]
+            ]
+        } else {
+            hr_request = [
+                "hr_request":[
+                    "access_token": access_token,
+                    "skip" :self.skip,
+                    "take" : 80,
+                    "sync_date": ""
+                ]
+            ]
+        }
+        let params = self.getAPIParameter(service_name: GET_HR_REQUEST, request_body: hr_request)
+        NetworkCalls.hr_request(params: params) { success, response in
+            if success {
+                self.count = JSON(response).dictionary![_count]!.intValue
+                if self.count <= 0 {
+                    DispatchQueue.main.async {
+                        self.currentCount += self.increment
+                        self.percentCounter.text = "\(self.currentCount)%"
+                    }
+                    self.isTotalCounter = 0
+                    self.getHrNotifications()
+                    return
+                }
+                if let hr_response = JSON(response).dictionary?[_hr_requests]?.array {
+                    let sync_date = JSON(response).dictionary?[_sync_date]?.string ?? ""
+                    do {
+                        self.setup_HRLogs_HRFILES(response: response)
+                        for json in hr_response {
+                            self.isTotalCounter += 1
+                            let dictionary = try json.rawData()
+                            let hrRequest: HrRequest = try JSONDecoder().decode(HrRequest.self, from: dictionary)
+                            AppDelegate.sharedInstance.db?.deleteRowWithMultipleConditions(tbl: db_hr_request, conditions: "SERVER_ID_PK = '\(hrRequest.ticketID!)' AND CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)'", { _ in
+                                AppDelegate.sharedInstance.db?.insert_tbl_hr_request(hrrequests: hrRequest, { _ in })
+                            })
+                        }
+                        if self.count == self.isTotalCounter {
+                            
+                            DispatchQueue.main.async {
+                                Helper.updateLastSyncStatus(APIName: GET_HR_REQUEST,
+                                                            date: sync_date,
+                                                            skip: self.skip,
+                                                            take: 80,
+                                                            total_records: self.count)
+                                self.count = 0
+                                self.skip = 0
+                                self.isTotalCounter = 0
+                                DispatchQueue.main.async {
+                                    self.currentCount += self.increment
+                                    self.percentCounter.text = "\(self.currentCount)%"
+                                    self.getHrNotifications()
+                                }
+                            }
+                        } else {
+                            self.skip += 80
+                            self.getHrRequest()
+                        }
+                    } catch let DecodingError.dataCorrupted(context) {
+                        print(context)
+                    } catch let DecodingError.keyNotFound(key, context) {
+                        print("Key '\(key)' not found:", context.debugDescription)
+                        print("codingPath:", context.codingPath)
+                    } catch let DecodingError.valueNotFound(value, context) {
+                        print("Value '\(value)' not found:", context.debugDescription)
+                        print("codingPath:", context.codingPath)
+                    } catch let DecodingError.typeMismatch(type, context)  {
+                        print("Type '\(type)' mismatch:", context.debugDescription)
+                        print("codingPath:", context.codingPath)
+                    } catch {
+                        print("error: ", error)
+                    }
+                } else {
+                    self.count = 0
+                    self.skip = 0
+                    self.isTotalCounter = 0
+                    DispatchQueue.main.async {
+                        self.currentCount += self.increment
+                        self.percentCounter.text = "\(self.currentCount)%"
+                        self.getHrNotifications()
+                    }
+                }
+            }
+        }
+    }
+    
+    func setup_HRLogs_HRFILES(response: Any) {
+        if let hr_files = JSON(response).dictionary?[_hr_files]?.array {
+            for file in hr_files {
+                AppDelegate.sharedInstance.db?.deleteRow(tableName: db_files, column: "SERVER_ID_PK", ref_id: "\(file.dictionary?["GIMG_ID"]?.int ?? 0)", handler: { _ in
+                    do {
+                        print("FILE: GIMG_ID: \(file.dictionary?["GIMG_ID"]?.int ?? 0) TICKET_ID: \(file.dictionary?["TICKET_ID"]?.int ?? 0)")
+                        let dictionary = try file.rawData()
+                        let file = try JSONDecoder().decode(HrFiles.self, from: dictionary)
+                        AppDelegate.sharedInstance.db?.insert_tbl_hr_files(hrfile: file)
+                    } catch let DecodingError.dataCorrupted(context) {
+                        print(context)
+                    } catch let DecodingError.keyNotFound(key, context) {
+                        print("Key '\(key)' not found:", context.debugDescription)
+                        print("codingPath:", context.codingPath)
+                    } catch let DecodingError.valueNotFound(value, context) {
+                        print("Value '\(value)' not found:", context.debugDescription)
+                        print("codingPath:", context.codingPath)
+                    } catch let DecodingError.typeMismatch(type, context)  {
+                        print("Type '\(type)' mismatch:", context.debugDescription)
+                        print("codingPath:", context.codingPath)
+                    } catch {
+                        print("error: ", error)
+                    }
+                })
+            }
+        }
+        if let hr_log = JSON(response).dictionary?[_hr_logs]?.array {
+            for log in hr_log {
+                AppDelegate.sharedInstance.db?.deleteRow(tableName: db_grievance_remarks, column: "SERVER_ID_PK", ref_id: "\(log.dictionary?["GREM_ID"]?.int ?? -1)", handler: { _ in
+                    do {
+                        print("LOG: GREM_ID: \(log.dictionary?["GREM_ID"]?.int ?? 0) TICKET_ID: \(log.dictionary?["TICKET_ID"]?.int ?? 0)")
+                        let dictionary = try log.rawData()
+                        let log = try JSONDecoder().decode(HrLog.self, from: dictionary)
+                        AppDelegate.sharedInstance.db?.insert_tbl_hr_grievance(hr_log: log)
+                    } catch let error {
+                        print("log id: \(log.dictionary?["GREM_ID"]?.intValue) \(error.localizedDescription)")
+                    }
+                })
+            }
+        }
+    }
+}
+
+//MARK: - HR Notifications Logs
+extension LandingViewController {
+    @objc func getHrNotifications() {
+        DispatchQueue.main.async {
+            var hr_notification = [String: [String:Any]]()
+            if let lastSyncStatus = AppDelegate.sharedInstance.db?.readLastSyncStatus(tableName: db_last_sync_status,
+                                                                                      condition: "SYNC_KEY = '\(GET_HR_NOTIFICATION)' AND CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)'") {
+                hr_notification = [
+                    "hr_request": [
+                        "access_token": self.access_token,
+                        "skip" :0,
+                        "take" : 80,
+                        "sync_date": lastSyncStatus.DATE
+                    ]
+                ]
+            } else {
+                hr_notification = [
+                    "hr_request": [
+                        "access_token": self.access_token,
+                        "skip" : self.skip,
+                        "take" :80,
+                        "sync_date" : ""
+                    ]
+                ]
+            }
+            
+            let params = self.getAPIParameter(service_name: GET_HR_NOTIFICATION, request_body: hr_notification)
+            NetworkCalls.hr_notification(params: params) { success, response in
+                if success {
+                    self.count = JSON(response).dictionary![_count]!.intValue
+                    if self.count <= 0 {
+                        DispatchQueue.main.async {
+                            self.currentCount += self.increment
+                            self.percentCounter.text = "\(self.currentCount)%"
+                            self.getTCSLocations {
+                                DispatchQueue.main.async {
+                                    if self.isFulfilmentAllowed {
+                                        self.skip = 0
+                                        self.isTotalCounter = 0
+                                        self.getFulfilment()
+                                        return
+                                    } else {
+                                        if isMISListingAllowed {
+                                            self.getMISToken { token_granted in
+                                                if token_granted {
+                                                    DispatchQueue.main.async {
+                                                        self.currentCount += self.increment
+                                                        self.percentCounter.text = "\(self.currentCount)%"
+                                                        self.getmisdailyoverview { dailyOverview_granted in
+                                                            if dailyOverview_granted {
+                                                                DispatchQueue.main.async {
+                                                                    self.currentCount += self.increment
+                                                                    self.percentCounter.text = "\(self.currentCount)%"
+                                                                    self.navigateHomeScreen()
+                                                                }
+                                                            } else {
+                                                                DispatchQueue.main.async {
+                                                                    self.view.makeToast(SOMETHINGWENTWRONG)
+                                                                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                                                                        self.navigationController?.popViewController(animated: true)
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                } else {
+                                                    DispatchQueue.main.async {
+                                                        self.view.makeToast(SOMETHINGWENTWRONG)
+                                                        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                                                            self.navigationController?.popViewController(animated: true)
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        } else {
+                                            self.navigateHomeScreen()
+                                        }
+//                                        self.activityIndicator[6].isHidden = false
+//                                        self.activityIndicator[6].startAnimating()
+//                                        self.wallet_label.text = "Syncing Wallet Setup"
+//                                        self.setupWallet { wallet_success in
+//                                            if wallet_success {
+//                                                DispatchQueue.main.async {
+//                                                    self.wallet_label.text = "Synced Wallet Setup"
+//                                                    self.loaderViews[6].backgroundColor = UIColor.nativeRedColor()
+//                                                    self.activityIndicator[6].stopAnimating()
+//                                                    self.activityIndicator[6].isHidden = true
+//                                                    self.checkedImageView[6].isHidden = false
+//
+//                                                    self.activityIndicator[7].isHidden = false
+//                                                    self.activityIndicator[7].startAnimating()
+//
+//                                                    self.count = 0
+//                                                    self.skip = 0
+//                                                    self.isTotalCounter = 0
+//
+//                                                    self.setupwallethistorypoints()
+//                                                }
+//                                            }
+//                                        }
+                                        return
+                                    }
+                                }
+                            }
+                        }
+                        return
+                    }
+                    
+                    if let notification_requests = JSON(response).dictionary?[_notification_requests]?.array {
+                        let sync_date = JSON(response).dictionary?[_sync_date]?.string ?? ""
+                        do {
+                            for json in notification_requests {
+                                self.isTotalCounter += 1
+                                let dictionary = try json.rawData()
+                                let hrNotification: HRNotificationRequest = try JSONDecoder().decode(HRNotificationRequest.self, from: dictionary)
+                                AppDelegate.sharedInstance.db?.deleteRow(tableName: db_hr_notifications, column: "TICKET_ID", ref_id: "\(hrNotification.ticketID!)", handler: { _ in
+                                    AppDelegate.sharedInstance.db?.insert_tbl_HR_Notification_Request(hnr: hrNotification, { _ in })
+                                })
+                            }
+                            if self.isTotalCounter  >= self.count {
+                                DispatchQueue.main.async {
+                                    Helper.updateLastSyncStatus(APIName: GET_HR_NOTIFICATION,
+                                                                date: sync_date,
+                                                                skip: self.skip,
+                                                                take: 80,
+                                                                total_records: self.count)
+                                    DispatchQueue.main.async {
+                                        self.currentCount += self.increment
+                                        self.percentCounter.text = "\(self.currentCount)%"
+                                    }
+                                    self.getTCSLocations {
+                                        DispatchQueue.main.async {
+                                            
+                                            if self.isFulfilmentAllowed {
+                                                self.skip = 0
+                                                self.isTotalCounter = 0
+                                                
+                                                self.getFulfilment()
+                                                return
+                                            } else {
+                                                if isMISListingAllowed {
+                                                    self.getMISToken { token_granted in
+                                                        if token_granted {
+                                                            DispatchQueue.main.async {
+                                                                self.currentCount += self.increment
+                                                                self.percentCounter.text = "\(self.currentCount)%"
+                                                                self.getmisdailyoverview { dailyOverview_granted in
+                                                                    if dailyOverview_granted {
+                                                                        DispatchQueue.main.async {
+                                                                            self.currentCount += self.increment
+                                                                            self.percentCounter.text = "\(self.currentCount)%"
+                                                                            self.navigateHomeScreen()
+                                                                        }
+                                                                    } else {
+                                                                        DispatchQueue.main.async {
+                                                                            self.view.makeToast(SOMETHINGWENTWRONG)
+                                                                            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                                                                                self.navigationController?.popViewController(animated: true)
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                        } else {
+                                                            DispatchQueue.main.async {
+                                                                self.view.makeToast(SOMETHINGWENTWRONG)
+                                                                DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                                                                    self.navigationController?.popViewController(animated: true)
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                } else {
+                                                    self.navigateHomeScreen()
+                                                }
+//                                                self.activityIndicator[6].isHidden = false
+//                                                self.activityIndicator[6].startAnimating()
+//                                                self.wallet_label.text = "Syncing Wallet Setup"
+//                                                self.setupWallet { wallet_success in
+//                                                    if wallet_success {
+//                                                        DispatchQueue.main.async {
+//                                                            self.wallet_label.text = "Synced Wallet Setup"
+//                                                            self.loaderViews[6].backgroundColor = UIColor.nativeRedColor()
+//                                                            self.activityIndicator[6].stopAnimating()
+//                                                            self.activityIndicator[6].isHidden = true
+//                                                            self.checkedImageView[6].isHidden = false
+//
+//                                                            self.activityIndicator[7].isHidden = false
+//                                                            self.activityIndicator[7].startAnimating()
+//
+//                                                            self.count = 0
+//                                                            self.skip = 0
+//                                                            self.isTotalCounter = 0
+//
+//                                                            self.setupwallethistorypoints()
+//                                                        }
+//                                                    }
+//                                                }
+                                                return
+                                            }
+                                        }
+                                    }
+                                }
+                            } else {
+                                self.skip += 80
+                                self.getHrNotifications()
+                            }
+                        } catch let DecodingError.dataCorrupted(context) {
+                            print(context)
+                        } catch let DecodingError.keyNotFound(key, context) {
+                            print("Key '\(key)' not found:", context.debugDescription)
+                            print("codingPath:", context.codingPath)
+                        } catch let DecodingError.valueNotFound(value, context) {
+                            print("Value '\(value)' not found:", context.debugDescription)
+                            print("codingPath:", context.codingPath)
+                        } catch let DecodingError.typeMismatch(type, context)  {
+                            print("Type '\(type)' mismatch:", context.debugDescription)
+                            print("codingPath:", context.codingPath)
+                        } catch {
+                            print("error: ", error)
+                        }
+                    } else {
+                        self.getTCSLocations {
+                            DispatchQueue.main.async {
+                                self.currentCount += self.increment
+                                self.percentCounter.text = "\(self.currentCount)%"
+                                if self.isFulfilmentAllowed {
+                                    self.skip = 0
+                                    self.isTotalCounter = 0
+                                    
+                                    self.getFulfilment()
+                                    return
+                                } else {
+                                    //MIS Setup
+                                    if isMISListingAllowed {
+                                        self.getMISToken { token_granted in
+                                            if token_granted {
+                                                DispatchQueue.main.async {
+                                                    self.currentCount += self.increment
+                                                    self.percentCounter.text = "\(self.currentCount)%"
+                                                    self.getmisdailyoverview { dailyOverview_granted in
+                                                        if dailyOverview_granted {
+                                                            DispatchQueue.main.async {
+                                                                self.currentCount += self.increment
+                                                                self.percentCounter.text = "\(self.currentCount)%"
+                                                                self.navigateHomeScreen()
+                                                            }
+                                                        } else {
+                                                            DispatchQueue.main.async {
+                                                                self.view.makeToast(SOMETHINGWENTWRONG)
+                                                                DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                                                                    self.navigationController?.popViewController(animated: true)
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            } else {
+                                                DispatchQueue.main.async {
+                                                    self.view.makeToast(SOMETHINGWENTWRONG)
+                                                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                                                        self.navigationController?.popViewController(animated: true)
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    } else {
+                                        self.navigateHomeScreen()
+                                    }
+//                                    self.activityIndicator[6].isHidden = false
+//                                    self.activityIndicator[6].startAnimating()
+//                                    self.wallet_label.text = "Syncing Wallet Setup"
+//                                    self.setupWallet { wallet_success in
+//                                        if wallet_success {
+//                                            DispatchQueue.main.async {
+//                                                self.wallet_label.text = "Synced Wallet Setup"
+//                                                self.loaderViews[6].backgroundColor = UIColor.nativeRedColor()
+//                                                self.activityIndicator[6].stopAnimating()
+//                                                self.activityIndicator[6].isHidden = true
+//                                                self.checkedImageView[6].isHidden = false
+//
+//                                                self.activityIndicator[7].isHidden = false
+//                                                self.activityIndicator[7].startAnimating()
+//
+//                                                self.count = 0
+//                                                self.skip = 0
+//                                                self.isTotalCounter = 0
+//
+//                                                self.setupwallethistorypoints()
+//                                            }
+//                                        }
+//                                    }
+                                }
+                            }
+                        }
+                    }
+                    
+                } else {
+                    DispatchQueue.main.async {
+                        self.navigationController?.popViewController(animated: true)
+                    }
+                }
+            }
+        }
+    }
+}
+
+//MARK: - Get TCS Locations
+extension LandingViewController {
+    func getTCSLocations (_ handler: @escaping()->Void) {
+        let json = [
+            "location_request" : [
+                "access_token" : access_token
+            ]
+        ]
+        let params = self.getAPIParameter(service_name: GETLOCATIONS, request_body: json)
+        NetworkCalls.get_tcs_location(params: params) { (granted, response) in
+            if granted {
+                if let data = JSON(response).array {
+                    AppDelegate.sharedInstance.db?.deleteAll(tableName: db_att_locations, handler: { _ in
+                        for locations in data {
+                            do {
+                                let dictionary = try locations.rawData()
+                                let att_location = try JSONDecoder().decode(AttLocations.self, from: dictionary)
+                                AppDelegate.sharedInstance.db?.insert_tbl_att_locations(att_location: att_location)
+                            } catch let DecodingError.dataCorrupted(context) {
+                                print(context)
+                            } catch let DecodingError.keyNotFound(key, context) {
+                                print("Key '\(key)' not found:", context.debugDescription)
+                                print("codingPath:", context.codingPath)
+                            } catch let DecodingError.valueNotFound(value, context) {
+                                print("Value '\(value)' not found:", context.debugDescription)
+                                print("codingPath:", context.codingPath)
+                            } catch let DecodingError.typeMismatch(type, context)  {
+                                print("Type '\(type)' mismatch:", context.debugDescription)
+                                print("codingPath:", context.codingPath)
+                            } catch {
+                                print("error: ", error)
+                            }
+                        }
+                    })
+                }
+            } else {
+                
+            }
+            handler()
+        }
+    }
+}
+//MARK: - Fulfilment Orders
+extension LandingViewController {
+    private func getAPIParameters(service_name: String, request_body: [String: Any]) -> [String:Any] {
+        let params = [
+            "eAI_MESSAGE": [
+                "eAI_HEADER": [
+                    "serviceName": service_name,
+                    "client": "ibm_apiconnect",
+                    "clientChannel": "MOB",
+                    "referenceNum": "",
+                    "securityInfo": [
+                        "authentication": [
+                            "userId": "",
+                            "password": ""
+                        ]
+                    ]
+                ],
+                "eAI_BODY": [
+                    "eAI_REQUEST": request_body
+                ]
+            ]
+        ]
+        return params as [String: Any]
+    }
+    func getFulfilment() {
+        var fulfilment = [String: [String:Any]]()
+        if let lastSyncStatus = AppDelegate.sharedInstance.db?.readLastSyncStatus(tableName: db_last_sync_status,
+                                                                                  condition: "SYNC_KEY = '\(GETORDERFULFILMET)' AND CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)'") {
+            fulfilment = [
+                "hr_request":[
+                    "access_token": access_token,
+                    "skip" :0,
+                    "take" : 80,
+                    "sync_date": lastSyncStatus.DATE
+                ]
+            ]
+        } else {
+            fulfilment = [
+                "hr_request":[
+                    "access_token": access_token,
+                    "skip" :skip,
+                    "take" : 80,
+                    "sync_date": ""
+                ]
+            ]
+        }
+        let params = self.getAPIParameters(service_name: GETORDERFULFILMET, request_body: fulfilment)
+        NetworkCalls.getorderfulfilment(params: params) { success, response in
+            if success {
+                self.count = JSON(response).dictionary![_count]!.intValue
+                if self.count <= 0 {
+                    DispatchQueue.main.async {
+                        self.currentCount += self.increment
+                        self.percentCounter.text = "\(self.currentCount)%"
+                        //MIS Setup
+                        if isMISListingAllowed {
+                            self.getMISToken { token_granted in
+                                if token_granted {
+                                    DispatchQueue.main.async {
+                                        self.getmisdailyoverview { dailyOverview_granted in
+                                            if dailyOverview_granted {
+                                                DispatchQueue.main.async {
+                                                    self.currentCount += self.increment
+                                                    self.percentCounter.text = "\(self.currentCount)%"
+                                                    self.navigateHomeScreen()
+                                                }
+                                            } else {
+                                                DispatchQueue.main.async {
+                                                    self.view.makeToast(SOMETHINGWENTWRONG)
+                                                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                                                        self.navigationController?.popViewController(animated: true)
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                } else {
+                                    DispatchQueue.main.async {
+                                        self.view.makeToast(SOMETHINGWENTWRONG)
+                                        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                                            self.navigationController?.popViewController(animated: true)
+                                        }
+                                    }
+                                }
+                            }
+                        } else {
+                            self.navigateHomeScreen()
+                        }
+//                        self.wallet_label.text = "Syncing Wallet Setup"
+//                        self.setupWallet { wallet_success in
+//                            if wallet_success {
+//                                DispatchQueue.main.async {
+//                                    self.wallet_label.text = "Synced Wallet Setup"
+//                                    self.loaderViews[6].backgroundColor = UIColor.nativeRedColor()
+//                                    self.activityIndicator[6].stopAnimating()
+//                                    self.activityIndicator[6].isHidden = true
+//                                    self.checkedImageView[6].isHidden = false
+//
+//                                    self.activityIndicator[7].isHidden = false
+//                                    self.activityIndicator[7].startAnimating()
+//
+//                                    self.count = 0
+//                                    self.skip = 0
+//                                    self.isTotalCounter = 0
+//
+//                                    self.setupwallethistorypoints()
+//                                }
+//                            }
+//                        }
+                    }
+                    return
+                }
+                
+                if let fulfilment_orders = JSON(response).dictionary?[_orders]?.array {
+                    let sync_date = JSON(response).dictionary?[_sync_date]?.string ?? ""
+                    do {
+                        for json in fulfilment_orders {
+                            self.isTotalCounter += 1
+                            let dictionary = try json.rawData()
+                            let fulfilment_orders: FulfilmentOrders = try JSONDecoder().decode(FulfilmentOrders.self, from: dictionary)
+                            AppDelegate.sharedInstance.db?.deleteRowWithMultipleConditions(tbl: db_fulfilment_orders, conditions: "CNSG_NO = '\(fulfilment_orders.cnsgNo)' AND CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)'", { _ in
+                                AppDelegate.sharedInstance.db?.insert_tbl_fulfilment_orders(fulfilment_orders: fulfilment_orders, handler: { _ in })
+                            })
+                        }
+                        if self.isTotalCounter  >= self.count {
+                            DispatchQueue.main.async {
+                                self.currentCount += self.increment
+                                self.percentCounter.text = "\(self.currentCount)%"
+                                Helper.updateLastSyncStatus(APIName: GETORDERFULFILMET,
+                                                            date: sync_date,
+                                                            skip: self.skip,
+                                                            take: 80,
+                                                            total_records: self.count)
+                                DispatchQueue.main.async {
+                                    //MIS Setup
+                                    if isMISListingAllowed {
+                                        self.getMISToken { token_granted in
+                                            if token_granted {
+                                                DispatchQueue.main.async {
+                                                    self.currentCount += self.increment
+                                                    self.percentCounter.text = "\(self.currentCount)%"
+                                                    self.getmisdailyoverview { dailyOverview_granted in
+                                                        if dailyOverview_granted {
+                                                            DispatchQueue.main.async {
+                                                                self.currentCount += self.increment
+                                                                self.percentCounter.text = "\(self.currentCount)%"
+                                                                self.navigateHomeScreen()
+                                                            }
+                                                        } else {
+                                                            DispatchQueue.main.async {
+                                                                self.view.makeToast(SOMETHINGWENTWRONG)
+                                                                DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                                                                    self.navigationController?.popViewController(animated: true)
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            } else {
+                                                DispatchQueue.main.async {
+                                                    self.view.makeToast(SOMETHINGWENTWRONG)
+                                                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                                                        self.navigationController?.popViewController(animated: true)
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    } else {
+                                        self.navigateHomeScreen()
+                                    }
+//                                    self.activityIndicator[6].isHidden = false
+//                                    self.activityIndicator[6].startAnimating()
+//                                    self.wallet_label.text = "Syncing Wallet Setup"
+//                                    self.setupWallet { wallet_success in
+//                                        if wallet_success {
+//                                            DispatchQueue.main.async {
+//                                                self.wallet_label.text = "Synced Wallet Setup"
+//                                                self.loaderViews[6].backgroundColor = UIColor.nativeRedColor()
+//                                                self.activityIndicator[6].stopAnimating()
+//                                                self.activityIndicator[6].isHidden = true
+//                                                self.checkedImageView[6].isHidden = false
+//
+//                                                self.activityIndicator[7].isHidden = false
+//                                                self.activityIndicator[7].startAnimating()
+//
+//                                                self.count = 0
+//                                                self.skip = 0
+//                                                self.isTotalCounter = 0
+//
+//                                                self.setupwallethistorypoints()
+//                                            }
+//                                        }
+//                                    }
+                                }
+                            }
+                        } else {
+                            self.skip += 80
+                            self.getFulfilment()
+                        }
+                    } catch let DecodingError.dataCorrupted(context) {
+                        print(context)
+                    } catch let DecodingError.keyNotFound(key, context) {
+                        print("Key '\(key)' not found:", context.debugDescription)
+                        print("codingPath:", context.codingPath)
+                    } catch let DecodingError.valueNotFound(value, context) {
+                        print("Value '\(value)' not found:", context.debugDescription)
+                        print("codingPath:", context.codingPath)
+                    } catch let DecodingError.typeMismatch(type, context)  {
+                        print("Type '\(type)' mismatch:", context.debugDescription)
+                        print("codingPath:", context.codingPath)
+                    } catch {
+                        print("error: ", error)
+                    }
+                } else {
+                    DispatchQueue.main.async {
+                        //MIS Setup
+                        if isMISListingAllowed {
+                            self.getMISToken { token_granted in
+                                if token_granted {
+                                    DispatchQueue.main.async {
+                                        self.currentCount += self.increment
+                                        self.percentCounter.text = "\(self.currentCount)%"
+                                        self.getmisdailyoverview { dailyOverview_granted in
+                                            if dailyOverview_granted {
+                                                DispatchQueue.main.async {
+                                                    self.currentCount += self.increment
+                                                    self.percentCounter.text = "\(self.currentCount)%"
+                                                    self.navigateHomeScreen()
+                                                }
+                                            } else {
+                                                DispatchQueue.main.async {
+                                                    self.view.makeToast(SOMETHINGWENTWRONG)
+                                                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                                                        self.navigationController?.popViewController(animated: true)
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                } else {
+                                    DispatchQueue.main.async {
+                                        self.view.makeToast(SOMETHINGWENTWRONG)
+                                        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                                            self.navigationController?.popViewController(animated: true)
+                                        }
+                                    }
+                                }
+                            }
+                        } else {
+                            self.navigateHomeScreen()
+                        }
+//                        self.activityIndicator[6].isHidden = false
+//                        self.activityIndicator[6].startAnimating()
+//                        self.wallet_label.text = "Syncing Wallet Setup"
+//                        self.setupWallet { wallet_success in
+//                            if wallet_success {
+//                                DispatchQueue.main.async {
+//                                    self.wallet_label.text = "Synced Wallet Setup"
+//                                    self.loaderViews[6].backgroundColor = UIColor.nativeRedColor()
+//                                    self.activityIndicator[6].stopAnimating()
+//                                    self.activityIndicator[6].isHidden = true
+//                                    self.checkedImageView[6].isHidden = false
+//
+//                                    self.activityIndicator[7].isHidden = false
+//                                    self.activityIndicator[7].startAnimating()
+//
+//                                    self.count = 0
+//                                    self.skip = 0
+//                                    self.isTotalCounter = 0
+//
+//                                    self.setupwallethistorypoints()
+//                                }
+//                            }
+//                        }
+                    }
+                }
+                
+            } else {
+                DispatchQueue.main.async {
+                    self.navigationController?.popViewController(animated: true)
+                }
+            }
+        }
+        
+    }
+}
+//MARK: - Management Information System
+extension LandingViewController {
+    private func getMISToken(_ handler: @escaping(Bool)->Void) {
+        let params = ["clientSecret": MISCLIENTSECRET] as [String:Any]
+        NetworkCalls.getmistoken(params: params) { token_granted in
+            if token_granted {
+                //get MIS Setup Data
+                DispatchQueue.main.async {
+                    self.currentCount += self.increment
+                    self.percentCounter.text = "\(self.currentCount)%"
+                }
+                let request_body = [String: Any]()
+                let params = [
+                    "eAI_MESSAGE": [
+                        "eAI_HEADER": [
+                            "serviceName": S_MIS_BUDGET_SETUP,
+                            "client": "TCS",
+                            "clientChannel": "MOB",
+                            "referenceNum": "",
+                            "securityInfo": [
+                                "authentication": [
+                                    "userId": "",
+                                    "password": ""
+                                ]
+                            ]
+                        ],
+                        "eAI_BODY": [
+                            "eAI_REQUEST": request_body
+                        ]
+                    ]
+                ] as [String :Any]
+                NetworkCalls.setupmis(params: params) { setup_granted, response in
+                    if setup_granted {
+                        let json = JSON(response)
+                        if let _BudgetSetup = json.dictionary?[_BudgetSetup]?.array {
+                            do {
+                                AppDelegate.sharedInstance.db?.deleteAll(tableName: db_mis_budget_setup, handler: { _ in })
+                                for budgetSetup in _BudgetSetup {
+                                    let rawData = try budgetSetup.rawData()
+                                    let budget_setup: BudgetSetup = try JSONDecoder().decode(BudgetSetup.self, from: rawData)
+                                    AppDelegate.sharedInstance.db?.insert_tbl_mis_budget_setup(budget_setup: budget_setup, handler: { _ in })
+                                }
+                                handler(true)
+                            } catch let DecodingError.dataCorrupted(context) {
+                                print(context)
+                            } catch let DecodingError.keyNotFound(key, context) {
+                                print("Key '\(key)' not found:", context.debugDescription)
+                                print("codingPath:", context.codingPath)
+                            } catch let DecodingError.valueNotFound(value, context) {
+                                print("Value '\(value)' not found:", context.debugDescription)
+                                print("codingPath:", context.codingPath)
+                            } catch let DecodingError.typeMismatch(type, context)  {
+                                print("Type '\(type)' mismatch:", context.debugDescription)
+                                print("codingPath:", context.codingPath)
+                            } catch {
+                                print("error: ", error)
+                            }
+                        } else {
+                            handler(false)
+                        }
+                    } else {
+                        handler(false)
+                    }
+                }
+            } else {
+                handler(false)
+            }
+        }
+    }
+    
+    //GET Daily Delivery
+    private func getmisdailyoverview(_ handler: @escaping(Bool)->Void) {
+        let lastSyncStatus = AppDelegate.sharedInstance.db?.readLastSyncStatus(tableName: db_last_sync_status,
+                                                                               condition: "SYNC_KEY = '\(S_MIS_BUDGET_DATA)' AND CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)'")
+        var last_budget_data = [String:Any]()
+        if lastSyncStatus == nil {
+            last_budget_data = [
+                "dateTime": ""
+            ]
+        } else {
+            last_budget_data = [
+                "dateTime" : ""
+            ]
+        }
+        
+        let params = [
+            "eAI_MESSAGE": [
+              "eAI_HEADER": [
+                "serviceName": "DAILY.BUDGET",
+                "client": "",
+                "clientChannel": "",
+                "referenceNum": "",
+                "securityInfo": [
+                  "authentication": [
+                    "userId": "string",
+                    "password": "string"
+                  ]
+                ]
+              ],
+              "eAI_BODY": [
+                "eAI_REQUEST": last_budget_data
+              ]
+            ]
+        ] as [String:Any]
+        
+        NetworkCalls.getbudgetdata(params: params) { daily_granted, response in
+            if daily_granted {
+                let json = JSON(response)
+                if let budgetData = json.dictionary?[_budgetData]?.array {
+                    do {
+                        if budgetData.count <= 0 {
+                            if let lastSync = json.dictionary?["lastSync"]?.string {
+                                Helper.updateLastSyncStatus(APIName: S_MIS_BUDGET_DATA,
+                                                            date: lastSync,
+                                                            skip: 0,
+                                                            take: 0,
+                                                            total_records: 0)
+                            }
+                            handler(true)
+                            return
+                        }
+                        
+                        for bd in budgetData {
+                            let rawData = try bd.rawData()
+                            let budget_data: BudgetData = try JSONDecoder().decode(BudgetData.self, from: rawData)
+                            AppDelegate.sharedInstance.db?.deleteRowWithMultipleConditions(tbl: db_mis_budget_data, conditions: "RPT_DATE = '\(budget_data.rptDate)' AND TYPE = '\(budget_data.type)'", { _ in
+                                AppDelegate.sharedInstance.db?.insert_tbl_mis_budget_data(budget_data: budget_data, handler: { _ in })
+                            })
+                            
+                        }
+                        if let lastSync = json.dictionary?["lastSyncDate"]?.string {
+                            Helper.updateLastSyncStatus(APIName: S_MIS_BUDGET_DATA,
+                                                        date: lastSync,
+                                                        skip: 0,
+                                                        take: 0,
+                                                        total_records: 0)
+                        }
+                        handler(true)
+                    } catch let DecodingError.dataCorrupted(context) {
+                        print(context)
+                    } catch let DecodingError.keyNotFound(key, context) {
+                        print("Key '\(key)' not found:", context.debugDescription)
+                        print("codingPath:", context.codingPath)
+                    } catch let DecodingError.valueNotFound(value, context) {
+                        print("Value '\(value)' not found:", context.debugDescription)
+                        print("codingPath:", context.codingPath)
+                    } catch let DecodingError.typeMismatch(type, context)  {
+                        print("Type '\(type)' mismatch:", context.debugDescription)
+                        print("codingPath:", context.codingPath)
+                    } catch {
+                        print("error: ", error)
+                    }
+                } else {
+                    handler(false)
+                }
+            } else {
+                handler(false)
+            }
+        }
+    }
+}
+
+
+extension LandingViewController {
+    @objc func navigateHomeScreen() {
+        if self.currentCount > 95 {
+            self.percentCounter.text = "100%"
+        }
+        UserDefaults.standard.setValue(CURRENT_USER_LOGGED_IN_ID, forKeyPath: "CurrentUser")
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+            NotificationCenter.default.removeObserver(self)
+//            if self.isPresented {
+//                self.isPresented = false
+//                self.dismiss(animated: true) {
+//                    NotificationCenter.default.post(Notification.init(name: .refreshedViews))
+//                }
+//                return
+//            }
+            
+            let dashboard = UIStoryboard(name: "Dashboard", bundle: nil)
+            let controller = dashboard.instantiateViewController(withIdentifier: "tabbar") as! UITabBarController
+            if #available(iOS 13.0, *) {
+                controller.modalPresentationStyle = .overFullScreen
+                
+            }
+//            controller.modalTransitionStyle = .crossDissolve
+//            Helper.topMostController().present(controller, animated: true, completion: nil)
+            self.navigationController?.pushViewController(controller, animated: true)
+//            self.navigationController?.popViewController(animated: true)
+        }
+//        Messaging.messaging().subscribe(toTopic: BROADCAST_KEY) { error in
+//            guard let err = error else {
+//                print("user subscribed")
+//                return
+//            }
+//            print(err.localizedDescription)
+//        }
+    }
+}
+
+
