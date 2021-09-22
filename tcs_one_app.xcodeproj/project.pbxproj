@@ -87,6 +87,9 @@
 		1BA5110E267B31F900E0E642 /* WalletHistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BA5110D267B31F900E0E642 /* WalletHistoryViewController.swift */; };
 		1BA51110267B801600E0E642 /* CustomAlertView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1BA5110F267B801600E0E642 /* CustomAlertView.xib */; };
 		1BA51112267B804100E0E642 /* CustomAlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BA51111267B804100E0E642 /* CustomAlertView.swift */; };
+		1BA6852026FB4A2B00AC07FB /* WalletBeneficiaryListingTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BA6851E26FB4A2B00AC07FB /* WalletBeneficiaryListingTableCell.swift */; };
+		1BA6852126FB4A2B00AC07FB /* WalletBeneficiaryListingTableCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1BA6851F26FB4A2B00AC07FB /* WalletBeneficiaryListingTableCell.xib */; };
+		1BA6852326FB62AA00AC07FB /* AddNewBeneficiaryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BA6852226FB62AA00AC07FB /* AddNewBeneficiaryViewController.swift */; };
 		1BA7BAC2260DF3FD002D9FA9 /* FulfilmentOrderDetailTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BA7BAC0260DF3FD002D9FA9 /* FulfilmentOrderDetailTableCell.swift */; };
 		1BA7BAC3260DF3FD002D9FA9 /* FulfilmentOrderDetailTableCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1BA7BAC1260DF3FD002D9FA9 /* FulfilmentOrderDetailTableCell.xib */; };
 		1BAFA3C626A14BAC00025BED /* WalletListingTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BAFA3C526A14BAC00025BED /* WalletListingTableCell.swift */; };
@@ -261,6 +264,9 @@
 		1BA5110D267B31F900E0E642 /* WalletHistoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletHistoryViewController.swift; sourceTree = "<group>"; };
 		1BA5110F267B801600E0E642 /* CustomAlertView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CustomAlertView.xib; sourceTree = "<group>"; };
 		1BA51111267B804100E0E642 /* CustomAlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomAlertView.swift; sourceTree = "<group>"; };
+		1BA6851E26FB4A2B00AC07FB /* WalletBeneficiaryListingTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletBeneficiaryListingTableCell.swift; sourceTree = "<group>"; };
+		1BA6851F26FB4A2B00AC07FB /* WalletBeneficiaryListingTableCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WalletBeneficiaryListingTableCell.xib; sourceTree = "<group>"; };
+		1BA6852226FB62AA00AC07FB /* AddNewBeneficiaryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddNewBeneficiaryViewController.swift; sourceTree = "<group>"; };
 		1BA7BAC0260DF3FD002D9FA9 /* FulfilmentOrderDetailTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FulfilmentOrderDetailTableCell.swift; sourceTree = "<group>"; };
 		1BA7BAC1260DF3FD002D9FA9 /* FulfilmentOrderDetailTableCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FulfilmentOrderDetailTableCell.xib; sourceTree = "<group>"; };
 		1BAFA3C526A14BAC00025BED /* WalletListingTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletListingTableCell.swift; sourceTree = "<group>"; };
@@ -513,11 +519,29 @@
 		1BA51108267B287F00E0E642 /* Wallet */ = {
 			isa = PBXGroup;
 			children = (
+				1BA6851C26FB47B900AC07FB /* Redemption */,
 				1BA51109267B28A400E0E642 /* WalletHistoryTableCell.swift */,
 				1BA5110A267B28A400E0E642 /* WalletHistoryTableCell.xib */,
 				1BAFA3C526A14BAC00025BED /* WalletListingTableCell.swift */,
 			);
 			path = Wallet;
+			sourceTree = "<group>";
+		};
+		1BA6851C26FB47B900AC07FB /* Redemption */ = {
+			isa = PBXGroup;
+			children = (
+				1BA6851D26FB491000AC07FB /* Beneficiary */,
+			);
+			path = Redemption;
+			sourceTree = "<group>";
+		};
+		1BA6851D26FB491000AC07FB /* Beneficiary */ = {
+			isa = PBXGroup;
+			children = (
+				1BA6851E26FB4A2B00AC07FB /* WalletBeneficiaryListingTableCell.swift */,
+				1BA6851F26FB4A2B00AC07FB /* WalletBeneficiaryListingTableCell.xib */,
+			);
+			path = Beneficiary;
 			sourceTree = "<group>";
 		};
 		1BC02EFD25FA445500EFAFE9 /* GeoLocation */ = {
@@ -541,6 +565,7 @@
 			isa = PBXGroup;
 			children = (
 				1BD7B53126FB162500606E2D /* WalletAddBeneficiaryViewController.swift */,
+				1BA6852226FB62AA00AC07FB /* AddNewBeneficiaryViewController.swift */,
 			);
 			path = "Add Benificiary";
 			sourceTree = "<group>";
@@ -964,6 +989,7 @@
 				1BF25A4A25E7CA3B008CE34F /* LeadershipAwaz.storyboard in Resources */,
 				1B281768257F7D44009AE4E3 /* ChartViews.xib in Resources */,
 				1B1ED252261C99EF0026234B /* buzzer.mp3 in Resources */,
+				1BA6852126FB4A2B00AC07FB /* WalletBeneficiaryListingTableCell.xib in Resources */,
 				1B11D085262EC82800C137A3 /* HeadOfSecurity.docx in Resources */,
 				60978BE125523E0B009AA2F3 /* MultiplePieCharCollectionCell.xib in Resources */,
 				605CE76D2541459800509434 /* sandboxcert.p12 in Resources */,
@@ -1093,6 +1119,7 @@
 				1BA5110B267B28A400E0E642 /* WalletHistoryTableCell.swift in Sources */,
 				1B61B2BC25DD25DD00CDAAE2 /* DManDetailsTableCell.swift in Sources */,
 				1B3EDCA2260C620100A97984 /* FulfilmentListingTableCell.swift in Sources */,
+				1BA6852326FB62AA00AC07FB /* AddNewBeneficiaryViewController.swift in Sources */,
 				1B5EAA83255EA4A600F49D09 /* GrievanceHelpDeskRequestsViewController.swift in Sources */,
 				1BA7BAC2260DF3FD002D9FA9 /* FulfilmentOrderDetailTableCell.swift in Sources */,
 				1BFB375D25F9FB580073CC53 /* MapViewController.swift in Sources */,
@@ -1110,6 +1137,7 @@
 				1BE523D62679DB1100F5F030 /* IMSDeliveryDetailTableCell.swift in Sources */,
 				1B326588259C95BF001B94C0 /* IMSDashboardViewController.swift in Sources */,
 				1B61B2B225DD20B800CDAAE2 /* RBagDetailsTableCell.swift in Sources */,
+				1BA6852026FB4A2B00AC07FB /* WalletBeneficiaryListingTableCell.swift in Sources */,
 				6010F4172540622500CF8597 /* NetworkCalls.swift in Sources */,
 				60E99911253D4F1300BCDAD1 /* PieChartCollectionCell.swift in Sources */,
 				1B3EDC9D260C598C00A97984 /* FulfilmentListingViewController.swift in Sources */,

@@ -17,13 +17,20 @@ class WalletAddBeneficiaryViewController: BaseViewController {
         super.viewDidLoad()
         title = "Wallet"
         makeTopCornersRounded(roundView: self.mainView)
+        self.tableView.register(UINib(nibName: WalletBeneficiaryListingTableCell.description(), bundle: nil), forCellReuseIdentifier: WalletBeneficiaryListingTableCell.description())
+//        self.tableView.estimatedRowHeight = 100
+//        self.tableView.rowHeight = UITableView.automaticDimension
         self.tableView.dataSource = self
         self.tableView.delegate = self
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-            self.tableViewHeightConstraint.constant = CGFloat(30 * 50)
+            self.tableViewHeightConstraint.constant = CGFloat(90 * 50)
             self.tableView.reloadData()
         }
+    }
+    @IBAction func addBeneficiaryTapped(_ sender: Any) {
+        let controller = self.storyboard?.instantiateViewController(withIdentifier: "AddNewBeneficiaryViewController") as! AddNewBeneficiaryViewController
+        self.navigationController?.pushViewController(controller, animated: true)
     }
 }
 
@@ -32,15 +39,17 @@ extension WalletAddBeneficiaryViewController: UITableViewDelegate, UITableViewDa
         return 50
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "cell") else {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: WalletBeneficiaryListingTableCell.description()) as? WalletBeneficiaryListingTableCell else {
             fatalError()
         }
         
-        cell.textLabel?.text = "\(indexPath.row)"
+        cell.nameLabel.text = "TCS One App \(indexPath.row)"
+        cell.empIdLabel.text = "EMP ID:     \(CURRENT_USER_LOGGED_IN_ID)"
+        cell.cellLabel.text = "CELL#        03331231231"
         
         return cell
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 30
+        return 90
     }
 }
