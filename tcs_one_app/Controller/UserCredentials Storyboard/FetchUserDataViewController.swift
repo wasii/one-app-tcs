@@ -1565,25 +1565,19 @@ extension FetchUserDataViewController {
                             do {
                                 let rawdata = try o.rawData()
                                 let model = try JSONDecoder().decode(WalletSetupData.self, from: rawdata)
-                                AppDelegate.sharedInstance.db?.deleteAll(tableName: db_w_query_detail, handler: { _ in
-                                    for incentiveData in model.incentiveData {
-                                        AppDelegate.sharedInstance.db?.deleteAll(tableName: db_w_query_master, handler: { _ in
-                                            AppDelegate.sharedInstance.db?.insert_tbl_wallet_query_master(incentiveData: incentiveData, handler: { _ in })
-                                        })
-                                    }
-                                    AppDelegate.sharedInstance.db?.deleteAll(tableName: db_w_pointtypes, handler: { _ in
-                                        for pointType in model.pointType {
-                                            
-                                            AppDelegate.sharedInstance.db?.insert_tbl_wallet_point_type(pointType: pointType, handler: { _ in })
-                                            
-                                        }
-                                    })
-                                    AppDelegate.sharedInstance.db?.deleteAll(tableName: db_w_setup_redemption, handler: { _ in
-                                        for setupRedemption in model.redemptionSetup {
-                                            AppDelegate.sharedInstance.db?.insert_tbl_wallet_setup(redemptionSetup: setupRedemption, handler: { _ in })
-                                        }
-                                    })
-                                })
+                                AppDelegate.sharedInstance.db?.deleteAll(tableName: db_w_query_master, handler: { _ in })
+                                AppDelegate.sharedInstance.db?.deleteAll(tableName: db_w_pointtypes, handler: { _ in })
+                                AppDelegate.sharedInstance.db?.deleteAll(tableName: db_w_setup_redemption, handler: { _ in })
+                                
+                                for incentiveData in model.incentiveData {
+                                    AppDelegate.sharedInstance.db?.insert_tbl_wallet_query_master(incentiveData: incentiveData, handler: { _ in })
+                                }
+                                for pointType in model.pointType {
+                                    AppDelegate.sharedInstance.db?.insert_tbl_wallet_point_type(pointType: pointType, handler: { _ in })
+                                }
+                                for setupRedemption in model.redemptionSetup {
+                                    AppDelegate.sharedInstance.db?.insert_tbl_wallet_setup(redemptionSetup: setupRedemption, handler: { _ in })
+                                }
                             } catch let DecodingError.dataCorrupted(context) {
                                 print(context)
                             } catch let DecodingError.keyNotFound(key, context) {

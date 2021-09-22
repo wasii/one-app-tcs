@@ -319,6 +319,9 @@ extension WalletDetailsViewController: UITableViewDataSource, UITableViewDelegat
                     p.IS_MATURE == 0
                 })
             }
+            filteredPoints = filteredPoints?.sorted(by: { one, two in
+                one.TRANSACTION_DATE < two.TRANSACTION_DATE
+            })
             
             let document = PDFDocument(format: .a4)
             
