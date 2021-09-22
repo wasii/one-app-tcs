@@ -88,14 +88,10 @@ class WalletDashboardViewController: BaseViewController {
         floaty.plusColor = UIColor.white
         floaty.buttonColor = UIColor.nativeRedColor()
         floaty.buttonImage = UIImage(named: "currency")
-        if let options = AppDelegate.sharedInstance.db?.read_tbl_wallet_setup(query: "SELECT * FROM \(db_w_setup_redemption)") {
-            for o in options {
-                let url = URL(string: o.IMAGE_URL_IOS)
-                let data = try? Data(contentsOf: url!)
-                floaty.addItem("\(o.REDEMPTION_DESCRIPTION)", icon: UIImage(data: data!)) { item in
-                    
-                }
-            }
+        floaty.addItem("P2P", icon: UIImage(named: "P2P")) { item in
+            let storyboard = UIStoryboard(name: "WalletRedemption", bundle: nil)
+            let controller = storyboard.instantiateViewController(withIdentifier: "WalletAddBeneficiaryViewController") as! WalletAddBeneficiaryViewController
+            self.navigationController?.pushViewController(controller, animated: true)
         }
         floaty.paddingX = (UIApplication.shared.keyWindow?.safeAreaInsets.right ?? 0) + 25
         floaty.paddingY = (UIApplication.shared.keyWindow?.safeAreaInsets.bottom ?? 0) + 75

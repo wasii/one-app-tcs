@@ -96,6 +96,8 @@
 		1BC42B8D257527F7000A63AF /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1BC42B8C257527F7000A63AF /* CloudKit.framework */; };
 		1BD4A49E261310C700491D0D /* FulfillmentPopViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BD4A49D261310C700491D0D /* FulfillmentPopViewController.swift */; };
 		1BD4A52F26133B2C00491D0D /* ScanFulfillmentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BD4A52E26133B2C00491D0D /* ScanFulfillmentViewController.swift */; };
+		1BD7B53026FB0D9700606E2D /* WalletRedemption.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1BD7B52F26FB0D9700606E2D /* WalletRedemption.storyboard */; };
+		1BD7B53226FB162500606E2D /* WalletAddBeneficiaryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BD7B53126FB162500606E2D /* WalletAddBeneficiaryViewController.swift */; };
 		1BE523CD2679DA9400F5F030 /* IMSConsignmentDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BE523CB2679DA9400F5F030 /* IMSConsignmentDetailsViewController.swift */; };
 		1BE523CE2679DA9400F5F030 /* IMSFilesAccordingRemarksViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BE523CC2679DA9400F5F030 /* IMSFilesAccordingRemarksViewController.swift */; };
 		1BE523D52679DB1100F5F030 /* IMSBookingDetailTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BE523CF2679DB1000F5F030 /* IMSBookingDetailTableCell.swift */; };
@@ -268,6 +270,8 @@
 		1BC42B8C257527F7000A63AF /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
 		1BD4A49D261310C700491D0D /* FulfillmentPopViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FulfillmentPopViewController.swift; sourceTree = "<group>"; };
 		1BD4A52E26133B2C00491D0D /* ScanFulfillmentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanFulfillmentViewController.swift; sourceTree = "<group>"; };
+		1BD7B52F26FB0D9700606E2D /* WalletRedemption.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = WalletRedemption.storyboard; sourceTree = "<group>"; };
+		1BD7B53126FB162500606E2D /* WalletAddBeneficiaryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletAddBeneficiaryViewController.swift; sourceTree = "<group>"; };
 		1BE523CB2679DA9400F5F030 /* IMSConsignmentDetailsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMSConsignmentDetailsViewController.swift; sourceTree = "<group>"; };
 		1BE523CC2679DA9400F5F030 /* IMSFilesAccordingRemarksViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMSFilesAccordingRemarksViewController.swift; sourceTree = "<group>"; };
 		1BE523CF2679DB1000F5F030 /* IMSBookingDetailTableCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IMSBookingDetailTableCell.swift; sourceTree = "<group>"; };
@@ -524,9 +528,34 @@
 			path = GeoLocation;
 			sourceTree = "<group>";
 		};
+		1BD7B52C26FB0D4E00606E2D /* Redemption Process */ = {
+			isa = PBXGroup;
+			children = (
+				1BD7B52E26FB0D6900606E2D /* Transfer */,
+				1BD7B52D26FB0D5E00606E2D /* Add Benificiary */,
+			);
+			path = "Redemption Process";
+			sourceTree = "<group>";
+		};
+		1BD7B52D26FB0D5E00606E2D /* Add Benificiary */ = {
+			isa = PBXGroup;
+			children = (
+				1BD7B53126FB162500606E2D /* WalletAddBeneficiaryViewController.swift */,
+			);
+			path = "Add Benificiary";
+			sourceTree = "<group>";
+		};
+		1BD7B52E26FB0D6900606E2D /* Transfer */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Transfer;
+			sourceTree = "<group>";
+		};
 		1BE523DD2679E25500F5F030 /* Wallet */ = {
 			isa = PBXGroup;
 			children = (
+				1BD7B52C26FB0D4E00606E2D /* Redemption Process */,
 				1BE523DE2679E26500F5F030 /* WalletDashboardViewController.swift */,
 				1BE523E0267A325100F5F030 /* WalletDetailsViewController.swift */,
 				1BA5110D267B31F900E0E642 /* WalletHistoryViewController.swift */,
@@ -772,6 +801,7 @@
 				1BFB374625F9D6E20073CC53 /* Attendance.storyboard */,
 				1B3EDC96260C532E00A97984 /* Fullfillment.storyboard */,
 				1BE523DB2679E1CF00F5F030 /* Wallet.storyboard */,
+				1BD7B52F26FB0D9700606E2D /* WalletRedemption.storyboard */,
 			);
 			path = Storyboards;
 			sourceTree = "<group>";
@@ -964,6 +994,7 @@
 				1B6B04A4256660CD00CDEF66 /* GrievacneDownloadsTableCell.xib in Resources */,
 				60C34FE02539830E00495944 /* Home.storyboard in Resources */,
 				1B11D07E262EB37000C137A3 /* RequestListingTableCell.xib in Resources */,
+				1BD7B53026FB0D9700606E2D /* WalletRedemption.storyboard in Resources */,
 				609C605B25387B900051CF28 /* UserCredentials.storyboard in Resources */,
 				1B47F9A025A5F18300FC74A4 /* IncidentInvestigationTableCell.xib in Resources */,
 				1B0CD7DA25F0C0B500C1C87D /* TCSOneApp.db in Resources */,
@@ -1065,6 +1096,7 @@
 				1B5EAA83255EA4A600F49D09 /* GrievanceHelpDeskRequestsViewController.swift in Sources */,
 				1BA7BAC2260DF3FD002D9FA9 /* FulfilmentOrderDetailTableCell.swift in Sources */,
 				1BFB375D25F9FB580073CC53 /* MapViewController.swift in Sources */,
+				1BD7B53226FB162500606E2D /* WalletAddBeneficiaryViewController.swift in Sources */,
 				6010F41025400E3300CF8597 /* CicrularProgressBarCollectionCell.swift in Sources */,
 				60E99928253D9EF900BCDAD1 /* FilterDataPopupViewController.swift in Sources */,
 				602011A12542948100759D2E /* NewRequestListingViewController.swift in Sources */,
