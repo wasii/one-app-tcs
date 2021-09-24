@@ -90,7 +90,7 @@ class WalletDashboardViewController: BaseViewController {
         floaty.buttonImage = UIImage(named: "currency")
         floaty.addItem("P2P", icon: UIImage(named: "P2P")) { item in
             let storyboard = UIStoryboard(name: "WalletRedemption", bundle: nil)
-            let controller = storyboard.instantiateViewController(withIdentifier: "WalletAddBeneficiaryViewController") as! WalletAddBeneficiaryViewController
+            let controller = storyboard.instantiateViewController(withIdentifier: "WalletBeneficiaryDetailsViewController") as! WalletBeneficiaryDetailsViewController
             self.navigationController?.pushViewController(controller, animated: true)
         }
         floaty.paddingX = (UIApplication.shared.keyWindow?.safeAreaInsets.right ?? 0) + 25

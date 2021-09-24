@@ -34,13 +34,33 @@ class AddNewBeneficiaryViewController: BaseViewController {
     @IBOutlet weak var oneTimePasscodeView: UIView!
     @IBOutlet weak var otp: MDCOutlinedTextField!
     @IBOutlet weak var confirmOtp: MDCOutlinedTextField!
+    let text = "I have read and understood the Terms & Conditions and agree to abide by them"
+    var range = NSRange()
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Wallet"
         makeTopCornersRounded(roundView: mainView)
         setupTextFields()
+        setupLabel()
     }
-    
+    private func setupLabel() {
+        termsAndConditiion.text = text
+        self.termsAndConditiion.textColor =  UIColor.black
+        let underlineAttriString = NSMutableAttributedString(string: text)
+        range = (text as NSString).range(of: "Terms & Conditions")
+        underlineAttriString.addAttribute(NSAttributedString.Key.underlineStyle, value: NSUnderlineStyle.single.rawValue, range: range)
+        underlineAttriString.addAttribute(NSAttributedString.Key.font, value: UIFont.systemFont(ofSize: 13, weight: .medium), range: range)
+        underlineAttriString.addAttribute(NSAttributedString.Key.foregroundColor, value: UIColor.nativeRedColor(), range: range)
+        termsAndConditiion.attributedText = underlineAttriString
+        termsAndConditiion.isUserInteractionEnabled = true
+        termsAndConditiion.addGestureRecognizer(UITapGestureRecognizer(target:self, action: #selector(tapLabel(gesture:))))
+    }
+    @IBAction func tapLabel(gesture: UITapGestureRecognizer) {
+        let termsRange = (text as NSString).range(of: "Terms & Conditions")
+        if gesture.didTapAttributedTextInLabel(label: termsAndConditiion, inRange: termsRange) {
+            print("Tapped terms")
+        }
+    }
     private func setupTextFields() {
         referenceNumber.label.textColor = UIColor.nativeRedColor()
         referenceNumber.label.text = "Reference Number"
@@ -97,4 +117,36 @@ class AddNewBeneficiaryViewController: BaseViewController {
         confirmOtp.setOutlineColor(UIColor.nativeRedColor(), for: .normal)
         confirmOtp.setOutlineColor(UIColor.nativeRedColor(), for: .editing)
     }
+}
+extension UITapGestureRecognizer {
+    func didTapAttributedTextInLabel(label: UILabel, inRange targetRange: NSRange) -> Bool {
+         // Create instances of NSLayoutManager, NSTextContainer and NSTextStorage
+         let layoutManager = NSLayoutManager()
+         let textContainer = NSTextContainer(size: CGSize.zero)
+         let textStorage = NSTextStorage(attributedString: label.attributedText!)
+
+         // Configure layoutManager and textStorage
+         layoutManager.addTextContainer(textContainer)
+         textStorage.addLayoutManager(layoutManager)
+
+         // Configure textContainer
+         textContainer.lineFragmentPadding = 0.0
+         textContainer.lineBreakMode = label.lineBreakMode
+         textContainer.maximumNumberOfLines = label.numberOfLines
+         let labelSize = label.bounds.size
+         textContainer.size = labelSize
+
+         // Find the tapped character location and compare it to the specified range
+         let locationOfTouchInLabel = self.location(in: label)
+         let textBoundingBox = layoutManager.usedRect(for: textContainer)
+         //let textContainerOffset = CGPointMake((labelSize.width - textBoundingBox.size.width) * 0.5 - textBoundingBox.origin.x,
+                                               //(labelSize.height - textBoundingBox.size.height) * 0.5 - textBoundingBox.origin.y);
+         let textContainerOffset = CGPoint(x: (labelSize.width - textBoundingBox.size.width) * 0.5 - textBoundingBox.origin.x, y: (labelSize.height - textBoundingBox.size.height) * 0.5 - textBoundingBox.origin.y)
+
+         //let locationOfTouchInTextContainer = CGPointMake(locationOfTouchInLabel.x - textContainerOffset.x,
+                                                         // locationOfTouchInLabel.y - textContainerOffset.y);
+         let locationOfTouchInTextContainer = CGPoint(x: locationOfTouchInLabel.x - textContainerOffset.x, y: locationOfTouchInLabel.y - textContainerOffset.y)
+         let indexOfCharacter = layoutManager.characterIndex(for: locationOfTouchInTextContainer, in: textContainer, fractionOfDistanceBetweenInsertionPoints: nil)
+         return NSLocationInRange(indexOfCharacter, targetRange)
+     }
 }

@@ -9,10 +9,10 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Wallet Add Beneficiary View Controller-->
+        <!--Wallet Beneficiary Details View Controller-->
         <scene sceneID="cmQ-zr-v31">
             <objects>
-                <viewController storyboardIdentifier="WalletAddBeneficiaryViewController" hidesBottomBarWhenPushed="YES" id="mh3-5a-fT4" customClass="WalletAddBeneficiaryViewController" customModule="One_App" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="WalletBeneficiaryDetailsViewController" hidesBottomBarWhenPushed="YES" id="mh3-5a-fT4" customClass="WalletBeneficiaryDetailsViewController" customModule="One_App" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="kSd-Np-hQ6">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -55,7 +55,7 @@
                                                             </userDefinedRuntimeAttribute>
                                                         </userDefinedRuntimeAttributes>
                                                         <connections>
-                                                            <action selector="addBeneficiaryTapped:" destination="mh3-5a-fT4" eventType="touchUpInside" id="dAc-sg-HVB"/>
+                                                            <action selector="addBeneficiaryTapped:" destination="mh3-5a-fT4" eventType="touchUpInside" id="jc8-hx-1hh"/>
                                                         </connections>
                                                     </button>
                                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="add-beneficiary" translatesAutoresizingMaskIntoConstraints="NO" id="lJa-eV-Uew">
@@ -146,9 +146,9 @@
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="mainView" destination="fdW-Eu-qaB" id="k1g-Ty-V3n"/>
-                        <outlet property="tableView" destination="zsJ-YV-fOY" id="uvf-Ik-Wpu"/>
-                        <outlet property="tableViewHeightConstraint" destination="AVI-Gn-rcd" id="acV-R2-8uA"/>
+                        <outlet property="mainView" destination="fdW-Eu-qaB" id="Wcb-Yz-rGF"/>
+                        <outlet property="tableView" destination="zsJ-YV-fOY" id="vBj-5u-cbo"/>
+                        <outlet property="tableViewHeightConstraint" destination="AVI-Gn-rcd" id="2MK-Ef-3H9"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="VEv-pT-3uK" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>

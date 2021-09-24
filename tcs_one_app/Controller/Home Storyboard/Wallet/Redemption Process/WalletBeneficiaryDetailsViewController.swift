@@ -8,7 +8,7 @@
 
 import UIKit
 
-class WalletAddBeneficiaryViewController: BaseViewController {
+class WalletBeneficiaryDetailsViewController: BaseViewController {
 
     @IBOutlet weak var mainView: UIView!
     @IBOutlet weak var tableViewHeightConstraint: NSLayoutConstraint!
@@ -34,7 +34,7 @@ class WalletAddBeneficiaryViewController: BaseViewController {
     }
 }
 
-extension WalletAddBeneficiaryViewController: UITableViewDelegate, UITableViewDataSource {
+extension WalletBeneficiaryDetailsViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 50
     }
@@ -45,7 +45,7 @@ extension WalletAddBeneficiaryViewController: UITableViewDelegate, UITableViewDa
         
         cell.nameLabel.text = "TCS One App \(indexPath.row)"
         cell.empIdLabel.text = "EMP ID:     \(CURRENT_USER_LOGGED_IN_ID)"
-        cell.cellLabel.text = "CELL#        03331231231"
+        cell.cellLabel.text = "CELL#:       03331231231"
         
         return cell
     }

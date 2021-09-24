@@ -2123,7 +2123,7 @@ class DBHelper {
             sqlite3_bind_text(insertStatement, 2, ((lov_area_security.areaCode ?? "") as NSString).utf8String, -1, nil)
             sqlite3_bind_text(insertStatement, 3, ((lov_area_security.securityPerson ?? "") as NSString).utf8String, -1, nil)
             sqlite3_bind_text(insertStatement, 4, ((lov_area_security.created ?? "") as NSString).utf8String, -1, nil)
-            sqlite3_bind_int(insertStatement, 5, Int32(lov_area_security.empNo))
+            sqlite3_bind_int(insertStatement, 5, Int32(lov_area_security.empNo ?? 0))
             if sqlite3_step(insertStatement) == SQLITE_DONE {
 //                print("\(db_grievance_remarks): Successfully inserted row.")
             } else {
