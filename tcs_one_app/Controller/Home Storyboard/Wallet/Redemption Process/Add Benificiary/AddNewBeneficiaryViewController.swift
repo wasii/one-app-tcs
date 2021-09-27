@@ -34,7 +34,7 @@ class AddNewBeneficiaryViewController: BaseViewController {
     @IBOutlet weak var oneTimePasscodeView: UIView!
     @IBOutlet weak var otp: MDCOutlinedTextField!
     @IBOutlet weak var confirmOtp: MDCOutlinedTextField!
-    let text = "I have read and understood the Terms & Conditions and agree to abide by them"
+    
     var range = NSRange()
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -44,10 +44,10 @@ class AddNewBeneficiaryViewController: BaseViewController {
         setupLabel()
     }
     private func setupLabel() {
-        termsAndConditiion.text = text
+        termsAndConditiion.text = WALLET_AGREEMENT_TEXT
         self.termsAndConditiion.textColor =  UIColor.black
-        let underlineAttriString = NSMutableAttributedString(string: text)
-        range = (text as NSString).range(of: "Terms & Conditions")
+        let underlineAttriString = NSMutableAttributedString(string: WALLET_AGREEMENT_TEXT)
+        range = (WALLET_AGREEMENT_TEXT as NSString).range(of: "Terms & Conditions")
         underlineAttriString.addAttribute(NSAttributedString.Key.underlineStyle, value: NSUnderlineStyle.single.rawValue, range: range)
         underlineAttriString.addAttribute(NSAttributedString.Key.font, value: UIFont.systemFont(ofSize: 13, weight: .medium), range: range)
         underlineAttriString.addAttribute(NSAttributedString.Key.foregroundColor, value: UIColor.nativeRedColor(), range: range)
@@ -56,7 +56,7 @@ class AddNewBeneficiaryViewController: BaseViewController {
         termsAndConditiion.addGestureRecognizer(UITapGestureRecognizer(target:self, action: #selector(tapLabel(gesture:))))
     }
     @IBAction func tapLabel(gesture: UITapGestureRecognizer) {
-        let termsRange = (text as NSString).range(of: "Terms & Conditions")
+        let termsRange = (WALLET_AGREEMENT_TEXT as NSString).range(of: "Terms & Conditions")
         if gesture.didTapAttributedTextInLabel(label: termsAndConditiion, inRange: termsRange) {
             print("Tapped terms")
         }

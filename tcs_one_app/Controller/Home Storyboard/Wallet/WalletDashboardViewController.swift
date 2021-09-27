@@ -146,7 +146,10 @@ class WalletDashboardViewController: BaseViewController {
         var xAxisDates = [String]()
         var barChartEntries = [BarChartDataEntry]()
         
-        if let points = tbl_wallet_points {
+        if var points = tbl_wallet_points {
+            points = points.sorted(by: { ps1, ps2 in
+                ps1.TRANSACTION_DATE > ps2.TRANSACTION_DATE
+            })
             for (index,summaryPoints) in points.enumerated() {
                 let mature: Double = Double(summaryPoints.MATURE_POINTS)
                 let unmature: Double = Double(summaryPoints.UNMATURE_POINTS)

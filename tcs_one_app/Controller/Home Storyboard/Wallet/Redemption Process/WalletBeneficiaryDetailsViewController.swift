@@ -42,7 +42,8 @@ extension WalletBeneficiaryDetailsViewController: UITableViewDelegate, UITableVi
         guard let cell = tableView.dequeueReusableCell(withIdentifier: WalletBeneficiaryListingTableCell.description()) as? WalletBeneficiaryListingTableCell else {
             fatalError()
         }
-        
+        cell.redemptionBtn.addTarget(self, action: #selector(transferPoints(sender:)), for: .touchUpInside)
+        cell.redemptionBtn.tag = indexPath.row
         cell.nameLabel.text = "TCS One App \(indexPath.row)"
         cell.empIdLabel.text = "EMP ID:     \(CURRENT_USER_LOGGED_IN_ID)"
         cell.cellLabel.text = "CELL#:       03331231231"
@@ -51,5 +52,9 @@ extension WalletBeneficiaryDetailsViewController: UITableViewDelegate, UITableVi
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 90
+    }
+    @objc func transferPoints(sender: UIButton) {
+        let controller = self.storyboard?.instantiateViewController(withIdentifier: "PointTransferViewController") as! PointTransferViewController
+        self.navigationController?.pushViewController(controller, animated: true)
     }
 }

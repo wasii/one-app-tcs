@@ -17,6 +17,8 @@ var BEARER_TOKEN            = ""
 let BROADCAST_KEY           = "broadcastiosqa"
 //let BROADCAST_KEY           = "broadcastios"
 
+let WALLET_AGREEMENT_TEXT = "I have read and understood the Terms & Conditions and agree to abide by them"
+
 let IS_NEW_DATABASE: Bool   = true
 var NOTIFICATION_COUNT      = 0
 
