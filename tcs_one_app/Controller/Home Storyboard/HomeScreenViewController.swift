@@ -825,6 +825,11 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
                 self.module?.remove(at: i)
             }
         }
+        for (i,m) in module!.enumerated() {
+            if m.TAGNAME == "RIDER" {
+                self.module?.remove(at: i)
+            }
+        }
         if let permission = AppDelegate.sharedInstance.db?.read_tbl_UserPermission(permission: PERMISSION_FulfilmentModule).count {
             if permission == 0 {
                 for (i, m) in module!.enumerated() {
