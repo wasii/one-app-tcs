@@ -531,6 +531,12 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
                 break
             }
         }
+        for (i, m) in module!.enumerated() {
+            if m.TAGNAME == "RIDER" {
+                self.module?.remove(at: i)
+                break
+            }
+        }
         for (i,m) in module!.enumerated() {
             if m.TAGNAME == MODULE_TAG_ATTENDANCE {
                 self.module?.remove(at: i)
@@ -547,6 +553,15 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
             }
         }
         if let permission = AppDelegate.sharedInstance.db?.read_tbl_UserPermission(permission: PERMISSION_ViewBroadcastMode).count {
+            if permission <= 0  {
+                for (i, m) in module!.enumerated() {
+                    if m.MODULENAME == "Leadership Connect" {
+                        self.module?.remove(at: i)
+                        self.ViewBroadCastPermission = false
+                        break
+                    }
+                }
+            }
             if let emp_info = AppDelegate.sharedInstance.db?.read_tbl_UserProfile().first {
                 if emp_info.HIGHNESS == "1" {
                     DispatchQueue.main.async {
@@ -555,17 +570,7 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
                     self.ViewBroadCastPermission = true
                     return
                 }
-                if permission <= 0  {
-                    for (i, m) in module!.enumerated() {
-                        if m.MODULENAME == "Leadership Connect" {
-                            self.module?.remove(at: i)
-                            self.ViewBroadCastPermission = false
-                            break
-                        }
-                    }
-                }
             }
-            
         }
         DispatchQueue.main.async {
             self.module_CollectionView.reloadData()
