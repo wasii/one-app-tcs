@@ -31,6 +31,7 @@ class MISDashboardViewController: BaseViewController {
 
         if let mis_budget_setup = AppDelegate.sharedInstance.db?.read_tbl_mis_budget_setup_listing(query: query) {
             self.mis_budget_setup = mis_budget_setup
+            self.mis_budget_setup!.append(tbl_mis_budget_setup(prod_with_prodtype: "", id: 112313, product: "Booking vs Promise Dashboard", budgeted: 1, dsr: 1, prodType: "Booking vs Promise", mnth: "September", yearr: 2021, pdBudget: 0, weight: 0, qsr: 0, pdWeight: 0))
             self.tableView.reloadData()
         }
     }
@@ -60,6 +61,11 @@ extension MISDashboardViewController: UITableViewDelegate, UITableViewDataSource
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if self.mis_budget_setup![indexPath.row].prodType == "Booking vs Promise" {
+            let controller = self.storyboard?.instantiateViewController(withIdentifier: "MISPieChartDetailViewController") as! MISPieChartDetailViewController
+            self.navigationController?.pushViewController(controller, animated: true)
+            return
+        }
         self.indexPath = indexPath
         let controller = self.storyboard?.instantiateViewController(withIdentifier: "MISDetailViewController") as! MISDetailViewController
         controller.mis_budget_setup = self.mis_budget_setup![indexPath.row]
