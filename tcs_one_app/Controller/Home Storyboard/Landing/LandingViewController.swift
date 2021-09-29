@@ -97,7 +97,7 @@ class LandingViewController: BaseViewController {
                 userPage.PAGENAME == PERMISSION_MIS_LISTING
             }).count {
                 if count > 0 {
-                    self.totalApiCounts += 3
+                    self.totalApiCounts += 4
                     isMISListingAllowed = true
                 }
             }
@@ -1446,23 +1446,22 @@ extension LandingViewController {
     
     //GET Daily Delivery
     private func getmisdailyoverview(_ handler: @escaping(Bool)->Void) {
-        let lastSyncStatus = AppDelegate.sharedInstance.db?.readLastSyncStatus(tableName: db_last_sync_status,
-                                                                               condition: "SYNC_KEY = '\(S_MIS_BUDGET_DATA)' AND CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)'")
         var last_budget_data = [String:Any]()
-        if lastSyncStatus == nil {
+        if let lastSyncStatus = AppDelegate.sharedInstance.db?.readLastSyncStatus(tableName: db_last_sync_status,
+                                                                                  condition: "SYNC_KEY = '\(S_MIS_BUDGET_DATA)' AND CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)'") {
             last_budget_data = [
-                "dateTime": ""
+                "dateTime" : ""//lastSyncStatus.DATE
             ]
         } else {
             last_budget_data = [
-                "dateTime" : ""
+                "dateTime": ""
             ]
         }
         
         let params = [
             "eAI_MESSAGE": [
               "eAI_HEADER": [
-                "serviceName": "DAILY.BUDGET",
+                "serviceName": S_MIS_BUDGET_DATA,
                 "client": "",
                 "clientChannel": "",
                 "referenceNum": "",
@@ -1529,6 +1528,97 @@ extension LandingViewController {
                 } else {
                     handler(false)
                 }
+            } else {
+                handler(false)
+            }
+        }
+    }
+    
+    //MARK: Dashboard Detail
+    func misdashboarddetail(_ handler: @escaping(Bool)->Void) {
+        var last_budget_data = [String:Any]()
+        if let lastSyncStatus = AppDelegate.sharedInstance.db?.readLastSyncStatus(tableName: db_last_sync_status,
+                                                                                  condition: "SYNC_KEY = '\(S_MIS_DASHBOARD_DETAILS)' AND CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)'") {
+            last_budget_data = [
+                "dateTime" : lastSyncStatus.DATE
+            ]
+        } else {
+            last_budget_data = [
+                "dateTime": ""
+            ]
+        }
+        
+        let params = [
+            "eAI_MESSAGE": [
+              "eAI_HEADER": [
+                "serviceName": S_MIS_DASHBOARD_DETAILS,
+                "client": "",
+                "clientChannel": "",
+                "referenceNum": "",
+                "securityInfo": [
+                  "authentication": [
+                    "userId": "string",
+                    "password": "string"
+                  ]
+                ]
+              ],
+              "eAI_BODY": [
+                "eAI_REQUEST": last_budget_data
+              ]
+            ]
+        ] as [String:Any]
+        NetworkCalls.getmisdashboarddetails(params: params) { granted, response in
+            if granted {
+                let json = JSON(response)
+                if let budgetData = json.dictionary?[_dashboardDetail]?.array {
+                    do {
+                        if budgetData.count <= 0 {
+                            if let lastSync = json.dictionary?["lastSyncDate"]?.string {
+                                Helper.updateLastSyncStatus(APIName: S_MIS_DASHBOARD_DETAILS,
+                                                            date: lastSync,
+                                                            skip: 0,
+                                                            take: 0,
+                                                            total_records: 0)
+                            }
+                            handler(true)
+                            return
+                        }
+                        
+                        for bd in budgetData {
+                            let rawData = try bd.rawData()
+                            let dashboard_detail: MISDashboardDetail = try JSONDecoder().decode(MISDashboardDetail.self, from: rawData)
+//                            AppDelegate.sharedInstance.db?.deleteRowWithMultipleConditions(tbl: db_mis_dashboard_detail, conditions: "RPT_DATE = '\(budget_data.rptDate)' AND TYPE = '\(budget_data.type)'", { _ in
+//
+//                            })
+                            AppDelegate.sharedInstance.db?.insert_tbl_mis_dashboard_detail(dashboard_detail: dashboard_detail, handler: { _ in })
+                            
+                        }
+                        if let lastSync = json.dictionary?["lastSyncDate"]?.string {
+                            Helper.updateLastSyncStatus(APIName: S_MIS_DASHBOARD_DETAILS,
+                                                        date: lastSync,
+                                                        skip: 0,
+                                                        take: 0,
+                                                        total_records: 0)
+                        }
+                        handler(true)
+                    } catch let DecodingError.dataCorrupted(context) {
+                        print(context)
+                    } catch let DecodingError.keyNotFound(key, context) {
+                        print("Key '\(key)' not found:", context.debugDescription)
+                        print("codingPath:", context.codingPath)
+                    } catch let DecodingError.valueNotFound(value, context) {
+                        print("Value '\(value)' not found:", context.debugDescription)
+                        print("codingPath:", context.codingPath)
+                    } catch let DecodingError.typeMismatch(type, context)  {
+                        print("Type '\(type)' mismatch:", context.debugDescription)
+                        print("codingPath:", context.codingPath)
+                    } catch {
+                        print("error: ", error)
+                    }
+                } else {
+                    handler(false)
+                }
+                handler(true)
             } else {
                 handler(false)
             }

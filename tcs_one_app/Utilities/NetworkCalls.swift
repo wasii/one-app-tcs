@@ -1298,6 +1298,52 @@ class NetworkCalls: NSObject {
             }
         }.resume()
     }
+    class func getmisdashboarddetails(params: [String:Any], handler: @escaping(_ granted: Bool,_ response: Any) -> Void) {
+        let Url = String(format: MIS_BUDGET_DATA)
+        guard let serviceUrl = URL(string: Url) else { return }
+        var request = URLRequest(url: serviceUrl)
+        request.httpMethod = "POST"
+        request.setValue("Application/json", forHTTPHeaderField: "Content-Type")
+        request.setValue("Bearer \(MIS_BEARER_TOKEN)", forHTTPHeaderField: "Authorization")
+        guard let httpBody = try? JSONSerialization.data(withJSONObject: params, options: []) else {
+            return
+        }
+        request.httpBody = httpBody
+        
+        let session = URLSession.shared
+        session.dataTask(with: request) { (data, response, error) in
+            if let data = data {
+                let json = JSON(data)
+                if let success = json.dictionary?[returnStatus] {
+                    //SUCCESS
+                    if success.dictionary?[_code] == "0200" {
+                        if let result = json.dictionary?[_result]?.dictionary {
+                            handler(true, result)
+                            return
+                        }
+                        handler(true, data)
+                        return
+                    }
+                    //FAILED
+                    if success.dictionary?[_code] == "0400" {
+                        handler(false, SOMETHINGWENTWRONG)
+                    }
+                    
+                    if success.dictionary?[_code] == "0403" {
+                        handler(false, SOMETHINGWENTWRONG)
+                    }
+                    if success.dictionary?[_code] == "0404" {
+                        handler(false, SOMETHINGWENTWRONG)
+                    }
+                    if success.dictionary?[_code] == "0208" {
+                        handler(false, "Already Reported.")
+                    }
+                }
+            } else {
+                handler(false, SOMETHINGWENTWRONG)
+            }
+        }.resume()
+    }
     
     class func getmisdailyoverview(_ handler: @escaping(_ granted: Bool,_ response: Any) -> Void) {
         let Url = String(format: MIS_DAILY_OVERVIEW)

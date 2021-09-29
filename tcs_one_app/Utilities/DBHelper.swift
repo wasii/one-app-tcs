@@ -3216,6 +3216,75 @@ class DBHelper {
         sqlite3_finalize(insertStatement)
     }
     
+    //MIS DASHBOARD DETAILS
+    func read_tbl_mis_dashboard_detail(query: String) -> [tbl_mis_dashboard_detail]? {
+        let queryStatementString = query
+        var queryStatement: OpaquePointer? = nil
+        var mis_dashboard_detail = [tbl_mis_dashboard_detail]()
+
+        if sqlite3_prepare_v2(db, queryStatementString, -1, &queryStatement, nil) == SQLITE_OK {
+            while sqlite3_step(queryStatement) == SQLITE_ROW {
+                guard let _ = sqlite3_column_text(queryStatement, 1) else {
+                    return nil
+                }
+                let id = Int(sqlite3_column_int(queryStatement, 0))
+                let title = String(describing: String(cString: sqlite3_column_text(queryStatement, 1)))
+                let typ = String(describing: String(cString: sqlite3_column_text(queryStatement, 2)))
+                let mnth = String(describing: String(cString: sqlite3_column_text(queryStatement, 3)))
+                let yearr = String(describing: String(cString: sqlite3_column_text(queryStatement, 4)))
+                let product = String(describing: String(cString: sqlite3_column_text(queryStatement, 5)))
+                let totalShipment = String(describing: String(cString: sqlite3_column_text(queryStatement, 6)))
+                let whithinKpi = String(describing: String(cString: sqlite3_column_text(queryStatement, 7)))
+                let wkpiAge = String(describing: String(cString: sqlite3_column_text(queryStatement, 8)))
+                let afterKpi = String(describing: String(cString: sqlite3_column_text(queryStatement, 9)))
+                let akpiAge = String(describing: String(cString: sqlite3_column_text(queryStatement, 10)))
+                let inprocess = String(describing: String(cString: sqlite3_column_text(queryStatement, 11)))
+                let inpAge = String(describing: String(cString: sqlite3_column_text(queryStatement, 12)))
+                let delivered = String(describing: String(cString: sqlite3_column_text(queryStatement, 13)))
+                let dlvrdAge = String(describing: String(cString: sqlite3_column_text(queryStatement, 14)))
+                let retrn = String(describing: String(cString: sqlite3_column_text(queryStatement, 15)))
+                let rtnAge = String(describing: String(cString: sqlite3_column_text(queryStatement, 16)))
+                
+                mis_dashboard_detail.append(tbl_mis_dashboard_detail(id: id, title: title, typ: typ, mnth: mnth, yearr: yearr, product: product, totalShipment: totalShipment, whithinKpi: whithinKpi, wkpiAge: wkpiAge, afterKpi: afterKpi, akpiAge: akpiAge, inprocess: inprocess, inpAge: inpAge, delivered: delivered, dlvrdAge: dlvrdAge, retrn: retrn, rtnAge: rtnAge))
+            }
+        } else {
+            print("SELECT statement \(db_mis_daily_overview) could not be prepared")
+        }
+        return mis_dashboard_detail.count > 0 ? mis_dashboard_detail : nil
+    }
+    func insert_tbl_mis_dashboard_detail(dashboard_detail: MISDashboardDetail, handler: @escaping(_ success: Bool) -> Void) {
+        let insertStatementString = "INSERT INTO \(db_mis_dashboard_detail)(TITLE, TYP, MNTH, YEARR, PRODUCT, TOTAL_SHIPMENT, WHITHIN_KPI, WKPI_AGE, AFTER_KPI, AKPI_AGE, INPROCESS, INP_AGE, DELIVERED, DLVRD_AGE, RETRN, RTN_AGE) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);"
+        var insertStatement: OpaquePointer? = nil
+        if sqlite3_prepare_v2(self.db, insertStatementString, -1, &insertStatement, nil) == SQLITE_OK {
+            sqlite3_bind_text(insertStatement, 1, (dashboard_detail.title as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 2, (dashboard_detail.typ as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 3, (dashboard_detail.mnth as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 4, (dashboard_detail.yearr as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 5, (dashboard_detail.product as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 6, ("\(dashboard_detail.totalShipment)" as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 7, ("\(dashboard_detail.whithinKpi)" as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 8, ("\(dashboard_detail.wkpiAge)" as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 9, ("\(dashboard_detail.afterKpi)" as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 10, ("\(dashboard_detail.akpiAge)" as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 11, ("\(dashboard_detail.inprocess)" as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 12, ("\(dashboard_detail.inpAge)" as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 13, ("\(dashboard_detail.delivered)" as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 14, ("\(dashboard_detail.dlvrdAge)" as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 15, ("\(dashboard_detail.retrn)" as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 16, ("\(dashboard_detail.rtnAge)" as NSString).utf8String, -1, nil)
+            if sqlite3_step(insertStatement) == SQLITE_DONE {
+                handler(true)
+            } else {
+                print("\(db_mis_region_data): Could not insert row.")
+                handler(false)
+            }
+        } else {
+            handler(false)
+            print("\(db_mis_region_data): INSERT statement could not be prepared.")
+        }
+        sqlite3_finalize(insertStatement)
+    }
+    
     //Get MIS Months
     func read_tbl_mis_budget_setup_month() -> [MISPopupMonth]? {
         let queryStatementString = "SELECT DISTINCT MNTH from \(db_mis_budget_setup)"
@@ -4332,6 +4401,19 @@ struct tbl_mis_budget_data_details {
     var SHIP: String = ""
     var TYPE: String = ""
     var WEIGHT: String = ""
+}
+
+struct tbl_mis_dashboard_detail {
+    var id: Int = -1
+    var title: String, typ: String, mnth: String, yearr: String = ""
+    var product: String = ""
+    var totalShipment: String, whithinKpi: String = ""
+    var wkpiAge: String = ""
+    var afterKpi: String = ""
+    var akpiAge: String = ""
+    var inprocess: String = ""
+    var inpAge: String = ""
+    var delivered: String, dlvrdAge: String, retrn: String, rtnAge: String = ""
 }
 
 //MARK: Wallet

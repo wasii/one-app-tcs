@@ -78,8 +78,10 @@ let MIS_DAILY_OVERVIEW      = ENDPOINT_NEW + "oneapp/daily-overview"
 //MIS NEW
 let MIS_BUDGET_SETUP        = ENDPOINT_NEW + "oneapp/mis/budget-setup"
 let MIS_BUDGET_DATA         = ENDPOINT_NEW + "oneapp/mis/daily-budget"
+let MIS_DASHBOARD_DETAILS   = ENDPOINT_NEW + "oneapp/mis/dashboard"
 let S_MIS_BUDGET_DATA       = "DAILY.BUDGET"
 let S_MIS_BUDGET_SETUP      = "BUDGET.SETUP"
+let S_MIS_DASHBOARD_DETAILS = "BKGVSPRODLV.API"
 
 let S_MIS_DAILY_OVERVIEW    = ENDPOINT_NEW + "DAILY.OVERVIEW.P"
 
@@ -162,6 +164,7 @@ let _orders                 = "orders"
 let _result                 = "result"
 let _BudgetSetup            = "budgetSetupData"
 let _budgetData             = "budgetData"
+let _dashboardDetail        = "dashboardDetail"
 
 
 //Wallet_Keys
@@ -232,6 +235,7 @@ let db_mis_daily_overview   = "MIS_DAILY_OVERVIEW"
 
 let db_mis_budget_setup     = "MIS_BUDGET_SETUP"
 let db_mis_budget_data      = "MIS_BUDGET_DATA"
+let db_mis_dashboard_detail = "MIS_Dashboard_Details"
 
 // Wallet
 let db_w_query_master       = "WALLET_MASTER_DETAILS"

@@ -84,6 +84,37 @@ struct BudgetData: Codable {
     }
 }
 
+// MARK: - DashboardDetail
+struct MISDashboardDetail: Codable {
+    let title, typ, mnth, yearr: String
+    let product: String
+    let totalShipment, whithinKpi: Int
+    let wkpiAge: Double
+    let afterKpi: Int
+    let akpiAge: Double
+    let inprocess: Int
+    let inpAge: Double
+    let delivered, dlvrdAge, retrn, rtnAge: Int
+
+    enum CodingKeys: String, CodingKey {
+        case title = "TITLE"
+        case typ = "TYP"
+        case mnth = "MNTH"
+        case yearr = "YEARR"
+        case product = "PRODUCT"
+        case totalShipment = "TOTAL_SHIPMENT"
+        case whithinKpi = "WHITHIN_KPI"
+        case wkpiAge = "WKPI_AGE"
+        case afterKpi = "AFTER_KPI"
+        case akpiAge = "AKPI_AGE"
+        case inprocess = "INPROCESS"
+        case inpAge = "INP_AGE"
+        case delivered = "DELIVERED"
+        case dlvrdAge = "DLVRD_AGE"
+        case retrn = "RETRN"
+        case rtnAge = "RTN_AGE"
+    }
+}
 
 //MARK: - Selection
 struct MISPopupMonth {
