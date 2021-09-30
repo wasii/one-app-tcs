@@ -88,13 +88,13 @@ struct BudgetData: Codable {
 struct MISDashboardDetail: Codable {
     let title, typ, mnth, yearr: String
     let product: String
-    let totalShipment, whithinKpi: Int
+    let totalShipment, whithinKpi: Double
     let wkpiAge: Double
-    let afterKpi: Int
+    let afterKpi: Double
     let akpiAge: Double
-    let inprocess: Int
+    let inprocess: Double
     let inpAge: Double
-    let delivered, dlvrdAge, retrn, rtnAge: Int
+    let delivered, dlvrdAge, retrn, rtnAge: Double
 
     enum CodingKeys: String, CodingKey {
         case title = "TITLE"

@@ -1299,7 +1299,7 @@ class NetworkCalls: NSObject {
         }.resume()
     }
     class func getmisdashboarddetails(params: [String:Any], handler: @escaping(_ granted: Bool,_ response: Any) -> Void) {
-        let Url = String(format: MIS_BUDGET_DATA)
+        let Url = String(format: MIS_DASHBOARD_DETAILS)
         guard let serviceUrl = URL(string: Url) else { return }
         var request = URLRequest(url: serviceUrl)
         request.httpMethod = "POST"

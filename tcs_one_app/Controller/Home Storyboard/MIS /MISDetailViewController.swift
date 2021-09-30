@@ -52,6 +52,7 @@ class MISDetailViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.makeTopCornersRounded(roundView: self.mainView)
+        addDoubleNavigationButtons()
         title = "MIS"
         if let product = mis_budget_setup?.product {
             headingLabel.text = product
@@ -84,6 +85,35 @@ class MISDetailViewController: BaseViewController {
         }
         reloadData(date: "\(year)-\(monthInNumber)")
     }
+    override func viewDidAppear(_ animated: Bool) {
+        NotificationCenter.default.addObserver(self, selector: #selector(upload_pending_request), name: .networkRefreshed, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(refreshedView(notification:)), name: .refreshedViews, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(navigateThroughtNotify(notification:)), name: .navigateThroughNotification, object: nil)
+        self.navigationItem.rightBarButtonItems = nil
+        addDoubleNavigationButtons()
+        
+        if let btn = self.navigationItem.rightBarButtonItems?.first {
+            let count = getNotificationCounts()
+            if count > 0 {
+                btn.addBadge(num: count)
+            } else {
+                btn.removeBadge()
+            }
+        }
+    }
+    @objc func refreshedView(notification: Notification) {
+        self.navigationItem.rightBarButtonItems = nil
+        addDoubleNavigationButtons()
+        if let btn = self.navigationItem.rightBarButtonItems?.first {
+            let count = getNotificationCounts()
+            if count > 0 {
+                btn.addBadge(num: count)
+            } else {
+                btn.removeBadge()
+            }
+        }
+        reloadData(date: "\(year)-\(monthInNumber)")
+    }
     
     private func reloadData(date: String) {
         dataEntryX = [String]()
@@ -97,9 +127,9 @@ class MISDetailViewController: BaseViewController {
             self.view.hideToastActivity()
             self.setupJSON(date: date) { count in
                 self.setupTableView { _ in
-                    self.tableView.reloadData()
                     self.tableViewHeightConstraint.constant = CGFloat(30 * self.tableView_data!.count) + CGFloat(40)
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                        self.tableView.reloadData()
                         self.collectionViewHeightConstraint.constant = CGFloat(30 * count) + 70
                         self.collectionView.reloadData()
                     }
@@ -690,7 +720,7 @@ class MISDetailViewController: BaseViewController {
         let storyboard = UIStoryboard(name: "Popups", bundle: nil)
         let controller = storyboard.instantiateViewController(withIdentifier: "NewRequestListingViewController") as! NewRequestListingViewController
         if sender.tag == 0 {
-            controller.mis_popop_year = AppDelegate.sharedInstance.db?.read_tbl_mis_budget_setup_year()
+            controller.mis_popop_year = AppDelegate.sharedInstance.db?.read_tbl_mis_budget_setup_year(query: "SELECT DISTINCT YEARR from \(db_mis_budget_setup)")
             controller.heading = "Select Year"
         } else {
             let formatter : DateFormatter = {
@@ -700,7 +730,7 @@ class MISDetailViewController: BaseViewController {
                 return df
             }()
             
-            controller.mis_popup_mnth = AppDelegate.sharedInstance.db?.read_tbl_mis_budget_setup_month()?.sorted(by: { m1, m2 in
+            controller.mis_popup_mnth = AppDelegate.sharedInstance.db?.read_tbl_mis_budget_setup_month(query: "SELECT DISTINCT MNTH from \(db_mis_budget_setup)")?.sorted(by: { m1, m2 in
                 formatter.date(from: m1.mnth)! < formatter.date(from: m2.mnth)!
             })
             controller.heading = "Select Month"

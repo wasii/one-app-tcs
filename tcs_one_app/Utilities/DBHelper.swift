@@ -480,6 +480,26 @@ class DBHelper {
         }
         return tbl_userpermission
     }
+    func read_tbl_UserPermission(query: String) -> [tbl_UserPermission]{
+        let queryStatementString = query
+        var queryStatement: OpaquePointer? = nil
+        var tbl_userpermission: [tbl_UserPermission] = []
+        
+        if sqlite3_prepare_v2(db, queryStatementString, -1, &queryStatement, nil) == SQLITE_OK {
+            while sqlite3_step(queryStatement) == SQLITE_ROW {
+                let id = Int(sqlite3_column_int(queryStatement, 0))
+                let server_id_pk = Int(sqlite3_column_int(queryStatement, 1))
+                let page_id = Int(sqlite3_column_int(queryStatement, 2))
+                let permission = String(describing: String(cString: sqlite3_column_text(queryStatement, 3)))
+                let is_active = Int(sqlite3_column_int(queryStatement, 4))
+                
+                tbl_userpermission.append(tbl_UserPermission(ID: id, SERVER_ID_PK: server_id_pk, PAGEID: page_id, PERMISSION: permission, ISACTIVE: is_active))
+            }
+        } else {
+            print("\(db_user_permission): SELECT statement could not be prepared")
+        }
+        return tbl_userpermission
+    }
     //MARK: USER_PROFILE
     func insert_tbl_UserProfile(user: User) {
         let insertStatementString = "INSERT INTO \(db_user_profile)(SERVER_ID_PK,EMP_NAME,GENDER,CNIC_NO,DISABLE_STATUS,CURR_CITY,EMP_CELL_1,EMP_CELL_2,GRADE_CODE,EMP_STATUS,UNIT_CODE,WORKING_DESIG_CODE,DESIG_CODE,DEPT_CODE,SUB_DEPT_CODE,USERID,AREA_CODE,STATION_CODE,HUB_CODE,ACCESSTOKEN, HIGHNESS) VALUES (?, ?, ?, ?,?, ?, ?, ?,?, ?, ?, ?,?, ?, ?, ?,?, ?, ?, ?, ?);"
@@ -3286,8 +3306,8 @@ class DBHelper {
     }
     
     //Get MIS Months
-    func read_tbl_mis_budget_setup_month() -> [MISPopupMonth]? {
-        let queryStatementString = "SELECT DISTINCT MNTH from \(db_mis_budget_setup)"
+    func read_tbl_mis_budget_setup_month(query: String) -> [MISPopupMonth]? {
+        let queryStatementString = query
         var queryStatement: OpaquePointer? = nil
         var popup_month = [MISPopupMonth]()
 
@@ -3302,8 +3322,8 @@ class DBHelper {
         return popup_month.count > 0 ? popup_month : nil
     }
     //Get MIS Years
-    func read_tbl_mis_budget_setup_year() -> [MISPopupYear]? {
-        let queryStatementString = "SELECT DISTINCT YEARR from \(db_mis_budget_setup)"
+    func read_tbl_mis_budget_setup_year(query: String) -> [MISPopupYear]? {
+        let queryStatementString = query
         var queryStatement: OpaquePointer? = nil
         var popup_yearr = [MISPopupYear]()
 
@@ -4368,6 +4388,7 @@ struct tbl_mis_daily_overview {
 
 //MARK: - Management information System - MIS (NEW)
 struct tbl_mis_budget_setup: Hashable {
+    var isPieChart: Bool = false
     var prod_with_prodtype: String = ""
     var id: Int = 0
     var product: String = ""

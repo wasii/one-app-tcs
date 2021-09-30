@@ -78,7 +78,7 @@ class LandingViewController: BaseViewController {
     }
     private func setupAnimations() {
         let screenSize = UIScreen.main.bounds.height / 3.7
-        UIView.animate(withDuration: 0.75) {
+        UIView.animate(withDuration: 0.3) {
             self.logoCenterConstraint.constant = -screenSize + self.safeTopArea
             self.logoHeightConstraint.constant = 200
             
@@ -824,25 +824,25 @@ extension LandingViewController {
                                                                 DispatchQueue.main.async {
                                                                     self.currentCount += self.increment
                                                                     self.percentCounter.text = "\(self.currentCount)%"
-                                                                    self.navigateHomeScreen()
-                                                                }
-                                                            } else {
-                                                                DispatchQueue.main.async {
-                                                                    self.view.makeToast(SOMETHINGWENTWRONG)
-                                                                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                                                                        self.navigationController?.popViewController(animated: true)
+                                                                    self.misdashboarddetail { dashboard_granted in
+                                                                        if dashboard_granted {
+                                                                            DispatchQueue.main.async {
+                                                                                self.currentCount += self.increment
+                                                                                self.percentCounter.text = "\(self.currentCount)%"
+                                                                                self.navigateHomeScreen()
+                                                                            }
+                                                                        } else {
+                                                                            self.showError()
+                                                                        }
                                                                     }
                                                                 }
+                                                            } else {
+                                                                self.showError()
                                                             }
                                                         }
                                                     }
                                                 } else {
-                                                    DispatchQueue.main.async {
-                                                        self.view.makeToast(SOMETHINGWENTWRONG)
-                                                        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                                                            self.navigationController?.popViewController(animated: true)
-                                                        }
-                                                    }
+                                                    self.showError()
                                                 }
                                             }
                                         } else {
@@ -922,25 +922,25 @@ extension LandingViewController {
                                                                         DispatchQueue.main.async {
                                                                             self.currentCount += self.increment
                                                                             self.percentCounter.text = "\(self.currentCount)%"
-                                                                            self.navigateHomeScreen()
-                                                                        }
-                                                                    } else {
-                                                                        DispatchQueue.main.async {
-                                                                            self.view.makeToast(SOMETHINGWENTWRONG)
-                                                                            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                                                                                self.navigationController?.popViewController(animated: true)
+                                                                            self.misdashboarddetail { dashboard_granted in
+                                                                                if dashboard_granted {
+                                                                                    DispatchQueue.main.async {
+                                                                                        self.currentCount += self.increment
+                                                                                        self.percentCounter.text = "\(self.currentCount)%"
+                                                                                        self.navigateHomeScreen()
+                                                                                    }
+                                                                                } else {
+                                                                                    self.showError()
+                                                                                }
                                                                             }
                                                                         }
+                                                                    } else {
+                                                                        self.showError()
                                                                     }
                                                                 }
                                                             }
                                                         } else {
-                                                            DispatchQueue.main.async {
-                                                                self.view.makeToast(SOMETHINGWENTWRONG)
-                                                                DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                                                                    self.navigationController?.popViewController(animated: true)
-                                                                }
-                                                            }
+                                                            self.showError()
                                                         }
                                                     }
                                                 } else {
@@ -1016,25 +1016,25 @@ extension LandingViewController {
                                                             DispatchQueue.main.async {
                                                                 self.currentCount += self.increment
                                                                 self.percentCounter.text = "\(self.currentCount)%"
-                                                                self.navigateHomeScreen()
-                                                            }
-                                                        } else {
-                                                            DispatchQueue.main.async {
-                                                                self.view.makeToast(SOMETHINGWENTWRONG)
-                                                                DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                                                                    self.navigationController?.popViewController(animated: true)
+                                                                self.misdashboarddetail { dashboard_granted in
+                                                                    if dashboard_granted {
+                                                                        DispatchQueue.main.async {
+                                                                            self.currentCount += self.increment
+                                                                            self.percentCounter.text = "\(self.currentCount)%"
+                                                                            self.navigateHomeScreen()
+                                                                        }
+                                                                    } else {
+                                                                        self.showError()
+                                                                    }
                                                                 }
                                                             }
+                                                        } else {
+                                                            self.showError()
                                                         }
                                                     }
                                                 }
                                             } else {
-                                                DispatchQueue.main.async {
-                                                    self.view.makeToast(SOMETHINGWENTWRONG)
-                                                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                                                        self.navigationController?.popViewController(animated: true)
-                                                    }
-                                                }
+                                                self.showError()
                                             }
                                         }
                                     } else {
@@ -1182,7 +1182,17 @@ extension LandingViewController {
                                                 DispatchQueue.main.async {
                                                     self.currentCount += self.increment
                                                     self.percentCounter.text = "\(self.currentCount)%"
-                                                    self.navigateHomeScreen()
+                                                    self.misdashboarddetail { dashboard_granted in
+                                                        if dashboard_granted {
+                                                            DispatchQueue.main.async {
+                                                                self.currentCount += self.increment
+                                                                self.percentCounter.text = "\(self.currentCount)%"
+                                                                self.navigateHomeScreen()
+                                                            }
+                                                        } else {
+                                                            self.showError()
+                                                        }
+                                                    }
                                                 }
                                             } else {
                                                 self.showError()
@@ -1254,7 +1264,17 @@ extension LandingViewController {
                                                             DispatchQueue.main.async {
                                                                 self.currentCount += self.increment
                                                                 self.percentCounter.text = "\(self.currentCount)%"
-                                                                self.navigateHomeScreen()
+                                                                self.misdashboarddetail { dashboard_granted in
+                                                                    if dashboard_granted {
+                                                                        DispatchQueue.main.async {
+                                                                            self.currentCount += self.increment
+                                                                            self.percentCounter.text = "\(self.currentCount)%"
+                                                                            self.navigateHomeScreen()
+                                                                        }
+                                                                    } else {
+                                                                        self.showError()
+                                                                    }
+                                                                }
                                                             }
                                                         } else {
                                                             self.showError()
@@ -1325,7 +1345,17 @@ extension LandingViewController {
                                                 DispatchQueue.main.async {
                                                     self.currentCount += self.increment
                                                     self.percentCounter.text = "\(self.currentCount)%"
-                                                    self.navigateHomeScreen()
+                                                    self.misdashboarddetail { dashboard_granted in
+                                                        if dashboard_granted {
+                                                            DispatchQueue.main.async {
+                                                                self.currentCount += self.increment
+                                                                self.percentCounter.text = "\(self.currentCount)%"
+                                                                self.navigateHomeScreen()
+                                                            }
+                                                        } else {
+                                                            self.showError()
+                                                        }
+                                                    }
                                                 }
                                             } else {
                                                 self.showError()
@@ -1535,7 +1565,7 @@ extension LandingViewController {
     }
     
     //MARK: Dashboard Detail
-    func misdashboarddetail(_ handler: @escaping(Bool)->Void) {
+    private func misdashboarddetail(_ handler: @escaping(Bool)->Void) {
         var last_budget_data = [String:Any]()
         if let lastSyncStatus = AppDelegate.sharedInstance.db?.readLastSyncStatus(tableName: db_last_sync_status,
                                                                                   condition: "SYNC_KEY = '\(S_MIS_DASHBOARD_DETAILS)' AND CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)'") {
@@ -1587,11 +1617,10 @@ extension LandingViewController {
                         for bd in budgetData {
                             let rawData = try bd.rawData()
                             let dashboard_detail: MISDashboardDetail = try JSONDecoder().decode(MISDashboardDetail.self, from: rawData)
-//                            AppDelegate.sharedInstance.db?.deleteRowWithMultipleConditions(tbl: db_mis_dashboard_detail, conditions: "RPT_DATE = '\(budget_data.rptDate)' AND TYPE = '\(budget_data.type)'", { _ in
-//
-//                            })
-                            AppDelegate.sharedInstance.db?.insert_tbl_mis_dashboard_detail(dashboard_detail: dashboard_detail, handler: { _ in })
-                            
+                            let condition = "PRODUCT = '\(dashboard_detail.product)' AND MNTH = '\(dashboard_detail.mnth)' AND YEARR = '\(dashboard_detail.yearr)' AND TITLE = '\(dashboard_detail.title)' AND TYP = '\(dashboard_detail.typ)'"
+                            AppDelegate.sharedInstance.db?.deleteRowWithMultipleConditions(tbl: db_mis_dashboard_detail, conditions: condition, { _ in
+                                AppDelegate.sharedInstance.db?.insert_tbl_mis_dashboard_detail(dashboard_detail: dashboard_detail, handler: { _ in })
+                            })
                         }
                         if let lastSync = json.dictionary?["lastSyncDate"]?.string {
                             Helper.updateLastSyncStatus(APIName: S_MIS_DASHBOARD_DETAILS,
@@ -1601,6 +1630,7 @@ extension LandingViewController {
                                                         total_records: 0)
                         }
                         handler(true)
+                        return
                     } catch let DecodingError.dataCorrupted(context) {
                         print(context)
                     } catch let DecodingError.keyNotFound(key, context) {
@@ -1686,7 +1716,7 @@ extension LandingViewController {
     }
     
     func openLoginScreen() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
             let storyboard = UIStoryboard(name: "UserCredentials", bundle: nil)
             let controller = storyboard.instantiateViewController(withIdentifier: "mainNavigation") as! UINavigationController
             (controller.children.first as! EnterPinViewController).delegate = self

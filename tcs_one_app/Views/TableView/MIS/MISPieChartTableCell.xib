@@ -19,13 +19,13 @@
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="za3-lY-3V8" customClass="CustomView" customModule="One_App" customModuleProvider="target">
-                        <rect key="frame" x="5" y="5" width="492" height="292"/>
+                        <rect key="frame" x="0.0" y="0.0" width="502" height="297"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fXs-Od-mKs">
-                                <rect key="frame" x="0.0" y="0.0" width="492" height="50"/>
+                                <rect key="frame" x="0.0" y="0.0" width="502" height="50"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Express" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iCY-MW-Rds">
-                                        <rect key="frame" x="215" y="14.5" width="62" height="21"/>
+                                        <rect key="frame" x="220" y="14.5" width="62" height="21"/>
                                         <fontDescription key="fontDescription" type="system" weight="medium" pointSize="17"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
@@ -39,14 +39,14 @@
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZDf-it-n26">
-                                <rect key="frame" x="0.0" y="50" width="492" height="242"/>
+                                <rect key="frame" x="0.0" y="50" width="502" height="247"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cnA-uL-WqO">
-                                        <rect key="frame" x="15" y="0.0" width="462" height="242"/>
-                                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                        <rect key="frame" x="15" y="0.0" width="472" height="247"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </view>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rf7-cE-gA2">
-                                        <rect key="frame" x="210" y="109" width="72.5" height="24"/>
+                                        <rect key="frame" x="215" y="111.5" width="72.5" height="24"/>
                                         <string key="text">Total Shipment
 99,999,999</string>
                                         <fontDescription key="fontDescription" type="system" pointSize="10"/>
@@ -54,7 +54,7 @@
                                         <nil key="highlightedColor"/>
                                     </label>
                                 </subviews>
-                                <color key="backgroundColor" red="0.9882352941176471" green="0.9882352941176471" blue="0.9882352941176471" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="backgroundColor" red="0.94901960784313721" green="0.94901960784313721" blue="0.94901960784313721" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstItem="rf7-cE-gA2" firstAttribute="centerY" secondItem="ZDf-it-n26" secondAttribute="centerY" id="Dgj-nB-3JY"/>
                                     <constraint firstItem="cnA-uL-WqO" firstAttribute="top" secondItem="ZDf-it-n26" secondAttribute="top" id="Iyp-pt-nRZ"/>
@@ -95,10 +95,10 @@
                     </view>
                 </subviews>
                 <constraints>
-                    <constraint firstAttribute="trailing" secondItem="za3-lY-3V8" secondAttribute="trailing" constant="5" id="BxG-Gi-zg4"/>
-                    <constraint firstItem="za3-lY-3V8" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="5" id="ImE-Qr-IHs"/>
+                    <constraint firstAttribute="trailing" secondItem="za3-lY-3V8" secondAttribute="trailing" id="BxG-Gi-zg4"/>
+                    <constraint firstItem="za3-lY-3V8" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" id="ImE-Qr-IHs"/>
                     <constraint firstAttribute="bottom" secondItem="za3-lY-3V8" secondAttribute="bottom" constant="5" id="uS2-LB-C84"/>
-                    <constraint firstItem="za3-lY-3V8" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="5" id="wRo-Lv-JbA"/>
+                    <constraint firstItem="za3-lY-3V8" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" id="wRo-Lv-JbA"/>
                 </constraints>
             </tableViewCellContentView>
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
