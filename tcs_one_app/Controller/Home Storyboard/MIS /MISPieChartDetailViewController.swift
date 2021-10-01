@@ -50,15 +50,11 @@ class MISPieChartDetailViewController: BaseViewController {
             monthInNumber = "0\(monthInNumber)"
         }
         
-        category_list = [MISCategoryList]()
-        category_list!.append(MISCategoryList(title: "Attempt (KPIs)", isSelected: true))
-        category_list!.append(MISCategoryList(title: "Delivery/Return (KPIs)", isSelected: false))
-        category_list!.append(MISCategoryList(title: "Delivery/Returned (Ratio)", isSelected: false))
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-            self.tableViewHeightConstraint.constant = 310 * 5
-            self.tableView.reloadData()
-            self.collectionView.reloadData()
+        if let category_list = AppDelegate.sharedInstance.db?.get_mis_dashboard_type() {
+            self.category_list = category_list
+            self.category_list![0].isSelected = true
         }
+        reloadData()
     }
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
@@ -75,7 +71,25 @@ class MISPieChartDetailViewController: BaseViewController {
             layout.invalidateLayout()
         }
     }
-    
+    private func reloadData() {
+        self.setupJSON { _ in
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                self.tableViewHeightConstraint.constant = 310 * 5
+                self.tableView.reloadData()
+                self.collectionView.reloadData()
+            }
+        }
+    }
+    private func setupJSON(_ handler: @escaping(Bool)->Void) {
+        let selectedType = self.category_list?.filter { category in
+            category.isSelected == true
+        }.first
+        let query = "SELECT * FROM \(db_mis_dashboard_detail) WHERE TITLE = '\(self.headingLabel.text ?? "")' AND TYP = '\(selectedType?.title ?? "")' AND MNTH = '\(self.monthName)' AND YEARR = '\(self.year)'"
+        if let dashboard_detail = AppDelegate.sharedInstance.db?.read_tbl_mis_dashboard_detail(query: query) {
+            print(dashboard_detail)
+        }
+        handler(true)
+    }
     @IBAction func selectionBtnTapped(_ sender: UIButton) {
         let storyboard = UIStoryboard(name: "Popups", bundle: nil)
         let controller = storyboard.instantiateViewController(withIdentifier: "NewRequestListingViewController") as! NewRequestListingViewController
@@ -165,7 +179,7 @@ extension MISPieChartDetailViewController: UICollectionViewDataSource, UICollect
             self.category_list![i].isSelected = false
         }
         self.category_list![indexPath.row].isSelected = true
-        self.collectionView.reloadData()
+        self.reloadData()
     }
 }
 
@@ -184,11 +198,13 @@ extension MISPieChartDetailViewController: MISDelegate {
             self.monthName = mnth.mnth
         }
         self.monthLabel.text = mnth.mnth
-}
+        self.reloadData()
+    }
     
     func updateYearr(year: MISPopupYear) {
         self.yearLabel.text = year.yearr
         self.year = year.yearr
+        self.reloadData()
     }
 }
 

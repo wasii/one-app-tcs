@@ -3304,7 +3304,22 @@ class DBHelper {
         }
         sqlite3_finalize(insertStatement)
     }
-    
+    //Get MIS Dashboard Type
+    func get_mis_dashboard_type() -> [MISCategoryList]? {
+        let queryStatementString = "SELECT DISTINCT TYP FROM \(db_mis_dashboard_detail)"
+        var queryStatement: OpaquePointer? = nil
+        var category_list = [MISCategoryList]()
+
+        if sqlite3_prepare_v2(db, queryStatementString, -1, &queryStatement, nil) == SQLITE_OK {
+            while sqlite3_step(queryStatement) == SQLITE_ROW {
+                let mnth = String(describing: String(cString: sqlite3_column_text(queryStatement, 0)))
+                category_list.append(MISCategoryList(title: mnth, isSelected: false))
+            }
+        } else {
+            print("SELECT statement \(db_mis_dashboard_detail) could not be prepared")
+        }
+        return category_list.count > 0 ? category_list : nil
+    }
     //Get MIS Months
     func read_tbl_mis_budget_setup_month(query: String) -> [MISPopupMonth]? {
         let queryStatementString = query
