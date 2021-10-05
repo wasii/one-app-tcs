@@ -18,7 +18,9 @@ class MISPieChartDetailViewController: BaseViewController {
     @IBOutlet weak var monthLabel: UILabel!
     @IBOutlet weak var yearLabel: UILabel!
     var category_list: [MISCategoryList]?
-    
+    var budget_setup: tbl_mis_budget_setup?
+    var mis_dashboard_detail: [tbl_mis_dashboard_detail]?
+    var temp_dashboard_detail: [tbl_mis_dashboard_detail]?
     var monthInNumber: String = ""
     var monthName: String = ""
     var year: String = ""
@@ -54,6 +56,9 @@ class MISPieChartDetailViewController: BaseViewController {
             self.category_list = category_list
             self.category_list![0].isSelected = true
         }
+        if let budget_setup = budget_setup {
+            self.headingLabel.text = budget_setup.product
+        }
         reloadData()
     }
     override func viewDidLayoutSubviews() {
@@ -86,7 +91,15 @@ class MISPieChartDetailViewController: BaseViewController {
         }.first
         let query = "SELECT * FROM \(db_mis_dashboard_detail) WHERE TITLE = '\(self.headingLabel.text ?? "")' AND TYP = '\(selectedType?.title ?? "")' AND MNTH = '\(self.monthName)' AND YEARR = '\(self.year)'"
         if let dashboard_detail = AppDelegate.sharedInstance.db?.read_tbl_mis_dashboard_detail(query: query) {
-            print(dashboard_detail)
+            self.temp_dashboard_detail = dashboard_detail
+            let permission_query = "SELECT u.* FROM \(db_user_page) AS up INNER JOIN \(db_user_permission) AS u ON  up.PAGENAME = '\(self.budget_setup?.product ?? "")' AND up.SERVER_ID_PK = u.PAGEID AND u.PERMISSION LIKE '\(selectedType?.title ?? "")%'"
+            if let permission = AppDelegate.sharedInstance.db?.read_tbl_UserPermission(query: permission_query) {
+                for p in permission {
+                    if p.PERMISSION.contains("") {
+                        
+                    }
+                }
+            }
         }
         handler(true)
     }

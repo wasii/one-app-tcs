@@ -100,6 +100,7 @@ extension MISDashboardViewController: UITableViewDelegate, UITableViewDataSource
         self.indexPath = indexPath
         if self.mis_budget_setup![indexPath.row].isPieChart {
             let controller = self.storyboard?.instantiateViewController(withIdentifier: "MISPieChartDetailViewController") as! MISPieChartDetailViewController
+            controller.budget_setup = self.mis_budget_setup![indexPath.row]
             self.navigationController?.pushViewController(controller, animated: true)
             return
         }
