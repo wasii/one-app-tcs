@@ -7,13 +7,22 @@
 //
 
 import UIKit
+import Charts
 
 class MISPieChartTableCell: UITableViewCell {
     override class func description() -> String {
         return "MISPieChartTableCell"
     }
+    
+    @IBOutlet weak var headingLabel: UILabel!
+    @IBOutlet weak var totalShipmentLabel: UILabel!
+    @IBOutlet weak var pieChart: PieChartView!
+    var product: String?
     override func awakeFromNib() {
         super.awakeFromNib()
+        if let product = product {
+            self.headingLabel.text = product
+        }
         // Initialization code
     }
 

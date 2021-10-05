@@ -7,7 +7,7 @@
 //
 
 import UIKit
-
+import Charts
 class MISPieChartDetailViewController: BaseViewController {
 
     @IBOutlet weak var mainView: UIView!
@@ -25,6 +25,7 @@ class MISPieChartDetailViewController: BaseViewController {
     var monthName: String = ""
     var year: String = ""
     let df = DateFormatter()
+    var productName: String = ""
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "MIS"
@@ -56,9 +57,17 @@ class MISPieChartDetailViewController: BaseViewController {
             self.category_list = category_list
             self.category_list![0].isSelected = true
         }
-        if let budget_setup = budget_setup {
+        if var budget_setup = budget_setup {
+            self.productName = budget_setup.product
             self.headingLabel.text = budget_setup.product
+            if budget_setup.product.last == " " {
+                _ = budget_setup.product.removeLast()
+                self.headingLabel.text = "\(budget_setup.product)"
+                self.productName = budget_setup.product
+            }
+            
         }
+
         reloadData()
     }
     override func viewDidLayoutSubviews() {
@@ -77,31 +86,46 @@ class MISPieChartDetailViewController: BaseViewController {
         }
     }
     private func reloadData() {
-        self.setupJSON { _ in
+        self.setupJSON { count in
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                self.tableViewHeightConstraint.constant = 310 * 5
+                self.tableViewHeightConstraint.constant = CGFloat(310 * count)
                 self.tableView.reloadData()
                 self.collectionView.reloadData()
             }
         }
     }
-    private func setupJSON(_ handler: @escaping(Bool)->Void) {
+    private func setupJSON(_ handler: @escaping(Int)->Void) {
         let selectedType = self.category_list?.filter { category in
             category.isSelected == true
         }.first
-        let query = "SELECT * FROM \(db_mis_dashboard_detail) WHERE TITLE = '\(self.headingLabel.text ?? "")' AND TYP = '\(selectedType?.title ?? "")' AND MNTH = '\(self.monthName)' AND YEARR = '\(self.year)'"
+        let query = "SELECT * FROM \(db_mis_dashboard_detail) WHERE TITLE = '\(self.productName)' AND TYP = '\(selectedType?.title ?? "")' AND MNTH = '\(self.monthName)' AND YEARR = '\(self.year)'"
         if let dashboard_detail = AppDelegate.sharedInstance.db?.read_tbl_mis_dashboard_detail(query: query) {
+            self.mis_dashboard_detail = [tbl_mis_dashboard_detail]()
             self.temp_dashboard_detail = dashboard_detail
-            let permission_query = "SELECT u.* FROM \(db_user_page) AS up INNER JOIN \(db_user_permission) AS u ON  up.PAGENAME = '\(self.budget_setup?.product ?? "")' AND up.SERVER_ID_PK = u.PAGEID AND u.PERMISSION LIKE '\(selectedType?.title ?? "")%'"
+            let permission_query = "SELECT u.* FROM \(db_user_page) AS up INNER JOIN \(db_user_permission) AS u ON  up.PAGENAME = '\(self.productName)' AND up.SERVER_ID_PK = u.PAGEID AND u.PERMISSION LIKE '\(selectedType?.title ?? "")%'"
             if let permission = AppDelegate.sharedInstance.db?.read_tbl_UserPermission(query: permission_query) {
-                for p in permission {
-                    if p.PERMISSION.contains("") {
-                        
+                for (i,detail) in dashboard_detail.enumerated() {
+                    let kpiPermissions = permission.filter { perm in
+                        perm.PERMISSION == "\(detail.typ)-\(detail.product)-KPI"
+                    }
+                    let dlvrdPermission = permission.filter { perm in
+                        perm.PERMISSION == "\(detail.typ)-\(detail.product)-DLVRD"
+                    }
+                    
+                    if kpiPermissions.count == 1 {
+                        self.temp_dashboard_detail![i].isKPIAllowed = true
+                        self.mis_dashboard_detail!.append(self.temp_dashboard_detail![i])
+                        continue
+                    }
+                    if dlvrdPermission.count == 1 {
+                        self.temp_dashboard_detail![i].isKPIAllowed = false
+                        self.mis_dashboard_detail!.append(self.temp_dashboard_detail![i])
+                        continue
                     }
                 }
             }
         }
-        handler(true)
+        handler(self.mis_dashboard_detail?.count ?? 0)
     }
     @IBAction func selectionBtnTapped(_ sender: UIButton) {
         let storyboard = UIStoryboard(name: "Popups", bundle: nil)
@@ -134,17 +158,69 @@ class MISPieChartDetailViewController: BaseViewController {
 
 extension MISPieChartDetailViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 5
+        if let count = self.mis_dashboard_detail?.count {
+            return count
+        }
+        return 0
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: MISPieChartTableCell.description()) as? MISPieChartTableCell else {
             fatalError()
         }
-        
+        if let dashboard_detail = self.mis_dashboard_detail?[indexPath.row] {
+            cell.headingLabel.text = dashboard_detail.product
+            cell.pieChart = self.setupCell(dashboard_detail: dashboard_detail, pieChartView: cell.pieChart)
+        }
         return cell
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 310
+    }
+    private func setupCell(dashboard_detail: tbl_mis_dashboard_detail, pieChartView: PieChartView) -> PieChartView {
+        pieChartView.highlightPerTapEnabled = true
+        pieChartView.usePercentValuesEnabled = false
+        pieChartView.drawSlicesUnderHoleEnabled = false
+        pieChartView.holeRadiusPercent = 0.60
+        pieChartView.chartDescription?.enabled = false
+        pieChartView.drawEntryLabelsEnabled = false
+        pieChartView.rotationEnabled = false
+        
+        pieChartView.legend.enabled = false
+        pieChartView.setExtraOffsets(left: 20, top: 0, right: 20, bottom: 0)
+        
+        
+        let count = 3
+        let range: UInt32 = 10
+        
+        let entries = (0..<count).map { (i) -> PieChartDataEntry in
+            // IMPORTANT: In a PieChart, no values (Entry) should have the same xIndex (even if from different DataSets), since no values can be drawn above each other.
+            return PieChartDataEntry(value: Double(arc4random_uniform(range) + range / 5))
+        }
+        let set = PieChartDataSet(entries: entries, label: "")
+        set.sliceSpace = 1
+        set.valueLinePart1OffsetPercentage = 0.8
+        set.valueLinePart1Length = 0.2
+        set.valueLinePart2Length = 0.4
+        
+        set.yValuePosition = .outsideSlice
+        
+        
+        set.colors = [UIColor.nativeRedColor(), UIColor.approvedColor(), UIColor.darkGray]
+        let data = PieChartData(dataSet: set)
+        
+        let pFormatter = NumberFormatter()
+        pFormatter.numberStyle = .percent
+        pFormatter.maximumFractionDigits = 1
+        pFormatter.multiplier = 1
+        pFormatter.percentSymbol = ""
+        
+        data.setValueFormatter(DefaultValueFormatter(formatter: pFormatter))
+        data.setValueFont(.systemFont(ofSize: 11, weight: .light))
+        data.setValueTextColor(.black)
+        
+        pieChartView.data = data
+//        pieChartView.animate(xAxisDuration: 0.4, easingOption: .easeOutBack)
+        return pieChartView
     }
 }
 

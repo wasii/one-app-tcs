@@ -3265,7 +3265,7 @@ class DBHelper {
                 let retrn = String(describing: String(cString: sqlite3_column_text(queryStatement, 15)))
                 let rtnAge = String(describing: String(cString: sqlite3_column_text(queryStatement, 16)))
                 
-                mis_dashboard_detail.append(tbl_mis_dashboard_detail(id: id, title: title, typ: typ, mnth: mnth, yearr: yearr, product: product, totalShipment: totalShipment, whithinKpi: whithinKpi, wkpiAge: wkpiAge, afterKpi: afterKpi, akpiAge: akpiAge, inprocess: inprocess, inpAge: inpAge, delivered: delivered, dlvrdAge: dlvrdAge, retrn: retrn, rtnAge: rtnAge))
+                mis_dashboard_detail.append(tbl_mis_dashboard_detail(id: id, title: title, typ: typ, mnth: mnth, yearr: yearr, product: product, totalShipment: totalShipment, whithinKpi: whithinKpi, wkpiAge: wkpiAge, afterKpi: afterKpi, akpiAge: akpiAge, inprocess: inprocess, inpAge: inpAge, delivered: delivered, dlvrdAge: dlvrdAge, retrn: retrn, rtnAge: rtnAge, isKPIAllowed: false))
             }
         } else {
             print("SELECT statement \(db_mis_daily_overview) could not be prepared")
@@ -4450,6 +4450,7 @@ struct tbl_mis_dashboard_detail {
     var inprocess: String = ""
     var inpAge: String = ""
     var delivered: String, dlvrdAge: String, retrn: String, rtnAge: String = ""
+    var isKPIAllowed: Bool = false
 }
 
 //MARK: Wallet
