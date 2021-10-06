@@ -88,7 +88,7 @@ class MISPieChartDetailViewController: BaseViewController {
     private func reloadData() {
         self.setupJSON { count in
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                self.tableViewHeightConstraint.constant = CGFloat(310 * count)
+                self.tableViewHeightConstraint.constant = CGFloat(350 * count)
                 self.tableView.reloadData()
                 self.collectionView.reloadData()
             }
@@ -169,12 +169,13 @@ extension MISPieChartDetailViewController: UITableViewDataSource, UITableViewDel
         }
         if let dashboard_detail = self.mis_dashboard_detail?[indexPath.row] {
             cell.headingLabel.text = dashboard_detail.product
+            cell.totalShipmentLabel.text = "Total Shipment\n\(dashboard_detail.totalShipment)"
             cell.pieChart = self.setupCell(dashboard_detail: dashboard_detail, pieChartView: cell.pieChart)
         }
         return cell
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 310
+        return 350
     }
     private func setupCell(dashboard_detail: tbl_mis_dashboard_detail, pieChartView: PieChartView) -> PieChartView {
         pieChartView.highlightPerTapEnabled = true
@@ -185,41 +186,63 @@ extension MISPieChartDetailViewController: UITableViewDataSource, UITableViewDel
         pieChartView.drawEntryLabelsEnabled = false
         pieChartView.rotationEnabled = false
         
+//        pieChartView.data?.setDrawValues(true)
+        
+        
         pieChartView.legend.enabled = false
-        pieChartView.setExtraOffsets(left: 20, top: 0, right: 20, bottom: 0)
+        pieChartView.setExtraOffsets(left: 35, top: 15, right: 35, bottom: 15)
         
-        
-        let count = 3
-        let range: UInt32 = 10
-        
-        let entries = (0..<count).map { (i) -> PieChartDataEntry in
-            // IMPORTANT: In a PieChart, no values (Entry) should have the same xIndex (even if from different DataSets), since no values can be drawn above each other.
-            return PieChartDataEntry(value: Double(arc4random_uniform(range) + range / 5))
+        var pieEntries = [PieChartDataEntry]()
+        /*
+         * It will show last in pie chart
+         * */
+        if (dashboard_detail.isKPIAllowed) {
+            let withPercentage = String(format: "%.1f", (dashboard_detail.wkpiAge as NSString).doubleValue)
+            pieEntries.append(PieChartDataEntry(value: (dashboard_detail.whithinKpi as NSString).doubleValue, label: "\(withPercentage)%*\((dashboard_detail.whithinKpi as NSString).doubleValue)*Shipments*With KPI"))
+        } else {
+            let returnPercentage = String(format: "%.1f", (dashboard_detail.rtnAge as NSString).doubleValue)
+            pieEntries.append(PieChartDataEntry(value: (dashboard_detail.retrn as NSString).doubleValue, label: "\(returnPercentage)%*\((dashboard_detail.retrn as NSString).doubleValue)*Shipments*Return"))
         }
-        let set = PieChartDataSet(entries: entries, label: "")
-        set.sliceSpace = 1
+        
+        /*
+         * It will show in the middle of pie chart
+         * */
+        let inProcessPercentage = String(format: "%.1f", (dashboard_detail.inpAge as NSString).doubleValue)
+        pieEntries.append(PieChartDataEntry(value: (dashboard_detail.inprocess as NSString).doubleValue, label: "\(inProcessPercentage)%*\((dashboard_detail.inprocess as NSString).doubleValue)*Shipments*In-Process"))
+        
+        /*
+         * It will show in the start of the pie chart
+         * */
+        if (dashboard_detail.isKPIAllowed) {
+            let afterPercentage = String(format: "%.1f", (dashboard_detail.akpiAge as NSString).doubleValue)
+            pieEntries.append(PieChartDataEntry(value: (dashboard_detail.afterKpi as NSString).doubleValue, label: "\(afterPercentage)%*\((dashboard_detail.afterKpi as NSString).doubleValue)*Shipments*After KPI"))
+        } else {
+            let deliverPercentage = String(format: "%.1f", (dashboard_detail.dlvrdAge as NSString).doubleValue)
+            pieEntries.append(PieChartDataEntry(value: (dashboard_detail.delivered as NSString).doubleValue, label: "\(deliverPercentage)%*\((dashboard_detail.delivered as NSString).doubleValue)*Shipments*Delivered"))
+        }
+        
+        let set = PieChartDataSet(entries: pieEntries, label: "")
+        set.sliceSpace = 3
         set.valueLinePart1OffsetPercentage = 0.8
-        set.valueLinePart1Length = 0.2
-        set.valueLinePart2Length = 0.4
-        
+        set.valueLinePart1Length = 0.6
+        set.valueLinePart2Length = 0.3 //decresing it may collapse label with circle
+        set.useValueColorForLine = true
+    
         set.yValuePosition = .outsideSlice
+        let grayColor = UIColor.init(_colorLiteralRed: 111.0/255.0, green: 111.0/255.0, blue: 111.0/255.0, alpha: 1)
+        set.colors = [UIColor.approvedColor(), grayColor , UIColor.nativeRedColor()]
+        set.valueColors = [UIColor.approvedColor(), grayColor , UIColor.nativeRedColor()]
+        set.valueLineWidth = 2
         
-        
-        set.colors = [UIColor.nativeRedColor(), UIColor.approvedColor(), UIColor.darkGray]
         let data = PieChartData(dataSet: set)
-        
-        let pFormatter = NumberFormatter()
-        pFormatter.numberStyle = .percent
-        pFormatter.maximumFractionDigits = 1
-        pFormatter.multiplier = 1
-        pFormatter.percentSymbol = ""
-        
-        data.setValueFormatter(DefaultValueFormatter(formatter: pFormatter))
+        data.setDrawValues(true)
         data.setValueFont(.systemFont(ofSize: 11, weight: .light))
         data.setValueTextColor(.black)
         
+        pieChartView.renderer = CustomPieChartRenderer(pieChartView: pieChartView, radius: CGFloat(2.5)) //It will draw circle twice of it
+        
         pieChartView.data = data
-//        pieChartView.animate(xAxisDuration: 0.4, easingOption: .easeOutBack)
+        pieChartView.animate(xAxisDuration: 0.9, easingOption: .easeOutCirc)
         return pieChartView
     }
 }

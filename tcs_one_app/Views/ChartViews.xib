@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19162" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19144"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -34,6 +34,13 @@
                         <constraint firstAttribute="height" constant="150" id="NtI-PM-OCf"/>
                     </constraints>
                 </view>
+                <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="utn-yq-Jae" userLabel="ProgressBar View">
+                    <rect key="frame" x="15" y="94" width="384" height="150"/>
+                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="150" id="15U-Ni-vKc"/>
+                    </constraints>
+                </view>
                 <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="J2J-Vt-vri" customClass="LineChartView" customModule="Charts">
                     <rect key="frame" x="5" y="94" width="404" height="150"/>
                     <subviews>
@@ -58,9 +65,12 @@
                 <constraint firstItem="qRb-9S-FyS" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="15" id="AJD-q2-xIu"/>
                 <constraint firstItem="J2J-Vt-vri" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="5" id="DGk-9f-7wQ"/>
                 <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="J2J-Vt-vri" secondAttribute="trailing" constant="5" id="RMC-z8-uAq"/>
+                <constraint firstItem="utn-yq-Jae" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" constant="50" id="SEg-6l-SfI"/>
                 <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="B0f-D9-mrf" secondAttribute="trailing" constant="15" id="UHx-Qf-zHZ"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="utn-yq-Jae" secondAttribute="trailing" constant="15" id="WvS-yL-L8r"/>
                 <constraint firstItem="B0f-D9-mrf" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="15" id="XZ8-Ce-7a3"/>
                 <constraint firstAttribute="trailing" secondItem="pHT-lA-fP8" secondAttribute="trailing" constant="15" id="ffq-Xl-wYt"/>
+                <constraint firstItem="utn-yq-Jae" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="15" id="nFh-GR-Bsd"/>
                 <constraint firstItem="B0f-D9-mrf" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" constant="55" id="oRB-Wd-96M"/>
                 <constraint firstItem="qRb-9S-FyS" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="15" id="oYM-5L-VzU"/>
                 <constraint firstItem="pHT-lA-fP8" firstAttribute="centerY" secondItem="qRb-9S-FyS" secondAttribute="centerY" id="zfs-0X-DFP"/>

@@ -14,6 +14,7 @@
 		1B11D07F262EB37000C137A3 /* RequestListingTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B11D07D262EB37000C137A3 /* RequestListingTableCell.swift */; };
 		1B11D085262EC82800C137A3 /* HeadOfSecurity.docx in Resources */ = {isa = PBXBuildFile; fileRef = 1B11D083262EC82800C137A3 /* HeadOfSecurity.docx */; };
 		1B11D086262EC82800C137A3 /* AreaSecurity.docx in Resources */ = {isa = PBXBuildFile; fileRef = 1B11D084262EC82800C137A3 /* AreaSecurity.docx */; };
+		1B13CBD4270D80C3009CB001 /* CustomPieChartRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B13CBD3270D80C3009CB001 /* CustomPieChartRenderer.swift */; };
 		1B14F16A25656DE500C4EA51 /* AddMemoPopupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B14F16925656DE500C4EA51 /* AddMemoPopupViewController.swift */; };
 		1B1691B525724CE40007B3B0 /* next-icon.svg in Resources */ = {isa = PBXBuildFile; fileRef = 1B1691B425724CE30007B3B0 /* next-icon.svg */; };
 		1B1691B82572524C0007B3B0 /* right-arrow-filled.svg in Resources */ = {isa = PBXBuildFile; fileRef = 1B1691B72572524C0007B3B0 /* right-arrow-filled.svg */; };
@@ -207,6 +208,7 @@
 		1B11D07D262EB37000C137A3 /* RequestListingTableCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RequestListingTableCell.swift; sourceTree = "<group>"; };
 		1B11D083262EC82800C137A3 /* HeadOfSecurity.docx */ = {isa = PBXFileReference; lastKnownFileType = file; path = HeadOfSecurity.docx; sourceTree = "<group>"; };
 		1B11D084262EC82800C137A3 /* AreaSecurity.docx */ = {isa = PBXFileReference; lastKnownFileType = file; path = AreaSecurity.docx; sourceTree = "<group>"; };
+		1B13CBD3270D80C3009CB001 /* CustomPieChartRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomPieChartRenderer.swift; sourceTree = "<group>"; };
 		1B14F16925656DE500C4EA51 /* AddMemoPopupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddMemoPopupViewController.swift; sourceTree = "<group>"; };
 		1B1691B425724CE30007B3B0 /* next-icon.svg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "next-icon.svg"; sourceTree = "<group>"; };
 		1B1691B72572524C0007B3B0 /* right-arrow-filled.svg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "right-arrow-filled.svg"; sourceTree = "<group>"; };
@@ -845,6 +847,7 @@
 				1BFB375825F9D8E60073CC53 /* SlideManager.swift */,
 				1B3239A626CF859900D89A9B /* YAxisFormatter.swift */,
 				1B5CBC8226F4A73B00831018 /* XAxisFormatter.swift */,
+				1B13CBD3270D80C3009CB001 /* CustomPieChartRenderer.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -1234,6 +1237,7 @@
 				1B28176B257F7D4F009AE4E3 /* ChartViews.swift in Sources */,
 				1B3202F62578C1270034803F /* ComingSoonViewController.swift in Sources */,
 				6082CD502550F4F90037CF54 /* RequestModePopupViewController.swift in Sources */,
+				1B13CBD4270D80C3009CB001 /* CustomPieChartRenderer.swift in Sources */,
 				609922942547ECB000534577 /* AddNewRequest.swift in Sources */,
 				1B77729827049464003E3374 /* MISPieChartTableCell.swift in Sources */,
 				6055E988254B303F009BB6E3 /* UpdateRequestViewController.swift in Sources */,
