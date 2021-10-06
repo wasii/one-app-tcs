@@ -218,6 +218,14 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
             chartViews = [ChartViews]()
             //MARK: - MIS Listing
             if isMISListingAllowed {
+                //Percent Values
+                let chart:ChartViews = Bundle.main.loadNibNamed("ChartViews", owner: self, options: nil)?.first as! ChartViews
+                chart.pieChart.isHidden = true
+                chart.progressBarView.isHidden = false
+                chart.misYearlyAverage.isHidden = true
+                chart.setupTableView()
+                self.ModuleCount += 1
+                chartViews.append(chart)
                 var product_type = ""
                 
                 let query = "SELECT up.* FROM (SELECT (CASE WHEN count(*) > 1 THEN GROUP_CONCAT(PROD_TYPE , ' + ') ELSE '' END) AS PROD_WITH_PRODTYPE,* FROM (SELECT * FROM MIS_BUDGET_SETUP GROUP BY PRODUCT,PROD_TYPE ORDER BY PROD_TYPE DESC) GROUP BY PRODUCT) AS up INNER JOIN (SELECT u.PERMISSION FROM USER_PAGE AS up INNER JOIN USER_PERMISSION AS u ON  up.PAGENAME = 'MIS Listing' AND up.SERVER_ID_PK = u.PAGEID) AS permission ON permission.PERMISSION = (CASE WHEN up.PROD_WITH_PRODTYPE == '' THEN up.PRODUCT || ' - ' || up.PROD_TYPE ELSE up.PRODUCT || ' - ' || up.PROD_WITH_PRODTYPE END)"

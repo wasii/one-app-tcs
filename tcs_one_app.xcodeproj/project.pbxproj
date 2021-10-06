@@ -102,6 +102,8 @@
 		1B77CE87256257B700A821E7 /* GrievanceViewRequestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B77CE86256257B700A821E7 /* GrievanceViewRequestViewController.swift */; };
 		1B78A6F525EE3434005670BE /* LeadershipAwazAllRequestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B78A6F425EE3434005670BE /* LeadershipAwazAllRequestViewController.swift */; };
 		1B7A292425A05E3C005694B6 /* IMSViewUpdateRequestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B7A292325A05E3C005694B6 /* IMSViewUpdateRequestViewController.swift */; };
+		1B8EB558270DCD6400BB3D9A /* PieChartTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B8EB556270DCD6400BB3D9A /* PieChartTableCell.swift */; };
+		1B8EB559270DCD6400BB3D9A /* PieChartTableCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1B8EB557270DCD6400BB3D9A /* PieChartTableCell.xib */; };
 		1B93213626E77FB100C96237 /* MISDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B93213526E77FB100C96237 /* MISDetailViewController.swift */; };
 		1B96C0A325E8D3020059775C /* NewRequestLeadershipAwazViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B96C0A225E8D3020059775C /* NewRequestLeadershipAwazViewController.swift */; };
 		1B9E6C812562779D006529C3 /* GrievanceViewClosedRequestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B9E6C802562779D006529C3 /* GrievanceViewClosedRequestViewController.swift */; };
@@ -295,6 +297,8 @@
 		1B77CE86256257B700A821E7 /* GrievanceViewRequestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GrievanceViewRequestViewController.swift; sourceTree = "<group>"; };
 		1B78A6F425EE3434005670BE /* LeadershipAwazAllRequestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeadershipAwazAllRequestViewController.swift; sourceTree = "<group>"; };
 		1B7A292325A05E3C005694B6 /* IMSViewUpdateRequestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMSViewUpdateRequestViewController.swift; sourceTree = "<group>"; };
+		1B8EB556270DCD6400BB3D9A /* PieChartTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PieChartTableCell.swift; sourceTree = "<group>"; };
+		1B8EB557270DCD6400BB3D9A /* PieChartTableCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PieChartTableCell.xib; sourceTree = "<group>"; };
 		1B93213526E77FB100C96237 /* MISDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MISDetailViewController.swift; sourceTree = "<group>"; };
 		1B96C0A225E8D3020059775C /* NewRequestLeadershipAwazViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewRequestLeadershipAwazViewController.swift; sourceTree = "<group>"; };
 		1B9E6C802562779D006529C3 /* GrievanceViewClosedRequestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GrievanceViewClosedRequestViewController.swift; sourceTree = "<group>"; };
@@ -579,6 +583,8 @@
 				1B6A402226C650F2004265F3 /* MISHeaderCell.swift */,
 				1B77729627049464003E3374 /* MISPieChartTableCell.swift */,
 				1B77729727049464003E3374 /* MISPieChartTableCell.xib */,
+				1B8EB556270DCD6400BB3D9A /* PieChartTableCell.swift */,
+				1B8EB557270DCD6400BB3D9A /* PieChartTableCell.xib */,
 			);
 			path = MIS;
 			sourceTree = "<group>";
@@ -1062,6 +1068,7 @@
 				1B614E1C2555138500E50B3A /* GoogleService-Info.plist in Resources */,
 				1BA7BAC3260DF3FD002D9FA9 /* FulfilmentOrderDetailTableCell.xib in Resources */,
 				1BA5110C267B28A400E0E642 /* WalletHistoryTableCell.xib in Resources */,
+				1B8EB559270DCD6400BB3D9A /* PieChartTableCell.xib in Resources */,
 				1BFB374725F9D6E20073CC53 /* Attendance.storyboard in Resources */,
 				1B6B04A4256660CD00CDEF66 /* GrievacneDownloadsTableCell.xib in Resources */,
 				1B77729927049464003E3374 /* MISPieChartTableCell.xib in Resources */,
@@ -1194,6 +1201,7 @@
 				1B5CBC8326F4A73B00831018 /* XAxisFormatter.swift in Sources */,
 				1B4AAD1725DA784300A26DE7 /* TrackHomeViewController.swift in Sources */,
 				6006955A254994D400EB3865 /* HRHelpDeskRequestViewController.swift in Sources */,
+				1B8EB558270DCD6400BB3D9A /* PieChartTableCell.swift in Sources */,
 				1BE523CE2679DA9400F5F030 /* IMSFilesAccordingRemarksViewController.swift in Sources */,
 				1BD4A49E261310C700491D0D /* FulfillmentPopViewController.swift in Sources */,
 				1B3EDCA7260C6BEA00A97984 /* FulfilmentOrderDetailViewController.swift in Sources */,

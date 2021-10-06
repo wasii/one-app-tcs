@@ -14,6 +14,8 @@ class ChartViews: UIView {
     @IBOutlet weak var heading: UILabel!
     @IBOutlet weak var pieChart: PieChartView!
     @IBOutlet weak var lineChartView: LineChartView!
+    @IBOutlet weak var progressBarView: UIView!
+    @IBOutlet weak var tableView: UITableView!
     
     
     
@@ -28,5 +30,40 @@ class ChartViews: UIView {
         // Drawing code
     }
     */
-
+    func setupTableView() {
+        self.tableView.register(UINib(nibName: PieChartTableCell.description(), bundle: nil), forCellReuseIdentifier: PieChartTableCell.description())
+        self.tableView.dataSource = self
+        self.tableView.delegate = self
+//        self.tableView.estimatedRowHeight = 30
+//        self.tableView.rowHeight = UITableView.automaticDimension
+        self.tableView.reloadData()
+    }
+}
+extension ChartViews: UITableViewDelegate, UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 3
+    }
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: PieChartTableCell.description()) as? PieChartTableCell else {
+            fatalError()
+        }
+        switch indexPath.row {
+        case 0:
+            cell.label.text = "Attempt (KPIs)"
+            break
+        case 1:
+            cell.label.text = "Delivery / Return (KPIs)"
+            break
+        case 2:
+            cell.label.text = "Delivery / Returned (Ratio)"
+            break
+        default:
+            break
+        }
+        
+        return cell
+    }
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 45
+    }
 }
