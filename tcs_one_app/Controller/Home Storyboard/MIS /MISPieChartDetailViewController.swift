@@ -29,6 +29,7 @@ class MISPieChartDetailViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "MIS"
+        addDoubleNavigationButtons()
         makeTopCornersRounded(roundView: mainView)
         tableView.register(UINib(nibName: MISPieChartTableCell.description(), bundle: nil), forCellReuseIdentifier: MISPieChartTableCell.description())
         tableView.dataSource = self
@@ -70,6 +71,36 @@ class MISPieChartDetailViewController: BaseViewController {
 
         reloadData()
     }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        NotificationCenter.default.addObserver(self, selector: #selector(upload_pending_request), name: .networkRefreshed, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(refreshedView(notification:)), name: .refreshedViews, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(navigateThroughtNotify(notification:)), name: .navigateThroughNotification, object: nil)
+        self.navigationItem.rightBarButtonItems = nil
+        addDoubleNavigationButtons()
+        
+        if let btn = self.navigationItem.rightBarButtonItems?.first {
+            let count = getNotificationCounts()
+            if count > 0 {
+                btn.addBadge(num: count)
+            } else {
+                btn.removeBadge()
+            }
+        }
+    }
+    @objc func refreshedView(notification: Notification) {
+        self.navigationItem.rightBarButtonItems = nil
+        addDoubleNavigationButtons()
+        if let btn = self.navigationItem.rightBarButtonItems?.first {
+            let count = getNotificationCounts()
+            if count > 0 {
+                btn.addBadge(num: count)
+            } else {
+                btn.removeBadge()
+            }
+        }
+    }
+    
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
@@ -178,11 +209,11 @@ extension MISPieChartDetailViewController: UITableViewDataSource, UITableViewDel
         return 350
     }
     private func setupCell(dashboard_detail: tbl_mis_dashboard_detail, pieChartView: PieChartView) -> PieChartView {
-        pieChartView.highlightPerTapEnabled = true
+        pieChartView.highlightPerTapEnabled = false
         pieChartView.usePercentValuesEnabled = false
         pieChartView.drawSlicesUnderHoleEnabled = false
         pieChartView.holeRadiusPercent = 0.60
-        pieChartView.chartDescription?.enabled = false
+        pieChartView.chartDescription?.enabled = true
         pieChartView.drawEntryLabelsEnabled = false
         pieChartView.rotationEnabled = false
         

@@ -3422,6 +3422,28 @@ class DBHelper {
         return home_targeted.count > 0 ? home_targeted : nil
     }
     
+    func read_tbl_mis_dashboard_detail_graph(query: String) -> [tbl_mis_dashboard_detail_graph]? {
+        let queryStatementString = query
+        var queryStatement: OpaquePointer? = nil
+        var graph_detail = [tbl_mis_dashboard_detail_graph]()
+
+        if sqlite3_prepare_v2(db, queryStatementString, -1, &queryStatement, nil) == SQLITE_OK {
+            while sqlite3_step(queryStatement) == SQLITE_ROW {
+                let after_kpi_per = String(describing: String(cString: sqlite3_column_text(queryStatement, 0)))
+                let within_kpi_per = String(describing: String(cString: sqlite3_column_text(queryStatement, 1)))
+                let inprocess_per = String(describing: String(cString: sqlite3_column_text(queryStatement, 2)))
+                let delivered_per = String(describing: String(cString: sqlite3_column_text(queryStatement, 3)))
+                let return_per = String(describing: String(cString: sqlite3_column_text(queryStatement, 4)))
+                let type = String(describing: String(cString: sqlite3_column_text(queryStatement, 5)))
+                
+                graph_detail.append(tbl_mis_dashboard_detail_graph(after_kpi_per: after_kpi_per, within_kpi_per: within_kpi_per, inprocess_per: inprocess_per, delivered_per: delivered_per, return_per: return_per, typ: type))
+            }
+        } else {
+            print("SELECT statement \(db_mis_dashboard_detail) could not be prepared")
+        }
+        return graph_detail.count > 0 ? graph_detail : nil
+    }
+    
     //MARK: WALLET INSERT
     func read_tbl_wallet_query_master(query: String) -> [tbl_wallet_query_master]? {
         let queryStatementString = query
@@ -4451,6 +4473,10 @@ struct tbl_mis_dashboard_detail {
     var inpAge: String = ""
     var delivered: String, dlvrdAge: String, retrn: String, rtnAge: String = ""
     var isKPIAllowed: Bool = false
+}
+struct tbl_mis_dashboard_detail_graph {
+    var after_kpi_per, within_kpi_per, inprocess_per: String
+    var delivered_per, return_per, typ: String
 }
 
 //MARK: Wallet

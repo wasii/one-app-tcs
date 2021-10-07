@@ -51,6 +51,7 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
     weak var axisFormatDelegate: IAxisValueFormatter?
     var product_type: String = ""
     var mis_budget_setup: [tbl_mis_budget_setup]?
+    var mis_dashboard_detail_graph: [tbl_mis_dashboard_detail_graph]?
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = "Dashboard"
@@ -219,16 +220,54 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
             //MARK: - MIS Listing
             if isMISListingAllowed {
                 //Percent Values
-                let chart:ChartViews = Bundle.main.loadNibNamed("ChartViews", owner: self, options: nil)?.first as! ChartViews
-                chart.pieChart.isHidden = true
-                chart.progressBarView.isHidden = false
-                chart.misYearlyAverage.isHidden = true
-                chart.setupTableView()
-                self.ModuleCount += 1
-                chartViews.append(chart)
+                var query = "SELECT up.* FROM (SELECT (CASE WHEN count(*) > 1 THEN GROUP_CONCAT(PROD_TYPE , ' + ') ELSE '' END) AS PROD_WITH_PRODTYPE,* FROM (SELECT * FROM MIS_BUDGET_SETUP GROUP BY PRODUCT,PROD_TYPE ORDER BY PROD_TYPE DESC) GROUP BY PRODUCT) AS up INNER JOIN (SELECT u.PERMISSION FROM USER_PAGE AS up INNER JOIN USER_PERMISSION AS u ON  up.PAGENAME = 'MIS Listing' AND up.SERVER_ID_PK = u.PAGEID) AS permission ON permission.PERMISSION = (CASE WHEN up.PROD_WITH_PRODTYPE == '' THEN up.PRODUCT || ' - ' || up.PROD_TYPE ELSE up.PRODUCT || ' - ' || up.PROD_WITH_PRODTYPE END)"
+
+                if let mis_budget_setup = AppDelegate.sharedInstance.db?.read_tbl_mis_budget_setup_listing(query: query) {
+                    self.mis_budget_setup = mis_budget_setup
+                    let nestedquery = "SELECT u.* FROM USER_PAGE AS up INNER JOIN USER_PERMISSION AS u ON  up.PAGENAME = 'MIS Listing' AND up.SERVER_ID_PK = u.PAGEID"
+                    if let nested_query_permissions = AppDelegate.sharedInstance.db?.read_tbl_UserPermission(query: nestedquery) {
+                        for data in nested_query_permissions {
+                            if data.PERMISSION.contains("- BPD") {
+                                let splitted_string = data.PERMISSION.split(separator: "-")
+                                self.mis_budget_setup!.append(tbl_mis_budget_setup(isPieChart: true, prod_with_prodtype: "", id: -1, product: "\(splitted_string[0])", budgeted: -1, dsr: -1, prodType: "", mnth: "", yearr: -1, pdBudget: -1, weight: -1, qsr: -1, pdWeight: -1))
+                            }
+                        }
+                        let temp_budget_setup = self.mis_budget_setup?.filter({ setup in
+                            setup.isPieChart == true
+                        })
+                        if let tms = temp_budget_setup {
+                            let df = DateFormatter()
+                            df.dateFormat = "MMMM"
+                            let monthName = df.string(from: Date())
+                            df.dateFormat = "yyyy"
+                            let year = df.string(from: Date())
+                            for var t in tms {
+                                var splitedText = t.product
+                                if t.product.last == " " {
+                                    _ = t.product.removeLast()
+                                    splitedText = "\(t.product)"
+                                }
+                                let detail_query = "SELECT CAST(sum(AFTER_KPI) as float) / CAST(sum(TOTAL_SHIPMENT) as float)  AS AFTER_KPI_PER, CAST(sum(WHITHIN_KPI) as float) / CAST(sum(TOTAL_SHIPMENT) as float)  AS WITHIN_KPI_PER, CAST(sum(INPROCESS) as float) / CAST(sum(TOTAL_SHIPMENT) as float)  AS INPROCESS_PER,CAST(sum(DELIVERED) as float) / CAST(sum(TOTAL_SHIPMENT) as float)  AS DELIVERED_PER, CAST(sum(RETRN) as float) / CAST(sum(TOTAL_SHIPMENT) as float) AS RETURN_PER, TYP FROM MIS_Dashboard_Details WHERE TITLE = '\(splitedText)' AND MNTH = '\(monthName)' AND YEARR = '\(year)' GROUP BY TITLE,TYP"
+                                if let graph_detail = AppDelegate.sharedInstance.db?.read_tbl_mis_dashboard_detail_graph(query: detail_query) {
+                                    self.mis_dashboard_detail_graph = [tbl_mis_dashboard_detail_graph]()
+                                    let chart:ChartViews = Bundle.main.loadNibNamed("ChartViews", owner: self, options: nil)?.first as! ChartViews
+                                    chart.heading.text = splitedText
+                                    chart.pieChart.isHidden = true
+                                    chart.progressBarView.isHidden = false
+                                    chart.misYearlyAverage.isHidden = true
+                                    chart.mis_dashboard_detail_graph = graph_detail
+                                    chart.title = splitedText
+                                    chart.setupTableView()
+                                    self.ModuleCount += 1
+                                    chartViews.append(chart)
+                                }
+                            }
+                        }
+                    }
+                }
                 var product_type = ""
                 
-                let query = "SELECT up.* FROM (SELECT (CASE WHEN count(*) > 1 THEN GROUP_CONCAT(PROD_TYPE , ' + ') ELSE '' END) AS PROD_WITH_PRODTYPE,* FROM (SELECT * FROM MIS_BUDGET_SETUP GROUP BY PRODUCT,PROD_TYPE ORDER BY PROD_TYPE DESC) GROUP BY PRODUCT) AS up INNER JOIN (SELECT u.PERMISSION FROM USER_PAGE AS up INNER JOIN USER_PERMISSION AS u ON  up.PAGENAME = 'MIS Listing' AND up.SERVER_ID_PK = u.PAGEID) AS permission ON permission.PERMISSION = (CASE WHEN up.PROD_WITH_PRODTYPE == '' THEN up.PRODUCT || ' - ' || up.PROD_TYPE ELSE up.PRODUCT || ' - ' || up.PROD_WITH_PRODTYPE END)"
+                query = "SELECT up.* FROM (SELECT (CASE WHEN count(*) > 1 THEN GROUP_CONCAT(PROD_TYPE , ' + ') ELSE '' END) AS PROD_WITH_PRODTYPE,* FROM (SELECT * FROM MIS_BUDGET_SETUP GROUP BY PRODUCT,PROD_TYPE ORDER BY PROD_TYPE DESC) GROUP BY PRODUCT) AS up INNER JOIN (SELECT u.PERMISSION FROM USER_PAGE AS up INNER JOIN USER_PERMISSION AS u ON  up.PAGENAME = 'MIS Listing' AND up.SERVER_ID_PK = u.PAGEID) AS permission ON permission.PERMISSION = (CASE WHEN up.PROD_WITH_PRODTYPE == '' THEN up.PRODUCT || ' - ' || up.PROD_TYPE ELSE up.PRODUCT || ' - ' || up.PROD_WITH_PRODTYPE END)"
 
                 if let mis_budget_setup = AppDelegate.sharedInstance.db?.read_tbl_mis_budget_setup_listing(query: query) {
                     self.mis_budget_setup = mis_budget_setup

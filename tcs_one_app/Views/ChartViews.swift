@@ -30,40 +30,88 @@ class ChartViews: UIView {
         // Drawing code
     }
     */
+    var mis_dashboard_detail_graph: [tbl_mis_dashboard_detail_graph]?
+    var isShowKpi: Bool = false
+    var title: String = ""
     func setupTableView() {
         self.tableView.register(UINib(nibName: PieChartTableCell.description(), bundle: nil), forCellReuseIdentifier: PieChartTableCell.description())
         self.tableView.dataSource = self
         self.tableView.delegate = self
-//        self.tableView.estimatedRowHeight = 30
-//        self.tableView.rowHeight = UITableView.automaticDimension
         self.tableView.reloadData()
     }
 }
 extension ChartViews: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 3
+        if let count = self.mis_dashboard_detail_graph?.count {
+            return count
+        }
+        return 0
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: PieChartTableCell.description()) as? PieChartTableCell else {
             fatalError()
         }
-        switch indexPath.row {
-        case 0:
-            cell.label.text = "Attempt (KPIs)"
-            break
-        case 1:
-            cell.label.text = "Delivery / Return (KPIs)"
-            break
-        case 2:
-            cell.label.text = "Delivery / Returned (Ratio)"
-            break
-        default:
-            break
+        let query = "SELECT u.* FROM \(db_user_page) AS up INNER JOIN \(db_user_permission) AS u ON  up.PAGENAME = '\(title)' AND up.SERVER_ID_PK = u.PAGEID AND PERMISSION LIKE '\(mis_dashboard_detail_graph?[indexPath.row].typ ?? "")%'"
+        if let data = AppDelegate.sharedInstance.db?.read_tbl_UserPermission(query: query) {
+            if let permission = data.first {
+                cell.fixedGreen.clipsToBounds = true
+                cell.fixedGreen.layer.cornerRadius = 5
+                cell.fixedGreen.layer.maskedCorners = [.layerMaxXMinYCorner, .layerMaxXMaxYCorner]
+                
+                cell.fixedRed.clipsToBounds = true
+                cell.fixedRed.layer.cornerRadius = 5
+                cell.fixedRed.layer.maskedCorners = [.layerMinXMinYCorner, .layerMinXMaxYCorner]
+                
+                let mis_dashboard_graph_indexpath = self.mis_dashboard_detail_graph![indexPath.row]
+                cell.label.text = mis_dashboard_graph_indexpath.typ
+                if permission.PERMISSION.contains("-KPI") {
+                    let withinKPI = (mis_dashboard_graph_indexpath.within_kpi_per as NSString).doubleValue
+                    let afterKPI = (mis_dashboard_graph_indexpath.after_kpi_per as NSString).doubleValue
+                    
+                    cell.withinKPILabel.text = String(format: "%.1f", afterKPI * 100)
+                    cell.afterKPILabel.text = String(format: "%.1f", withinKPI * 100)
+                    cell.withinKPIWidthConstraint = MyConstraint.changeMultiplier(cell.withinKPIWidthConstraint, multiplier: afterKPI)
+                    cell.afterKPIWidthConstraint = MyConstraint.changeMultiplier(cell.afterKPIWidthConstraint, multiplier: withinKPI)
+                    
+                } else {
+                    let returnKPI = (mis_dashboard_graph_indexpath.return_per as NSString).doubleValue
+                    let deliveredKPI = (mis_dashboard_graph_indexpath.delivered_per as NSString).doubleValue
+                    
+                    cell.withinKPILabel.text = String(format: "%.1f", deliveredKPI * 100)
+                    cell.afterKPILabel.text = String(format: "%.1f", returnKPI * 100)
+                    
+                    cell.withinKPIWidthConstraint = MyConstraint.changeMultiplier(cell.withinKPIWidthConstraint, multiplier: deliveredKPI)
+                    cell.afterKPIWidthConstraint = MyConstraint.changeMultiplier(cell.afterKPIWidthConstraint, multiplier: returnKPI)
+                }
+                let inprocessValue = (mis_dashboard_graph_indexpath.inprocess_per as NSString).doubleValue
+                cell.inprogressLabel.text = String(format: "%.1f", inprocessValue * 100)
+                cell.inprogressWidthConstraint = MyConstraint.changeMultiplier(cell.inprogressWidthConstraint, multiplier: inprocessValue)
+            }
         }
-        
         return cell
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 45
+        return 55
     }
+}
+
+
+struct MyConstraint {
+  static func changeMultiplier(_ constraint: NSLayoutConstraint, multiplier: CGFloat) -> NSLayoutConstraint {
+    let newConstraint = NSLayoutConstraint(
+      item: constraint.firstItem,
+      attribute: constraint.firstAttribute,
+      relatedBy: constraint.relation,
+      toItem: constraint.secondItem,
+      attribute: constraint.secondAttribute,
+      multiplier: multiplier,
+      constant: constraint.constant)
+
+    newConstraint.priority = constraint.priority
+
+    NSLayoutConstraint.deactivate([constraint])
+    NSLayoutConstraint.activate([newConstraint])
+
+    return newConstraint
+  }
 }
