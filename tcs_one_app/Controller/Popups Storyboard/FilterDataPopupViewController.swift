@@ -29,6 +29,7 @@ class FilterDataPopupViewController: UIViewController {
         font: UIFont.boldSystemFont(ofSize: 17),
         showCancelButton: true
     )
+    var tempDate: Date?
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = UIColor(white: 0.1, alpha: 0.7)
@@ -63,6 +64,9 @@ class FilterDataPopupViewController: UIViewController {
             
             self.fromDate_Btn.setTitle(self.fromdate!.dateOnly, for: .normal)
             self.toDate_Btn.setTitle(self.todate!.dateOnly, for: .normal)
+            let df = DateFormatter()
+            df.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
+            self.tempDate = df.date(from: self.fromdate!)
         }
         self.tableView.reloadData()
     }
@@ -81,9 +85,25 @@ class FilterDataPopupViewController: UIViewController {
             }
         }
     }
+    func openToDatePicker(title: String, date: Date?, handler: @escaping(_ success: Bool,_ date: String) -> Void) {
+        datePicker.show(title,
+                        doneButtonTitle: "Done",
+                        cancelButtonTitle: "Cancel",
+                        minimumDate: date ?? Date(),
+                        maximumDate: Date(),
+                        datePickerMode: .date,
+                        window: self.view.window) { (date) in
+            if let dt = date {
+                let formatter = DateFormatter()
+                formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
+                handler(true, formatter.string(from: dt))
+            }
+        }
+    }
+
     
     @IBAction func toBtn_Tapped(_ sender: Any) {
-        self.openDatePicker(title: "To Date") { success, date in
+        self.openToDatePicker(title: "To Date", date: self.tempDate) { success, date in
             if success {
                 let finalDate = date.dateOnly + "T23:59:59"
                 self.todate = finalDate
@@ -97,6 +117,9 @@ class FilterDataPopupViewController: UIViewController {
                 let finalDate = date.dateOnly + "T00:00:00"
                 self.fromDate_Btn.setTitle(date.dateOnly, for: .normal)
                 self.fromdate = finalDate
+                let df = DateFormatter()
+                df.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
+                self.tempDate = df.date(from: finalDate)
                 self.toDate_Btn.isEnabled = true
             }
         }

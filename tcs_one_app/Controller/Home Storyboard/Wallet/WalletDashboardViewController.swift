@@ -126,7 +126,8 @@ class WalletDashboardViewController: BaseViewController {
         barChart.highlightFullBarEnabled = false
         barChart.pinchZoomEnabled = false
         barChart.doubleTapToZoomEnabled = false
-
+        barChart.scaleXEnabled = false
+        barChart.scaleYEnabled = false
         let leftAxis = barChart.leftAxis
         leftAxis.axisMinimum = 0
 
@@ -139,16 +140,18 @@ class WalletDashboardViewController: BaseViewController {
         xAxis.labelPosition = .top
         xAxis.granularity = 1.0
 
-        xAxis.labelFont = UIFont.init(name: "Helvetica", size: 10)!
-        barChart.legend.form = .empty
+        xAxis.labelFont = UIFont.init(name: "Helvetica", size: 09)!
+        barChart.legend.horizontalAlignment = .right
         var set = BarChartDataSet()
 
         var xAxisDates = [String]()
         var barChartEntries = [BarChartDataEntry]()
         
         if var points = tbl_wallet_points {
+            barChart.legend.setCustom(entries: [LegendEntry(label: "Mature", form: .square, formSize: CGFloat.nan, formLineWidth: CGFloat.nan, formLineDashPhase: CGFloat.nan, formLineDashLengths: nil, formColor: UIColor.inprocessColor()),
+                                                LegendEntry(label: "Unmature", form: .square, formSize: CGFloat.nan, formLineWidth: CGFloat.nan, formLineDashPhase: CGFloat.nan, formLineDashLengths: nil, formColor: UIColor.approvedColor())])
             points = points.sorted(by: { ps1, ps2 in
-                ps1.TRANSACTION_DATE > ps2.TRANSACTION_DATE
+                ps1.TRANSACTION_DATE < ps2.TRANSACTION_DATE
             })
             for (index,summaryPoints) in points.enumerated() {
                 let mature: Double = Double(summaryPoints.MATURE_POINTS)
@@ -171,11 +174,13 @@ class WalletDashboardViewController: BaseViewController {
         let formatt = CustomFormatter()
         formatt.labels = xAxisDates
         xAxis.valueFormatter = formatt
+        xAxis.labelCount = xAxisDates.count
         set = BarChartDataSet(entries: barChartEntries, label: "")
         set.drawIconsEnabled = false
         set.colors = [UIColor.inprocessColor(), UIColor.approvedColor()]
 
         let data = BarChartData(dataSet: set)
+        
         let formatter = NumberFormatter()
         formatter.numberStyle = .none
         formatter.maximumFractionDigits = 0
