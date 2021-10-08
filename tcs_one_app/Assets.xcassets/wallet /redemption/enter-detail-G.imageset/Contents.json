@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "delete.png",
+      "filename" : "enter-detail-G.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "delete@2x.png",
+      "filename" : "enter-detail-G@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "delete@3x.png",
+      "filename" : "enter-detail-G@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

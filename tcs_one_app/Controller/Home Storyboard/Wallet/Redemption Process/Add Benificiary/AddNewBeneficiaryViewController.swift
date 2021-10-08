@@ -11,6 +11,14 @@ import MaterialComponents.MaterialTextControls_OutlinedTextFields
 
 class AddNewBeneficiaryViewController: BaseViewController {
 
+    
+    @IBOutlet weak var leftBorder: UIView!
+    @IBOutlet weak var confirmDetails: CustomView!
+    @IBOutlet weak var middleBorder: UIView!
+    @IBOutlet weak var otpVIew: CustomView!
+    @IBOutlet weak var rightBorder: UIView!
+    @IBOutlet weak var requestSubmitted: CustomView!
+    
     @IBOutlet weak var mainView: UIView!
     @IBOutlet weak var beneficiaryLabel: UILabel!
     @IBOutlet weak var referenceNumber: MDCOutlinedTextField!
@@ -31,11 +39,28 @@ class AddNewBeneficiaryViewController: BaseViewController {
     @IBOutlet weak var termAndConditionBtn: UIButton!
     @IBOutlet weak var termsAndConditiion: UILabel!
     
+    @IBOutlet weak var agreementView: CustomView!
     @IBOutlet weak var oneTimePasscodeView: UIView!
     @IBOutlet weak var otp: MDCOutlinedTextField!
     @IBOutlet weak var confirmOtp: MDCOutlinedTextField!
     
+    @IBOutlet weak var forwardBtn: UIButton!
+    @IBOutlet weak var backBtn: UIButton!
+    @IBOutlet weak var confirmBtn: UIButton!
+    @IBOutlet weak var homeBtn: UIButton!
     var range = NSRange()
+    var currentFormIndex: Int = 0
+    
+    var BeneficiaryName: String = ""
+    var BeneficiaryEmpId: String = ""
+    var BeneficiaryNumber: String = ""
+    var BeneficiaryNickName: String = ""
+    var BeneficiaryEmail: String = ""
+    var IsSendConfirmation: Bool = false
+    var IsTermsAndConditionsRead: Bool = false
+    var OTP: String = ""
+    var ConfirmOTP: String = ""
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Wallet"
@@ -62,42 +87,49 @@ class AddNewBeneficiaryViewController: BaseViewController {
         }
     }
     private func setupTextFields() {
+        referenceNumber.accessibilityLabel = "ReferenceNumber"
         referenceNumber.label.textColor = UIColor.nativeRedColor()
         referenceNumber.label.text = "Reference Number"
         referenceNumber.placeholder = "Reference Number"
         referenceNumber.setOutlineColor(UIColor.nativeRedColor(), for: .normal)
         referenceNumber.setOutlineColor(UIColor.nativeRedColor(), for: .editing)
         
+        beneficiaryName.accessibilityLabel = "BeneficiaryName"
         beneficiaryName.label.textColor = UIColor.nativeRedColor()
         beneficiaryName.label.text = "Beneficiary Name"
         beneficiaryName.placeholder = "Enter Beneficiary Name"
         beneficiaryName.setOutlineColor(UIColor.nativeRedColor(), for: .normal)
         beneficiaryName.setOutlineColor(UIColor.nativeRedColor(), for: .editing)
         
+        beneficiaryEmpId.accessibilityLabel = "BeneficiaryEmpId"
         beneficiaryEmpId.label.textColor = UIColor.nativeRedColor()
         beneficiaryEmpId.label.text = "Beneficiary EMP ID"
         beneficiaryEmpId.placeholder = "Enter Beneficiary Employee Id"
         beneficiaryEmpId.setOutlineColor(UIColor.nativeRedColor(), for: .normal)
         beneficiaryEmpId.setOutlineColor(UIColor.nativeRedColor(), for: .editing)
         
+        beneficiaryNumber.accessibilityLabel = "BeneficiaryNumber"
         beneficiaryNumber.label.textColor = UIColor.nativeRedColor()
         beneficiaryNumber.label.text = "Beneficiary Number"
         beneficiaryNumber.placeholder = "Enter Beneficiary Number"
         beneficiaryNumber.setOutlineColor(UIColor.nativeRedColor(), for: .normal)
         beneficiaryNumber.setOutlineColor(UIColor.nativeRedColor(), for: .editing)
         
+        beneficiaryNickName.accessibilityLabel = "BeneficiaryNickName"
         beneficiaryNickName.label.textColor = UIColor.nativeRedColor()
         beneficiaryNickName.label.text = "Beneficiary Nickname"
         beneficiaryNickName.placeholder = "Enter Beneficiary Nickname"
         beneficiaryNickName.setOutlineColor(UIColor.nativeRedColor(), for: .normal)
         beneficiaryNickName.setOutlineColor(UIColor.nativeRedColor(), for: .editing)
         
+        beneficiaryEmail.accessibilityLabel = "BeneficiaryEmail"
         beneficiaryEmail.label.textColor = UIColor.nativeRedColor()
         beneficiaryEmail.label.text = "Beneficiary Email"
         beneficiaryEmail.placeholder = "Enter Beneficiary Email"
         beneficiaryEmail.setOutlineColor(UIColor.nativeRedColor(), for: .normal)
         beneficiaryEmail.setOutlineColor(UIColor.nativeRedColor(), for: .editing)
         
+        sendConfirmation.accessibilityLabel = "SendConfirmation"
         sendConfirmation.label.textColor = UIColor.nativeRedColor()
         sendConfirmation.label.text = "Send confirmation to Beneficiary when a transfer is made"
         sendConfirmation.text = "No"
@@ -105,17 +137,165 @@ class AddNewBeneficiaryViewController: BaseViewController {
         sendConfirmation.setOutlineColor(UIColor.nativeRedColor(), for: .normal)
         sendConfirmation.setOutlineColor(UIColor.nativeRedColor(), for: .editing)
         
+        otp.accessibilityLabel = "OTP"
         otp.label.textColor = UIColor.nativeRedColor()
         otp.label.text = "OTP"
         otp.placeholder = "Enter OTP"
         otp.setOutlineColor(UIColor.nativeRedColor(), for: .normal)
         otp.setOutlineColor(UIColor.nativeRedColor(), for: .editing)
         
+        confirmOtp.accessibilityLabel = "ConfirmOTP"
         confirmOtp.label.textColor = UIColor.nativeRedColor()
         confirmOtp.label.text = "OTP"
         confirmOtp.placeholder = "Enter Confirm OTP"
         confirmOtp.setOutlineColor(UIColor.nativeRedColor(), for: .normal)
         confirmOtp.setOutlineColor(UIColor.nativeRedColor(), for: .editing)
+        
+        setupConditions()
+    }
+    
+    private func setupConditions() {
+        self.beneficiaryLabel.isHidden = false
+        self.referenceNumber.isHidden = false
+        self.beneficiaryName.isHidden = false
+        self.beneficiaryEmpId.isHidden = false
+        self.beneficiaryNickName.isHidden = false
+        self.beneficiaryEmail.isHidden = false
+        self.sendConfirmationView.isHidden = false
+        self.sendConfirmation.isHidden = false
+        self.agreementView.isHidden = false
+        self.oneTimePasscodeView.isHidden = false
+        self.forwardBtn.isHidden = false
+        self.backBtn.isHidden = false
+        self.confirmBtn.isHidden = false
+        self.homeBtn.isHidden = false
+        switch self.currentFormIndex {
+        case 0:
+            self.beneficiaryLabel.isHidden = true
+            self.referenceNumber.isHidden = true
+            self.agreementView.isHidden = true
+            self.sendConfirmation.isHidden = true
+            self.oneTimePasscodeView.isHidden = true
+            //BUTTONS
+            self.backBtn.isHidden = true
+            self.confirmBtn.isHidden = true
+            self.homeBtn.isHidden = true
+            
+            break
+        case 1:
+            self.beneficiaryLabel.isHidden = true
+            self.referenceNumber.isHidden = true
+            
+            self.sendConfirmationView.isHidden = true
+            self.oneTimePasscodeView.isHidden = true
+            //BUTTONS
+            self.confirmBtn.isHidden = true
+            self.homeBtn.isHidden = true
+            
+            self.leftBorder.backgroundColor = UIColor.nativeRedColor()
+            break
+        case 2:
+            self.beneficiaryLabel.isHidden = true
+            self.referenceNumber.isHidden = true
+            agreementView.isHidden = true
+            self.sendConfirmationView.isHidden = true
+            //BUTTONS
+            self.confirmBtn.isHidden = true
+            self.homeBtn.isHidden = true
+            
+            self.middleBorder.backgroundColor = UIColor.nativeRedColor()
+            break
+        case 3:
+            agreementView.isHidden = true
+            self.sendConfirmationView.isHidden = true
+            self.oneTimePasscodeView.isHidden = true
+            //BUTTONS
+            self.forwardBtn.isHidden = true
+            self.confirmBtn.isHidden = true
+            self.backBtn.isHidden = true
+            
+            self.rightBorder.backgroundColor = UIColor.nativeRedColor()
+            break
+        default: break
+            
+        }
+    }
+    @IBAction func forwardBtnTapped(_ sender: Any) {
+        if self.currentFormIndex == 3 {
+            return
+        }
+        switch currentFormIndex {
+        case 0:
+            if self.beneficiaryName.text == "" {
+                self.view.makeToast("Beneficiary Name cannot be left blank.")
+                return
+            }
+            if self.beneficiaryEmpId.text == "" {
+                self.view.makeToast("Beneficiary Emp Id cannot be left blank.")
+                return
+            }
+            if self.beneficiaryNumber.text == "" {
+                self.view.makeToast("Beneficiary Number cannot be left blank.")
+                return
+            }
+            if self.beneficiaryNickName.text == "" {
+                self.view.makeToast("Beneficiary Nickname cannot be left blank.")
+                return
+            }
+            BeneficiaryName = self.beneficiaryName.text!
+            BeneficiaryEmpId = self.beneficiaryEmpId.text!
+            BeneficiaryNumber = self.beneficiaryNumber.text!
+            BeneficiaryNickName = self.beneficiaryNickName.text!
+            
+            break
+        case 1:
+            if !self.IsTermsAndConditionsRead {
+                self.view.makeToast("You need to accept Terms and Conditions.")
+                return
+            }
+            self.IsTermsAndConditionsRead = true
+            break
+        case 2:
+            if self.otp.text != self.confirmOtp.text {
+                self.view.makeToast("OTP isn't same.")
+                return
+            }
+            break
+        default: break
+        }
+        self.currentFormIndex += 1
+        setupConditions()
+    }
+    @IBAction func backBtnTapped(_ sender: Any) {
+        if self.currentFormIndex == 0 {
+            return
+        }
+        self.currentFormIndex -= 1
+        setupConditions()
+    }
+    @IBAction func confirmBtnTapped(_ sender: Any) {
+    }
+    @IBAction func homeBtnTapped(_ sender: Any) {
+    }
+    
+    @IBAction func sendConfirmationBtnTapped(_ sender: UIButton) {
+        sender.isSelected = !sender.isSelected
+        self.IsSendConfirmation = sender.isSelected
+        if sender.isSelected {
+            sender.setImage(UIImage(named: "check"), for: .normal)
+        } else {
+            sender.setImage(nil, for: .normal)
+        }
+    }
+    
+    @IBAction func readTermsBtnTapped(_ sender: UIButton) {
+        sender.isSelected = !sender.isSelected
+        self.IsTermsAndConditionsRead = sender.isSelected
+        if sender.isSelected {
+            sender.setImage(UIImage(named: "check"), for: .normal)
+        } else {
+            sender.setImage(nil, for: .normal)
+        }
     }
 }
 extension UITapGestureRecognizer {
@@ -149,4 +329,7 @@ extension UITapGestureRecognizer {
          let indexOfCharacter = layoutManager.characterIndex(for: locationOfTouchInTextContainer, in: textContainer, fractionOfDistanceBetweenInsertionPoints: nil)
          return NSLocationInRange(indexOfCharacter, targetRange)
      }
+}
+extension AddNewBeneficiaryViewController: UITextFieldDelegate {
+    
 }

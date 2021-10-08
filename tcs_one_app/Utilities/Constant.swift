@@ -13,8 +13,8 @@ let INACTIVE                = "INACTIVE"
 let API_KEY                 = "5E4D0F6D8E12D8EC5EA3BBB11B63B2F88E39A7561F25EC67CCB440F782FD0360"
 let CLIENTSECRET            = "Tcs@wallet3001"
 var BEARER_TOKEN            = ""
-//let BROADCAST_KEY           = "broadcastiosdev"
-let BROADCAST_KEY           = "broadcastiosqa"
+let BROADCAST_KEY           = "broadcastiosdev"
+//let BROADCAST_KEY           = "broadcastiosqa"
 //let BROADCAST_KEY           = "broadcastios"
 
 let WALLET_AGREEMENT_TEXT = "I have read and understood the Terms & Conditions and agree to abide by them"
@@ -31,7 +31,7 @@ var RECORD_ID               = 0
 
 //DEV
 let WALLET_ENDPOINT         = "https://sandbox.tcscourier.com/qa/v1/wallet/"
-let ENDPOINT                = "https://devapi.tcscourier.com/qacore/api/main"
+let ENDPOINT                = "https://devapi.tcscourier.com/core/api/main"
 let UPLOADFILESURL          = "https://pwaqaapi.tcscourier.com/api/file-upload"
 
 let LOGIN                   = "oneapp.login"
@@ -74,9 +74,13 @@ let WALLET_DETAIL_POINTS    = WALLET_ENDPOINT + "detail-points"
 let WALLET_HISTORY_POINT    = WALLET_ENDPOINT + "history-points"
 let WALLET_SUMMARY_POINT    = WALLET_ENDPOINT + "summary-points"
 
+//WALLET REDEMPTION
+let WALLET_ADD_BENEFICIARY  = WALLET_ENDPOINT + "add-beneficiary"
+
 let S_WALLET_POINTS_HISTORY = "WALLET.GET.HISTORY.POINTS"
 let S_WALLET_POINTS_SUMMARY = "WALLET.GET.SUMMARY.POINTS"
 let S_WALLET_POINTS_DETAILS = "WALLET.GET.DETAIL.POINTS"
+let S_WALLETADD_BENEFICIARY = "WALLET.ADD.BENEFICIARY"
 
 //API BACKEND KEYS
 let eAI_MESSAGE             = "eAI_MESSAGE"
