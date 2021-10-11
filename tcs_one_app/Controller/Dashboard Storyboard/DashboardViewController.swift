@@ -38,9 +38,9 @@ class DashboardViewController: UITabBarController, UITabBarControllerDelegate {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         switch UIDevice().type {
-        case .iPhone12, .iPhone12Pro, .iPhone12ProMax, .iPhone12Mini:
-            tabBar.frame.size.height = 95
-            tabBar.frame.origin.y = view.frame.height - 95
+        case .iPhone12, .iPhone12Pro, .iPhone12ProMax, .iPhone12Mini, .iPhone13, .iPhone13Pro, .iPhone13ProMax, .iPhone13Mini:
+//            tabBar.frame.size.height = 95
+//            tabBar.frame.origin.y = view.frame.height - 95
             break
         default:
             break

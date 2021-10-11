@@ -1360,6 +1360,35 @@ class NetworkCalls: NSObject {
             }
         }.resume()
     }
+    class func getwalletpin(params: [String:Any], _ handler: @escaping(Bool) -> Void) {
+        let Url = String(format: WALLET_PIN_GENERATION)
+        guard let serviceUrl = URL(string: Url) else { return }
+        var request = URLRequest(url: serviceUrl)
+        request.httpMethod = "POST"
+        request.setValue("Bearer \(BEARER_TOKEN)", forHTTPHeaderField: "Authorization")
+        request.setValue("Application/json", forHTTPHeaderField: "Content-Type")
+        guard let httpBody = try? JSONSerialization.data(withJSONObject: params, options: []) else {
+            return
+        }
+        request.httpBody = httpBody
+        let session = URLSession.shared
+        session.dataTask(with: request) { (data, response, error) in
+            if let data = data {
+                let json = JSON(data)
+                if let success = json.dictionary?[returnStatus] {
+                    //SUCCESS
+                    if success.dictionary?[_code] == "0200" {
+                        handler(true)
+                        return
+                    } else {
+                        handler(false)
+                    }
+                }
+            } else {
+                handler(false)
+            }
+        }.resume()
+    }
 }
 
 

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="19162" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19144"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -321,6 +321,7 @@
         <!--Message-->
         <scene sceneID="Tjw-UC-edm">
             <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="TAk-qf-EEJ" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="R9J-r4-xmC" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Message" image="mesg" id="hkc-b5-8i3"/>
                     <toolbarItems/>
@@ -340,7 +341,6 @@
                         <segue destination="fk9-Ti-lBl" kind="relationship" relationship="rootViewController" id="MrR-XW-i41"/>
                     </connections>
                 </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="TAk-qf-EEJ" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-1113.0434782608697" y="327.45535714285711"/>
         </scene>
@@ -439,6 +439,7 @@
         <!--Item 2-->
         <scene sceneID="0dL-Pt-ull">
             <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="mcD-OZ-o1C" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="5QR-j0-Smm" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Item 2" id="p8r-LD-tgT"/>
                     <toolbarItems/>
@@ -458,7 +459,6 @@
                         <segue destination="B2l-Hz-0rS" kind="relationship" relationship="rootViewController" id="0nF-iF-oi3"/>
                     </connections>
                 </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="mcD-OZ-o1C" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-1114" y="1038"/>
         </scene>
@@ -546,7 +546,7 @@
         <image name="home" width="27.5" height="30.5"/>
         <image name="mail" width="27.5" height="30.5"/>
         <image name="mesg" width="27.5" height="30.5"/>
-        <image name="wallet-tabbar" width="27.5" height="30.5"/>
+        <image name="wallet-tabbar" width="25" height="25"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

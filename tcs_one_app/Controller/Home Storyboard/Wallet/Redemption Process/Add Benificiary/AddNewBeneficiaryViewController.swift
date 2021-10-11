@@ -8,6 +8,7 @@
 
 import UIKit
 import MaterialComponents.MaterialTextControls_OutlinedTextFields
+import SwiftyJSON
 
 class AddNewBeneficiaryViewController: BaseViewController {
 
@@ -48,19 +49,22 @@ class AddNewBeneficiaryViewController: BaseViewController {
     @IBOutlet weak var backBtn: UIButton!
     @IBOutlet weak var confirmBtn: UIButton!
     @IBOutlet weak var homeBtn: UIButton!
+    
+    @IBOutlet weak var enterDetailImg: UIImageView!
+    @IBOutlet weak var enterDetailLabel: UILabel!
+    @IBOutlet weak var confirmDetailImg: UIImageView!
+    @IBOutlet weak var confirmDetailLabel: UILabel!
+    @IBOutlet weak var enterOTPImg: UIImageView!
+    @IBOutlet weak var enterOTPLabel: UILabel!
+    @IBOutlet weak var requestSubmittedImg: UIImageView!
+    @IBOutlet weak var requestSubmittedLabel: UILabel!
     var range = NSRange()
     var currentFormIndex: Int = 0
     
-    var BeneficiaryName: String = ""
-    var BeneficiaryEmpId: String = ""
-    var BeneficiaryNumber: String = ""
-    var BeneficiaryNickName: String = ""
-    var BeneficiaryEmail: String = ""
+    
     var IsSendConfirmation: Bool = false
     var IsTermsAndConditionsRead: Bool = false
-    var OTP: String = ""
-    var ConfirmOTP: String = ""
-    
+    var emp_model: [User]?
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Wallet"
@@ -97,9 +101,12 @@ class AddNewBeneficiaryViewController: BaseViewController {
         beneficiaryName.accessibilityLabel = "BeneficiaryName"
         beneficiaryName.label.textColor = UIColor.nativeRedColor()
         beneficiaryName.label.text = "Beneficiary Name"
+        beneficiaryName.text = "Beneficiary Name"
+        beneficiaryName.textColor = UIColor.darkGray
         beneficiaryName.placeholder = "Enter Beneficiary Name"
         beneficiaryName.setOutlineColor(UIColor.nativeRedColor(), for: .normal)
-        beneficiaryName.setOutlineColor(UIColor.nativeRedColor(), for: .editing)
+        beneficiaryName.setTextColor(UIColor.gray, for: .normal)
+        beneficiaryName.isUserInteractionEnabled = false
         
         beneficiaryEmpId.accessibilityLabel = "BeneficiaryEmpId"
         beneficiaryEmpId.label.textColor = UIColor.nativeRedColor()
@@ -107,6 +114,7 @@ class AddNewBeneficiaryViewController: BaseViewController {
         beneficiaryEmpId.placeholder = "Enter Beneficiary Employee Id"
         beneficiaryEmpId.setOutlineColor(UIColor.nativeRedColor(), for: .normal)
         beneficiaryEmpId.setOutlineColor(UIColor.nativeRedColor(), for: .editing)
+        beneficiaryEmpId.delegate = self
         
         beneficiaryNumber.accessibilityLabel = "BeneficiaryNumber"
         beneficiaryNumber.label.textColor = UIColor.nativeRedColor()
@@ -169,6 +177,17 @@ class AddNewBeneficiaryViewController: BaseViewController {
         self.backBtn.isHidden = false
         self.confirmBtn.isHidden = false
         self.homeBtn.isHidden = false
+        
+        //Labels and Image
+        confirmDetailImg.image = UIImage(named: "confirm-G")
+        confirmDetailLabel.textColor = UIColor.darkGray
+        
+        enterOTPImg.image = UIImage(named: "otp-G")
+        enterOTPLabel.textColor = UIColor.darkGray
+        
+        requestSubmittedImg.image = UIImage(named: "submit-G")
+        requestSubmittedLabel.textColor = UIColor.darkGray
+        
         switch self.currentFormIndex {
         case 0:
             self.beneficiaryLabel.isHidden = true
@@ -181,6 +200,25 @@ class AddNewBeneficiaryViewController: BaseViewController {
             self.confirmBtn.isHidden = true
             self.homeBtn.isHidden = true
             
+            
+            beneficiaryEmpId.setTextColor(UIColor.black, for: .normal)
+            beneficiaryEmpId.isUserInteractionEnabled = true
+            beneficiaryEmpId.label.textColor = UIColor.black
+            
+            //OPTIONAL VALUES
+            beneficiaryNumber.setTextColor(UIColor.black, for: .normal)
+            beneficiaryNumber.isUserInteractionEnabled = true
+            beneficiaryNumber.label.textColor = UIColor.black
+            beneficiaryNumber.isEnabled = true
+            
+            beneficiaryNickName.setTextColor(UIColor.black, for: .normal)
+            beneficiaryNickName.isUserInteractionEnabled = true
+            beneficiaryNickName.isEnabled = true
+            
+            beneficiaryEmail.setTextColor(UIColor.black, for: .normal)
+            beneficiaryEmail.isUserInteractionEnabled = true
+            beneficiaryEmail.isEnabled = true
+            
             break
         case 1:
             self.beneficiaryLabel.isHidden = true
@@ -192,7 +230,38 @@ class AddNewBeneficiaryViewController: BaseViewController {
             self.confirmBtn.isHidden = true
             self.homeBtn.isHidden = true
             
+            //Labels and Image
+            confirmDetailImg.image = UIImage(named: "confirm-R")
+            confirmDetailLabel.textColor = UIColor.nativeRedColor()
+            
             self.leftBorder.backgroundColor = UIColor.nativeRedColor()
+            beneficiaryEmpId.setTextColor(UIColor.gray, for: .normal)
+            beneficiaryEmpId.isUserInteractionEnabled = false
+            beneficiaryEmpId.label.textColor = UIColor.gray
+            beneficiaryNumber.setTextColor(UIColor.gray, for: .normal)
+            beneficiaryNumber.isUserInteractionEnabled = false
+            
+            if beneficiaryNumber.text == "" {
+                beneficiaryNumber.isEnabled = false
+                beneficiaryNumber.setOutlineColor(UIColor.nativeRedColor(), for: .disabled)
+            }
+            
+            
+            beneficiaryNickName.setTextColor(UIColor.gray, for: .normal)
+            beneficiaryNickName.isUserInteractionEnabled = false
+            
+            if beneficiaryNickName.text == "" {
+                beneficiaryNickName.isEnabled = false
+                beneficiaryNickName.setOutlineColor(UIColor.nativeRedColor(), for: .disabled)
+            }
+            
+            beneficiaryEmail.setTextColor(UIColor.gray, for: .normal)
+            beneficiaryEmail.isUserInteractionEnabled = false
+            if beneficiaryEmail.text == "" {
+                beneficiaryEmail.isEnabled = false
+                beneficiaryEmail.setOutlineColor(UIColor.nativeRedColor(), for: .disabled)
+            }
+            
             break
         case 2:
             self.beneficiaryLabel.isHidden = true
@@ -200,9 +269,14 @@ class AddNewBeneficiaryViewController: BaseViewController {
             agreementView.isHidden = true
             self.sendConfirmationView.isHidden = true
             //BUTTONS
-            self.confirmBtn.isHidden = true
+            self.forwardBtn.isHidden = true
             self.homeBtn.isHidden = true
             
+            //Labels and Image
+            confirmDetailImg.image = UIImage(named: "confirm-R")
+            confirmDetailLabel.textColor = UIColor.nativeRedColor()
+            enterOTPImg.image = UIImage(named: "otp-R")
+            enterOTPLabel.textColor = UIColor.nativeRedColor()
             self.middleBorder.backgroundColor = UIColor.nativeRedColor()
             break
         case 3:
@@ -214,6 +288,14 @@ class AddNewBeneficiaryViewController: BaseViewController {
             self.confirmBtn.isHidden = true
             self.backBtn.isHidden = true
             
+            
+            //Labels and Image
+            confirmDetailImg.image = UIImage(named: "confirm-R")
+            confirmDetailLabel.textColor = UIColor.nativeRedColor()
+            enterOTPImg.image = UIImage(named: "otp-R")
+            enterOTPLabel.textColor = UIColor.nativeRedColor()
+            requestSubmittedImg.image = UIImage(named: "submit-R")
+            requestSubmittedLabel.textColor = UIColor.nativeRedColor()
             self.rightBorder.backgroundColor = UIColor.nativeRedColor()
             break
         default: break
@@ -226,27 +308,10 @@ class AddNewBeneficiaryViewController: BaseViewController {
         }
         switch currentFormIndex {
         case 0:
-            if self.beneficiaryName.text == "" {
-                self.view.makeToast("Beneficiary Name cannot be left blank.")
-                return
-            }
             if self.beneficiaryEmpId.text == "" {
                 self.view.makeToast("Beneficiary Emp Id cannot be left blank.")
                 return
             }
-            if self.beneficiaryNumber.text == "" {
-                self.view.makeToast("Beneficiary Number cannot be left blank.")
-                return
-            }
-            if self.beneficiaryNickName.text == "" {
-                self.view.makeToast("Beneficiary Nickname cannot be left blank.")
-                return
-            }
-            BeneficiaryName = self.beneficiaryName.text!
-            BeneficiaryEmpId = self.beneficiaryEmpId.text!
-            BeneficiaryNumber = self.beneficiaryNumber.text!
-            BeneficiaryNickName = self.beneficiaryNickName.text!
-            
             break
         case 1:
             if !self.IsTermsAndConditionsRead {
@@ -254,7 +319,22 @@ class AddNewBeneficiaryViewController: BaseViewController {
                 return
             }
             self.IsTermsAndConditionsRead = true
-            break
+            //GET OTP
+            if !CustomReachability.isConnectedNetwork() {
+                self.view.makeToast(NOINTERNETCONNECTION)
+                return
+            }
+            self.getOTP { granted in
+                DispatchQueue.main.async {
+                    if granted {
+                        self.currentFormIndex += 1
+                        self.setupConditions()
+                    } else {
+                        self.view.makeToast(SOMETHINGWENTWRONG)
+                    }
+                }
+            }
+            return
         case 2:
             if self.otp.text != self.confirmOtp.text {
                 self.view.makeToast("OTP isn't same.")
@@ -274,6 +354,8 @@ class AddNewBeneficiaryViewController: BaseViewController {
         setupConditions()
     }
     @IBAction func confirmBtnTapped(_ sender: Any) {
+        self.currentFormIndex += 1
+        self.setupConditions()
     }
     @IBAction func homeBtnTapped(_ sender: Any) {
     }
@@ -331,5 +413,76 @@ extension UITapGestureRecognizer {
      }
 }
 extension AddNewBeneficiaryViewController: UITextFieldDelegate {
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        switch textField.accessibilityLabel {
+        case "BeneficiaryEmpId":
+            self.view.makeToastActivity(.center)
+            self.freezeScreen()
+            getEmployee { granted in
+                DispatchQueue.main.async {
+                    if granted {
+                        self.view.hideToastActivity()
+                        self.unFreezeScreen()
+                        
+                        self.beneficiaryName.text = self.emp_model?.first?.empName ?? ""
+                    } else {
+                        self.unFreezeScreen()
+                        self.view.hideToastActivity()
+                        self.view.makeToast("No Employee Found")
+                    }
+                }
+            }
+            break
+            
+        default: break
+        }
+    }
+}
+
+//MARK: -API Calls
+extension AddNewBeneficiaryViewController {
+    private func getEmployee(_ handler: @escaping(Bool) -> Void) {
+        let search_employee = [
+            "empployee": [
+                "access_token": UserDefaults.standard.string(forKey: USER_ACCESS_TOKEN)!,
+                "emp_id" :"\(self.beneficiaryEmpId.text!)"
+            ]
+        ]
+        let params = self.getAPIParameter(service_name: SERACH_EMPLOYEE, request_body: search_employee)
+        NetworkCalls.search_empoloyee(params: params) { (success, response) in
+            if success {
+                if let emp_data = JSON(response).array?.first {
+                    do {
+                        self.emp_model = [User]()
+                        let user = try emp_data.rawData()
+                        self.emp_model!.append(try JSONDecoder().decode(User.self, from: user))
+                        handler(true)
+                    } catch let err {
+                        handler(false)
+                        print(err.localizedDescription)
+                    }
+                } else {
+                    handler(false)
+                }
+            } else {
+                handler(false)
+            }
+        }
+    }
     
+    private func getOTP(_ handler: @escaping(Bool)-> Void) {
+        let request_body = [
+            "employeeno": CURRENT_USER_LOGGED_IN_ID,
+            "applicationid": "2",
+            "deviceid": DEVICEID ?? ""
+        ]
+        let params = self.getAPIParameterNew(serviceName: S_WALLET_PIN_GEN, client: "", request_body: request_body)
+        NetworkCalls.getwalletpin(params: params) { granted in
+            if granted {
+                handler(true)
+            } else {
+                handler(false)
+            }
+        }
+    }
 }

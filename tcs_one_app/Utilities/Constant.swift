@@ -76,11 +76,13 @@ let WALLET_SUMMARY_POINT    = WALLET_ENDPOINT + "summary-points"
 
 //WALLET REDEMPTION
 let WALLET_ADD_BENEFICIARY  = WALLET_ENDPOINT + "add-beneficiary"
+let WALLET_PIN_GENERATION   = WALLET_ENDPOINT + "pin-gen"
 
 let S_WALLET_POINTS_HISTORY = "WALLET.GET.HISTORY.POINTS"
 let S_WALLET_POINTS_SUMMARY = "WALLET.GET.SUMMARY.POINTS"
 let S_WALLET_POINTS_DETAILS = "WALLET.GET.DETAIL.POINTS"
 let S_WALLETADD_BENEFICIARY = "WALLET.ADD.BENEFICIARY"
+let S_WALLET_PIN_GEN        = "WALLET.PIN.GEN"
 
 //API BACKEND KEYS
 let eAI_MESSAGE             = "eAI_MESSAGE"
@@ -248,6 +250,10 @@ public enum Model : String {
          iPhone12           = "iPhone 12",
          iPhone12Pro        = "iPhone 12 Pro",
          iPhone12ProMax     = "iPhone 12 Pro Max",
+         iPhone13Mini       = "iPhone 13 Mini",
+         iPhone13           = "iPhone 13",
+         iPhone13Pro        = "iPhone 13 Pro",
+         iPhone13ProMax     = "iPhone 13 Pro Max",
          
          //unrecognized
          unrecognized       = "?unrecognized?"
