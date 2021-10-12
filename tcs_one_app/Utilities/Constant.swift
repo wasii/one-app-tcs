@@ -77,6 +77,7 @@ let WALLET_SUMMARY_POINT    = WALLET_ENDPOINT + "summary-points"
 //WALLET REDEMPTION
 let WALLET_ADD_BENEFICIARY  = WALLET_ENDPOINT + "add-beneficiary"
 let WALLET_PIN_GENERATION   = WALLET_ENDPOINT + "pin-gen"
+let WALLET_GET_BENEFICIARY  = WALLET_ENDPOINT + "get-beneficiary"
 
 let S_WALLET_POINTS_HISTORY = "WALLET.GET.HISTORY.POINTS"
 let S_WALLET_POINTS_SUMMARY = "WALLET.GET.SUMMARY.POINTS"
@@ -84,6 +85,7 @@ let S_WALLET_POINTS_DETAILS = "WALLET.GET.DETAIL.POINTS"
 let S_WALLET_GET_SETUP      = "WALLET.SETUP"
 let S_WALLETADD_BENEFICIARY = "WALLET.ADD.BENEFICIARY"
 let S_WALLET_PIN_GEN        = "WALLET.PIN.GEN"
+let S_WALLETGET_BENEFICIARY = "WALLET.GET.BENEFICIARY"
 
 //API BACKEND KEYS
 let eAI_MESSAGE             = "eAI_MESSAGE"
@@ -155,6 +157,7 @@ let _walletHistoryPointData = "walletHistoryPointsData"
 let _walletSummaryPointData = "walletSummaryPointsData"
 let _walletDetailPoints     = "walletDetailPoints"
 let _pointsDetail           = "pointsDetail"
+let _getBeneficiary         = "getBeneficiary"
 
 //Local Storage (Database) tablename keys
 let db_user_module          = "USER_MODULE"
@@ -214,6 +217,7 @@ let db_w_pointSummary       = "WALLET_POINTS_SUMMARY"
 let db_w_history_point      = "WALLET_HISTORY_POINTS"
 let db_w_pointSumDetails    = "WALLET_POINT_SUMMARY_DETAILS"
 let db_w_detail_point       = "WALLET_DETAIL_POINTS"
+let db_w_beneficiaries      = "WALLET_BENEFICIARIES"
 
 //ERROR MESSAGES
 let NOINTERNETCONNECTION    = "Connect your device with internet first."

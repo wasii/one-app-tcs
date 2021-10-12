@@ -358,11 +358,20 @@ class AddNewBeneficiaryViewController: BaseViewController {
         setupConditions()
     }
     @IBAction func confirmBtnTapped(_ sender: Any) {
-        self.addBeneficiary { _ in
-            
+        self.addBeneficiary { granted, message in
+            if granted {
+                DispatchQueue.main.async {
+                    self.view.hideToastActivity()
+                    self.unFreezeScreen()
+                    if let message = message {
+                        self.view.makeToast(message)
+                    } else {
+                        self.currentFormIndex += 1
+                        self.setupConditions()
+                    }
+                }
+            }
         }
-        self.currentFormIndex += 1
-        self.setupConditions()
     }
     @IBAction func homeBtnTapped(_ sender: Any) {
     }
@@ -495,7 +504,7 @@ extension AddNewBeneficiaryViewController {
         }
     }
     
-    private func addBeneficiary(_ handler: @escaping(Bool)->Void) {
+    private func addBeneficiary(_ handler: @escaping(Bool, String?)->Void) {
         let request_body = [
             "p_employee_id": CURRENT_USER_LOGGED_IN_ID,
             "p_beneficiary_name": "\(self.beneficiaryName.text ?? "")",
@@ -506,9 +515,47 @@ extension AddNewBeneficiaryViewController {
             "p_is_email_notify": "\(self.IsSendConfirmation ? "Y" : "N")",
             "p_entry_type": "I",
             "p_otp": Int(((self.otp.text ?? "") as NSString).intValue),
-            "p_user_id": ""
+            "p_user_id": CURRENT_USER_LOGGED_IN_ID
         ] as [String:Any]
         let params = self.getAPIParameterNew(serviceName: S_WALLETADD_BENEFICIARY, client: "", request_body: request_body)
-        print(JSON(params))
+        NetworkCalls.addwalletbeneficiaries(params: params) { granted, response in
+            if granted {
+                let json = JSON(response)
+                if let getBeneficiary = json.dictionary?[_result]?.dictionary?[_getBeneficiary]?.array?.first {
+                    print(getBeneficiary)
+                    do {
+                        let rawData = try json.rawData()
+                        let wallet_beneficiary: WalletBeneficiary = try JSONDecoder().decode(WalletBeneficiary.self, from: rawData)
+                        AppDelegate.sharedInstance.db?.insert_tbl_wallet_beneficiaries(wallet_beneficiary: wallet_beneficiary, handler: { success in
+                            if success {
+                                handler(true, nil)
+                            } else {
+                                handler(false, nil)
+                            }
+                            return
+                        })
+                    } catch let DecodingError.dataCorrupted(context) {
+                        print(context)
+                    } catch let DecodingError.keyNotFound(key, context) {
+                        print("Key '\(key)' not found:", context.debugDescription)
+                        print("codingPath:", context.codingPath)
+                    } catch let DecodingError.valueNotFound(value, context) {
+                        print("Value '\(value)' not found:", context.debugDescription)
+                        print("codingPath:", context.codingPath)
+                    } catch let DecodingError.typeMismatch(type, context)  {
+                        print("Type '\(type)' mismatch:", context.debugDescription)
+                        print("codingPath:", context.codingPath)
+                    } catch {
+                        print("error: ", error)
+                    }
+                } else {
+                    if let message = json.dictionary?[returnStatus]?["message"].string {
+                        handler(true, message)
+                    }
+                }
+            } else {
+                handler(false, nil)
+            }
+        }
     }
 }

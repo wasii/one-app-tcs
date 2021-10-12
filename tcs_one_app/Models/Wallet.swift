@@ -150,3 +150,27 @@ struct PointsDetail: Codable {
         case points = "POINTS"
     }
 }
+
+// MARK: - WalletBeneficiary
+struct WalletBeneficiary: Codable {
+    let rid: Int
+    let referenceNumber, employeeID, beneficiaryName, beneficiaryEmpID: String
+    let beneficiaryMobileNumber, beneficiaryNickname, beneficiaryEmail: String?
+    let isEmailNotify: String
+    let isActive: Int
+    let createdDate: String
+
+    enum CodingKeys: String, CodingKey {
+        case rid = "RID"
+        case referenceNumber = "REFERENCE_NUMBER"
+        case employeeID = "EMPLOYEE_ID"
+        case beneficiaryName = "BENEFICIARY_NAME"
+        case beneficiaryEmpID = "BENEFICIARY_EMP_ID"
+        case beneficiaryMobileNumber = "BENEFICIARY_MOBILE_NUMBER"
+        case beneficiaryNickname = "BENEFICIARY_NICKNAME"
+        case beneficiaryEmail = "BENEFICIARY_EMAIL"
+        case isEmailNotify = "IS_EMAIL_NOTIFY"
+        case isActive = "IS_ACTIVE"
+        case createdDate = "CREATED_DATE"
+    }
+}

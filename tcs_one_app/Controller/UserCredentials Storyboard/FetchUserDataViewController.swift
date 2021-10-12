@@ -36,6 +36,8 @@ class FetchUserDataViewController: BaseViewController {
     @IBOutlet weak var walletHistoryPointsCounter: UILabel!
     
     @IBOutlet weak var walletSummaryPoints: UILabel!
+    @IBOutlet weak var walletBeneficiaryLabel: UILabel!
+    @IBOutlet weak var walletBeneficiaryCounter: UILabel!
     
     @IBOutlet weak var version: UILabel!
     @IBOutlet weak var build: UILabel!
@@ -1104,7 +1106,7 @@ extension FetchUserDataViewController {
                                     
                                     self.setupwallethistorypoints()
                                 }
-//                                self.navigateHomeScreen()
+//                                self.getwalletbeneficiaries()
                             }
                         }
                     }
@@ -1167,7 +1169,7 @@ extension FetchUserDataViewController {
                                                 self.setupwallethistorypoints()
                                             }
                                         }
-//                                        self.navigateHomeScreen()
+//                                        self.getwalletbeneficiaries()
                                     }
                                 }
                             }
@@ -1222,7 +1224,7 @@ extension FetchUserDataViewController {
                                     
                                     self.setupwallethistorypoints()
                                 }
-//                                self.navigateHomeScreen()
+//                                self.getwalletbeneficiaries()
                             }
                         }
                     }
@@ -1329,7 +1331,7 @@ extension FetchUserDataViewController {
                                                         
                                                         self.setupwallethistorypoints()
                                                     }
-//                                                    self.navigateHomeScreen()
+//                                                    self.getwalletbeneficiaries()
                                                 }
                                             }
                                             return
@@ -1420,7 +1422,7 @@ extension FetchUserDataViewController {
                                                                 
                                                                 self.setupwallethistorypoints()
                                                             }
-//                                                            self.navigateHomeScreen()
+//                                                            self.getwalletbeneficiaries()
                                                         }
                                                     }
                                                     return
@@ -1505,7 +1507,7 @@ extension FetchUserDataViewController {
                                                     
                                                     self.setupwallethistorypoints()
                                                 }
-//                                                self.navigateHomeScreen()
+//                                                self.getwalletbeneficiaries()
                                             }
                                         }
                                     }
@@ -1814,7 +1816,7 @@ extension FetchUserDataViewController {
                             self.activityIndicator[8].isHidden = true
                             self.checkedImageView[8].isHidden = false
                         }
-                        self.navigateHomeScreen()
+                        self.getwalletbeneficiaries()
                     } else {
                         DispatchQueue.main.async {
                             self.walletSummaryPoints.text = "Synced Wallet Summary Points"
@@ -1823,7 +1825,131 @@ extension FetchUserDataViewController {
                             self.activityIndicator[8].isHidden = true
                             self.checkedImageView[8].isHidden = false
                         }
-                        self.navigateHomeScreen()
+                        self.getwalletbeneficiaries()
+                    }
+                } else {
+                    DispatchQueue.main.async {
+                        self.view.makeToast(SOMETHINGWENTWRONG)
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                            self.navigationController?.popViewController(animated: true)
+                        }
+                    }
+                }
+            } else {
+                DispatchQueue.main.async {
+                    self.view.makeToast(SOMETHINGWENTWRONG)
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                        self.navigationController?.popViewController(animated: true)
+                    }
+                }
+            }
+        }
+    }
+    //get beneficiaries
+    func getwalletbeneficiaries() {
+        DispatchQueue.main.async {
+            self.loaderViews[8].backgroundColor = UIColor.nativeRedColor()
+            self.activityIndicator[8].stopAnimating()
+            self.activityIndicator[8].isHidden = true
+            self.checkedImageView[8].isHidden = false
+            
+            self.activityIndicator[9].isHidden = false
+            self.activityIndicator[9].startAnimating()
+            
+            self.count = 0
+            self.skip = 0
+            self.isTotalCounter = 0
+        }
+        var request_body = [String:Any]()
+        if let lastSyncStatus = AppDelegate.sharedInstance.db?.readLastSyncStatus(tableName: db_last_sync_status,
+                                                                                  condition: "SYNC_KEY = '\(S_WALLETGET_BENEFICIARY)' AND CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)'") {
+            request_body = [
+                "p_employee_id": "\(CURRENT_USER_LOGGED_IN_ID)",
+                "p_transaction_date": "\(lastSyncStatus.DATE)",
+                "p_skip": lastSyncStatus.SKIP,
+                "p_take": 80
+            ]
+        } else {
+            request_body = [
+                "p_employee_id": "\(CURRENT_USER_LOGGED_IN_ID)",
+                "p_transaction_date": "",
+                "p_skip": 0,
+                "p_take": 80
+            ]
+        }
+        let params = self.getAPIParameterNew(serviceName: S_WALLETGET_BENEFICIARY, client: "", request_body: request_body)
+        NetworkCalls.getwalletbeneficiary(params: params) { granted, response in
+            if granted {
+                let json = JSON(response)
+                if let result = json.dictionary?[_result] {
+                    self.count = Int(result[_count].string ?? "0") ?? 0
+                    let syncDate = result[_sync_date].string ?? "2021-07-13"
+                    if self.count <= 0 {
+                        DispatchQueue.main.async {
+                            self.walletBeneficiaryLabel.text = "Synced Wallet Beneficiaries"
+                            self.loaderViews[9].backgroundColor = UIColor.nativeRedColor()
+                            self.activityIndicator[9].stopAnimating()
+                            self.activityIndicator[9].isHidden = true
+                            self.checkedImageView[9].isHidden = false
+                            self.navigateHomeScreen()
+                        }
+                        return
+                    }
+                    if let getBeneficiary = result[_getBeneficiary].array {
+                        do {
+                            for gb in getBeneficiary {
+                                let rawData = try gb.rawData()
+                                let wallet_beneficiary: WalletBeneficiary = try JSONDecoder().decode(WalletBeneficiary.self, from: rawData)
+                                self.isTotalCounter += 1
+                                AppDelegate.sharedInstance.db?.insert_tbl_wallet_beneficiaries(wallet_beneficiary: wallet_beneficiary, handler: { success in
+                                    DispatchQueue.main.async {
+                                        self.walletBeneficiaryCounter.text = "\(self.isTotalCounter)/\(self.count)"
+                                    }
+                                })
+                            }
+                        } catch let DecodingError.dataCorrupted(context) {
+                            print(context)
+                        } catch let DecodingError.keyNotFound(key, context) {
+                            print("Key '\(key)' not found:", context.debugDescription)
+                            print("codingPath:", context.codingPath)
+                        } catch let DecodingError.valueNotFound(value, context) {
+                            print("Value '\(value)' not found:", context.debugDescription)
+                            print("codingPath:", context.codingPath)
+                        } catch let DecodingError.typeMismatch(type, context)  {
+                            print("Type '\(type)' mismatch:", context.debugDescription)
+                            print("codingPath:", context.codingPath)
+                        } catch {
+                            print("error: ", error)
+                        }
+                        if self.count == self.isTotalCounter {
+                            DispatchQueue.main.async {
+                                Helper.updateLastSyncStatus(APIName: S_WALLETGET_BENEFICIARY,
+                                                            date: syncDate, //MARK: Change Date
+                                                            skip: self.skip,
+                                                            take: 80,
+                                                            total_records: self.count)
+                                self.count = 0
+                                self.skip = 0
+                                self.isTotalCounter = 0
+                                DispatchQueue.main.async {
+                                    self.walletBeneficiaryLabel.text = "Synced Wallet Beneficiaries"
+                                    self.loaderViews[9].backgroundColor = UIColor.nativeRedColor()
+                                    self.activityIndicator[9].stopAnimating()
+                                    self.activityIndicator[9].isHidden = true
+                                    self.checkedImageView[9].isHidden = false
+                                    self.navigateHomeScreen()
+                                }
+                            }
+                        } else {
+                            DispatchQueue.main.async {
+                                self.walletHistoryPointsCounter.isHidden = false
+                                self.walletHistoryPointsCounter.text = "\(self.isTotalCounter)/\(self.count)"
+                            }
+                            self.skip += 80
+                            self.getwalletbeneficiaries()
+                        }
+                    } else {
+                        
                     }
                 } else {
                     DispatchQueue.main.async {
