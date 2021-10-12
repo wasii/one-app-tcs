@@ -223,7 +223,7 @@ class AddNewBeneficiaryViewController: BaseViewController {
         case 1:
             self.beneficiaryLabel.isHidden = true
             self.referenceNumber.isHidden = true
-            
+            self.sendConfirmation.text = "\(self.IsSendConfirmation ? "Yes" : "No")"
             self.sendConfirmationView.isHidden = true
             self.oneTimePasscodeView.isHidden = true
             //BUTTONS
@@ -327,9 +327,13 @@ class AddNewBeneficiaryViewController: BaseViewController {
             self.getOTP { granted in
                 DispatchQueue.main.async {
                     if granted {
+                        self.view.hideToastActivity()
+                        self.unFreezeScreen()
                         self.currentFormIndex += 1
                         self.setupConditions()
                     } else {
+                        self.view.hideToastActivity()
+                        self.unFreezeScreen()
                         self.view.makeToast(SOMETHINGWENTWRONG)
                     }
                 }
@@ -354,6 +358,9 @@ class AddNewBeneficiaryViewController: BaseViewController {
         setupConditions()
     }
     @IBAction func confirmBtnTapped(_ sender: Any) {
+        self.addBeneficiary { _ in
+            
+        }
         self.currentFormIndex += 1
         self.setupConditions()
     }
@@ -471,6 +478,8 @@ extension AddNewBeneficiaryViewController {
     }
     
     private func getOTP(_ handler: @escaping(Bool)-> Void) {
+        self.view.makeToastActivity(.center)
+        self.freezeScreen()
         let request_body = [
             "employeeno": CURRENT_USER_LOGGED_IN_ID,
             "applicationid": "2",
@@ -484,5 +493,22 @@ extension AddNewBeneficiaryViewController {
                 handler(false)
             }
         }
+    }
+    
+    private func addBeneficiary(_ handler: @escaping(Bool)->Void) {
+        let request_body = [
+            "p_employee_id": CURRENT_USER_LOGGED_IN_ID,
+            "p_beneficiary_name": "\(self.beneficiaryName.text ?? "")",
+            "p_beneficiary_emp_id": "\(self.beneficiaryEmpId.text ?? "")",
+            "p_beneficiary_mobile_number": "\(self.beneficiaryNumber.text ?? "")",
+            "p_beneficiary_nickname": "\(self.beneficiaryNickName.text ?? "")",
+            "p_beneficiary_email": "\(self.beneficiaryEmail.text ?? "")",
+            "p_is_email_notify": "\(self.IsSendConfirmation ? "Y" : "N")",
+            "p_entry_type": "I",
+            "p_otp": Int(((self.otp.text ?? "") as NSString).intValue),
+            "p_user_id": ""
+        ] as [String:Any]
+        let params = self.getAPIParameterNew(serviceName: S_WALLETADD_BENEFICIARY, client: "", request_body: request_body)
+        print(JSON(params))
     }
 }

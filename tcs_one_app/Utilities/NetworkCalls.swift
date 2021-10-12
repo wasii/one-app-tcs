@@ -1225,7 +1225,7 @@ class NetworkCalls: NSObject {
                 let json = JSON(data)
                 if let success = json.dictionary?[returnStatus] {
                     //SUCCESS
-                    if success.dictionary?[_code] == "200" {
+                    if success.dictionary?[_code] == "0200" {
                         handler(true, data)
                         return
                     }
@@ -1266,7 +1266,7 @@ class NetworkCalls: NSObject {
                 let json = JSON(data)
                 if let success = json.dictionary?[returnStatus] {
                     //SUCCESS
-                    if success.dictionary?[_code] == "200" {
+                    if success.dictionary?[_code] == "0200" {
                         handler(true, data)
                         return
                     }
@@ -1306,7 +1306,7 @@ class NetworkCalls: NSObject {
                 let json = JSON(data)
                 if let success = json.dictionary?[returnStatus] {
                     //SUCCESS
-                    if success.dictionary?[_code] == "200" {
+                    if success.dictionary?[_code] == "0200" {
                         handler(true, data)
                         return
                     }
