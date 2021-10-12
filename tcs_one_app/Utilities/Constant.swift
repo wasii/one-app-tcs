@@ -30,7 +30,7 @@ var RECORD_ID               = 0
 //let UPLOADFILESURL          = "https://oneappapi.tcscourier.com/api/file-upload"
 
 //DEV
-let WALLET_ENDPOINT         = "https://sandbox.tcscourier.com/qa/v1/wallet/"
+let WALLET_ENDPOINT         = "https://sandbox.tcscourier.com/dev/v1/wallet/"
 let ENDPOINT                = "https://devapi.tcscourier.com/core/api/main"
 let UPLOADFILESURL          = "https://pwaqaapi.tcscourier.com/api/file-upload"
 
@@ -68,7 +68,7 @@ let GETORDERFULFILMET       = "oneapp.getorderfullfilment"
 let UPDATEORDERFULFILMENT   = "oneapp.updateorderfullfilment"
 
 let WALLET_SETUP            = WALLET_ENDPOINT + "setup"
-let WALLET_GET_TOKEN        = WALLET_ENDPOINT + "token?clientSecret=\(CLIENTSECRET)"
+let WALLET_GET_TOKEN        = WALLET_ENDPOINT + "token"
 
 let WALLET_DETAIL_POINTS    = WALLET_ENDPOINT + "detail-points"
 let WALLET_HISTORY_POINT    = WALLET_ENDPOINT + "history-points"
@@ -81,6 +81,7 @@ let WALLET_PIN_GENERATION   = WALLET_ENDPOINT + "pin-gen"
 let S_WALLET_POINTS_HISTORY = "WALLET.GET.HISTORY.POINTS"
 let S_WALLET_POINTS_SUMMARY = "WALLET.GET.SUMMARY.POINTS"
 let S_WALLET_POINTS_DETAILS = "WALLET.GET.DETAIL.POINTS"
+let S_WALLET_GET_SETUP      = "WALLET.SETUP"
 let S_WALLETADD_BENEFICIARY = "WALLET.ADD.BENEFICIARY"
 let S_WALLET_PIN_GEN        = "WALLET.PIN.GEN"
 
@@ -143,6 +144,7 @@ let _scan_prefix            = "scan_prefix"
 let _orders                 = "orders"
 
 //Wallet_Keys
+let _result                 = "result"
 let _walletSetupData        = "walletSetupData"
 let _walletHistoryPoints    = "walletHistoryPoints"
 let _walletPointsData       = "walletPointsData"

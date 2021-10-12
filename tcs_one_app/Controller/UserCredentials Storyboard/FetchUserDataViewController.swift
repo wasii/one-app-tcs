@@ -1558,10 +1558,12 @@ extension FetchUserDataViewController {
     func setupWallet(_ handler: @escaping(Bool)->Void) {
         NetworkCalls.getwallettoken { granted in
             if granted {
-                NetworkCalls.setupwallet { granted, response in
+                let request_body = [String : Any]()
+                let params = self.getAPIParameterNew(serviceName: S_WALLET_GET_SETUP, client: "", request_body: request_body)
+                NetworkCalls.setupwallet(params: params) { granted, response in
                     if granted {
                         let json = JSON(response)
-                        if let o = json.dictionary?[_walletSetupData] {
+                        if let o = json.dictionary?[_result]?.dictionary?[_walletSetupData] {
                             do {
                                 let rawdata = try o.rawData()
                                 let model = try JSONDecoder().decode(WalletSetupData.self, from: rawdata)
@@ -1646,7 +1648,7 @@ extension FetchUserDataViewController {
         NetworkCalls.getwallethistorypoints(params: params) { granted, response in
             if granted {
                 let json = JSON(response)
-                if let walletHistoryPointsData = json.dictionary?[_walletHistoryPointData] {
+                if let walletHistoryPointsData = json.dictionary?[_result]?.dictionary?[_walletHistoryPointData] {
                     self.count = Int(walletHistoryPointsData[_count].string ?? "0") ?? 0
                     let syncDate = walletHistoryPointsData[_sync_date].string ?? "2021-07-13"
                     if self.count <= 0 {
@@ -1766,7 +1768,7 @@ extension FetchUserDataViewController {
         NetworkCalls.getwalletsummarypoints(params: params) { granted, response in
             if granted {
                 let json = JSON(response)
-                if let _walletSummaryPointData = json.dictionary?[_walletSummaryPointData] {
+                if let _walletSummaryPointData = json.dictionary?[_result]?.dictionary?[_walletSummaryPointData] {
                     let syncDate = _walletSummaryPointData[_sync_date].string ?? "2021-07-13"
                     if let pointsSummary = _walletSummaryPointData[_pointsSummary].array {
                         for summary in pointsSummary {
