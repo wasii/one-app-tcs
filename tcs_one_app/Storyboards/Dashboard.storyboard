@@ -155,7 +155,7 @@
                     <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="jos-Ba-Fzc">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="49"/>
                         <autoresizingMask key="autoresizingMask"/>
-                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="backgroundColor" systemColor="tertiarySystemGroupedBackgroundColor"/>
                         <color key="selectedImageTintColor" red="0.70196078429999997" green="0.1215686275" blue="0.13725490200000001" alpha="1" colorSpace="calibratedRGB"/>
                     </tabBar>
                     <connections>
@@ -174,7 +174,7 @@
         <scene sceneID="Yjg-OM-SaD">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="hY3-QZ-UdS" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Home" image="home" selectedImage="home" id="lXW-F2-mvJ"/>
+                    <tabBarItem key="tabBarItem" title="Home" image="home" selectedImage="new-home" id="lXW-F2-mvJ"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" largeTitles="YES" id="c5S-9K-UjW">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="96"/>
@@ -321,9 +321,8 @@
         <!--Message-->
         <scene sceneID="Tjw-UC-edm">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="TAk-qf-EEJ" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="R9J-r4-xmC" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Message" image="mesg" id="hkc-b5-8i3"/>
+                    <tabBarItem key="tabBarItem" title="Message" image="new-message" id="hkc-b5-8i3"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" largeTitles="YES" id="pV8-Z6-YbS">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="96"/>
@@ -341,6 +340,7 @@
                         <segue destination="fk9-Ti-lBl" kind="relationship" relationship="rootViewController" id="MrR-XW-i41"/>
                     </connections>
                 </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="TAk-qf-EEJ" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-1113.0434782608697" y="327.45535714285711"/>
         </scene>
@@ -398,7 +398,7 @@
         <scene sceneID="ab8-iC-yev">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="g7K-Az-ZLi" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Mail" image="mail" id="hgC-VI-Pek"/>
+                    <tabBarItem key="tabBarItem" title="Mail" image="new-mail" id="hgC-VI-Pek"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" largeTitles="YES" id="Bsk-2X-JnG">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="96"/>
@@ -436,37 +436,11 @@
             </objects>
             <point key="canvasLocation" x="-204" y="1038"/>
         </scene>
-        <!--Item 2-->
-        <scene sceneID="0dL-Pt-ull">
-            <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="mcD-OZ-o1C" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="5QR-j0-Smm" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Item 2" id="p8r-LD-tgT"/>
-                    <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" largeTitles="YES" id="jeM-sU-QgI">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="96"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                        <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        <textAttributes key="titleTextAttributes">
-                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        </textAttributes>
-                        <textAttributes key="largeTitleTextAttributes">
-                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        </textAttributes>
-                    </navigationBar>
-                    <nil name="viewControllers"/>
-                    <connections>
-                        <segue destination="B2l-Hz-0rS" kind="relationship" relationship="rootViewController" id="0nF-iF-oi3"/>
-                    </connections>
-                </navigationController>
-            </objects>
-            <point key="canvasLocation" x="-1114" y="1038"/>
-        </scene>
         <!--Attendance-->
         <scene sceneID="yI0-oe-e6T">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="Dmb-26-XnR" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Attendance" image="attendance-tabbar" id="URU-WC-WFO"/>
+                    <tabBarItem key="tabBarItem" title="Attendance" image="new-attendance" id="URU-WC-WFO"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" largeTitles="YES" id="pLb-4C-fJc">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="96"/>
@@ -512,7 +486,7 @@
         <scene sceneID="q3M-L3-bM2">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="SNw-xr-igU" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Wallet" image="wallet-tabbar" id="rBs-m3-Zkc"/>
+                    <tabBarItem key="tabBarItem" title="Wallet" image="new-wallet" id="rBs-m3-Zkc"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" largeTitles="YES" id="tYX-Ac-o2n">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="96"/>
@@ -542,13 +516,17 @@
     </designables>
     <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
     <resources>
-        <image name="attendance-tabbar" width="27.5" height="30.5"/>
         <image name="home" width="27.5" height="30.5"/>
-        <image name="mail" width="27.5" height="30.5"/>
-        <image name="mesg" width="27.5" height="30.5"/>
-        <image name="wallet-tabbar" width="25" height="25"/>
+        <image name="new-attendance" width="23" height="23"/>
+        <image name="new-home" width="23" height="23"/>
+        <image name="new-mail" width="23" height="23"/>
+        <image name="new-message" width="23" height="23"/>
+        <image name="new-wallet" width="23" height="23"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="tertiarySystemGroupedBackgroundColor">
+            <color red="0.94901960784313721" green="0.94901960784313721" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>
