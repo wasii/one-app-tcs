@@ -13,6 +13,8 @@ class WalletBeneficiaryDetailsViewController: BaseViewController {
     @IBOutlet weak var mainView: UIView!
     @IBOutlet weak var tableViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var tableView: UITableView!
+    
+    var get_beneficiaries: [tbl_wallet_beneficiaries]?
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Wallet"
@@ -22,10 +24,16 @@ class WalletBeneficiaryDetailsViewController: BaseViewController {
 //        self.tableView.rowHeight = UITableView.automaticDimension
         self.tableView.dataSource = self
         self.tableView.delegate = self
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-            self.tableViewHeightConstraint.constant = CGFloat(90 * 50)
-            self.tableView.reloadData()
+    }
+    override func viewDidAppear(_ animated: Bool) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            let query = "SELECT * FROM \(db_w_beneficiaries) WHERE CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)'"
+            if let get_beneficiaries = AppDelegate.sharedInstance.db?.read_tbl_wallet_beneficiaries(query: query) {
+                self.get_beneficiaries = get_beneficiaries
+                self.tableViewHeightConstraint.constant = CGFloat(get_beneficiaries.count * 90)
+                self.tableView.reloadData()
+            }
+            
         }
     }
     @IBAction func addBeneficiaryTapped(_ sender: Any) {
@@ -36,17 +44,23 @@ class WalletBeneficiaryDetailsViewController: BaseViewController {
 
 extension WalletBeneficiaryDetailsViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 50
+        if let count = self.get_beneficiaries?.count {
+            return count
+        }
+        return 0
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: WalletBeneficiaryListingTableCell.description()) as? WalletBeneficiaryListingTableCell else {
             fatalError()
         }
-        cell.redemptionBtn.addTarget(self, action: #selector(transferPoints(sender:)), for: .touchUpInside)
-        cell.redemptionBtn.tag = indexPath.row
-        cell.nameLabel.text = "TCS One App \(indexPath.row)"
-        cell.empIdLabel.text = "EMP ID:     \(CURRENT_USER_LOGGED_IN_ID)"
-        cell.cellLabel.text = "CELL#:       03331231231"
+        if let beneficiaries = self.get_beneficiaries?[indexPath.row] {
+            cell.redemptionBtn.addTarget(self, action: #selector(transferPoints(sender:)), for: .touchUpInside)
+            cell.redemptionBtn.tag = indexPath.row
+            cell.nameLabel.text = beneficiaries.beneficiaryName
+            cell.empIdLabel.text = beneficiaries.beneficiaryEmpID
+            cell.cellLabel.text = beneficiaries.beneficiaryMobileNumber
+        }
+        
         
         return cell
     }

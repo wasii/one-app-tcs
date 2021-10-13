@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19162" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19144"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -28,13 +28,25 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="EMP ID" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="d6H-R3-o5Z" userLabel="empId">
-                                <rect key="frame" x="15" y="34.5" width="340" height="16"/>
+                                <rect key="frame" x="15" y="34.5" width="80" height="16"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="80" id="uuC-Ca-Vd4"/>
+                                </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                 <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="CELL#" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zxi-ob-PD2" userLabel="cellLabel">
-                                <rect key="frame" x="15" y="55.5" width="340" height="16"/>
+                                <rect key="frame" x="15" y="55.5" width="80" height="16"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="80" id="Hov-fj-ud2"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="CELL#" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Pbj-xS-VWk" userLabel="cellLabel">
+                                <rect key="frame" x="95" y="55.5" width="260" height="16"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                 <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
@@ -60,20 +72,30 @@
                                     </button>
                                 </subviews>
                             </stackView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="EMP ID" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TWX-qN-YX2" userLabel="empId">
+                                <rect key="frame" x="95" y="34.5" width="260" height="16"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstItem="rqR-pc-lRU" firstAttribute="leading" secondItem="zxi-ob-PD2" secondAttribute="trailing" constant="15" id="26f-RF-hge"/>
+                            <constraint firstItem="rqR-pc-lRU" firstAttribute="leading" secondItem="Pbj-xS-VWk" secondAttribute="trailing" constant="15" id="067-bG-kzH"/>
                             <constraint firstItem="d6H-R3-o5Z" firstAttribute="leading" secondItem="LKX-kj-9sY" secondAttribute="leading" constant="15" id="39a-bd-EGS"/>
                             <constraint firstAttribute="trailing" secondItem="rqR-pc-lRU" secondAttribute="trailing" constant="15" id="6cP-Ul-KxK"/>
                             <constraint firstItem="zxi-ob-PD2" firstAttribute="leading" secondItem="LKX-kj-9sY" secondAttribute="leading" constant="15" id="6fZ-DO-vfO"/>
+                            <constraint firstItem="TWX-qN-YX2" firstAttribute="centerY" secondItem="d6H-R3-o5Z" secondAttribute="centerY" id="9YC-Fw-eno"/>
                             <constraint firstItem="rAo-sT-3zT" firstAttribute="top" secondItem="LKX-kj-9sY" secondAttribute="top" constant="10" id="B5p-ug-WdN"/>
                             <constraint firstItem="d6H-R3-o5Z" firstAttribute="top" secondItem="rAo-sT-3zT" secondAttribute="bottom" constant="3" id="BbW-6P-0RW"/>
-                            <constraint firstItem="rqR-pc-lRU" firstAttribute="leading" secondItem="d6H-R3-o5Z" secondAttribute="trailing" constant="15" id="EtC-mc-jUK"/>
+                            <constraint firstItem="rqR-pc-lRU" firstAttribute="leading" secondItem="TWX-qN-YX2" secondAttribute="trailing" constant="15" id="Lkx-lm-F87"/>
+                            <constraint firstItem="TWX-qN-YX2" firstAttribute="leading" secondItem="d6H-R3-o5Z" secondAttribute="trailing" id="OLA-k6-NcF"/>
                             <constraint firstItem="rqR-pc-lRU" firstAttribute="leading" secondItem="rAo-sT-3zT" secondAttribute="trailing" constant="15" id="dgA-um-8AZ"/>
                             <constraint firstItem="zxi-ob-PD2" firstAttribute="top" secondItem="d6H-R3-o5Z" secondAttribute="bottom" constant="5" id="jD6-nT-xQf"/>
+                            <constraint firstItem="Pbj-xS-VWk" firstAttribute="leading" secondItem="zxi-ob-PD2" secondAttribute="trailing" id="sah-ee-xmw"/>
                             <constraint firstItem="rAo-sT-3zT" firstAttribute="leading" secondItem="LKX-kj-9sY" secondAttribute="leading" constant="15" id="w3b-da-dIb"/>
                             <constraint firstItem="rqR-pc-lRU" firstAttribute="centerY" secondItem="LKX-kj-9sY" secondAttribute="centerY" id="wED-b5-Pv2"/>
+                            <constraint firstItem="Pbj-xS-VWk" firstAttribute="centerY" secondItem="zxi-ob-PD2" secondAttribute="centerY" id="y50-pe-X0h"/>
                         </constraints>
                         <userDefinedRuntimeAttributes>
                             <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
@@ -99,9 +121,9 @@
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <connections>
-                <outlet property="cellLabel" destination="zxi-ob-PD2" id="3uS-cq-NFP"/>
+                <outlet property="cellLabel" destination="Pbj-xS-VWk" id="Dey-wt-o4r"/>
                 <outlet property="deleteBtn" destination="eqO-a1-ebQ" id="2I7-en-8sy"/>
-                <outlet property="empIdLabel" destination="d6H-R3-o5Z" id="Ca3-J9-e5h"/>
+                <outlet property="empIdLabel" destination="TWX-qN-YX2" id="JO0-5A-yBl"/>
                 <outlet property="nameLabel" destination="rAo-sT-3zT" id="uST-XK-dDl"/>
                 <outlet property="redemptionBtn" destination="iL9-2W-W8c" id="Sr9-EC-fzR"/>
             </connections>
@@ -110,7 +132,7 @@
     </objects>
     <resources>
         <image name="P2PRed" width="42" height="42"/>
-        <image name="delete-wallet" width="42" height="42"/>
+        <image name="delete-wallet" width="48" height="48"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

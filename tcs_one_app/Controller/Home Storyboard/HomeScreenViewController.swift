@@ -195,7 +195,19 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
     
     
     override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
         setupSlideScrollView(chartViews: chartViews)
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .vertical
+        self.module_CollectionView.collectionViewLayout = layout
+        self.module_CollectionView!.contentInset = UIEdgeInsets(top: 0, left: 0, bottom:0, right: 0)
+        
+        if let layout = self.module_CollectionView.collectionViewLayout as? UICollectionViewFlowLayout {
+            layout.minimumInteritemSpacing = 0
+            layout.minimumLineSpacing = 0
+            layout.itemSize = CGSize(width: self.module_CollectionView.frame.size.width/4, height: 95)
+            layout.invalidateLayout()
+        }
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
@@ -763,12 +775,12 @@ extension HomeScreenViewController: UICollectionViewDelegate, UICollectionViewDa
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         return 0
     }
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let yourWidth = CGFloat(80)
-        let yourHeight = collectionView.bounds.width / 4.0
-        
-        return CGSize(width: yourWidth, height: yourHeight)
-    }
+//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+//        let yourWidth = CGFloat(80)
+//        let yourHeight = collectionView.bounds.width / 4.0
+//
+//        return CGSize(width: yourWidth, height: yourHeight)
+//    }
     
     @objc func openChartDetails() {
         let controller = self.storyboard?.instantiateViewController(withIdentifier: "ChartListingViewController") as! ChartListingViewController

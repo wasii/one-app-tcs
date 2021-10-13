@@ -3347,8 +3347,9 @@ class DBHelper {
                 let isEmailNotify = String(describing: String(cString: sqlite3_column_text(queryStatement, 9)))
                 let isActive = Int(sqlite3_column_int(queryStatement, 10))
                 let createdDate = String(describing: String(cString: sqlite3_column_text(queryStatement, 11)))
+                let current_user = String(describing: String(cString: sqlite3_column_text(queryStatement, 12)))
                 
-                wallet_beneficiaries.append(tbl_wallet_beneficiaries(id: id, rid: rid, referenceNumber: referenceNumber, employeeID: employeeID, beneficiaryName: beneficiaryName, beneficiaryEmpID: beneficiaryEmpID, beneficiaryMobileNumber: beneficiaryMobileNumber, beneficiaryNickname: beneficiaryNickname, beneficiaryEmail: beneficiaryEmail, isEmailNotify: isEmailNotify, isActive: isActive, createdDate: createdDate))
+                wallet_beneficiaries.append(tbl_wallet_beneficiaries(id: id, rid: rid, referenceNumber: referenceNumber, employeeID: employeeID, beneficiaryName: beneficiaryName, beneficiaryEmpID: beneficiaryEmpID, beneficiaryMobileNumber: beneficiaryMobileNumber, beneficiaryNickname: beneficiaryNickname, beneficiaryEmail: beneficiaryEmail, isEmailNotify: isEmailNotify, isActive: isActive, createdDate: createdDate, current_user: current_user))
             }
         } else {
             print("SELECT statement \(db_w_detail_point) could not be prepared")
@@ -3356,7 +3357,7 @@ class DBHelper {
         return wallet_beneficiaries.count > 0 ? wallet_beneficiaries : nil
     }
     func insert_tbl_wallet_beneficiaries(wallet_beneficiary: WalletBeneficiary, handler: @escaping(_ success: Bool) -> Void) {
-        let insertStatementString = "INSERT INTO \(db_w_beneficiaries)(RID, REFERENCE_NUMBER, EMPLOYEE_ID, BENEFICIARY_NAME, BENEFICIARY_EMP_ID, BENEFICIARY_MOBILE_NUMBER, BENEFICIARY_NICKNAME, BENEFICIARY_EMAIL, IS_EMAIL_NOTIFY, IS_ACTIVE, CREATED_DATE) VALUES (?,?,?,?,?,?,?,?,?,?,?);"
+        let insertStatementString = "INSERT INTO \(db_w_beneficiaries)(RID, REFERENCE_NUMBER, EMPLOYEE_ID, BENEFICIARY_NAME, BENEFICIARY_EMP_ID, BENEFICIARY_MOBILE_NUMBER, BENEFICIARY_NICKNAME, BENEFICIARY_EMAIL, IS_EMAIL_NOTIFY, IS_ACTIVE, CREATED_DATE, CURRENT_USER) VALUES (?,?,?,?,?,?,?,?,?,?,?,?);"
 
         var insertStatement: OpaquePointer? = nil
         if sqlite3_prepare_v2(self.db, insertStatementString, -1, &insertStatement, nil) == SQLITE_OK {
@@ -3371,7 +3372,7 @@ class DBHelper {
             sqlite3_bind_text(insertStatement, 9, (wallet_beneficiary.isEmailNotify as NSString).utf8String, -1, nil)
             sqlite3_bind_int(insertStatement, 10, Int32(wallet_beneficiary.isActive))
             sqlite3_bind_text(insertStatement, 11, (wallet_beneficiary.createdDate as NSString).utf8String, -1, nil)
-
+            sqlite3_bind_text(insertStatement, 12, (CURRENT_USER_LOGGED_IN_ID as NSString).utf8String, -1, nil)
             if sqlite3_step(insertStatement) == SQLITE_DONE {
                 handler(true)
             } else {
@@ -4026,5 +4027,5 @@ struct tbl_wallet_beneficiaries {
     var beneficiaryMobileNumber: String, beneficiaryNickname: String, beneficiaryEmail: String = ""
     var isEmailNotify: String = ""
     var isActive: Int = -1
-    var createdDate: String = ""
+    var createdDate: String, current_user: String = ""
 }

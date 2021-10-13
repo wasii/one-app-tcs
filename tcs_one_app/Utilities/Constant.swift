@@ -78,6 +78,7 @@ let WALLET_SUMMARY_POINT    = WALLET_ENDPOINT + "summary-points"
 let WALLET_ADD_BENEFICIARY  = WALLET_ENDPOINT + "add-beneficiary"
 let WALLET_PIN_GENERATION   = WALLET_ENDPOINT + "pin-gen"
 let WALLET_GET_BENEFICIARY  = WALLET_ENDPOINT + "get-beneficiary"
+let WALLET_GET_EMPLOYEE     = WALLET_ENDPOINT + "get-employee"
 
 let S_WALLET_POINTS_HISTORY = "WALLET.GET.HISTORY.POINTS"
 let S_WALLET_POINTS_SUMMARY = "WALLET.GET.SUMMARY.POINTS"
@@ -86,6 +87,7 @@ let S_WALLET_GET_SETUP      = "WALLET.SETUP"
 let S_WALLETADD_BENEFICIARY = "WALLET.ADD.BENEFICIARY"
 let S_WALLET_PIN_GEN        = "WALLET.PIN.GEN"
 let S_WALLETGET_BENEFICIARY = "WALLET.GET.BENEFICIARY"
+let S_WALLET_GET_EMPLOYEE   = "WALLET.GET.EMPLOYEE"
 
 //API BACKEND KEYS
 let eAI_MESSAGE             = "eAI_MESSAGE"
@@ -158,6 +160,7 @@ let _walletSummaryPointData = "walletSummaryPointsData"
 let _walletDetailPoints     = "walletDetailPoints"
 let _pointsDetail           = "pointsDetail"
 let _getBeneficiary         = "getBeneficiary"
+let _getEmployee            = "getEmployee"
 
 //Local Storage (Database) tablename keys
 let db_user_module          = "USER_MODULE"

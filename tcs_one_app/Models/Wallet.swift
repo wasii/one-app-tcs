@@ -174,3 +174,16 @@ struct WalletBeneficiary: Codable {
         case createdDate = "CREATED_DATE"
     }
 }
+
+// MARK: - GetEmployee
+struct GetEmployee: Codable {
+    let empid: Int
+    let empName, empCell1, officialEmailID: String
+
+    enum CodingKeys: String, CodingKey {
+        case empid = "EMPID"
+        case empName = "EMP_NAME"
+        case empCell1 = "EMP_CELL#1"
+        case officialEmailID = "OFFICIAL_EMAIL_ID"
+    }
+}

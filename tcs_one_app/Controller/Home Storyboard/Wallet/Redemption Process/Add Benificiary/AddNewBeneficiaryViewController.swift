@@ -58,13 +58,18 @@ class AddNewBeneficiaryViewController: BaseViewController {
     @IBOutlet weak var enterOTPLabel: UILabel!
     @IBOutlet weak var requestSubmittedImg: UIImageView!
     @IBOutlet weak var requestSubmittedLabel: UILabel!
+    @IBOutlet weak var resendCode: UIButton!
     var range = NSRange()
     var currentFormIndex: Int = 0
     
     
     var IsSendConfirmation: Bool = false
     var IsTermsAndConditionsRead: Bool = false
-    var emp_model: [User]?
+    var get_employee: GetEmployee?
+    
+    var counter = 30
+    var timer : Timer?
+    var wallet_beneficiary: WalletBeneficiary?
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Wallet"
@@ -178,6 +183,8 @@ class AddNewBeneficiaryViewController: BaseViewController {
         self.confirmBtn.isHidden = false
         self.homeBtn.isHidden = false
         
+        self.resendCode.isHidden = true
+        self.timer?.invalidate()
         //Labels and Image
         confirmDetailImg.image = UIImage(named: "confirm-G")
         confirmDetailLabel.textColor = UIColor.darkGray
@@ -278,6 +285,13 @@ class AddNewBeneficiaryViewController: BaseViewController {
             enterOTPImg.image = UIImage(named: "otp-R")
             enterOTPLabel.textColor = UIColor.nativeRedColor()
             self.middleBorder.backgroundColor = UIColor.nativeRedColor()
+            
+            //resend otp button
+            self.timer?.invalidate()
+            self.resendCode.isHidden = false
+            self.resendCode.isEnabled = false
+            self.counter = 30
+            self.timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(self.updateCounter), userInfo: nil, repeats: true)
             break
         case 3:
             agreementView.isHidden = true
@@ -288,6 +302,12 @@ class AddNewBeneficiaryViewController: BaseViewController {
             self.confirmBtn.isHidden = true
             self.backBtn.isHidden = true
             
+            if let wallet_beneficiary = self.wallet_beneficiary {
+                self.referenceNumber.text = wallet_beneficiary.referenceNumber
+                self.referenceNumber.setTextColor(UIColor.gray, for: .normal)
+                self.referenceNumber.isEnabled = false
+                self.referenceNumber.setOutlineColor(UIColor.nativeRedColor(), for: .disabled)
+            }
             
             //Labels and Image
             confirmDetailImg.image = UIImage(named: "confirm-R")
@@ -311,6 +331,17 @@ class AddNewBeneficiaryViewController: BaseViewController {
             if self.beneficiaryEmpId.text == "" {
                 self.view.makeToast("Beneficiary Emp Id cannot be left blank.")
                 return
+            }
+            //Optional Value Checked (Email)
+            if self.beneficiaryEmail.text != "" {
+                if !isValidEmail(self.beneficiaryEmail.text!) {
+                    self.view.makeToast("\(self.beneficiaryEmail.text!) is not a valid email.")
+                }
+            }
+            if self.beneficiaryNumber.text != "" {
+                if self.beneficiaryNumber.text!.count < 11 {
+                    self.view.makeToast("Phone Number is not a valid.")
+                }
             }
             break
         case 1:
@@ -358,6 +389,12 @@ class AddNewBeneficiaryViewController: BaseViewController {
         setupConditions()
     }
     @IBAction func confirmBtnTapped(_ sender: Any) {
+        if !CustomReachability.isConnectedNetwork() {
+            self.view.makeToast(NOINTERNETCONNECTION)
+            return
+        }
+        self.view.makeToastActivity(.center)
+        self.freezeScreen()
         self.addBeneficiary { granted, message in
             if granted {
                 DispatchQueue.main.async {
@@ -370,10 +407,17 @@ class AddNewBeneficiaryViewController: BaseViewController {
                         self.setupConditions()
                     }
                 }
+            } else {
+                DispatchQueue.main.async {
+                    self.view.hideToastActivity()
+                    self.unFreezeScreen()
+                    self.view.makeToast(SOMETHINGWENTWRONG)
+                }
             }
         }
     }
     @IBAction func homeBtnTapped(_ sender: Any) {
+        self.navigationController?.popViewController(animated: true)
     }
     
     @IBAction func sendConfirmationBtnTapped(_ sender: UIButton) {
@@ -393,6 +437,37 @@ class AddNewBeneficiaryViewController: BaseViewController {
             sender.setImage(UIImage(named: "check"), for: .normal)
         } else {
             sender.setImage(nil, for: .normal)
+        }
+    }
+    @IBAction func resendCodeTapped(_ sender: Any) {
+        self.freezeScreen()
+        self.view.makeToastActivity(.center)
+        self.getOTP { granted in
+            DispatchQueue.main.async {
+                if granted {
+                    self.resendCode.isEnabled = false
+                    self.resendCode.setTitleColor(UIColor.init(hexString: "#E2E2E2"), for: .normal)
+                } else {
+                    self.view.hideToastActivity()
+                    self.unFreezeScreen()
+                    self.view.makeToast(SOMETHINGWENTWRONG)
+                }
+            }
+        }
+    }
+    @objc func updateCounter() {
+        if counter > 0 {
+            counter -= 1
+            if counter <= 9 {
+                self.resendCode.setTitle("Resend code: 0\(counter) seconds", for: .normal)
+            } else {
+                self.resendCode.setTitle("Resend code: \(counter) seconds", for: .normal)
+            }
+            
+        } else {
+            self.resendCode.isEnabled = true
+            self.resendCode.setTitleColor(UIColor.darkGray, for: .normal)
+            self.timer?.invalidate()
         }
     }
 }
@@ -430,20 +505,28 @@ extension UITapGestureRecognizer {
 }
 extension AddNewBeneficiaryViewController: UITextFieldDelegate {
     func textFieldDidEndEditing(_ textField: UITextField) {
+        if textField.text == "" || textField.text!.count < 3 {
+            return
+        }
         switch textField.accessibilityLabel {
         case "BeneficiaryEmpId":
             self.view.makeToastActivity(.center)
             self.freezeScreen()
             getEmployee { granted in
                 DispatchQueue.main.async {
+                    self.view.hideToastActivity()
+                    self.unFreezeScreen()
                     if granted {
-                        self.view.hideToastActivity()
-                        self.unFreezeScreen()
-                        
-                        self.beneficiaryName.text = self.emp_model?.first?.empName ?? ""
+                        if let get_employee = self.get_employee {
+                            self.beneficiaryName.text = get_employee.empName
+                            self.beneficiaryNumber.text = get_employee.empCell1
+                            self.beneficiaryEmail.text = get_employee.officialEmailID
+                        } else {
+                            self.beneficiaryName.text = ""
+                            self.beneficiaryNumber.text = ""
+                            self.beneficiaryEmail.text = ""
+                        }
                     } else {
-                        self.unFreezeScreen()
-                        self.view.hideToastActivity()
                         self.view.makeToast("No Employee Found")
                     }
                 }
@@ -453,26 +536,54 @@ extension AddNewBeneficiaryViewController: UITextFieldDelegate {
         default: break
         }
     }
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        if string.isEmpty {
+            return true
+        }
+        switch textField.accessibilityLabel {
+        case "BeneficiaryEmpId", "OTP", "ConfirmOTP":
+            let maxLength = 6
+            let currentString: NSString = textField.text as! NSString
+            let newString: NSString =
+                    currentString.replacingCharacters(in: range, with: string) as NSString
+            if newString.length <= maxLength {
+                return true
+            }
+            return false
+        case "BeneficiaryNumber":
+            let maxLength = 11
+            let currentString: NSString = textField.text as! NSString
+            let newString: NSString =
+                    currentString.replacingCharacters(in: range, with: string) as NSString
+            if newString.length <= maxLength {
+                return true
+            }
+            return false
+        default: return true
+        }
+    }
 }
 
 //MARK: -API Calls
 extension AddNewBeneficiaryViewController {
     private func getEmployee(_ handler: @escaping(Bool) -> Void) {
-        let search_employee = [
-            "empployee": [
-                "access_token": UserDefaults.standard.string(forKey: USER_ACCESS_TOKEN)!,
-                "emp_id" :"\(self.beneficiaryEmpId.text!)"
-            ]
-        ]
-        let params = self.getAPIParameter(service_name: SERACH_EMPLOYEE, request_body: search_employee)
-        NetworkCalls.search_empoloyee(params: params) { (success, response) in
-            if success {
-                if let emp_data = JSON(response).array?.first {
+        let request_body = ["p_emp_id": self.beneficiaryEmpId.text!]
+        let params = self.getAPIParameterNew(serviceName: S_WALLET_GET_EMPLOYEE, client: "", request_body: request_body)
+        NetworkCalls.getwalletemployee(params: params) { granted, response in
+            if granted {
+                let json = JSON(response)
+                if let result = json.dictionary?[_result]?.dictionary?[_getEmployee]?.array {
                     do {
-                        self.emp_model = [User]()
-                        let user = try emp_data.rawData()
-                        self.emp_model!.append(try JSONDecoder().decode(User.self, from: user))
-                        handler(true)
+                        if result.count == 0 {
+                            handler(false)
+                            return
+                        }
+                        for r in result {
+                            let rawData = try r.rawData()
+                            let getEmployee : GetEmployee = try JSONDecoder().decode(GetEmployee.self, from: rawData)
+                            self.get_employee = getEmployee
+                            handler(true)
+                        }
                     } catch let err {
                         handler(false)
                         print(err.localizedDescription)
@@ -521,19 +632,22 @@ extension AddNewBeneficiaryViewController {
         NetworkCalls.addwalletbeneficiaries(params: params) { granted, response in
             if granted {
                 let json = JSON(response)
-                if let getBeneficiary = json.dictionary?[_result]?.dictionary?[_getBeneficiary]?.array?.first {
+                if let getBeneficiary = json.dictionary?[_result]?.dictionary?[_getBeneficiary]?.array {
                     print(getBeneficiary)
                     do {
-                        let rawData = try json.rawData()
-                        let wallet_beneficiary: WalletBeneficiary = try JSONDecoder().decode(WalletBeneficiary.self, from: rawData)
-                        AppDelegate.sharedInstance.db?.insert_tbl_wallet_beneficiaries(wallet_beneficiary: wallet_beneficiary, handler: { success in
-                            if success {
-                                handler(true, nil)
-                            } else {
-                                handler(false, nil)
-                            }
-                            return
-                        })
+                        for gb in getBeneficiary {
+                            let rawData = try gb.rawData()
+                            let wallet_beneficiary: WalletBeneficiary = try JSONDecoder().decode(WalletBeneficiary.self, from: rawData)
+                            self.wallet_beneficiary = wallet_beneficiary
+                            AppDelegate.sharedInstance.db?.insert_tbl_wallet_beneficiaries(wallet_beneficiary: wallet_beneficiary, handler: { success in
+                                if success {
+                                    handler(true, nil)
+                                } else {
+                                    handler(false, nil)
+                                }
+                                return
+                            })
+                        }
                     } catch let DecodingError.dataCorrupted(context) {
                         print(context)
                     } catch let DecodingError.keyNotFound(key, context) {
