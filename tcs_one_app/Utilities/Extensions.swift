@@ -5,8 +5,8 @@ import MapKit
 
 extension UIColor {
     class func nativeRedColor() -> UIColor {
-//        return UIColor.init(red: 222.0/255.0, green: 0.0/255.0, blue: 0.0/255.0, alpha: 1)
-        return UIColor.init(hexString: "#FF0000")
+        return UIColor.init(red: 222.0/255.0, green: 0.0/255.0, blue: 0.0/255.0, alpha: 1)
+//        return UIColor.init(hexString: "#FF0000")
     }
     
     class func approvedColor() -> UIColor {

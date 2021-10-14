@@ -40,7 +40,7 @@ class WalletDashboardViewController: BaseViewController {
     var tbl_wallet_points: [tbl_wallet_points_summary]?
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "Wallet"
+        self.navigationController?.navigationBar.topItem?.title = "Wallet"
         self.selected_query = "Weekly"
         self.makeTopCornersRounded(roundView: self.mainView)
         layoutFAB()
@@ -88,7 +88,8 @@ class WalletDashboardViewController: BaseViewController {
         floaty.plusColor = UIColor.white
         floaty.buttonColor = UIColor.nativeRedColor()
         floaty.buttonImage = UIImage(named: "currency")
-        floaty.addItem("P2P", icon: UIImage(named: "P2P")) { item in
+        floaty.itemButtonColor = UIColor.clear
+        floaty.addItem("P2P", icon: UIImage(named: "p2p-red")) { item in
             let storyboard = UIStoryboard(name: "WalletRedemption", bundle: nil)
             let controller = storyboard.instantiateViewController(withIdentifier: "WalletBeneficiaryDetailsViewController") as! WalletBeneficiaryDetailsViewController
             self.navigationController?.pushViewController(controller, animated: true)
