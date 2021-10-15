@@ -409,6 +409,7 @@ class AddNewBeneficiaryViewController: BaseViewController {
                     self.unFreezeScreen()
                     if let message = message {
                         self.view.makeToast(message)
+                        return
                     } else {
                         self.currentFormIndex += 1
                         self.setupConditions()

@@ -88,7 +88,7 @@ class WalletDashboardViewController: BaseViewController {
         floaty.plusColor = UIColor.white
         floaty.buttonColor = UIColor.nativeRedColor()
         floaty.buttonImage = UIImage(named: "currency")
-        floaty.itemButtonColor = UIColor.clear
+        floaty.itemButtonColor = UIColor.nativeRedColor()
         floaty.addItem("P2P", icon: UIImage(named: "p2p-red")) { item in
             let storyboard = UIStoryboard(name: "WalletRedemption", bundle: nil)
             let controller = storyboard.instantiateViewController(withIdentifier: "WalletBeneficiaryDetailsViewController") as! WalletBeneficiaryDetailsViewController
