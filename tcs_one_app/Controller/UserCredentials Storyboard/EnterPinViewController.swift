@@ -38,7 +38,7 @@ class EnterPinViewController: BaseViewController {
         
         self.makeTopCornersRounded(roundView: self.mainView)
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
             if UserDefaults.standard.string(forKey: USER_ACCESS_TOKEN) != nil {
                 if UserDefaults.standard.string(forKey: "CurrentUser") != nil {
                     CURRENT_USER_LOGGED_IN_ID = UserDefaults.standard.string(forKey: "CurrentUser")!

@@ -332,6 +332,12 @@ class AddNewBeneficiaryViewController: BaseViewController {
                 self.view.makeToast("Beneficiary Emp Id cannot be left blank.")
                 return
             }
+            if self.IsSendConfirmation {
+                if self.beneficiaryEmail.text == "" && self.beneficiaryNumber.text == "" {
+                    self.view.makeToast("You need to insert Email or Mobile Number.")
+                    return
+                }
+            }
             //Optional Value Checked (Email)
             if self.beneficiaryEmail.text != "" {
                 if !isValidEmail(self.beneficiaryEmail.text!) {
@@ -395,6 +401,7 @@ class AddNewBeneficiaryViewController: BaseViewController {
         }
         self.view.makeToastActivity(.center)
         self.freezeScreen()
+        self.timer?.invalidate()
         self.addBeneficiary { granted, message in
             if granted {
                 DispatchQueue.main.async {
@@ -635,6 +642,12 @@ extension AddNewBeneficiaryViewController {
                 if let getBeneficiary = json.dictionary?[_result]?.dictionary?[_getBeneficiary]?.array {
                     print(getBeneficiary)
                     do {
+                        if getBeneficiary.count == 0 {
+                            if let message = json.dictionary?[returnStatus]?["message"].string {
+                                handler(true, message)
+                                return
+                            }
+                        }
                         for gb in getBeneficiary {
                             let rawData = try gb.rawData()
                             let wallet_beneficiary: WalletBeneficiary = try JSONDecoder().decode(WalletBeneficiary.self, from: rawData)
