@@ -24,7 +24,7 @@ class LandingViewController: BaseViewController {
     var safeTopArea: CGFloat = 0.0
     var currentCenterConstraintPosition: CGFloat = 0.0
     
-    var totalApiCounts: Int = 4 //Setup, HrRequest, HrNotification, Attendance
+    var totalApiCounts = 9 //Setup, HrRequest, HrNotification, Attendance, Wallet-> Token, Setup, HistoryPoints, SummaryPoints, Beneficiairy
     var increment: Int = 0
     var currentCount: Int = 0
     
@@ -90,7 +90,7 @@ class LandingViewController: BaseViewController {
     }
     
     private func checkConditions() {
-        self.totalApiCounts = 4
+        self.totalApiCounts = 9
         if CustomReachability.isConnectedNetwork() {
             //MIS
             if let count = AppDelegate.sharedInstance.db?.read_tbl_UserPage().filter({ userPage in
@@ -130,25 +130,6 @@ class LandingViewController: BaseViewController {
         self.indicatorView.startAnimating()
         
         self.setupAPIs()
-//        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-//            self.percentCounter.text = "20%"
-//            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-//                self.percentCounter.text = "40%"
-//                DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-//                    self.percentCounter.text = "60%"
-//                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-//                        self.percentCounter.text = "80%"
-//                        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-//                            self.percentCounter.text = "100%"
-//                            self.indicatorView.stopAnimating()
-//                            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-//                                self.navigateHomeScreen()
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//        }
     }
     
     private func setupAPIs() {
@@ -183,6 +164,7 @@ class LandingViewController: BaseViewController {
                                 self.percentCounter.text = "\(self.currentCount)%"
                             }
                             self.getHrRequest()
+                            return
                         } else {
                             self.showError()
                         }
@@ -829,7 +811,46 @@ extension LandingViewController {
                                                                             DispatchQueue.main.async {
                                                                                 self.currentCount += self.increment
                                                                                 self.percentCounter.text = "\(self.currentCount)%"
-                                                                                self.navigateHomeScreen()
+                                                                                //MARK: Wallet
+                                                                                self.setupWallet { wallet_granted in
+                                                                                    if wallet_granted {
+                                                                                        DispatchQueue.main.async {
+                                                                                            self.currentCount += self.increment
+                                                                                            self.percentCounter.text = "\(self.currentCount)%"
+                                                                                            self.setupwallethistorypoints { history_granted in
+                                                                                                if history_granted {
+                                                                                                    DispatchQueue.main.async {
+                                                                                                        self.currentCount += self.increment
+                                                                                                        self.percentCounter.text = "\(self.currentCount)%"
+                                                                                                        self.setupwalletsummarypoints { summary_granted in
+                                                                                                            if summary_granted {
+                                                                                                                DispatchQueue.main.async {
+                                                                                                                    self.currentCount += self.increment
+                                                                                                                    self.percentCounter.text = "\(self.currentCount)%"
+                                                                                                                    self.getwalletbeneficiaries { beneficiary_granted in
+                                                                                                                        if beneficiary_granted {
+                                                                                                                            DispatchQueue.main.async {
+                                                                                                                                self.navigateHomeScreen()
+                                                                                                                            }
+                                                                                                                        } else {
+                                                                                                                            self.showError()
+                                                                                                                        }
+                                                                                                                    }
+                                                                                                                }
+                                                                                                            } else {
+                                                                                                                self.showError()
+                                                                                                            }
+                                                                                                        }
+                                                                                                    }
+                                                                                                } else {
+                                                                                                    self.showError()
+                                                                                                }
+                                                                                            }
+                                                                                        }
+                                                                                    } else {
+                                                                                        self.showError()
+                                                                                    }
+                                                                                }
                                                                             }
                                                                         } else {
                                                                             self.showError()
@@ -846,31 +867,47 @@ extension LandingViewController {
                                                 }
                                             }
                                         } else {
-                                            self.navigateHomeScreen()
+                                            //MARK: Wallet
+                                            self.setupWallet { wallet_granted in
+                                                if wallet_granted {
+                                                    DispatchQueue.main.async {
+                                                        self.currentCount += self.increment
+                                                        self.percentCounter.text = "\(self.currentCount)%"
+                                                        self.setupwallethistorypoints { history_granted in
+                                                            if history_granted {
+                                                                DispatchQueue.main.async {
+                                                                    self.currentCount += self.increment
+                                                                    self.percentCounter.text = "\(self.currentCount)%"
+                                                                    self.setupwalletsummarypoints { summary_granted in
+                                                                        if summary_granted {
+                                                                            DispatchQueue.main.async {
+                                                                                self.currentCount += self.increment
+                                                                                self.percentCounter.text = "\(self.currentCount)%"
+                                                                                self.getwalletbeneficiaries { beneficiary_granted in
+                                                                                    if beneficiary_granted {
+                                                                                        DispatchQueue.main.async {
+                                                                                            self.navigateHomeScreen()
+                                                                                        }
+                                                                                    } else {
+                                                                                        self.showError()
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                        } else {
+                                                                            self.showError()
+                                                                        }
+                                                                    }
+                                                                }
+                                                            } else {
+                                                                self.showError()
+                                                            }
+                                                        }
+                                                    }
+                                                } else {
+                                                    self.showError()
+                                                }
+                                            }
                                         }
-//                                        self.activityIndicator[6].isHidden = false
-//                                        self.activityIndicator[6].startAnimating()
-//                                        self.wallet_label.text = "Syncing Wallet Setup"
-//                                        self.setupWallet { wallet_success in
-//                                            if wallet_success {
-//                                                DispatchQueue.main.async {
-//                                                    self.wallet_label.text = "Synced Wallet Setup"
-//                                                    self.loaderViews[6].backgroundColor = UIColor.nativeRedColor()
-//                                                    self.activityIndicator[6].stopAnimating()
-//                                                    self.activityIndicator[6].isHidden = true
-//                                                    self.checkedImageView[6].isHidden = false
-//
-//                                                    self.activityIndicator[7].isHidden = false
-//                                                    self.activityIndicator[7].startAnimating()
-//
-//                                                    self.count = 0
-//                                                    self.skip = 0
-//                                                    self.isTotalCounter = 0
-//
-//                                                    self.setupwallethistorypoints()
-//                                                }
-//                                            }
-//                                        }
                                         return
                                     }
                                 }
@@ -927,7 +964,46 @@ extension LandingViewController {
                                                                                     DispatchQueue.main.async {
                                                                                         self.currentCount += self.increment
                                                                                         self.percentCounter.text = "\(self.currentCount)%"
-                                                                                        self.navigateHomeScreen()
+                                                                                        //MARK: Wallet
+                                                                                        self.setupWallet { wallet_granted in
+                                                                                            if wallet_granted {
+                                                                                                DispatchQueue.main.async {
+                                                                                                    self.currentCount += self.increment
+                                                                                                    self.percentCounter.text = "\(self.currentCount)%"
+                                                                                                    self.setupwallethistorypoints { history_granted in
+                                                                                                        if history_granted {
+                                                                                                            DispatchQueue.main.async {
+                                                                                                                self.currentCount += self.increment
+                                                                                                                self.percentCounter.text = "\(self.currentCount)%"
+                                                                                                                self.setupwalletsummarypoints { summary_granted in
+                                                                                                                    if summary_granted {
+                                                                                                                        DispatchQueue.main.async {
+                                                                                                                            self.currentCount += self.increment
+                                                                                                                            self.percentCounter.text = "\(self.currentCount)%"
+                                                                                                                            self.getwalletbeneficiaries { beneficiary_granted in
+                                                                                                                                if beneficiary_granted {
+                                                                                                                                    DispatchQueue.main.async {
+                                                                                                                                        self.navigateHomeScreen()
+                                                                                                                                    }
+                                                                                                                                } else {
+                                                                                                                                    self.showError()
+                                                                                                                                }
+                                                                                                                            }
+                                                                                                                        }
+                                                                                                                    } else {
+                                                                                                                        self.showError()
+                                                                                                                    }
+                                                                                                                }
+                                                                                                            }
+                                                                                                        } else {
+                                                                                                            self.showError()
+                                                                                                        }
+                                                                                                    }
+                                                                                                }
+                                                                                            } else {
+                                                                                                self.showError()
+                                                                                            }
+                                                                                        }
                                                                                     }
                                                                                 } else {
                                                                                     self.showError()
@@ -944,31 +1020,47 @@ extension LandingViewController {
                                                         }
                                                     }
                                                 } else {
-                                                    self.navigateHomeScreen()
+                                                    //MARK: Wallet
+                                                    self.setupWallet { wallet_granted in
+                                                        if wallet_granted {
+                                                            DispatchQueue.main.async {
+                                                                self.currentCount += self.increment
+                                                                self.percentCounter.text = "\(self.currentCount)%"
+                                                                self.setupwallethistorypoints { history_granted in
+                                                                    if history_granted {
+                                                                        DispatchQueue.main.async {
+                                                                            self.currentCount += self.increment
+                                                                            self.percentCounter.text = "\(self.currentCount)%"
+                                                                            self.setupwalletsummarypoints { summary_granted in
+                                                                                if summary_granted {
+                                                                                    DispatchQueue.main.async {
+                                                                                        self.currentCount += self.increment
+                                                                                        self.percentCounter.text = "\(self.currentCount)%"
+                                                                                        self.getwalletbeneficiaries { beneficiary_granted in
+                                                                                            if beneficiary_granted {
+                                                                                                DispatchQueue.main.async {
+                                                                                                    self.navigateHomeScreen()
+                                                                                                }
+                                                                                            } else {
+                                                                                                self.showError()
+                                                                                            }
+                                                                                        }
+                                                                                    }
+                                                                                } else {
+                                                                                    self.showError()
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                    } else {
+                                                                        self.showError()
+                                                                    }
+                                                                }
+                                                            }
+                                                        } else {
+                                                            self.showError()
+                                                        }
+                                                    }
                                                 }
-//                                                self.activityIndicator[6].isHidden = false
-//                                                self.activityIndicator[6].startAnimating()
-//                                                self.wallet_label.text = "Syncing Wallet Setup"
-//                                                self.setupWallet { wallet_success in
-//                                                    if wallet_success {
-//                                                        DispatchQueue.main.async {
-//                                                            self.wallet_label.text = "Synced Wallet Setup"
-//                                                            self.loaderViews[6].backgroundColor = UIColor.nativeRedColor()
-//                                                            self.activityIndicator[6].stopAnimating()
-//                                                            self.activityIndicator[6].isHidden = true
-//                                                            self.checkedImageView[6].isHidden = false
-//
-//                                                            self.activityIndicator[7].isHidden = false
-//                                                            self.activityIndicator[7].startAnimating()
-//
-//                                                            self.count = 0
-//                                                            self.skip = 0
-//                                                            self.isTotalCounter = 0
-//
-//                                                            self.setupwallethistorypoints()
-//                                                        }
-//                                                    }
-//                                                }
                                                 return
                                             }
                                         }
@@ -1021,7 +1113,46 @@ extension LandingViewController {
                                                                         DispatchQueue.main.async {
                                                                             self.currentCount += self.increment
                                                                             self.percentCounter.text = "\(self.currentCount)%"
-                                                                            self.navigateHomeScreen()
+                                                                            //MARK: Wallet
+                                                                            self.setupWallet { wallet_granted in
+                                                                                if wallet_granted {
+                                                                                    DispatchQueue.main.async {
+                                                                                        self.currentCount += self.increment
+                                                                                        self.percentCounter.text = "\(self.currentCount)%"
+                                                                                        self.setupwallethistorypoints { history_granted in
+                                                                                            if history_granted {
+                                                                                                DispatchQueue.main.async {
+                                                                                                    self.currentCount += self.increment
+                                                                                                    self.percentCounter.text = "\(self.currentCount)%"
+                                                                                                    self.setupwalletsummarypoints { summary_granted in
+                                                                                                        if summary_granted {
+                                                                                                            DispatchQueue.main.async {
+                                                                                                                self.currentCount += self.increment
+                                                                                                                self.percentCounter.text = "\(self.currentCount)%"
+                                                                                                                self.getwalletbeneficiaries { beneficiary_granted in
+                                                                                                                    if beneficiary_granted {
+                                                                                                                        DispatchQueue.main.async {
+                                                                                                                            self.navigateHomeScreen()
+                                                                                                                        }
+                                                                                                                    } else {
+                                                                                                                        self.showError()
+                                                                                                                    }
+                                                                                                                }
+                                                                                                            }
+                                                                                                        } else {
+                                                                                                            self.showError()
+                                                                                                        }
+                                                                                                    }
+                                                                                                }
+                                                                                            } else {
+                                                                                                self.showError()
+                                                                                            }
+                                                                                        }
+                                                                                    }
+                                                                                } else {
+                                                                                    self.showError()
+                                                                                }
+                                                                            }
                                                                         }
                                                                     } else {
                                                                         self.showError()
@@ -1038,31 +1169,47 @@ extension LandingViewController {
                                             }
                                         }
                                     } else {
-                                        self.navigateHomeScreen()
+                                        //MARK: Wallet
+                                        self.setupWallet { wallet_granted in
+                                            if wallet_granted {
+                                                DispatchQueue.main.async {
+                                                    self.currentCount += self.increment
+                                                    self.percentCounter.text = "\(self.currentCount)%"
+                                                    self.setupwallethistorypoints { history_granted in
+                                                        if history_granted {
+                                                            DispatchQueue.main.async {
+                                                                self.currentCount += self.increment
+                                                                self.percentCounter.text = "\(self.currentCount)%"
+                                                                self.setupwalletsummarypoints { summary_granted in
+                                                                    if summary_granted {
+                                                                        DispatchQueue.main.async {
+                                                                            self.currentCount += self.increment
+                                                                            self.percentCounter.text = "\(self.currentCount)%"
+                                                                            self.getwalletbeneficiaries { beneficiary_granted in
+                                                                                if beneficiary_granted {
+                                                                                    DispatchQueue.main.async {
+                                                                                        self.navigateHomeScreen()
+                                                                                    }
+                                                                                } else {
+                                                                                    self.showError()
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                    } else {
+                                                                        self.showError()
+                                                                    }
+                                                                }
+                                                            }
+                                                        } else {
+                                                            self.showError()
+                                                        }
+                                                    }
+                                                }
+                                            } else {
+                                                self.showError()
+                                            }
+                                        }
                                     }
-//                                    self.activityIndicator[6].isHidden = false
-//                                    self.activityIndicator[6].startAnimating()
-//                                    self.wallet_label.text = "Syncing Wallet Setup"
-//                                    self.setupWallet { wallet_success in
-//                                        if wallet_success {
-//                                            DispatchQueue.main.async {
-//                                                self.wallet_label.text = "Synced Wallet Setup"
-//                                                self.loaderViews[6].backgroundColor = UIColor.nativeRedColor()
-//                                                self.activityIndicator[6].stopAnimating()
-//                                                self.activityIndicator[6].isHidden = true
-//                                                self.checkedImageView[6].isHidden = false
-//
-//                                                self.activityIndicator[7].isHidden = false
-//                                                self.activityIndicator[7].startAnimating()
-//
-//                                                self.count = 0
-//                                                self.skip = 0
-//                                                self.isTotalCounter = 0
-//
-//                                                self.setupwallethistorypoints()
-//                                            }
-//                                        }
-//                                    }
                                 }
                             }
                         }
@@ -1187,7 +1334,46 @@ extension LandingViewController {
                                                             DispatchQueue.main.async {
                                                                 self.currentCount += self.increment
                                                                 self.percentCounter.text = "\(self.currentCount)%"
-                                                                self.navigateHomeScreen()
+                                                                //MARK: Wallet
+                                                                self.setupWallet { wallet_granted in
+                                                                    if wallet_granted {
+                                                                        DispatchQueue.main.async {
+                                                                            self.currentCount += self.increment
+                                                                            self.percentCounter.text = "\(self.currentCount)%"
+                                                                            self.setupwallethistorypoints { history_granted in
+                                                                                if history_granted {
+                                                                                    DispatchQueue.main.async {
+                                                                                        self.currentCount += self.increment
+                                                                                        self.percentCounter.text = "\(self.currentCount)%"
+                                                                                        self.setupwalletsummarypoints { summary_granted in
+                                                                                            if summary_granted {
+                                                                                                DispatchQueue.main.async {
+                                                                                                    self.currentCount += self.increment
+                                                                                                    self.percentCounter.text = "\(self.currentCount)%"
+                                                                                                    self.getwalletbeneficiaries { beneficiary_granted in
+                                                                                                        if beneficiary_granted {
+                                                                                                            DispatchQueue.main.async {
+                                                                                                                self.navigateHomeScreen()
+                                                                                                            }
+                                                                                                        } else {
+                                                                                                            self.showError()
+                                                                                                        }
+                                                                                                    }
+                                                                                                }
+                                                                                            } else {
+                                                                                                self.showError()
+                                                                                            }
+                                                                                        }
+                                                                                    }
+                                                                                } else {
+                                                                                    self.showError()
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                    } else {
+                                                                        self.showError()
+                                                                    }
+                                                                }
                                                             }
                                                         } else {
                                                             self.showError()
@@ -1204,29 +1390,47 @@ extension LandingViewController {
                                 }
                             }
                         } else {
-                            self.navigateHomeScreen()
+                            //MARK: Wallet
+                            self.setupWallet { wallet_granted in
+                                if wallet_granted {
+                                    DispatchQueue.main.async {
+                                        self.currentCount += self.increment
+                                        self.percentCounter.text = "\(self.currentCount)%"
+                                        self.setupwallethistorypoints { history_granted in
+                                            if history_granted {
+                                                DispatchQueue.main.async {
+                                                    self.currentCount += self.increment
+                                                    self.percentCounter.text = "\(self.currentCount)%"
+                                                    self.setupwalletsummarypoints { summary_granted in
+                                                        if summary_granted {
+                                                            DispatchQueue.main.async {
+                                                                self.currentCount += self.increment
+                                                                self.percentCounter.text = "\(self.currentCount)%"
+                                                                self.getwalletbeneficiaries { beneficiary_granted in
+                                                                    if beneficiary_granted {
+                                                                        DispatchQueue.main.async {
+                                                                            self.navigateHomeScreen()
+                                                                        }
+                                                                    } else {
+                                                                        self.showError()
+                                                                    }
+                                                                }
+                                                            }
+                                                        } else {
+                                                            self.showError()
+                                                        }
+                                                    }
+                                                }
+                                            } else {
+                                                self.showError()
+                                            }
+                                        }
+                                    }
+                                } else {
+                                    self.showError()
+                                }
+                            }
                         }
-//                        self.wallet_label.text = "Syncing Wallet Setup"
-//                        self.setupWallet { wallet_success in
-//                            if wallet_success {
-//                                DispatchQueue.main.async {
-//                                    self.wallet_label.text = "Synced Wallet Setup"
-//                                    self.loaderViews[6].backgroundColor = UIColor.nativeRedColor()
-//                                    self.activityIndicator[6].stopAnimating()
-//                                    self.activityIndicator[6].isHidden = true
-//                                    self.checkedImageView[6].isHidden = false
-//
-//                                    self.activityIndicator[7].isHidden = false
-//                                    self.activityIndicator[7].startAnimating()
-//
-//                                    self.count = 0
-//                                    self.skip = 0
-//                                    self.isTotalCounter = 0
-//
-//                                    self.setupwallethistorypoints()
-//                                }
-//                            }
-//                        }
                     }
                     return
                 }
@@ -1269,7 +1473,46 @@ extension LandingViewController {
                                                                         DispatchQueue.main.async {
                                                                             self.currentCount += self.increment
                                                                             self.percentCounter.text = "\(self.currentCount)%"
-                                                                            self.navigateHomeScreen()
+                                                                            //MARK: Wallet
+                                                                            self.setupWallet { wallet_granted in
+                                                                                if wallet_granted {
+                                                                                    DispatchQueue.main.async {
+                                                                                        self.currentCount += self.increment
+                                                                                        self.percentCounter.text = "\(self.currentCount)%"
+                                                                                        self.setupwallethistorypoints { history_granted in
+                                                                                            if history_granted {
+                                                                                                DispatchQueue.main.async {
+                                                                                                    self.currentCount += self.increment
+                                                                                                    self.percentCounter.text = "\(self.currentCount)%"
+                                                                                                    self.setupwalletsummarypoints { summary_granted in
+                                                                                                        if summary_granted {
+                                                                                                            DispatchQueue.main.async {
+                                                                                                                self.currentCount += self.increment
+                                                                                                                self.percentCounter.text = "\(self.currentCount)%"
+                                                                                                                self.getwalletbeneficiaries { beneficiary_granted in
+                                                                                                                    if beneficiary_granted {
+                                                                                                                        DispatchQueue.main.async {
+                                                                                                                            self.navigateHomeScreen()
+                                                                                                                        }
+                                                                                                                    } else {
+                                                                                                                        self.showError()
+                                                                                                                    }
+                                                                                                                }
+                                                                                                            }
+                                                                                                        } else {
+                                                                                                            self.showError()
+                                                                                                        }
+                                                                                                    }
+                                                                                                }
+                                                                                            } else {
+                                                                                                self.showError()
+                                                                                            }
+                                                                                        }
+                                                                                    }
+                                                                                } else {
+                                                                                    self.showError()
+                                                                                }
+                                                                            }
                                                                         }
                                                                     } else {
                                                                         self.showError()
@@ -1286,31 +1529,47 @@ extension LandingViewController {
                                             }
                                         }
                                     } else {
-                                        self.navigateHomeScreen()
+                                        //MARK: Wallet
+                                        self.setupWallet { wallet_granted in
+                                            if wallet_granted {
+                                                DispatchQueue.main.async {
+                                                    self.currentCount += self.increment
+                                                    self.percentCounter.text = "\(self.currentCount)%"
+                                                    self.setupwallethistorypoints { history_granted in
+                                                        if history_granted {
+                                                            DispatchQueue.main.async {
+                                                                self.currentCount += self.increment
+                                                                self.percentCounter.text = "\(self.currentCount)%"
+                                                                self.setupwalletsummarypoints { summary_granted in
+                                                                    if summary_granted {
+                                                                        DispatchQueue.main.async {
+                                                                            self.currentCount += self.increment
+                                                                            self.percentCounter.text = "\(self.currentCount)%"
+                                                                            self.getwalletbeneficiaries { beneficiary_granted in
+                                                                                if beneficiary_granted {
+                                                                                    DispatchQueue.main.async {
+                                                                                        self.navigateHomeScreen()
+                                                                                    }
+                                                                                } else {
+                                                                                    self.showError()
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                    } else {
+                                                                        self.showError()
+                                                                    }
+                                                                }
+                                                            }
+                                                        } else {
+                                                            self.showError()
+                                                        }
+                                                    }
+                                                }
+                                            } else {
+                                                self.showError()
+                                            }
+                                        }
                                     }
-//                                    self.activityIndicator[6].isHidden = false
-//                                    self.activityIndicator[6].startAnimating()
-//                                    self.wallet_label.text = "Syncing Wallet Setup"
-//                                    self.setupWallet { wallet_success in
-//                                        if wallet_success {
-//                                            DispatchQueue.main.async {
-//                                                self.wallet_label.text = "Synced Wallet Setup"
-//                                                self.loaderViews[6].backgroundColor = UIColor.nativeRedColor()
-//                                                self.activityIndicator[6].stopAnimating()
-//                                                self.activityIndicator[6].isHidden = true
-//                                                self.checkedImageView[6].isHidden = false
-//
-//                                                self.activityIndicator[7].isHidden = false
-//                                                self.activityIndicator[7].startAnimating()
-//
-//                                                self.count = 0
-//                                                self.skip = 0
-//                                                self.isTotalCounter = 0
-//
-//                                                self.setupwallethistorypoints()
-//                                            }
-//                                        }
-//                                    }
                                 }
                             }
                         } else {
@@ -1350,7 +1609,46 @@ extension LandingViewController {
                                                             DispatchQueue.main.async {
                                                                 self.currentCount += self.increment
                                                                 self.percentCounter.text = "\(self.currentCount)%"
-                                                                self.navigateHomeScreen()
+                                                                //MARK: Wallet
+                                                                self.setupWallet { wallet_granted in
+                                                                    if wallet_granted {
+                                                                        DispatchQueue.main.async {
+                                                                            self.currentCount += self.increment
+                                                                            self.percentCounter.text = "\(self.currentCount)%"
+                                                                            self.setupwallethistorypoints { history_granted in
+                                                                                if history_granted {
+                                                                                    DispatchQueue.main.async {
+                                                                                        self.currentCount += self.increment
+                                                                                        self.percentCounter.text = "\(self.currentCount)%"
+                                                                                        self.setupwalletsummarypoints { summary_granted in
+                                                                                            if summary_granted {
+                                                                                                DispatchQueue.main.async {
+                                                                                                    self.currentCount += self.increment
+                                                                                                    self.percentCounter.text = "\(self.currentCount)%"
+                                                                                                    self.getwalletbeneficiaries { beneficiary_granted in
+                                                                                                        if beneficiary_granted {
+                                                                                                            DispatchQueue.main.async {
+                                                                                                                self.navigateHomeScreen()
+                                                                                                            }
+                                                                                                        } else {
+                                                                                                            self.showError()
+                                                                                                        }
+                                                                                                    }
+                                                                                                }
+                                                                                            } else {
+                                                                                                self.showError()
+                                                                                            }
+                                                                                        }
+                                                                                    }
+                                                                                } else {
+                                                                                    self.showError()
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                    } else {
+                                                                        self.showError()
+                                                                    }
+                                                                }
                                                             }
                                                         } else {
                                                             self.showError()
@@ -1367,31 +1665,47 @@ extension LandingViewController {
                                 }
                             }
                         } else {
-                            self.navigateHomeScreen()
+                            //MARK: Wallet
+                            self.setupWallet { wallet_granted in
+                                if wallet_granted {
+                                    DispatchQueue.main.async {
+                                        self.currentCount += self.increment
+                                        self.percentCounter.text = "\(self.currentCount)%"
+                                        self.setupwallethistorypoints { history_granted in
+                                            if history_granted {
+                                                DispatchQueue.main.async {
+                                                    self.currentCount += self.increment
+                                                    self.percentCounter.text = "\(self.currentCount)%"
+                                                    self.setupwalletsummarypoints { summary_granted in
+                                                        if summary_granted {
+                                                            DispatchQueue.main.async {
+                                                                self.currentCount += self.increment
+                                                                self.percentCounter.text = "\(self.currentCount)%"
+                                                                self.getwalletbeneficiaries { beneficiary_granted in
+                                                                    if beneficiary_granted {
+                                                                        DispatchQueue.main.async {
+                                                                            self.navigateHomeScreen()
+                                                                        }
+                                                                    } else {
+                                                                        self.showError()
+                                                                    }
+                                                                }
+                                                            }
+                                                        } else {
+                                                            self.showError()
+                                                        }
+                                                    }
+                                                }
+                                            } else {
+                                                self.showError()
+                                            }
+                                        }
+                                    }
+                                } else {
+                                    self.showError()
+                                }
+                            }
                         }
-//                        self.activityIndicator[6].isHidden = false
-//                        self.activityIndicator[6].startAnimating()
-//                        self.wallet_label.text = "Syncing Wallet Setup"
-//                        self.setupWallet { wallet_success in
-//                            if wallet_success {
-//                                DispatchQueue.main.async {
-//                                    self.wallet_label.text = "Synced Wallet Setup"
-//                                    self.loaderViews[6].backgroundColor = UIColor.nativeRedColor()
-//                                    self.activityIndicator[6].stopAnimating()
-//                                    self.activityIndicator[6].isHidden = true
-//                                    self.checkedImageView[6].isHidden = false
-//
-//                                    self.activityIndicator[7].isHidden = false
-//                                    self.activityIndicator[7].startAnimating()
-//
-//                                    self.count = 0
-//                                    self.skip = 0
-//                                    self.isTotalCounter = 0
-//
-//                                    self.setupwallethistorypoints()
-//                                }
-//                            }
-//                        }
                     }
                 }
                 
@@ -1699,7 +2013,7 @@ extension LandingViewController {
             self.safeTopArea = 0.0
             self.currentCenterConstraintPosition = 0.0
             
-            self.totalApiCounts = 4 //Setup, HrRequest, HrNotification, Attendance
+            self.totalApiCounts = 9 //Setup, HrRequest, HrNotification, Attendance, Wallet-> Token, Setup, HistoryPoints, SummaryPoints, Beneficiairy
             self.increment = 0
             self.currentCount = 0
             
@@ -1755,4 +2069,295 @@ extension LandingViewController {
         }
     }
 }
-
+//MARK: Wallet Setup
+extension LandingViewController {
+    func setupWallet(_ handler: @escaping(Bool)->Void) {
+        NetworkCalls.getwallettoken { granted in
+            if granted {
+                DispatchQueue.main.async {
+                    self.currentCount += self.increment
+                    self.percentCounter.text = "\(self.currentCount)%"
+                }
+                let request_body = [String : Any]()
+                let params = self.getAPIParameterNew(serviceName: S_WALLET_GET_SETUP, client: "", request_body: request_body)
+                NetworkCalls.setupwallet(params: params) { granted, response in
+                    if granted {
+                        let json = JSON(response)
+                        if let o = json.dictionary?[_result]?.dictionary?[_walletSetupData] {
+                            do {
+                                let rawdata = try o.rawData()
+                                let model = try JSONDecoder().decode(WalletSetupData.self, from: rawdata)
+                                AppDelegate.sharedInstance.db?.deleteAll(tableName: db_w_query_master, handler: { _ in })
+                                AppDelegate.sharedInstance.db?.deleteAll(tableName: db_w_pointtypes, handler: { _ in })
+                                AppDelegate.sharedInstance.db?.deleteAll(tableName: db_w_setup_redemption, handler: { _ in })
+                                
+                                for incentiveData in model.incentiveData {
+                                    AppDelegate.sharedInstance.db?.insert_tbl_wallet_query_master(incentiveData: incentiveData, handler: { _ in })
+                                }
+                                for pointType in model.pointType {
+                                    AppDelegate.sharedInstance.db?.insert_tbl_wallet_point_type(pointType: pointType, handler: { _ in })
+                                }
+                                for setupRedemption in model.redemptionSetup {
+                                    AppDelegate.sharedInstance.db?.insert_tbl_wallet_setup(redemptionSetup: setupRedemption, handler: { _ in })
+                                }
+                            } catch let DecodingError.dataCorrupted(context) {
+                                print(context)
+                            } catch let DecodingError.keyNotFound(key, context) {
+                                print("Key '\(key)' not found:", context.debugDescription)
+                                print("codingPath:", context.codingPath)
+                            } catch let DecodingError.valueNotFound(value, context) {
+                                print("Value '\(value)' not found:", context.debugDescription)
+                                print("codingPath:", context.codingPath)
+                            } catch let DecodingError.typeMismatch(type, context)  {
+                                print("Type '\(type)' mismatch:", context.debugDescription)
+                                print("codingPath:", context.codingPath)
+                            } catch {
+                                print("error: ", error)
+                            }
+                            handler(true)
+                        } else {
+                            handler(false)
+                        }
+                    } else {
+                        handler(false)
+                    }
+                }
+            } else {
+                handler(false)
+            }
+        }
+    }
+    
+    func setupwallethistorypoints(_ handler: @escaping(Bool)-> Void) {
+        let lastSyncStatus = AppDelegate.sharedInstance.db?.readLastSyncStatus(tableName: db_last_sync_status,
+                                                                               condition: "SYNC_KEY = '\(S_WALLET_POINTS_HISTORY)' AND CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)'")
+        var history_points = [String:Any]()
+        if lastSyncStatus == nil {
+            history_points = [
+                "p_employee_id": "\(CURRENT_USER_LOGGED_IN_ID)",
+                "p_transaction_date": "",
+                "p_skip": self.skip,
+                "p_take": 80
+            ]
+        } else {
+            history_points = [
+                "p_employee_id": "\(CURRENT_USER_LOGGED_IN_ID)",
+                "p_transaction_date": "\(lastSyncStatus!.DATE)",
+                "p_skip": lastSyncStatus!.SKIP,
+                "p_take": 80
+            ]
+        }
+        
+        
+        let params = self.getAPIParameters(service_name: S_WALLET_POINTS_HISTORY, request_body: history_points)
+        NetworkCalls.getwallethistorypoints(params: params) { granted, response in
+            if granted {
+                let json = JSON(response)
+                if let walletHistoryPointsData = json.dictionary?[_result]?.dictionary?[_walletHistoryPointData] {
+                    self.count = Int(walletHistoryPointsData[_count].string ?? "0") ?? 0
+                    let syncDate = walletHistoryPointsData[_sync_date].string ?? "2021-07-13"
+                    if self.count <= 0 {
+                        self.isTotalCounter = 0
+                        handler(true)
+                        return
+                    }
+                    if let walletHistoryPoints = walletHistoryPointsData[_walletHistoryPoints].array {
+                        for history in walletHistoryPoints {
+                            do {
+                                let data = try history.rawData()
+                                let historyPoints: WalletHistoryPoint = try JSONDecoder().decode(WalletHistoryPoint.self, from: data)
+                                self.isTotalCounter += 1
+                                AppDelegate.sharedInstance.db?.deleteRowWithMultipleConditions(tbl: db_w_history_point, conditions: "RID = '\(historyPoints.rid)'", { _ in
+                                    AppDelegate.sharedInstance.db?.insert_tbl_wallet_history_point(history_point: historyPoints, handler: { _ in })
+                                })
+                            } catch let DecodingError.dataCorrupted(context) {
+                                print(context)
+                            } catch let DecodingError.keyNotFound(key, context) {
+                                print("Key '\(key)' not found:", context.debugDescription)
+                                print("codingPath:", context.codingPath)
+                            } catch let DecodingError.valueNotFound(value, context) {
+                                print("Value '\(value)' not found:", context.debugDescription)
+                                print("codingPath:", context.codingPath)
+                            } catch let DecodingError.typeMismatch(type, context)  {
+                                print("Type '\(type)' mismatch:", context.debugDescription)
+                                print("codingPath:", context.codingPath)
+                            } catch {
+                                print("error: ", error)
+                            }
+                        }
+                        if self.count == self.isTotalCounter {
+                            DispatchQueue.main.async {
+                                Helper.updateLastSyncStatus(APIName: S_WALLET_POINTS_HISTORY,
+                                                            date: syncDate, //MARK: Change Date
+                                                            skip: self.skip,
+                                                            take: 80,
+                                                            total_records: self.count)
+                                self.count = 0
+                                self.skip = 0
+                                self.isTotalCounter = 0
+                                handler(true)
+                            }
+                        } else {
+                            self.skip += 80
+                            self.setupwallethistorypoints { _ in }
+                        }
+                    }
+                } else {
+                    handler(false)
+                }
+            } else {
+                handler(false)
+            }
+        }
+    }
+    
+    func setupwalletsummarypoints(_ handler: @escaping(Bool)->Void) {
+        let lastSyncStatus = AppDelegate.sharedInstance.db?.readLastSyncStatus(tableName: db_last_sync_status,
+                                                                               condition: "SYNC_KEY = '\(S_WALLET_POINTS_SUMMARY)' AND CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)'")
+        var summary_points = [String:Any]()
+        if lastSyncStatus == nil {
+            summary_points = [
+                "p_employee_id": "\(CURRENT_USER_LOGGED_IN_ID)",
+                "p_transaction_date": ""
+            ]
+        } else {
+            summary_points = [
+                "p_employee_id": "\(CURRENT_USER_LOGGED_IN_ID)",
+                "p_transaction_date": "\(lastSyncStatus!.DATE)"
+            ]
+        }
+        let params = self.getAPIParameters(service_name: S_WALLET_POINTS_SUMMARY, request_body: summary_points)
+        NetworkCalls.getwalletsummarypoints(params: params) { granted, response in
+            if granted {
+                let json = JSON(response)
+                if let _walletSummaryPointData = json.dictionary?[_result]?.dictionary?[_walletSummaryPointData] {
+                    let syncDate = _walletSummaryPointData[_sync_date].string ?? "2021-07-13"
+                    if let pointsSummary = _walletSummaryPointData[_pointsSummary].array {
+                        for summary in pointsSummary {
+                            do {
+                                let data = try summary.rawData()
+                                let summaryPoints: PointsSummary = try JSONDecoder().decode(PointsSummary.self, from: data)
+                                self.isTotalCounter += 1
+                                AppDelegate.sharedInstance.db?.deleteRowWithMultipleConditions(tbl: db_w_pointSummary, conditions: "TRANSACTION_DATE = '\(summaryPoints.transactionDate)' AND EMPLOYEE_ID = '\(CURRENT_USER_LOGGED_IN_ID)'", { _ in
+                                    
+                                    AppDelegate.sharedInstance.db?.deleteRowWithMultipleConditions(tbl: db_w_pointSumDetails, conditions: "TRANSACTION_DATE = '\(summaryPoints.transactionDate)' AND EMPLOYEE_ID = '\(CURRENT_USER_LOGGED_IN_ID)'", { _ in })
+                                    
+                                    
+                                    AppDelegate.sharedInstance.db?.insert_tbl_wallet_point_summary(point_summary: summaryPoints, handler: { _ in
+                                        for detail in summaryPoints.pointSummaryDetails {
+                                            AppDelegate.sharedInstance.db?.insert_tbl_wallet_point_summary_detail(summary_detail: detail) { _ in }
+                                        }
+                                    })
+                                })
+                            } catch let DecodingError.dataCorrupted(context) {
+                                print(context)
+                            } catch let DecodingError.keyNotFound(key, context) {
+                                print("Key '\(key)' not found:", context.debugDescription)
+                                print("codingPath:", context.codingPath)
+                            } catch let DecodingError.valueNotFound(value, context) {
+                                print("Value '\(value)' not found:", context.debugDescription)
+                                print("codingPath:", context.codingPath)
+                            } catch let DecodingError.typeMismatch(type, context)  {
+                                print("Type '\(type)' mismatch:", context.debugDescription)
+                                print("codingPath:", context.codingPath)
+                            } catch {
+                                print("error: ", error)
+                            }
+                        }
+                        Helper.updateLastSyncStatus(APIName: S_WALLET_POINTS_SUMMARY,
+                                                    date: syncDate,
+                                                    skip: 0,
+                                                    take: 0,
+                                                    total_records: 0)
+                        handler(true)
+                        return
+                    } else {
+                        handler(true)
+                        DispatchQueue.main.async {}
+                    }
+                } else {
+                    handler(false)
+                }
+            } else {
+                handler(false)
+            }
+        }
+    }
+    //get beneficiaries
+    func getwalletbeneficiaries(_ handler: @escaping(Bool) -> Void) {
+        DispatchQueue.main.async {}
+        var request_body = [String:Any]()
+        if let lastSyncStatus = AppDelegate.sharedInstance.db?.readLastSyncStatus(tableName: db_last_sync_status,
+                                                                                  condition: "SYNC_KEY = '\(S_WALLETGET_BENEFICIARY)' AND CURRENT_USER = '\(CURRENT_USER_LOGGED_IN_ID)'") {
+            request_body = [
+                "p_employee_id": "\(CURRENT_USER_LOGGED_IN_ID)",
+                "p_transaction_date": "\(lastSyncStatus.DATE)",
+                "p_skip": lastSyncStatus.SKIP,
+                "p_take": 80
+            ]
+        } else {
+            request_body = [
+                "p_employee_id": "\(CURRENT_USER_LOGGED_IN_ID)",
+                "p_transaction_date": "",
+                "p_skip": 0,
+                "p_take": 80
+            ]
+        }
+        let params = self.getAPIParameterNew(serviceName: S_WALLETGET_BENEFICIARY, client: "", request_body: request_body)
+        NetworkCalls.getwalletbeneficiary(params: params) { granted, response in
+            if granted {
+                let json = JSON(response)
+                if let result = json.dictionary?[_result] {
+                    self.count = Int(result[_count].string ?? "0") ?? 0
+                    let syncDate = result[_sync_date].string ?? "2021-07-13"
+                    if self.count <= 0 {
+                        handler(true)
+                        return
+                    }
+                    if let getBeneficiary = result[_getBeneficiary].array {
+                        do {
+                            for gb in getBeneficiary {
+                                let rawData = try gb.rawData()
+                                let wallet_beneficiary: WalletBeneficiary = try JSONDecoder().decode(WalletBeneficiary.self, from: rawData)
+                                self.isTotalCounter += 1
+                                AppDelegate.sharedInstance.db?.insert_tbl_wallet_beneficiaries(wallet_beneficiary: wallet_beneficiary, handler: { _ in })
+                            }
+                        } catch let DecodingError.dataCorrupted(context) {
+                            print(context)
+                        } catch let DecodingError.keyNotFound(key, context) {
+                            print("Key '\(key)' not found:", context.debugDescription)
+                            print("codingPath:", context.codingPath)
+                        } catch let DecodingError.valueNotFound(value, context) {
+                            print("Value '\(value)' not found:", context.debugDescription)
+                            print("codingPath:", context.codingPath)
+                        } catch let DecodingError.typeMismatch(type, context)  {
+                            print("Type '\(type)' mismatch:", context.debugDescription)
+                            print("codingPath:", context.codingPath)
+                        } catch {
+                            print("error: ", error)
+                        }
+                        if self.count == self.isTotalCounter {
+                            DispatchQueue.main.async {
+                                Helper.updateLastSyncStatus(APIName: S_WALLETGET_BENEFICIARY,
+                                                            date: syncDate, //MARK: Change Date
+                                                            skip: self.skip,
+                                                            take: 80,
+                                                            total_records: self.count)
+                                handler(true)
+                            }
+                        } else {
+                            self.skip += 80
+                            self.getwalletbeneficiaries { _ in }
+                        }
+                    } else {
+                        handler(false)
+                    }
+                } else {
+                    handler(false)
+                }
+            } else {
+                handler(false)
+            }
+        }
+    }
+}

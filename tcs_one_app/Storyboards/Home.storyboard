@@ -173,7 +173,7 @@
                                                 </userDefinedRuntimeAttributes>
                                             </view>
                                             <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5cq-CF-MXa">
-                                                <rect key="frame" x="362" y="598" width="42" height="148"/>
+                                                <rect key="frame" x="362" y="588" width="42" height="128"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
@@ -186,7 +186,7 @@
                                             <constraint firstItem="PBc-Gv-Etx" firstAttribute="leading" secondItem="5OI-ea-XTG" secondAttribute="trailing" constant="5" id="751-rf-9eJ"/>
                                             <constraint firstAttribute="trailing" secondItem="5cq-CF-MXa" secondAttribute="trailing" constant="10" id="B7x-9p-sBv"/>
                                             <constraint firstAttribute="trailing" secondItem="6Ns-T1-GN5" secondAttribute="trailing" constant="15" id="BV9-FF-9D9"/>
-                                            <constraint firstAttribute="bottom" secondItem="5cq-CF-MXa" secondAttribute="bottom" constant="10" id="C9Y-E7-FLf"/>
+                                            <constraint firstAttribute="bottom" secondItem="5cq-CF-MXa" secondAttribute="bottom" constant="40" id="C9Y-E7-FLf"/>
                                             <constraint firstItem="Gjx-Jx-Nt5" firstAttribute="top" secondItem="5OI-ea-XTG" secondAttribute="top" id="FLI-aj-1n0"/>
                                             <constraint firstItem="5OI-ea-XTG" firstAttribute="top" secondItem="mOV-Zy-inp" secondAttribute="top" constant="20" id="IsV-Jo-eIZ"/>
                                             <constraint firstItem="5cq-CF-MXa" firstAttribute="top" secondItem="N38-Tq-WRe" secondAttribute="bottom" constant="10" id="KKf-AR-AIe"/>

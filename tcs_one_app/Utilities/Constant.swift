@@ -34,7 +34,7 @@ var RECORD_ID               = 0
 //let ENDPOINT_NEW            = "https://developers.tcscourier.com/prod/v1/"
 
 //DEV
-let WALLET_ENDPOINT         = "https://sandbox.tcscourier.com/dev/v1/wallet/"
+let ENDPOINT_NEW            = "https://sandbox.tcscourier.com/dev/v1/"
 let ENDPOINT                = "https://devapi.tcscourier.com/core/api/main"
 let UPLOADFILESURL          = "https://pwaqaapi.tcscourier.com/api/file-upload"
 
@@ -88,23 +88,17 @@ let S_MIS_DAILY_OVERVIEW    = ENDPOINT_NEW + "DAILY.OVERVIEW.P"
 
 //WALLET
 let WALLET_SETUP            = ENDPOINT_NEW + "wallet/setup"
-let WALLET_GET_TOKEN        = ENDPOINT_NEW + "wallet/token?clientSecret=\(CLIENTSECRET)"
+let WALLET_GET_TOKEN        = ENDPOINT_NEW + "wallet/token"
 
 let WALLET_DETAIL_POINTS    = ENDPOINT_NEW + "wallet/detail-points"
 let WALLET_HISTORY_POINT    = ENDPOINT_NEW + "wallet/history-points"
 let WALLET_SUMMARY_POINT    = ENDPOINT_NEW + "wallet/summary-points"
-let WALLET_SETUP            = WALLET_ENDPOINT + "setup"
-let WALLET_GET_TOKEN        = WALLET_ENDPOINT + "token"
-
-let WALLET_DETAIL_POINTS    = WALLET_ENDPOINT + "detail-points"
-let WALLET_HISTORY_POINT    = WALLET_ENDPOINT + "history-points"
-let WALLET_SUMMARY_POINT    = WALLET_ENDPOINT + "summary-points"
 
 //WALLET REDEMPTION
-let WALLET_ADD_BENEFICIARY  = WALLET_ENDPOINT + "add-beneficiary"
-let WALLET_PIN_GENERATION   = WALLET_ENDPOINT + "pin-gen"
-let WALLET_GET_BENEFICIARY  = WALLET_ENDPOINT + "get-beneficiary"
-let WALLET_GET_EMPLOYEE     = WALLET_ENDPOINT + "get-employee"
+let WALLET_ADD_BENEFICIARY  = ENDPOINT_NEW + "wallet/add-beneficiary"
+let WALLET_PIN_GENERATION   = ENDPOINT_NEW + "wallet/pin-gen"
+let WALLET_GET_BENEFICIARY  = ENDPOINT_NEW + "wallet/get-beneficiary"
+let WALLET_GET_EMPLOYEE     = ENDPOINT_NEW + "wallet/get-employee"
 
 let S_WALLET_POINTS_HISTORY = "WALLET.GET.HISTORY.POINTS"
 let S_WALLET_POINTS_SUMMARY = "WALLET.GET.SUMMARY.POINTS"
@@ -186,7 +180,6 @@ let _dashboardDetail        = "dashboardDetail"
 
 
 //Wallet_Keys
-let _result                 = "result"
 let _walletSetupData        = "walletSetupData"
 let _walletHistoryPoints    = "walletHistoryPoints"
 let _walletPointsData       = "walletPointsData"

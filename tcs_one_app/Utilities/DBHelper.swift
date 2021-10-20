@@ -3886,7 +3886,7 @@ class DBHelper {
                 wallet_beneficiaries.append(tbl_wallet_beneficiaries(id: id, rid: rid, referenceNumber: referenceNumber, employeeID: employeeID, beneficiaryName: beneficiaryName, beneficiaryEmpID: beneficiaryEmpID, beneficiaryMobileNumber: beneficiaryMobileNumber, beneficiaryNickname: beneficiaryNickname, beneficiaryEmail: beneficiaryEmail, isEmailNotify: isEmailNotify, isActive: isActive, createdDate: createdDate, current_user: current_user))
             }
         } else {
-            print("SELECT statement \(db_w_detail_point) could not be prepared")
+            print("SELECT statement \(db_w_beneficiaries) could not be prepared")
         }
         return wallet_beneficiaries.count > 0 ? wallet_beneficiaries : nil
     }
