@@ -215,7 +215,7 @@ struct City: Codable {
 struct AreaSecurity: Codable {
     let secID: Int
     let areaCode, securityPerson, created: String?
-    let empNo: Int
+    let empNo: Int?
 
     enum CodingKeys: String, CodingKey {
         case secID = "SEC_ID"

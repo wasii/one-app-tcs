@@ -40,7 +40,7 @@ class WalletDashboardViewController: BaseViewController {
     var tbl_wallet_points: [tbl_wallet_points_summary]?
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "Wallet"
+        self.navigationController?.navigationBar.topItem?.title = "Wallet"
         self.selected_query = "Weekly"
         self.makeTopCornersRounded(roundView: self.mainView)
         layoutFAB()
@@ -88,14 +88,11 @@ class WalletDashboardViewController: BaseViewController {
         floaty.plusColor = UIColor.white
         floaty.buttonColor = UIColor.nativeRedColor()
         floaty.buttonImage = UIImage(named: "currency")
-        if let options = AppDelegate.sharedInstance.db?.read_tbl_wallet_setup(query: "SELECT * FROM \(db_w_setup_redemption)") {
-            for o in options {
-                let url = URL(string: o.IMAGE_URL_IOS)
-                let data = try? Data(contentsOf: url!)
-                floaty.addItem("\(o.REDEMPTION_DESCRIPTION)", icon: UIImage(data: data!)) { item in
-                    
-                }
-            }
+        floaty.itemButtonColor = UIColor.nativeRedColor()
+        floaty.addItem("P2P", icon: UIImage(named: "p2p-red")) { item in
+            let storyboard = UIStoryboard(name: "WalletRedemption", bundle: nil)
+            let controller = storyboard.instantiateViewController(withIdentifier: "WalletBeneficiaryDetailsViewController") as! WalletBeneficiaryDetailsViewController
+            self.navigationController?.pushViewController(controller, animated: true)
         }
         floaty.paddingX = (UIApplication.shared.keyWindow?.safeAreaInsets.right ?? 0) + 25
         floaty.paddingY = (UIApplication.shared.keyWindow?.safeAreaInsets.bottom ?? 0) + 75
@@ -130,7 +127,8 @@ class WalletDashboardViewController: BaseViewController {
         barChart.highlightFullBarEnabled = false
         barChart.pinchZoomEnabled = false
         barChart.doubleTapToZoomEnabled = false
-
+        barChart.scaleXEnabled = false
+        barChart.scaleYEnabled = false
         let leftAxis = barChart.leftAxis
         leftAxis.axisMinimum = 0
 
@@ -143,14 +141,19 @@ class WalletDashboardViewController: BaseViewController {
         xAxis.labelPosition = .top
         xAxis.granularity = 1.0
 
-        xAxis.labelFont = UIFont.init(name: "Helvetica", size: 10)!
-        barChart.legend.form = .empty
+        xAxis.labelFont = UIFont.init(name: "Helvetica", size: 09)!
+        barChart.legend.horizontalAlignment = .right
         var set = BarChartDataSet()
 
         var xAxisDates = [String]()
         var barChartEntries = [BarChartDataEntry]()
         
-        if let points = tbl_wallet_points {
+        if var points = tbl_wallet_points {
+            barChart.legend.setCustom(entries: [LegendEntry(label: "Mature", form: .square, formSize: CGFloat.nan, formLineWidth: CGFloat.nan, formLineDashPhase: CGFloat.nan, formLineDashLengths: nil, formColor: UIColor.inprocessColor()),
+                                                LegendEntry(label: "Unmature", form: .square, formSize: CGFloat.nan, formLineWidth: CGFloat.nan, formLineDashPhase: CGFloat.nan, formLineDashLengths: nil, formColor: UIColor.approvedColor())])
+            points = points.sorted(by: { ps1, ps2 in
+                ps1.TRANSACTION_DATE < ps2.TRANSACTION_DATE
+            })
             for (index,summaryPoints) in points.enumerated() {
                 let mature: Double = Double(summaryPoints.MATURE_POINTS)
                 let unmature: Double = Double(summaryPoints.UNMATURE_POINTS)
@@ -172,11 +175,13 @@ class WalletDashboardViewController: BaseViewController {
         let formatt = CustomFormatter()
         formatt.labels = xAxisDates
         xAxis.valueFormatter = formatt
+        xAxis.labelCount = xAxisDates.count
         set = BarChartDataSet(entries: barChartEntries, label: "")
         set.drawIconsEnabled = false
         set.colors = [UIColor.inprocessColor(), UIColor.approvedColor()]
 
         let data = BarChartData(dataSet: set)
+        
         let formatter = NumberFormatter()
         formatter.numberStyle = .none
         formatter.maximumFractionDigits = 0

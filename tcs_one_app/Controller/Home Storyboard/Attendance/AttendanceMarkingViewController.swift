@@ -45,7 +45,7 @@ class AttendanceMarkingViewController: BaseViewController, MKMapViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.title = "Attendance"
+        self.navigationController?.navigationBar.topItem?.title = "Attendance"
         self.makeTopCornersRounded(roundView: self.mainView)
         addDoubleNavigationButtons()
         

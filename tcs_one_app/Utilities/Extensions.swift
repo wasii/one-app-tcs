@@ -367,6 +367,28 @@ extension UIViewController {
         ]
         return params as [String: Any]
     }
+    func getAPIParameterNew(serviceName: String, client: String, request_body: [String:Any]) -> [String:Any]{
+        let params = [
+            "eAI_MESSAGE": [
+                "eAI_HEADER": [
+                    "serviceName": serviceName,
+                    "client": client,
+                    "clientChannel": "",
+                    "referenceNum": "",
+                    "securityInfo": [
+                        "authentication": [
+                            "userId": "",
+                            "password": ""
+                        ]
+                    ]
+                ],
+                "eAI_BODY": [
+                    "eAI_REQUEST": request_body
+                ]
+            ]
+        ]
+        return params as [String: Any]
+    }
     
     func randomString() -> String {
         let letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
@@ -755,7 +777,7 @@ public extension UIDevice {
             "iPhone14,4" : .iPhone13Mini,
             "iPhone14,5" : .iPhone13,
             "iPhone14,2" : .iPhone13Pro,
-            "iPhone14,3" : .iPhone13ProMax
+            "iPhone14,3" : .iPhone13ProMax,
         ]
         
         if let model = modelMap[String.init(validatingUTF8: modelCode!)!] {

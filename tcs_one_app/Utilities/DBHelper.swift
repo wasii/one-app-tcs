@@ -28,14 +28,14 @@ class DBHelper {
             let fileManager = FileManager.default
             if fileManager.fileExists(atPath: filePath) {
                 let new_db = UserDefaults.standard.bool(forKey: "NEWDB")
-                if new_db {
+                if !new_db {
                     do {
                         try fileManager.removeItem(at: pathComponent)
                         try fileManager.removeItem(at: url.appendingPathComponent("\(databaseName).db-shm")!)
                         try fileManager.removeItem(at: url.appendingPathComponent("\(databaseName).db-wal")!)
                         UserDefaults.standard.removeObject(forKey: "CurrentUser")
                         UserDefaults.standard.removeObject(forKey: USER_ACCESS_TOKEN)
-                        UserDefaults.standard.set(false, forKey: "NEWDB")
+                        UserDefaults.standard.set(true, forKey: "NEWDB")
                         return self.copy_database(databaseName: databaseName, pathComponent: pathComponent)
 
                     } catch let err {
@@ -45,7 +45,7 @@ class DBHelper {
                 print(pathComponent)
                 return pathComponent
             } else {
-                UserDefaults.standard.set(false, forKey: "NEWDB")
+                UserDefaults.standard.set(true, forKey: "NEWDB")
                 return self.copy_database(databaseName: databaseName, pathComponent: pathComponent)
             }
         } else {
@@ -2158,7 +2158,7 @@ class DBHelper {
             sqlite3_bind_text(insertStatement, 2, ((lov_area_security.areaCode ?? "") as NSString).utf8String, -1, nil)
             sqlite3_bind_text(insertStatement, 3, ((lov_area_security.securityPerson ?? "") as NSString).utf8String, -1, nil)
             sqlite3_bind_text(insertStatement, 4, ((lov_area_security.created ?? "") as NSString).utf8String, -1, nil)
-            sqlite3_bind_int(insertStatement, 5, Int32(lov_area_security.empNo))
+            sqlite3_bind_int(insertStatement, 5, Int32(lov_area_security.empNo ?? 0))
             if sqlite3_step(insertStatement) == SQLITE_DONE {
 //                print("\(db_grievance_remarks): Successfully inserted row.")
             } else {
@@ -3860,6 +3860,65 @@ class DBHelper {
         }
         sqlite3_finalize(insertStatement)
     }
+    
+    //WALLET_BENEFICIARIES
+    func read_tbl_wallet_beneficiaries(query: String) -> [tbl_wallet_beneficiaries]? {
+        let queryStatementString = query
+        var queryStatement: OpaquePointer? = nil
+        var wallet_beneficiaries = [tbl_wallet_beneficiaries]()
+
+        if sqlite3_prepare_v2(db, queryStatementString, -1, &queryStatement, nil) == SQLITE_OK {
+            while sqlite3_step(queryStatement) == SQLITE_ROW {
+                let id = Int(sqlite3_column_int(queryStatement, 0))
+                let rid = Int(sqlite3_column_int(queryStatement, 1))
+                let referenceNumber = String(describing: String(cString: sqlite3_column_text(queryStatement, 2)))
+                let employeeID = String(describing: String(cString: sqlite3_column_text(queryStatement, 3)))
+                let beneficiaryName = String(describing: String(cString: sqlite3_column_text(queryStatement, 4)))
+                let beneficiaryEmpID = String(describing: String(cString: sqlite3_column_text(queryStatement, 5)))
+                let beneficiaryMobileNumber = String(describing: String(cString: sqlite3_column_text(queryStatement, 6)))
+                let beneficiaryNickname = String(describing: String(cString: sqlite3_column_text(queryStatement, 7)))
+                let beneficiaryEmail = String(describing: String(cString: sqlite3_column_text(queryStatement, 8)))
+                let isEmailNotify = String(describing: String(cString: sqlite3_column_text(queryStatement, 9)))
+                let isActive = Int(sqlite3_column_int(queryStatement, 10))
+                let createdDate = String(describing: String(cString: sqlite3_column_text(queryStatement, 11)))
+                let current_user = String(describing: String(cString: sqlite3_column_text(queryStatement, 12)))
+                
+                wallet_beneficiaries.append(tbl_wallet_beneficiaries(id: id, rid: rid, referenceNumber: referenceNumber, employeeID: employeeID, beneficiaryName: beneficiaryName, beneficiaryEmpID: beneficiaryEmpID, beneficiaryMobileNumber: beneficiaryMobileNumber, beneficiaryNickname: beneficiaryNickname, beneficiaryEmail: beneficiaryEmail, isEmailNotify: isEmailNotify, isActive: isActive, createdDate: createdDate, current_user: current_user))
+            }
+        } else {
+            print("SELECT statement \(db_w_detail_point) could not be prepared")
+        }
+        return wallet_beneficiaries.count > 0 ? wallet_beneficiaries : nil
+    }
+    func insert_tbl_wallet_beneficiaries(wallet_beneficiary: WalletBeneficiary, handler: @escaping(_ success: Bool) -> Void) {
+        let insertStatementString = "INSERT INTO \(db_w_beneficiaries)(RID, REFERENCE_NUMBER, EMPLOYEE_ID, BENEFICIARY_NAME, BENEFICIARY_EMP_ID, BENEFICIARY_MOBILE_NUMBER, BENEFICIARY_NICKNAME, BENEFICIARY_EMAIL, IS_EMAIL_NOTIFY, IS_ACTIVE, CREATED_DATE, CURRENT_USER) VALUES (?,?,?,?,?,?,?,?,?,?,?,?);"
+
+        var insertStatement: OpaquePointer? = nil
+        if sqlite3_prepare_v2(self.db, insertStatementString, -1, &insertStatement, nil) == SQLITE_OK {
+            sqlite3_bind_int(insertStatement, 1, Int32(wallet_beneficiary.rid))
+            sqlite3_bind_text(insertStatement, 2, (wallet_beneficiary.referenceNumber as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 3, (wallet_beneficiary.employeeID as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 4, (wallet_beneficiary.beneficiaryName as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 5, (wallet_beneficiary.beneficiaryEmpID as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 6, ((wallet_beneficiary.beneficiaryMobileNumber ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 7, ((wallet_beneficiary.beneficiaryNickname ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 8, ((wallet_beneficiary.beneficiaryEmail ?? "") as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 9, (wallet_beneficiary.isEmailNotify as NSString).utf8String, -1, nil)
+            sqlite3_bind_int(insertStatement, 10, Int32(wallet_beneficiary.isActive))
+            sqlite3_bind_text(insertStatement, 11, (wallet_beneficiary.createdDate as NSString).utf8String, -1, nil)
+            sqlite3_bind_text(insertStatement, 12, (CURRENT_USER_LOGGED_IN_ID as NSString).utf8String, -1, nil)
+            if sqlite3_step(insertStatement) == SQLITE_DONE {
+                handler(true)
+            } else {
+                print("\(db_w_beneficiaries): Could not insert row.")
+                handler(false)
+            }
+        } else {
+            handler(false)
+            print("\(db_w_beneficiaries): INSERT statement could not be prepared.")
+        }
+        sqlite3_finalize(insertStatement)
+    }
 }
 
 
@@ -4572,6 +4631,15 @@ struct tbl_wallet_detail_points {
     var CAT: Int = -1
     var SUB_CAT: Int = -1
     var POINTS: Int = -1
+}
+
+struct tbl_wallet_beneficiaries {
+    var id: Int, rid: Int = -1
+    var referenceNumber: String, employeeID: String, beneficiaryName: String, beneficiaryEmpID: String = ""
+    var beneficiaryMobileNumber: String, beneficiaryNickname: String, beneficiaryEmail: String = ""
+    var isEmailNotify: String = ""
+    var isActive: Int = -1
+    var createdDate: String, current_user: String = ""
 }
 
 

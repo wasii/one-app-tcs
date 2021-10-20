@@ -22,7 +22,7 @@
                                 <rect key="frame" x="0.0" y="140" width="414" height="756"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mOV-Zy-inp">
-                                        <rect key="frame" x="0.0" y="0.0" width="414" height="710"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="414" height="756"/>
                                         <subviews>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5OI-ea-XTG" userLabel="SearchView" customClass="CustomView" customModule="One_App" customModuleProvider="target">
                                                 <rect key="frame" x="10" y="20" width="344" height="50"/>
@@ -172,21 +172,29 @@
                                                     </userDefinedRuntimeAttribute>
                                                 </userDefinedRuntimeAttributes>
                                             </view>
+                                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5cq-CF-MXa">
+                                                <rect key="frame" x="362" y="598" width="42" height="148"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
                                         </subviews>
                                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                         <constraints>
                                             <constraint firstItem="PBc-Gv-Etx" firstAttribute="top" secondItem="mOV-Zy-inp" secondAttribute="top" constant="17" id="0eJ-Zx-lKk"/>
                                             <constraint firstItem="2rv-so-ScA" firstAttribute="leading" secondItem="mOV-Zy-inp" secondAttribute="leading" constant="13" id="2FJ-OX-hwA"/>
                                             <constraint firstItem="PBc-Gv-Etx" firstAttribute="leading" secondItem="5OI-ea-XTG" secondAttribute="trailing" constant="5" id="751-rf-9eJ"/>
+                                            <constraint firstAttribute="trailing" secondItem="5cq-CF-MXa" secondAttribute="trailing" constant="10" id="B7x-9p-sBv"/>
                                             <constraint firstAttribute="trailing" secondItem="6Ns-T1-GN5" secondAttribute="trailing" constant="15" id="BV9-FF-9D9"/>
+                                            <constraint firstAttribute="bottom" secondItem="5cq-CF-MXa" secondAttribute="bottom" constant="10" id="C9Y-E7-FLf"/>
                                             <constraint firstItem="Gjx-Jx-Nt5" firstAttribute="top" secondItem="5OI-ea-XTG" secondAttribute="top" id="FLI-aj-1n0"/>
                                             <constraint firstItem="5OI-ea-XTG" firstAttribute="top" secondItem="mOV-Zy-inp" secondAttribute="top" constant="20" id="IsV-Jo-eIZ"/>
+                                            <constraint firstItem="5cq-CF-MXa" firstAttribute="top" secondItem="N38-Tq-WRe" secondAttribute="bottom" constant="10" id="KKf-AR-AIe"/>
                                             <constraint firstItem="N38-Tq-WRe" firstAttribute="leading" secondItem="mOV-Zy-inp" secondAttribute="leading" constant="10" id="Mgv-DS-sks"/>
                                             <constraint firstAttribute="trailing" secondItem="Gjx-Jx-Nt5" secondAttribute="trailing" constant="10" id="apk-MW-gsl"/>
                                             <constraint firstAttribute="trailing" secondItem="PBc-Gv-Etx" secondAttribute="trailing" constant="10" id="d6b-yM-Jv1"/>
                                             <constraint firstItem="N38-Tq-WRe" firstAttribute="top" secondItem="2rv-so-ScA" secondAttribute="bottom" constant="20" id="f8g-ty-vOb"/>
                                             <constraint firstAttribute="trailing" secondItem="N38-Tq-WRe" secondAttribute="trailing" constant="10" id="gdY-8S-jH2"/>
-                                            <constraint firstAttribute="height" constant="710" id="gug-VT-Dwf"/>
                                             <constraint firstItem="6Ns-T1-GN5" firstAttribute="leading" secondItem="5OI-ea-XTG" secondAttribute="trailing" constant="5" id="ilY-hN-QfQ"/>
                                             <constraint firstItem="2rv-so-ScA" firstAttribute="top" secondItem="5OI-ea-XTG" secondAttribute="bottom" constant="30" id="kAU-lq-Fgh"/>
                                             <constraint firstAttribute="trailing" secondItem="2rv-so-ScA" secondAttribute="trailing" constant="13" id="koP-J6-Wm8"/>
@@ -203,6 +211,7 @@
                                 <constraints>
                                     <constraint firstItem="mOV-Zy-inp" firstAttribute="top" secondItem="j0d-uA-hWp" secondAttribute="top" id="KKy-iT-x2z"/>
                                     <constraint firstItem="mOV-Zy-inp" firstAttribute="centerX" secondItem="j0d-uA-hWp" secondAttribute="centerX" id="MIQ-yE-MhY"/>
+                                    <constraint firstItem="mOV-Zy-inp" firstAttribute="height" secondItem="j0d-uA-hWp" secondAttribute="height" id="Q6W-oP-SnS"/>
                                     <constraint firstItem="mOV-Zy-inp" firstAttribute="leading" secondItem="j0d-uA-hWp" secondAttribute="leading" id="XtC-o6-NKD"/>
                                     <constraint firstAttribute="trailing" secondItem="mOV-Zy-inp" secondAttribute="trailing" id="dqA-zT-Lb1"/>
                                     <constraint firstAttribute="bottom" secondItem="mOV-Zy-inp" secondAttribute="bottom" id="pud-oB-Lde"/>
@@ -222,7 +231,6 @@
                     <connections>
                         <outlet property="mainChartView" destination="2rv-so-ScA" id="UhT-gF-ELf"/>
                         <outlet property="mainView" destination="mOV-Zy-inp" id="G73-6H-pjL"/>
-                        <outlet property="mainViewHeightConstraint" destination="gug-VT-Dwf" id="d3q-5M-cJM"/>
                         <outlet property="module_CollectionView" destination="N38-Tq-WRe" id="Dfq-tB-Qpm"/>
                         <outlet property="notificationBtn" destination="6Ns-T1-GN5" id="KXV-n0-G6U"/>
                         <outlet property="notification_label" destination="a9G-OD-6HL" id="fDn-yW-aZt"/>

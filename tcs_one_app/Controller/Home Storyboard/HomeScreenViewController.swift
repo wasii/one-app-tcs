@@ -62,7 +62,7 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
         
         self.tabBarController?.viewControllers?[0].title = "Home"
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-            self.mainViewHeightConstraint.constant = self.view.frame.height
+//            self.mainViewHeightConstraint.constant = self.view.frame.height
             
         }
         

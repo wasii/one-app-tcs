@@ -15,6 +15,7 @@ import SwiftSVG
 protocol PinValidateDelegate {
     func pinValidateDelegate()
 }
+
 class EnterPinViewController: BaseViewController {
 
     var isVerifiedId = false
@@ -31,6 +32,7 @@ class EnterPinViewController: BaseViewController {
     @IBOutlet weak var mainView: UIView!
     
     var delegate: PinValidateDelegate?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         employeeId_textField.delegate = self
@@ -40,6 +42,23 @@ class EnterPinViewController: BaseViewController {
         
         self.makeTopCornersRounded(roundView: self.mainView)
         
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            if UserDefaults.standard.string(forKey: USER_ACCESS_TOKEN) != nil {
+                if UserDefaults.standard.string(forKey: "CurrentUser") != nil {
+                    CURRENT_USER_LOGGED_IN_ID = UserDefaults.standard.string(forKey: "CurrentUser")!
+                    let controller = self.storyboard?.instantiateViewController(withIdentifier: "FetchUserDataViewController") as! FetchUserDataViewController
+                    controller.isNavigate = true
+                    self.navigationController?.pushViewController(controller, animated: true)
+                }
+            }
+        }
+    }
+    override func viewDidAppear(_ animated: Bool) {
+//        let svgURL = Bundle.main.url(forResource: "right-arrow-filled", withExtension: "svg")!
+//         _ = CALayer(SVGURL: svgURL) { (svgLayer) in
+//            svgLayer.resizeToFit(self.nextBtnOutlet.bounds)
+//            self.nextBtnOutlet.layer.addSublayer(svgLayer)
+//        }
     }
     
     @IBAction func resendBtn_Tapped(_ sender: Any) {

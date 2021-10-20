@@ -1386,9 +1386,13 @@ class NetworkCalls: NSObject {
         let Url = String(format: WALLET_GET_TOKEN)
         guard let serviceUrl = URL(string: Url) else { return }
         var request = URLRequest(url: serviceUrl)
-        request.httpMethod = "GET"
+        request.httpMethod = "POST"
         request.setValue("Application/json", forHTTPHeaderField: "Content-Type")
-        
+        let params = ["clientSecret": CLIENTSECRET]
+        guard let httpBody = try? JSONSerialization.data(withJSONObject: params, options: []) else {
+            return
+        }
+        request.httpBody = httpBody
         let session = URLSession.shared
         session.dataTask(with: request) { (data, response, error) in
             if let data = data {
@@ -1405,12 +1409,17 @@ class NetworkCalls: NSObject {
             }
         }.resume()
     }
-    class func setupwallet(_ handler: @escaping(_ granted: Bool,_ response: Any) -> Void) {
+    class func setupwallet(params: [String:Any], _ handler: @escaping(_ granted: Bool,_ response: Any) -> Void) {
         let Url = String(format: WALLET_SETUP)
         guard let serviceUrl = URL(string: Url) else { return }
         var request = URLRequest(url: serviceUrl)
         request.setValue("Bearer \(BEARER_TOKEN)", forHTTPHeaderField: "Authorization")
-        request.httpMethod = "GET"
+        request.setValue("Application/json", forHTTPHeaderField: "Content-Type")
+        request.httpMethod = "POST"
+        guard let httpBody = try? JSONSerialization.data(withJSONObject: params, options: []) else {
+            return
+        }
+        request.httpBody = httpBody
         let session = URLSession.shared
         session.dataTask(with: request) { (data, response, error) in
             if let data = data {
@@ -1523,6 +1532,157 @@ class NetworkCalls: NSObject {
     }
     class func getwalletdetailpoints(params: [String:Any], _ handler: @escaping(_ granted: Bool,_ response: Any) -> Void) {
         let Url = String(format: WALLET_DETAIL_POINTS)
+        guard let serviceUrl = URL(string: Url) else { return }
+        var request = URLRequest(url: serviceUrl)
+        request.httpMethod = "POST"
+        request.setValue("Bearer \(BEARER_TOKEN)", forHTTPHeaderField: "Authorization")
+        request.setValue("Application/json", forHTTPHeaderField: "Content-Type")
+        guard let httpBody = try? JSONSerialization.data(withJSONObject: params, options: []) else {
+            return
+        }
+        request.httpBody = httpBody
+        let session = URLSession.shared
+        session.dataTask(with: request) { (data, response, error) in
+            if let data = data {
+                let json = JSON(data)
+                if let success = json.dictionary?[returnStatus] {
+                    //SUCCESS
+                    if success.dictionary?[_code] == "0200" {
+                        handler(true, data)
+                        return
+                    }
+                    //FAILED
+                    if success.dictionary?[_code] == "0400" {
+                        handler(false, SOMETHINGWENTWRONG)
+                    }
+                    if success.dictionary?[_code] == "0403" {
+                        handler(false, SOMETHINGWENTWRONG)
+                    }
+                    if success.dictionary?[_code] == "0404" {
+                        handler(false, SOMETHINGWENTWRONG)
+                    }
+                    if success.dictionary?[_code] == "0208" {
+                        handler(false, "Already Reported.")
+                    }
+                }
+            } else {
+                handler(false, SOMETHINGWENTWRONG)
+            }
+        }.resume()
+    }
+    class func getwalletpin(params: [String:Any], _ handler: @escaping(Bool) -> Void) {
+        let Url = String(format: WALLET_PIN_GENERATION)
+        guard let serviceUrl = URL(string: Url) else { return }
+        var request = URLRequest(url: serviceUrl)
+        request.httpMethod = "POST"
+        request.setValue("Bearer \(BEARER_TOKEN)", forHTTPHeaderField: "Authorization")
+        request.setValue("Application/json", forHTTPHeaderField: "Content-Type")
+        guard let httpBody = try? JSONSerialization.data(withJSONObject: params, options: []) else {
+            return
+        }
+        request.httpBody = httpBody
+        let session = URLSession.shared
+        session.dataTask(with: request) { (data, response, error) in
+            if let data = data {
+                let json = JSON(data)
+                if let success = json.dictionary?[returnStatus] {
+                    //SUCCESS
+                    if success.dictionary?[_code] == "0200" {
+                        handler(true)
+                        return
+                    } else {
+                        handler(false)
+                    }
+                } else {
+                    handler(false)
+                }
+            } else {
+                handler(false)
+            }
+        }.resume()
+    }
+    class func addwalletbeneficiaries(params: [String:Any], _ handler: @escaping(_ granted: Bool,_ response: Any) -> Void) {
+        let Url = String(format: WALLET_ADD_BENEFICIARY)
+        guard let serviceUrl = URL(string: Url) else { return }
+        var request = URLRequest(url: serviceUrl)
+        request.httpMethod = "POST"
+        request.setValue("Bearer \(BEARER_TOKEN)", forHTTPHeaderField: "Authorization")
+        request.setValue("Application/json", forHTTPHeaderField: "Content-Type")
+        guard let httpBody = try? JSONSerialization.data(withJSONObject: params, options: []) else {
+            return
+        }
+        request.httpBody = httpBody
+        let session = URLSession.shared
+        session.dataTask(with: request) { (data, response, error) in
+            if let data = data {
+                let json = JSON(data)
+                if let success = json.dictionary?[returnStatus] {
+                    //SUCCESS
+                    if success.dictionary?[_code] == "0200" {
+                        handler(true, data)
+                        return
+                    }
+                    //FAILED
+                    if success.dictionary?[_code] == "0400" {
+                        handler(false, SOMETHINGWENTWRONG)
+                    }
+                    if success.dictionary?[_code] == "0403" {
+                        handler(false, SOMETHINGWENTWRONG)
+                    }
+                    if success.dictionary?[_code] == "0404" {
+                        handler(false, SOMETHINGWENTWRONG)
+                    }
+                    if success.dictionary?[_code] == "0208" {
+                        handler(false, "Already Reported.")
+                    }
+                }
+            } else {
+                handler(false, SOMETHINGWENTWRONG)
+            }
+        }.resume()
+    }
+    class func getwalletbeneficiary(params: [String:Any], _ handler: @escaping(_ granted: Bool,_ response: Any) -> Void) {
+        let Url = String(format: WALLET_GET_BENEFICIARY)
+        guard let serviceUrl = URL(string: Url) else { return }
+        var request = URLRequest(url: serviceUrl)
+        request.httpMethod = "POST"
+        request.setValue("Bearer \(BEARER_TOKEN)", forHTTPHeaderField: "Authorization")
+        request.setValue("Application/json", forHTTPHeaderField: "Content-Type")
+        guard let httpBody = try? JSONSerialization.data(withJSONObject: params, options: []) else {
+            return
+        }
+        request.httpBody = httpBody
+        let session = URLSession.shared
+        session.dataTask(with: request) { (data, response, error) in
+            if let data = data {
+                let json = JSON(data)
+                if let success = json.dictionary?[returnStatus] {
+                    //SUCCESS
+                    if success.dictionary?[_code] == "0200" {
+                        handler(true, data)
+                        return
+                    }
+                    //FAILED
+                    if success.dictionary?[_code] == "0400" {
+                        handler(false, SOMETHINGWENTWRONG)
+                    }
+                    if success.dictionary?[_code] == "0403" {
+                        handler(false, SOMETHINGWENTWRONG)
+                    }
+                    if success.dictionary?[_code] == "0404" {
+                        handler(false, SOMETHINGWENTWRONG)
+                    }
+                    if success.dictionary?[_code] == "0208" {
+                        handler(false, "Already Reported.")
+                    }
+                }
+            } else {
+                handler(false, SOMETHINGWENTWRONG)
+            }
+        }.resume()
+    }
+    class func getwalletemployee(params: [String:Any], _ handler: @escaping(_ granted: Bool,_ response: Any) -> Void) {
+        let Url = String(format: WALLET_GET_EMPLOYEE)
         guard let serviceUrl = URL(string: Url) else { return }
         var request = URLRequest(url: serviceUrl)
         request.httpMethod = "POST"

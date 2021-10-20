@@ -20,6 +20,8 @@ let BROADCAST_KEY           = "broadcastiosdev"
 //let BROADCAST_KEY           = "broadcastiosqa"
 //let BROADCAST_KEY           = "broadcastios"
 
+let WALLET_AGREEMENT_TEXT = "I have read and understood the Terms & Conditions and agree to abide by them"
+
 let IS_NEW_DATABASE: Bool   = true
 var NOTIFICATION_COUNT      = 0
 
@@ -32,8 +34,7 @@ var RECORD_ID               = 0
 //let ENDPOINT_NEW            = "https://developers.tcscourier.com/prod/v1/"
 
 //DEV
-//let ENDPOINT_NEW            = "http://apigatewayuat.tranzumpk.com:3003/dev/v1/"
-let ENDPOINT_NEW            = "http://apigatewayuat:3003/dev/v1/"
+let WALLET_ENDPOINT         = "https://sandbox.tcscourier.com/dev/v1/wallet/"
 let ENDPOINT                = "https://devapi.tcscourier.com/core/api/main"
 let UPLOADFILESURL          = "https://pwaqaapi.tcscourier.com/api/file-upload"
 
@@ -92,10 +93,27 @@ let WALLET_GET_TOKEN        = ENDPOINT_NEW + "wallet/token?clientSecret=\(CLIENT
 let WALLET_DETAIL_POINTS    = ENDPOINT_NEW + "wallet/detail-points"
 let WALLET_HISTORY_POINT    = ENDPOINT_NEW + "wallet/history-points"
 let WALLET_SUMMARY_POINT    = ENDPOINT_NEW + "wallet/summary-points"
+let WALLET_SETUP            = WALLET_ENDPOINT + "setup"
+let WALLET_GET_TOKEN        = WALLET_ENDPOINT + "token"
+
+let WALLET_DETAIL_POINTS    = WALLET_ENDPOINT + "detail-points"
+let WALLET_HISTORY_POINT    = WALLET_ENDPOINT + "history-points"
+let WALLET_SUMMARY_POINT    = WALLET_ENDPOINT + "summary-points"
+
+//WALLET REDEMPTION
+let WALLET_ADD_BENEFICIARY  = WALLET_ENDPOINT + "add-beneficiary"
+let WALLET_PIN_GENERATION   = WALLET_ENDPOINT + "pin-gen"
+let WALLET_GET_BENEFICIARY  = WALLET_ENDPOINT + "get-beneficiary"
+let WALLET_GET_EMPLOYEE     = WALLET_ENDPOINT + "get-employee"
 
 let S_WALLET_POINTS_HISTORY = "WALLET.GET.HISTORY.POINTS"
 let S_WALLET_POINTS_SUMMARY = "WALLET.GET.SUMMARY.POINTS"
 let S_WALLET_POINTS_DETAILS = "WALLET.GET.DETAIL.POINTS"
+let S_WALLET_GET_SETUP      = "WALLET.SETUP"
+let S_WALLETADD_BENEFICIARY = "WALLET.ADD.BENEFICIARY"
+let S_WALLET_PIN_GEN        = "WALLET.PIN.GEN"
+let S_WALLETGET_BENEFICIARY = "WALLET.GET.BENEFICIARY"
+let S_WALLET_GET_EMPLOYEE   = "WALLET.GET.EMPLOYEE"
 
 //API BACKEND KEYS
 let eAI_MESSAGE             = "eAI_MESSAGE"
@@ -168,6 +186,7 @@ let _dashboardDetail        = "dashboardDetail"
 
 
 //Wallet_Keys
+let _result                 = "result"
 let _walletSetupData        = "walletSetupData"
 let _walletHistoryPoints    = "walletHistoryPoints"
 let _walletPointsData       = "walletPointsData"
@@ -178,6 +197,8 @@ let _walletHistoryPointData = "walletHistoryPointsData"
 let _walletSummaryPointData = "walletSummaryPointsData"
 let _walletDetailPoints     = "walletDetailPoints"
 let _pointsDetail           = "pointsDetail"
+let _getBeneficiary         = "getBeneficiary"
+let _getEmployee            = "getEmployee"
 
 //Local Storage (Database) tablename keys
 let db_user_module          = "USER_MODULE"
@@ -246,6 +267,7 @@ let db_w_pointSummary       = "WALLET_POINTS_SUMMARY"
 let db_w_history_point      = "WALLET_HISTORY_POINTS"
 let db_w_pointSumDetails    = "WALLET_POINT_SUMMARY_DETAILS"
 let db_w_detail_point       = "WALLET_DETAIL_POINTS"
+let db_w_beneficiaries      = "WALLET_BENEFICIARIES"
 
 //ERROR MESSAGES
 let NOINTERNETCONNECTION    = "Connect your device with internet first."
