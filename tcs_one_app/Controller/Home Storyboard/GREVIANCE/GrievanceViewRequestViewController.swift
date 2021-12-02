@@ -1061,9 +1061,10 @@ extension GrievanceViewRequestViewController {
         document.add(.contentLeft, textObject: PDFSimpleText(text: "Request Details"))
         document.addLineSeparator(style: .init(type: .full, color: .black, width: 1, radius: nil))
 
-        let table = PDFTable(rows: 9, columns: 2)
+        let table = PDFTable(rows: 10, columns: 2)
 
         table.content = [
+            ["Ticket ID", "\(self.request_logs?.SERVER_ID_PK ?? 0)"],
             ["Reqeust Mode", "\(self.request_logs?.REQ_MODE_DESC ?? "")"],
             ["Employee Name", "\(self.request_logs?.EMP_NAME ?? "")"],
             ["Ticket Status", "\(self.status.text!)"],
@@ -1072,7 +1073,8 @@ extension GrievanceViewRequestViewController {
             ["Sub Query", "\(self.request_logs?.DETAIL_QUERY ?? "")"],
             ["Ticket Date", "\(self.request_logs?.CREATED_DATE?.dateSeperateWithT ?? "")"],
             ["Case Detail" , "\(self.request_logs?.REQ_REMARKS ?? "")"],
-            ["Closure Remarks" , "\(self.request_logs?.HR_REMARKS ?? "")"]
+            ["Closure Remarks" , "\(self.request_logs?.HR_REMARKS ?? "")"],
+            ["Closure Date" , "\(self.request_logs?.UPDATED_DATE ?? "")"],
         ]
         
 
@@ -1145,7 +1147,7 @@ extension GrievanceViewRequestViewController {
             }
             
             
-            let tbl = PDFTable(rows: 5, columns: 2)
+            let tbl = PDFTable(rows: 6, columns: 2)
             tbl.style = style
             tbl.rows.allRowsAlignment = [.left, .left]
             tbl.widths = [0.35, 0.65]
@@ -1155,7 +1157,8 @@ extension GrievanceViewRequestViewController {
                 ["GREM ID", "\(hist.SERVER_ID_PK)"],
                 ["REMARKS INPUT", "\(hist.REMARKS_INPUT)"],
                 ["REMARKS", "\(hist.REMARKS)"],
-                ["TICKET STATUS", s]
+                ["TICKET STATUS", s],
+                ["REMARKS DATE", hist.CREATED.dateSeperateWithT],
             ]
             document.add(table: tbl)
             document.add(space: 15.0)
