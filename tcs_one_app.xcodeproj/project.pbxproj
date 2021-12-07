@@ -51,6 +51,7 @@
 		1B47F9A325A5F81C00FC74A4 /* IncidentInvestigationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B47F9A225A5F81C00FC74A4 /* IncidentInvestigationViewController.swift */; };
 		1B4AAD1325DA781E00A26DE7 /* TrackStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1B4AAD1225DA781E00A26DE7 /* TrackStoryboard.storyboard */; };
 		1B4AAD1725DA784300A26DE7 /* TrackHomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B4AAD1625DA784300A26DE7 /* TrackHomeViewController.swift */; };
+		1B4D9283275F4031009FBD7D /* Landing.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1B4D9282275F4031009FBD7D /* Landing.storyboard */; };
 		1B55201D2705B684009B6A1E /* MISHeadingCollectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B55201C2705B684009B6A1E /* MISHeadingCollectionCell.swift */; };
 		1B590C64255818E300C413AA /* WatchAllRequestsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B590C63255818E300C413AA /* WatchAllRequestsViewController.swift */; };
 		1B5970B0256553CF00FF8CA0 /* AddAttachmentsTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B5970AE256553CF00FF8CA0 /* AddAttachmentsTableCell.swift */; };
@@ -247,6 +248,7 @@
 		1B47F9A225A5F81C00FC74A4 /* IncidentInvestigationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IncidentInvestigationViewController.swift; sourceTree = "<group>"; };
 		1B4AAD1225DA781E00A26DE7 /* TrackStoryboard.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = TrackStoryboard.storyboard; sourceTree = "<group>"; };
 		1B4AAD1625DA784300A26DE7 /* TrackHomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackHomeViewController.swift; sourceTree = "<group>"; };
+		1B4D9282275F4031009FBD7D /* Landing.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Landing.storyboard; sourceTree = "<group>"; };
 		1B55201C2705B684009B6A1E /* MISHeadingCollectionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MISHeadingCollectionCell.swift; sourceTree = "<group>"; };
 		1B590C63255818E300C413AA /* WatchAllRequestsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchAllRequestsViewController.swift; sourceTree = "<group>"; };
 		1B5970AE256553CF00FF8CA0 /* AddAttachmentsTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddAttachmentsTableCell.swift; sourceTree = "<group>"; };
@@ -874,6 +876,7 @@
 				1BE523DB2679E1CF00F5F030 /* Wallet.storyboard */,
 				1B3B229726C15F4E008EDC15 /* MIS.storyboard */,
 				1B5CBC8426F865B600831018 /* Landing.storyboard */,
+				1B4D9282275F4031009FBD7D /* Landing.storyboard */,
 			);
 			path = Storyboards;
 			sourceTree = "<group>";
@@ -1024,6 +1027,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1B4D9283275F4031009FBD7D /* Landing.storyboard in Resources */,
 				1B5CBC8926F86CB900831018 /* LaunchScreen.storyboard in Resources */,
 				1B6FA11726C3A53900E954D0 /* MISDetailTableCell.xib in Resources */,
 				1B3B229826C15F4E008EDC15 /* MIS.storyboard in Resources */,
