@@ -187,6 +187,8 @@
 		60F3C7FA2546C7FE00FA80B9 /* Protocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60F3C7F92546C7FE00FA80B9 /* Protocols.swift */; };
 		B88879F5278C102E0044AC26 /* Sales-CRM.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B88879F4278C102E0044AC26 /* Sales-CRM.storyboard */; };
 		B88879F8278C14DD0044AC26 /* SalesCRMDashboardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B88879F7278C14DD0044AC26 /* SalesCRMDashboardViewController.swift */; };
+		B88879FA278C5D2A0044AC26 /* SalesCRMAllListingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B88879F9278C5D2A0044AC26 /* SalesCRMAllListingViewController.swift */; };
+		B88879FC278C61C60044AC26 /* SalesCRMAddNewLeadsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B88879FB278C61C60044AC26 /* SalesCRMAddNewLeadsViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -373,6 +375,8 @@
 		68AFBA718D6CF2D713D8E9F0 /* Pods-tcs_one_app.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-tcs_one_app.debug.xcconfig"; path = "Target Support Files/Pods-tcs_one_app/Pods-tcs_one_app.debug.xcconfig"; sourceTree = "<group>"; };
 		B88879F4278C102E0044AC26 /* Sales-CRM.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Sales-CRM.storyboard"; sourceTree = "<group>"; };
 		B88879F7278C14DD0044AC26 /* SalesCRMDashboardViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SalesCRMDashboardViewController.swift; sourceTree = "<group>"; };
+		B88879F9278C5D2A0044AC26 /* SalesCRMAllListingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SalesCRMAllListingViewController.swift; sourceTree = "<group>"; };
+		B88879FB278C61C60044AC26 /* SalesCRMAddNewLeadsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SalesCRMAddNewLeadsViewController.swift; sourceTree = "<group>"; };
 		CA51BA4126CEE514AB22E928 /* Pods_tcs_one_app.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_tcs_one_app.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		DA870E8E73156BAD86D9A857 /* Pods-tcs_one_app.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-tcs_one_app.release.xcconfig"; path = "Target Support Files/Pods-tcs_one_app/Pods-tcs_one_app.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -913,6 +917,8 @@
 			isa = PBXGroup;
 			children = (
 				B88879F7278C14DD0044AC26 /* SalesCRMDashboardViewController.swift */,
+				B88879F9278C5D2A0044AC26 /* SalesCRMAllListingViewController.swift */,
+				B88879FB278C61C60044AC26 /* SalesCRMAddNewLeadsViewController.swift */,
 			);
 			path = "Sales-CRM";
 			sourceTree = "<group>";
@@ -1123,6 +1129,7 @@
 				1B5EAACD255EB71C00F49D09 /* GrievanceNewRequestViewController.swift in Sources */,
 				1BA5110B267B28A400E0E642 /* WalletHistoryTableCell.swift in Sources */,
 				1B61B2BC25DD25DD00CDAAE2 /* DManDetailsTableCell.swift in Sources */,
+				B88879FA278C5D2A0044AC26 /* SalesCRMAllListingViewController.swift in Sources */,
 				1B3EDCA2260C620100A97984 /* FulfilmentListingTableCell.swift in Sources */,
 				1B5EAA83255EA4A600F49D09 /* GrievanceHelpDeskRequestsViewController.swift in Sources */,
 				1BA7BAC2260DF3FD002D9FA9 /* FulfilmentOrderDetailTableCell.swift in Sources */,
@@ -1184,6 +1191,7 @@
 				1BF25A5325E7D507008CE34F /* ChairmenListingViewController.swift in Sources */,
 				609C606225387C850051CF28 /* Constant.swift in Sources */,
 				60EE11B7254B263C00ACB45B /* MessageViewController.swift in Sources */,
+				B88879FC278C61C60044AC26 /* SalesCRMAddNewLeadsViewController.swift in Sources */,
 				601BA4BF25387B17002CFD1F /* SceneDelegate.swift in Sources */,
 				1B28176B257F7D4F009AE4E3 /* ChartViews.swift in Sources */,
 				1B3202F62578C1270034803F /* ComingSoonViewController.swift in Sources */,

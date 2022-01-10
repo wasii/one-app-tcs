@@ -202,7 +202,19 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
     
     
     override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
         setupSlideScrollView(chartViews: chartViews)
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .vertical
+        self.module_CollectionView.collectionViewLayout = layout
+        self.module_CollectionView!.contentInset = UIEdgeInsets(top: 0, left: 0, bottom:0, right: 0)
+        
+        if let layout = self.module_CollectionView.collectionViewLayout as? UICollectionViewFlowLayout {
+            layout.minimumInteritemSpacing = 0
+            layout.minimumLineSpacing = 0
+            layout.itemSize = CGSize(width: self.module_CollectionView.frame.size.width/4, height: 111)
+            layout.invalidateLayout()
+        }
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
@@ -776,6 +788,11 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
                 self.module?.remove(at: i)
             }
         }
+        for (i,m) in module!.enumerated() {
+            if m.TAGNAME == "RIDER" {
+                self.module?.remove(at: i)
+            }
+        }
         if let permission = AppDelegate.sharedInstance.db?.read_tbl_UserPermission(permission: PERMISSION_FulfilmentModule).count {
             if permission == 0 {
                 for (i, m) in module!.enumerated() {
@@ -787,6 +804,15 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
             }
         }
         if let permission = AppDelegate.sharedInstance.db?.read_tbl_UserPermission(permission: PERMISSION_ViewBroadcastMode).count {
+            if permission <= 0  {
+                for (i, m) in module!.enumerated() {
+                    if m.MODULENAME == "Leadership Connect" {
+                        self.module?.remove(at: i)
+                        self.ViewBroadCastPermission = false
+                        break
+                    }
+                }
+            }
             if let emp_info = AppDelegate.sharedInstance.db?.read_tbl_UserProfile().first {
                 if emp_info.HIGHNESS == "1" {
                     DispatchQueue.main.async {
@@ -795,17 +821,7 @@ class HomeScreenViewController: BaseViewController, ChartViewDelegate, UIScrollV
                     self.ViewBroadCastPermission = true
                     return
                 }
-                if permission <= 0  {
-                    for (i, m) in module!.enumerated() {
-                        if m.MODULENAME == "Leadership Connect" {
-                            self.module?.remove(at: i)
-                            self.ViewBroadCastPermission = false
-                            break
-                        }
-                    }
-                }
             }
-            
         }
         DispatchQueue.main.async {
             self.module_CollectionView.reloadData()
@@ -1034,6 +1050,15 @@ extension HomeScreenViewController: UICollectionViewDelegate, UICollectionViewDa
             controller.hidesBottomBarWhenPushed = true
             self.navigationController?.pushViewController(controller, animated: true)
             break
+        
+        //CRM
+        case "CRM":
+            CONSTANT_MODULE_ID = AppDelegate.sharedInstance.db?.read_tbl_UserModule(query: "SELECT * FROM \(db_user_module) WHERE TAGNAME = '\(MODULE_TAG_MIS)';").first?.SERVER_ID_PK ?? -1
+            let storyboard = UIStoryboard(name: "Sales-CRM", bundle: nil)
+            let controller = storyboard.instantiateViewController(withIdentifier: "SalesCRMDashboardViewController") as! SalesCRMDashboardViewController
+            controller.hidesBottomBarWhenPushed = true
+            self.navigationController?.pushViewController(controller, animated: true)
+            break
             
         default:
             break
@@ -1051,12 +1076,12 @@ extension HomeScreenViewController: UICollectionViewDelegate, UICollectionViewDa
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         return 0
     }
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let yourWidth = CGFloat(80)
-        let yourHeight = collectionView.bounds.width / 4.0
-        
-        return CGSize(width: yourWidth, height: yourHeight)
-    }
+//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+//        let yourWidth = CGFloat(80)
+//        let yourHeight = collectionView.bounds.width / 4.0
+//        
+//        return CGSize(width: yourWidth, height: yourHeight)
+//    }
     
     @objc func openChartDetails() {
         let controller = self.storyboard?.instantiateViewController(withIdentifier: "ChartListingViewController") as! ChartListingViewController

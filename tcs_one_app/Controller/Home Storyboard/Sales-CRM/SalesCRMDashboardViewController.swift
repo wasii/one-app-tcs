@@ -33,9 +33,16 @@ class SalesCRMDashboardViewController: BaseViewController {
     
     
     @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var tableViewHeightConstraint: NSLayoutConstraint!
     override func viewDidLoad() {
         super.viewDidLoad()
         self.makeTopCornersRounded(roundView: self.mainView)
         title = "Sales CRM"
-   }
+    }
+    
+    
+    @IBAction func addNewLeadTapped(_ sender: Any) {
+        let controller = self.storyboard?.instantiateViewController(withIdentifier: "SalesCRMAddNewLeadsViewController") as! SalesCRMAddNewLeadsViewController
+        self.navigationController?.pushViewController(controller, animated: true)
+    }
 }
