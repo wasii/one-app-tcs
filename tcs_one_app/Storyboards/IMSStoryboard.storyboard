@@ -7306,6 +7306,9 @@
         <designable name="Biz-9a-sBl">
             <size key="intrinsicContentSize" width="50" height="30"/>
         </designable>
+        <designable name="FSj-SJ-4If">
+            <size key="intrinsicContentSize" width="-1" height="30"/>
+        </designable>
         <designable name="JLJ-qr-lKL">
             <size key="intrinsicContentSize" width="42" height="42"/>
         </designable>

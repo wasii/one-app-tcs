@@ -16,9 +16,9 @@ let MISCLIENTSECRET         = "Tcs@oneapp3003"
 let CLIENTSECRET            = "Tcs@wallet3001"
 var MIS_BEARER_TOKEN        = ""
 var BEARER_TOKEN            = ""
-//let BROADCAST_KEY           = "broadcastiosdev"
+let BROADCAST_KEY           = "broadcastiosdev"
 //let BROADCAST_KEY           = "broadcastiosqa"
-let BROADCAST_KEY           = "broadcastios"
+//let BROADCAST_KEY           = "broadcastios"
 
 let IS_NEW_DATABASE: Bool   = true
 var NOTIFICATION_COUNT      = 0
@@ -27,14 +27,14 @@ var RECORD_ID               = 0
 //API ENDPOINTS
 
 //PRODUCTION
-let ENDPOINT                = "https://prodapi.tcscourier.com/core/api/main/"
-let UPLOADFILESURL          = "https://oneappapi.tcscourier.com/api/file-upload"
+//let ENDPOINT                = "https://prodapi.tcscourier.com/core/api/main/"
+//let UPLOADFILESURL          = "https://oneappapi.tcscourier.com/api/file-upload"
 
 //DEV
 let ENDPOINT_NEW            = "https://developers.tcscourier.com/prod/v1/"
 //let WALLET_ENDPOINT         = "https://sandbox.tcscourier.com/qa/v1/wallet/"
-//let ENDPOINT                = "https://devapi.tcscourier.com/core/api/main"
-//let UPLOADFILESURL          = "https://pwaqaapi.tcscourier.com/api/file-upload"
+let ENDPOINT                = "https://devapi.tcscourier.com/core/api/main"
+let UPLOADFILESURL          = "https://pwaqaapi.tcscourier.com/api/file-upload"
 
 let LOGIN                   = "oneapp.login"
 let PIN_VALIDATE            = "oneapp.pinvalidate"
