@@ -189,6 +189,7 @@
 		B88879F8278C14DD0044AC26 /* SalesCRMDashboardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B88879F7278C14DD0044AC26 /* SalesCRMDashboardViewController.swift */; };
 		B88879FA278C5D2A0044AC26 /* SalesCRMAllListingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B88879F9278C5D2A0044AC26 /* SalesCRMAllListingViewController.swift */; };
 		B88879FC278C61C60044AC26 /* SalesCRMAddNewLeadsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B88879FB278C61C60044AC26 /* SalesCRMAddNewLeadsViewController.swift */; };
+		B8F6DF97279997C50007E508 /* SalesCRMContactCreationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8F6DF96279997C50007E508 /* SalesCRMContactCreationViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -377,6 +378,7 @@
 		B88879F7278C14DD0044AC26 /* SalesCRMDashboardViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SalesCRMDashboardViewController.swift; sourceTree = "<group>"; };
 		B88879F9278C5D2A0044AC26 /* SalesCRMAllListingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SalesCRMAllListingViewController.swift; sourceTree = "<group>"; };
 		B88879FB278C61C60044AC26 /* SalesCRMAddNewLeadsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SalesCRMAddNewLeadsViewController.swift; sourceTree = "<group>"; };
+		B8F6DF96279997C50007E508 /* SalesCRMContactCreationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SalesCRMContactCreationViewController.swift; sourceTree = "<group>"; };
 		CA51BA4126CEE514AB22E928 /* Pods_tcs_one_app.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_tcs_one_app.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		DA870E8E73156BAD86D9A857 /* Pods-tcs_one_app.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-tcs_one_app.release.xcconfig"; path = "Target Support Files/Pods-tcs_one_app/Pods-tcs_one_app.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -919,6 +921,7 @@
 				B88879F7278C14DD0044AC26 /* SalesCRMDashboardViewController.swift */,
 				B88879F9278C5D2A0044AC26 /* SalesCRMAllListingViewController.swift */,
 				B88879FB278C61C60044AC26 /* SalesCRMAddNewLeadsViewController.swift */,
+				B8F6DF96279997C50007E508 /* SalesCRMContactCreationViewController.swift */,
 			);
 			path = "Sales-CRM";
 			sourceTree = "<group>";
@@ -1124,6 +1127,7 @@
 				1B6279E72591E5E200C88FEE /* IMSNewRequestViewController.swift in Sources */,
 				1BE523DF2679E26500F5F030 /* WalletDashboardViewController.swift in Sources */,
 				1BFB374D25F9D73B0073CC53 /* AttendanceMarkingViewController.swift in Sources */,
+				B8F6DF97279997C50007E508 /* SalesCRMContactCreationViewController.swift in Sources */,
 				60C34FDA25397D1600495944 /* FetchUserDataViewController.swift in Sources */,
 				1B96C0A325E8D3020059775C /* NewRequestLeadershipAwazViewController.swift in Sources */,
 				1B5EAACD255EB71C00F49D09 /* GrievanceNewRequestViewController.swift in Sources */,
